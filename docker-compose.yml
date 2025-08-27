@@ -1,0 +1,129 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: sajuapp-postgres
+    ports:
+      - "4006:5432"
+    environment:
+      POSTGRES_DB: fortune_calendar
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secure_password_change_me
+      TZ: Asia/Seoul
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d fortune_calendar"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: sajuapp-redis
+    ports:
+      - "4007:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./packages/backend/api-gateway
+      dockerfile: Dockerfile
+    container_name: sajuapp-api-gateway
+    ports:
+      - "4002:4002"
+    environment:
+      PORT: 4002
+      NODE_ENV: development
+      CALENDAR_SERVICE_URL: http://calendar-service:4003
+      AUTH_SERVICE_URL: http://auth-service:4004
+      DIARY_SERVICE_URL: http://diary-service:4005
+    depends_on:
+      - calendar-service
+      - auth-service
+      - diary-service
+    volumes:
+      - ./packages/backend/api-gateway:/app
+      - /app/node_modules
+
+  # Calendar Service
+  calendar-service:
+    build:
+      context: ./packages/backend/services/calendar
+      dockerfile: Dockerfile
+    container_name: sajuapp-calendar-service
+    ports:
+      - "4003:4003"
+    environment:
+      PORT: 4003
+      NODE_ENV: development
+      DATABASE_URL: postgresql://admin:secure_password_change_me@postgres:5432/fortune_calendar
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./packages/backend/services/calendar:/app
+      - /app/node_modules
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./packages/backend/services/auth
+      dockerfile: Dockerfile
+    container_name: sajuapp-auth-service
+    ports:
+      - "4004:4004"
+    environment:
+      PORT: 4004
+      NODE_ENV: development
+      DATABASE_URL: postgresql://admin:secure_password_change_me@postgres:5432/fortune_calendar
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./packages/backend/services/auth:/app
+      - /app/node_modules
+
+  # Diary Service
+  diary-service:
+    build:
+      context: ./packages/backend/services/diary
+      dockerfile: Dockerfile
+    container_name: sajuapp-diary-service
+    ports:
+      - "4005:4005"
+    environment:
+      PORT: 4005
+      NODE_ENV: development
+      DATABASE_URL: postgresql://admin:secure_password_change_me@postgres:5432/fortune_calendar
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./packages/backend/services/diary:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  default:
+    name: sajuapp-network

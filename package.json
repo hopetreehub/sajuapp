@@ -1,0 +1,52 @@
+{
+  "name": "sajuapp",
+  "version": "1.0.0",
+  "description": "Fortune Compass Calendar - Google Calendar-like app with diary features",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "packages/backend/services/*",
+    "packages/backend/api-gateway"
+  ],
+  "scripts": {
+    "dev": "npm run dev:web",
+    "dev:web": "npm run dev --workspace=packages/web",
+    "dev:backend": "npm run dev:services",
+    "dev:services": "concurrently \"npm:dev:gateway\" \"npm:dev:calendar\" \"npm:dev:auth\" \"npm:dev:diary\"",
+    "dev:gateway": "npm run dev --workspace=packages/backend/api-gateway",
+    "dev:calendar": "npm run dev --workspace=packages/backend/services/calendar",
+    "dev:auth": "npm run dev --workspace=packages/backend/services/auth",
+    "dev:diary": "npm run dev --workspace=packages/backend/services/diary",
+    "build": "npm run build:web && npm run build:backend",
+    "build:web": "npm run build --workspace=packages/web",
+    "build:backend": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "db:migrate": "npm run migrate --workspace=packages/backend/services/calendar",
+    "clean": "npm run clean --workspaces --if-present && rimraf node_modules"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/sajuapp.git"
+  },
+  "keywords": [
+    "calendar",
+    "diary",
+    "fortune",
+    "react",
+    "typescript",
+    "monorepo"
+  ],
+  "author": "",
+  "license": "MIT"
+}
