@@ -1,14 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SajuInputForm from '@/components/saju/SajuInputForm';
 import SixAreaChart from '@/components/saju/charts/SixAreaChart';
-import ChartNavigation from '@/components/common/ChartNavigation';
+import ChartNavigation from '@/components/Common/ChartNavigation';
+import UserSelectionPanel from '@/components/User/UserSelectionPanel';
 import { SajuBirthInfo, SajuAnalysisResult } from '@/types/saju';
+import { UserProfile, AnalysisType } from '@/types/user';
+import { getCurrentUser, addAnalysisHistory } from '@/utils/userStorage';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 
 const SajuAnalysisPage: React.FC = () => {
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [birthInfo, setBirthInfo] = useState<SajuBirthInfo | null>(null);
   const [analysisResult, setAnalysisResult] = useState<SajuAnalysisResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showUserPanel, setShowUserPanel] = useState(true);
+
+  // 현재 사용자 로드
+  useEffect(() => {
+    const user = getCurrentUser();
+    if (user) {
+      setCurrentUser(user);
+      setBirthInfo(user.birthInfo);
+      setShowUserPanel(false);
+      // 자동으로 분석 시작
+      analyzeSaju(user.birthInfo);
+    }
+  }, []);
+
+  // 사용자 선택 핸들러
+  const handleUserSelect = (user: UserProfile) => {
+    setCurrentUser(user);
+    if (user) {
+      setBirthInfo(user.birthInfo);
+      setShowUserPanel(false);
+      analyzeSaju(user.birthInfo);
+      // 분석 히스토리 추가
+      addAnalysisHistory(user.id, AnalysisType.SIX_AREA);
+    }
+  };
+
+  const handleUserChange = () => {
+    // 사용자 변경 시 필요한 업데이트
+  };
 
   // 임시 사주 분석 함수 (실제로는 백엔드 API 호출)
   const analyzeSaju = async (info: SajuBirthInfo) => {
@@ -66,7 +99,7 @@ const SajuAnalysisPage: React.FC = () => {
     const date = new Date(info.year, info.month - 1, info.day);
     const weekday = weekdays[date.getDay()];
     
-    return `${info.year}년 ${info.month}월 ${info.day}일 ${info.hour}시 ${info.minute}분 (${weekday}요일) ${info.isLunar ? '음력' : '양력'}`;
+    return `${info.year}년 ${info.month}월 ${info.day}일 ${info.hour}시 ${info.minute || 0}분 (${weekday}요일) ${info.isLunar ? '음력' : '양력'}`;
   };
 
   const formatFourPillars = (pillars: any) => {
@@ -87,63 +120,106 @@ const SajuAnalysisPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* 왼쪽: 입력 폼 */}
+          {/* 왼쪽: 사용자 선택 또는 입력 폼 */}
           <div className="lg:col-span-1">
-            <SajuInputForm onSubmit={analyzeSaju} />
-            
-            {/* 분석 정보 표시 */}
-            {birthInfo && analysisResult && !loading && (
-              <div className="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">
-                  📋 분석 정보
-                </h3>
-                <div className="space-y-2 text-sm">
-                  <div>
-                    <span className="text-gray-600 dark:text-gray-400">이름:</span>
-                    <span className="ml-2 text-gray-800 dark:text-gray-200 font-medium">
-                      {birthInfo.name || '미입력'}
-                    </span>
+            {showUserPanel || !currentUser ? (
+              <div className="space-y-4">
+                <UserSelectionPanel
+                  currentUser={currentUser}
+                  onUserSelect={handleUserSelect}
+                  onUserChange={handleUserChange}
+                />
+                
+                {/* 직접 입력 옵션 */}
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600">
+                  <div className="p-4 border-b border-gray-200 dark:border-gray-600">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                      📝 직접 입력
+                    </h3>
                   </div>
-                  <div>
-                    <span className="text-gray-600 dark:text-gray-400">출생:</span>
-                    <span className="ml-2 text-gray-800 dark:text-gray-200 font-medium">
-                      {formatBirthDate(birthInfo)}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-gray-600 dark:text-gray-400">사주:</span>
-                    <span className="ml-2 text-gray-800 dark:text-gray-200 font-medium">
-                      {formatFourPillars(analysisResult.fourPillars)}
-                    </span>
+                  <div className="p-4">
+                    <SajuInputForm onSubmit={analyzeSaju} />
                   </div>
                 </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {/* 현재 사용자 정보 표시 */}
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                      👤 현재 분석 대상
+                    </h3>
+                    <button
+                      onClick={() => setShowUserPanel(true)}
+                      className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-md transition-colors"
+                    >
+                      변경
+                    </button>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="font-medium text-gray-900 dark:text-white">{currentUser.name}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {formatBirthDate(currentUser.birthInfo)}
+                    </p>
+                  </div>
+                </div>
+            
+                {/* 분석 정보 표시 */}
+                {birthInfo && analysisResult && !loading && (
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 p-6">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">
+                      📋 분석 정보
+                    </h3>
+                    <div className="space-y-2 text-sm">
+                      <div>
+                        <span className="text-gray-600 dark:text-gray-400">이름:</span>
+                        <span className="ml-2 text-gray-800 dark:text-gray-200 font-medium">
+                          {currentUser?.name || birthInfo.name || '미입력'}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600 dark:text-gray-400">출생:</span>
+                        <span className="ml-2 text-gray-800 dark:text-gray-200 font-medium">
+                          {formatBirthDate(birthInfo)}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-gray-600 dark:text-gray-400">사주:</span>
+                        <span className="ml-2 text-gray-800 dark:text-gray-200 font-medium">
+                          {formatFourPillars(analysisResult.fourPillars)}
+                        </span>
+                      </div>
+                    </div>
 
-                {/* 차트 네비게이션 */}
-                <div className="mt-6">
-                  <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    📊 분석 차트 (총 30개)
-                  </h4>
-                  <div className="space-y-1">
-                    <button className="w-full text-left px-3 py-2 text-sm bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg">
-                      ▶ 6대 영역 분석
-                    </button>
-                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-                      오행 균형도
-                    </button>
-                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-                      십성 분포도
-                    </button>
-                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-                      대운 흐름도
-                    </button>
-                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-                      월별 운세
-                    </button>
-                    <div className="text-xs text-gray-500 dark:text-gray-500 mt-2">
-                      ... 25개 차트 더보기
+                    {/* 차트 네비게이션 */}
+                    <div className="mt-6">
+                      <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        📊 분석 차트 (총 30개)
+                      </h4>
+                      <div className="space-y-1">
+                        <button className="w-full text-left px-3 py-2 text-sm bg-purple-600 text-white rounded-lg">
+                          ▶ 6대 영역 분석
+                        </button>
+                        <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                          오행 균형도
+                        </button>
+                        <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                          십성 분포도
+                        </button>
+                        <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                          대운 흐름도
+                        </button>
+                        <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
+                          월별 운세
+                        </button>
+                        <div className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+                          ... 25개 차트 더보기
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             )}
           </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PersonalityAnalysisChart from '@/components/saju/charts/PersonalityAnalysisChart';
-import ChartNavigation from '@/components/common/ChartNavigation';
+import ChartNavigation from '@/components/Common/ChartNavigation';
 import { PersonalityTraits } from '@/types/saju';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 

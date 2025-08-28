@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SeventeenFortuneChart from '@/components/saju/charts/SeventeenFortuneChart';
-import ChartNavigation from '@/components/common/ChartNavigation';
+import ChartNavigation from '@/components/Common/ChartNavigation';
 import { SeventeenFortuneScores } from '@/types/saju';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 
@@ -205,7 +205,7 @@ const DetailedFortunePage: React.FC = () => {
                 <p className="text-sm text-yellow-800 dark:text-yellow-200 text-center">
                   💡 더 정확한 분석을 위해 설정에서 개인정보를 입력해주세요.
                   <button
-                    onClick={() => navigate('/settings')}
+                    onClick={() => window.location.href = '/settings'}
                     className="ml-2 underline hover:no-underline"
                   >
                     설정으로 이동
