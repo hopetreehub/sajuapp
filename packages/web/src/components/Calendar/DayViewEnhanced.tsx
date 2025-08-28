@@ -4,13 +4,7 @@ import { format, isSameDay } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { CalendarEvent } from '@/services/api'
 import TodayFortuneWidget from '@/components/Fortune/TodayFortuneWidget'
-
-interface Todo {
-  id: string;
-  text: string;
-  completed: boolean;
-  priority: 'high' | 'medium' | 'low';
-}
+import DiaryModal from '@/components/DiaryModal'
 
 interface DayViewEnhancedProps {
   events: CalendarEvent[]
@@ -19,13 +13,10 @@ interface DayViewEnhancedProps {
 }
 
 export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: DayViewEnhancedProps) {
-  const { currentDate } = useCalendar()
-  const [todos, setTodos] = useState<Todo[]>([
-    { id: '1', text: '보고서 작성', completed: false, priority: 'high' },
-    { id: '2', text: '장보기', completed: true, priority: 'medium' },
-    { id: '3', text: '운동하기', completed: false, priority: 'low' },
-  ])
+  const { currentDate, getTodosForDate, addTodo, updateTodo, deleteTodo, toggleTodo } = useCalendar()
   const [newTodo, setNewTodo] = useState('')
+  const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false)
+  const [diaryEntry, setDiaryEntry] = useState<any>(null)
 
   const dayEvents = useMemo(() => {
     return events.filter(event => {
@@ -34,28 +25,31 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
     }).sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
   }, [events, currentDate])
 
+  const todos = getTodosForDate(currentDate)
   const todayTags = ['#중요', '#긴급', '#업무', '#개인']
   const completedTodos = todos.filter(todo => todo.completed).length
   const totalTodos = todos.length
   const progressPercentage = totalTodos > 0 ? (completedTodos / totalTodos) * 100 : 0
 
-  const toggleTodo = (id: string) => {
-    setTodos(todos.map(todo => 
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ))
-  }
-
-  const addTodo = () => {
+  const handleAddTodo = () => {
     if (newTodo.trim()) {
-      setTodos([...todos, {
-        id: Date.now().toString(),
-        text: newTodo,
+      addTodo({
+        text: newTodo.trim(),
         completed: false,
-        priority: 'medium'
-      }])
+        priority: 'medium',
+        date: format(currentDate, 'yyyy-MM-dd')
+      })
       setNewTodo('')
     }
   }
+
+  const handleDiarySave = (entry: any) => {
+    setDiaryEntry(entry)
+    // 실제로는 여기서 API 호출하여 저장
+    console.log('Saving diary entry:', entry)
+  }
+
+  const hasDiaryEntry = !!diaryEntry
 
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
@@ -236,7 +230,7 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
                         {todo.text}
                       </span>
                       <button
-                        onClick={() => setTodos(todos.filter(t => t.id !== todo.id))}
+                        onClick={() => deleteTodo(todo.id)}
                         className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 text-sm transition-opacity"
                       >
                         삭제
@@ -251,17 +245,33 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
                     type="text"
                     value={newTodo}
                     onChange={(e) => setNewTodo(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addTodo()}
+                    onKeyPress={(e) => e.key === 'Enter' && handleAddTodo()}
                     placeholder="새 할일 추가..."
                     className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
                   />
                   <button
-                    onClick={addTodo}
+                    onClick={handleAddTodo}
                     className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
                   >
                     추가
                   </button>
                 </div>
+
+                {/* 일기 버튼 - 할일 바로 아래 */}
+                <button 
+                  onClick={() => setIsDiaryModalOpen(true)}
+                  className={`
+                    w-full mt-2 flex items-center justify-center space-x-2 px-3 py-2 rounded-lg transition-all text-sm
+                    ${hasDiaryEntry 
+                      ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30' 
+                      : 'text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20'
+                    }
+                  `}
+                >
+                  <span className="text-lg">📝</span>
+                  <span>오늘의 일기</span>
+                  {hasDiaryEntry && <div className="w-2 h-2 bg-green-500 rounded-full"></div>}
+                </button>
               </div>
             </div>
 
@@ -287,16 +297,15 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
           </div>
         </div>
 
-        {/* 다이어리 플로팅 버튼 */}
-        <div className="fixed bottom-6 right-6">
-          <button 
-            onClick={() => window.location.href = '/diary'}
-            className="flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
-          >
-            <span className="text-xl">📝</span>
-            <span>오늘의 일기</span>
-          </button>
-        </div>
+
+        {/* 일기 작성 모달 */}
+        <DiaryModal 
+          isOpen={isDiaryModalOpen}
+          onClose={() => setIsDiaryModalOpen(false)}
+          date={currentDate}
+          existingEntry={diaryEntry}
+          onSave={handleDiarySave}
+        />
       </div>
     </div>
   )

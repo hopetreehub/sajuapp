@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
 import { format, isSameDay, getHours, getMinutes } from 'date-fns'
 import { ko } from 'date-fns/locale'
@@ -13,7 +13,8 @@ interface DayViewProps {
 }
 
 export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewProps) {
-  const { currentDate } = useCalendar()
+  const { currentDate, getTodosForDate, addTodo, updateTodo, deleteTodo, toggleTodo } = useCalendar()
+  const [newTodo, setNewTodo] = useState('')
 
   const dayEvents = useMemo(() => {
     return events.filter(event => {
@@ -24,6 +25,28 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
 
   const allDayEvents = dayEvents.filter(event => event.all_day)
   const timedEvents = dayEvents.filter(event => !event.all_day)
+  const todos = getTodosForDate(currentDate)
+
+  const handleAddTodo = () => {
+    if (newTodo.trim()) {
+      addTodo({
+        text: newTodo.trim(),
+        completed: false,
+        priority: 'medium',
+        date: format(currentDate, 'yyyy-MM-dd')
+      })
+      setNewTodo('')
+    }
+  }
+
+  const getPriorityIcon = (priority: string) => {
+    switch (priority) {
+      case 'high': return '🔴'
+      case 'medium': return '🟡'
+      case 'low': return '🟢'
+      default: return ''
+    }
+  }
 
   const currentHour = new Date().getHours()
   const currentMinute = new Date().getMinutes()
@@ -89,7 +112,7 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
         )}
 
         {/* Quick stats */}
-        <div className="bg-muted rounded-lg p-4">
+        <div className="bg-muted rounded-lg p-4 mb-6">
           <h3 className="text-sm font-semibold text-foreground mb-3">오늘의 요약</h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -104,6 +127,65 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
               <span className="text-muted-foreground">시간별 일정</span>
               <span className="font-medium">{timedEvents.length}개</span>
             </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">할일</span>
+              <span className="font-medium">{todos.length}개</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Todos section */}
+        <div className="mb-6">
+          <h3 className="text-sm font-semibold text-foreground mb-3">오늘의 할일</h3>
+          
+          {/* Todo list */}
+          <div className="space-y-2 mb-3">
+            {todos.map(todo => (
+              <div key={todo.id} className="flex items-center space-x-2 p-2 bg-muted rounded-lg group">
+                <button
+                  onClick={() => toggleTodo(todo.id)}
+                  className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${
+                    todo.completed 
+                      ? 'bg-green-500 border-green-500 text-white' 
+                      : 'border-gray-300 dark:border-gray-600'
+                  }`}
+                >
+                  {todo.completed && <span className="text-xs">✓</span>}
+                </button>
+                <span className="text-xs">{getPriorityIcon(todo.priority)}</span>
+                <span 
+                  className={`flex-1 text-sm ${
+                    todo.completed ? 'line-through text-muted-foreground' : 'text-foreground'
+                  }`}
+                >
+                  {todo.text}
+                </span>
+                <button
+                  onClick={() => deleteTodo(todo.id)}
+                  className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 text-xs transition-opacity"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Add new todo */}
+          <div className="space-y-2">
+            <input
+              type="text"
+              value={newTodo}
+              onChange={(e) => setNewTodo(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleAddTodo()}
+              placeholder="새 할일 추가..."
+              className="w-full px-3 py-2 text-sm border border-border rounded-lg bg-background text-foreground"
+            />
+            <button
+              onClick={handleAddTodo}
+              className="w-full py-2 px-3 text-sm bg-muted hover:bg-muted/80 text-foreground rounded-lg transition-colors"
+            >
+              할일 추가
+            </button>
           </div>
         </div>
 

@@ -81,10 +81,11 @@ export default function SettingsPage() {
                         </label>
                         <input
                           type="time"
+                          step="1800"
                           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
                         />
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          정확한 사주 계산을 위해 필요합니다
+                          24시간 형식으로 입력해주세요 (예: 14:30)
                         </p>
                       </div>
                       

@@ -1,7 +1,17 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react'
 import { ViewMode, UserSettings } from '@/types/calendar'
 import { CalendarEvent } from '@/services/api'
-import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns'
+import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, format } from 'date-fns'
+
+interface Todo {
+  id: string;
+  text: string;
+  completed: boolean;
+  priority: 'high' | 'medium' | 'low';
+  date: string; // YYYY-MM-DD
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 interface CalendarContextType {
   currentDate: Date
@@ -9,6 +19,7 @@ interface CalendarContextType {
   events: CalendarEvent[]
   selectedDate: Date | null
   settings: UserSettings
+  todos: Todo[]
   
   setCurrentDate: (date: Date) => void
   setViewMode: (mode: ViewMode) => void
@@ -20,6 +31,13 @@ interface CalendarContextType {
   updateEvent: (id: string, event: Partial<CalendarEvent>) => void
   deleteEvent: (id: string) => void
   getEventsForDateRange: (start: Date, end: Date) => CalendarEvent[]
+  
+  // 할일 관련 함수들
+  addTodo: (todo: Omit<Todo, 'id' | 'createdAt' | 'updatedAt'>) => void
+  updateTodo: (id: string, updates: Partial<Todo>) => void
+  deleteTodo: (id: string) => void
+  toggleTodo: (id: string) => void
+  getTodosForDate: (date: Date) => Todo[]
 }
 
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined)
@@ -41,6 +59,35 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
   const [viewMode, setViewMode] = useState<ViewMode>('month')
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [events, setEvents] = useState<CalendarEvent[]>([])
+  const [todos, setTodos] = useState<Todo[]>([
+    { 
+      id: '1', 
+      text: '보고서 작성', 
+      completed: false, 
+      priority: 'high', 
+      date: format(new Date(), 'yyyy-MM-dd'),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    { 
+      id: '2', 
+      text: '장보기', 
+      completed: true, 
+      priority: 'medium', 
+      date: format(new Date(), 'yyyy-MM-dd'),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    { 
+      id: '3', 
+      text: '운동하기', 
+      completed: false, 
+      priority: 'low', 
+      date: format(new Date(), 'yyyy-MM-dd'),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+  ])
   
   const [settings] = useState<UserSettings>({
     timezone: 'Asia/Seoul',
@@ -132,12 +179,48 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
     })
   }, [events])
 
+  const addTodo = useCallback((todoData: Omit<Todo, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const newTodo: Todo = {
+      ...todoData,
+      id: crypto.randomUUID(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+    setTodos(prev => [...prev, newTodo])
+  }, [])
+
+  const updateTodo = useCallback((id: string, updates: Partial<Todo>) => {
+    setTodos(prev => prev.map(todo => 
+      todo.id === id 
+        ? { ...todo, ...updates, updatedAt: new Date() }
+        : todo
+    ))
+  }, [])
+
+  const deleteTodo = useCallback((id: string) => {
+    setTodos(prev => prev.filter(todo => todo.id !== id))
+  }, [])
+
+  const toggleTodo = useCallback((id: string) => {
+    setTodos(prev => prev.map(todo => 
+      todo.id === id 
+        ? { ...todo, completed: !todo.completed, updatedAt: new Date() }
+        : todo
+    ))
+  }, [])
+
+  const getTodosForDate = useCallback((date: Date) => {
+    const dateStr = format(date, 'yyyy-MM-dd')
+    return todos.filter(todo => todo.date === dateStr)
+  }, [todos])
+
   const value = {
     currentDate,
     viewMode,
     events,
     selectedDate,
     settings,
+    todos,
     setCurrentDate,
     setViewMode,
     setSelectedDate,
@@ -147,7 +230,12 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
     addEvent,
     updateEvent,
     deleteEvent,
-    getEventsForDateRange
+    getEventsForDateRange,
+    addTodo,
+    updateTodo,
+    deleteTodo,
+    toggleTodo,
+    getTodosForDate
   }
 
   return (

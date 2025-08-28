@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
 import { 
   startOfWeek, 
@@ -16,7 +16,7 @@ import {
 import { ko } from 'date-fns/locale'
 import { CalendarEvent } from '@/services/api'
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i)
+const HOURS = Array.from({ length: 11 }, (_, i) => i + 9) // 9시-19시
 
 interface WeekViewProps {
   events: CalendarEvent[]
@@ -25,13 +25,33 @@ interface WeekViewProps {
 }
 
 export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekViewProps) {
-  const { currentDate } = useCalendar()
+  const { currentDate, getTodosForDate, addTodo, updateTodo, deleteTodo, toggleTodo } = useCalendar()
 
   const weekDays = useMemo(() => {
     const start = startOfWeek(currentDate, { weekStartsOn: 0 })
     const end = endOfWeek(currentDate, { weekStartsOn: 0 })
     return eachDayOfInterval({ start, end })
   }, [currentDate])
+
+  const handleAddTodo = (date: Date, text: string) => {
+    if (text.trim()) {
+      addTodo({
+        text: text.trim(),
+        completed: false,
+        priority: 'medium',
+        date: format(date, 'yyyy-MM-dd')
+      })
+    }
+  }
+
+  const getPriorityIcon = (priority: string) => {
+    switch (priority) {
+      case 'high': return '🔴'
+      case 'medium': return '🟡'
+      case 'low': return '🟢'
+      default: return ''
+    }
+  }
 
   const getEventsForDayAndHour = (date: Date, hour: number) => {
     if (!events || events.length === 0) return []
@@ -168,6 +188,78 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
                       </div>
                     )
                   })}
+                </div>
+              )
+            })}
+          </div>
+
+          {/* 할일 섹션 */}
+          <div className="mt-4 grid grid-cols-8 gap-px bg-border">
+            {/* 할일 헤더 */}
+            <div className="bg-muted p-3 text-center text-sm font-semibold text-muted-foreground">
+              할일
+            </div>
+            
+            {/* 각 요일의 할일 */}
+            {weekDays.map(day => {
+              const dayTodos = getTodosForDate(day)
+              const isCurrentDay = isToday(day)
+              
+              return (
+                <div 
+                  key={`todos-${day.toISOString()}`} 
+                  className={`
+                    bg-background p-3 min-h-[120px]
+                    ${isCurrentDay ? 'bg-primary/5' : ''}
+                  `}
+                >
+                  {/* 할일 목록 */}
+                  <div className="space-y-1 mb-2">
+                    {dayTodos.map(todo => (
+                      <div key={todo.id} className="flex items-center space-x-1 group">
+                        <button
+                          onClick={() => toggleTodo(todo.id)}
+                          className={`
+                            w-3 h-3 rounded-full border flex items-center justify-center text-xs
+                            ${todo.completed 
+                              ? 'bg-green-500 border-green-500 text-white' 
+                              : 'border-gray-300 dark:border-gray-600'
+                            }
+                          `}
+                        >
+                          {todo.completed && '✓'}
+                        </button>
+                        <span className="text-xs">{getPriorityIcon(todo.priority)}</span>
+                        <span 
+                          className={`
+                            flex-1 text-xs truncate
+                            ${todo.completed ? 'line-through text-gray-500' : 'text-gray-800 dark:text-gray-200'}
+                          `}
+                        >
+                          {todo.text}
+                        </span>
+                        <button
+                          onClick={() => deleteTodo(todo.id)}
+                          className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 text-xs"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  {/* 할일 추가 */}
+                  <button
+                    onClick={() => {
+                      const newTodoText = prompt('새 할일을 입력하세요:')
+                      if (newTodoText) {
+                        handleAddTodo(day, newTodoText)
+                      }
+                    }}
+                    className="w-full text-xs text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 py-1 border border-dashed border-gray-300 rounded hover:border-purple-300 transition-colors"
+                  >
+                    + 할일 추가
+                  </button>
                 </div>
               )
             })}
