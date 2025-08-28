@@ -8,6 +8,7 @@ import UserSelectionPanel from '@/components/User/UserSelectionPanel';
 import { SajuBirthInfo, SajuAnalysisResult } from '@/types/saju';
 import { UserProfile, AnalysisType } from '@/types/user';
 import { getCurrentUser, addAnalysisHistory } from '@/utils/userStorage';
+import { SajuCalculator, formatFourPillars, formatFourPillarsDetailed, FourPillarsResult } from '@/utils/sajuCalculator';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 
 const SajuAnalysisPage: React.FC = () => {
@@ -15,6 +16,7 @@ const SajuAnalysisPage: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [birthInfo, setBirthInfo] = useState<SajuBirthInfo | null>(null);
   const [analysisResult, setAnalysisResult] = useState<SajuAnalysisResult | null>(null);
+  const [fourPillars, setFourPillars] = useState<FourPillarsResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [showUserPanel, setShowUserPanel] = useState(true);
 
@@ -46,21 +48,29 @@ const SajuAnalysisPage: React.FC = () => {
     // 사용자 변경 시 필요한 업데이트
   };
 
-  // 임시 사주 분석 함수 (실제로는 백엔드 API 호출)
+  // 정확한 사주 분석 함수 
   const analyzeSaju = async (info: SajuBirthInfo) => {
     setLoading(true);
     setBirthInfo(info);
 
-    // 시뮬레이션: 2초 대기 후 결과 생성
+    // 정확한 사주 계산
+    const calculatedPillars = SajuCalculator.calculateFourPillars(info);
+    setFourPillars(calculatedPillars);
+    
+    console.log('=== 사주 계산 결과 ===');
+    console.log('입력:', info);
+    console.log('사주:', formatFourPillarsDetailed(calculatedPillars));
+
+    // 시뮬레이션: 1초 대기 후 결과 생성
     setTimeout(() => {
-      // 임시 데이터 생성 (실제로는 백엔드에서 계산)
+      // 계산된 사주로 분석 결과 생성
       const result: SajuAnalysisResult = {
         birthInfo: info,
         fourPillars: {
-          year: { heavenly: '병', earthly: '술' },
-          month: { heavenly: '신', earthly: '묘' },
-          day: { heavenly: '임', earthly: '진' },
-          hour: { heavenly: '계', earthly: '묘' }
+          year: { heavenly: calculatedPillars.year.heavenly, earthly: calculatedPillars.year.earthly },
+          month: { heavenly: calculatedPillars.month.heavenly, earthly: calculatedPillars.month.earthly },
+          day: { heavenly: calculatedPillars.day.heavenly, earthly: calculatedPillars.day.earthly },
+          hour: { heavenly: calculatedPillars.hour.heavenly, earthly: calculatedPillars.hour.earthly }
         },
         sixAreas: {
           foundation: 68,
@@ -94,7 +104,7 @@ const SajuAnalysisPage: React.FC = () => {
       };
       setAnalysisResult(result);
       setLoading(false);
-    }, 2000);
+    }, 1000);
   };
 
   const formatBirthDate = (info: SajuBirthInfo) => {
@@ -170,13 +180,13 @@ const SajuAnalysisPage: React.FC = () => {
                   </div>
                 </div>
             
-                {/* 분석 정보 표시 */}
-                {birthInfo && analysisResult && !loading && (
+                {/* 사주 결과 우선 표시 */}
+                {birthInfo && fourPillars && !loading && (
                   <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 p-6">
-                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">
-                      📋 분석 정보
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+                      🔮 사주(四柱) 결과
                     </h3>
-                    <div className="space-y-2 text-sm">
+                    <div className="space-y-3">
                       <div>
                         <span className="text-gray-600 dark:text-gray-400">이름:</span>
                         <span className="ml-2 text-gray-800 dark:text-gray-200 font-medium">
@@ -189,11 +199,76 @@ const SajuAnalysisPage: React.FC = () => {
                           {formatBirthDate(birthInfo)}
                         </span>
                       </div>
-                      <div>
-                        <span className="text-gray-600 dark:text-gray-400">사주:</span>
-                        <span className="ml-2 text-gray-800 dark:text-gray-200 font-medium">
-                          {formatFourPillars(analysisResult.fourPillars)}
-                        </span>
+                      
+                      <div className="border-t pt-3 mt-3">
+                        <div className="grid grid-cols-2 gap-3 text-sm">
+                          <div className="bg-red-50 dark:bg-red-900/20 p-3 rounded-lg">
+                            <div className="font-semibold text-red-800 dark:text-red-200">년주 (年柱)</div>
+                            <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+                              {fourPillars.year.combined}
+                            </div>
+                            <div className="text-xs text-red-600 dark:text-red-400">
+                              {fourPillars.year.heavenly}({fourPillars.year.heavenly === '갑'||fourPillars.year.heavenly === '을' ? '목' : 
+                               fourPillars.year.heavenly === '병'||fourPillars.year.heavenly === '정' ? '화' :
+                               fourPillars.year.heavenly === '무'||fourPillars.year.heavenly === '기' ? '토' :
+                               fourPillars.year.heavenly === '경'||fourPillars.year.heavenly === '신' ? '금' : '수'}) 
+                              {fourPillars.year.earthly}
+                            </div>
+                          </div>
+                          
+                          <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
+                            <div className="font-semibold text-green-800 dark:text-green-200">월주 (月柱)</div>
+                            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                              {fourPillars.month.combined}
+                            </div>
+                            <div className="text-xs text-green-600 dark:text-green-400">
+                              {fourPillars.month.heavenly}({fourPillars.month.heavenly === '갑'||fourPillars.month.heavenly === '을' ? '목' : 
+                               fourPillars.month.heavenly === '병'||fourPillars.month.heavenly === '정' ? '화' :
+                               fourPillars.month.heavenly === '무'||fourPillars.month.heavenly === '기' ? '토' :
+                               fourPillars.month.heavenly === '경'||fourPillars.month.heavenly === '신' ? '금' : '수'}) 
+                              {fourPillars.month.earthly}
+                            </div>
+                          </div>
+                          
+                          <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                            <div className="font-semibold text-blue-800 dark:text-blue-200">일주 (日柱)</div>
+                            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                              {fourPillars.day.combined}
+                            </div>
+                            <div className="text-xs text-blue-600 dark:text-blue-400">
+                              {fourPillars.day.heavenly}({fourPillars.day.heavenly === '갑'||fourPillars.day.heavenly === '을' ? '목' : 
+                               fourPillars.day.heavenly === '병'||fourPillars.day.heavenly === '정' ? '화' :
+                               fourPillars.day.heavenly === '무'||fourPillars.day.heavenly === '기' ? '토' :
+                               fourPillars.day.heavenly === '경'||fourPillars.day.heavenly === '신' ? '금' : '수'}) 
+                              {fourPillars.day.earthly} (일간)
+                            </div>
+                          </div>
+                          
+                          <div className="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg">
+                            <div className="font-semibold text-purple-800 dark:text-purple-200">시주 (時柱)</div>
+                            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                              {fourPillars.hour.combined}
+                            </div>
+                            <div className="text-xs text-purple-600 dark:text-purple-400">
+                              {fourPillars.hour.heavenly}({fourPillars.hour.heavenly === '갑'||fourPillars.hour.heavenly === '을' ? '목' : 
+                               fourPillars.hour.heavenly === '병'||fourPillars.hour.heavenly === '정' ? '화' :
+                               fourPillars.hour.heavenly === '무'||fourPillars.hour.heavenly === '기' ? '토' :
+                               fourPillars.hour.heavenly === '경'||fourPillars.hour.heavenly === '신' ? '금' : '수'}) 
+                              {fourPillars.hour.earthly}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                          <div className="text-center">
+                            <div className="font-bold text-lg text-gray-800 dark:text-gray-200">
+                              {formatFourPillarsDetailed(fourPillars)}
+                            </div>
+                            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                              완전한 사주(四柱)
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
