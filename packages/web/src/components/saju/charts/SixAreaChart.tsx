@@ -51,33 +51,88 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
     return () => observer.disconnect();
   }, []);
 
-  // 시간대별 데이터 생성 함수
-  const generateTimeBasedScore = (baseScore: number, variance: number): number => {
-    const change = (Math.random() - 0.5) * variance;
-    return Math.max(0, Math.min(100, Math.round(baseScore + change)));
+  // 시간대별 영역 가중치 정의
+  const timeFrameWeights = {
+    today: {
+      foundation: 0.7,     // 근본 약화
+      thinking: 1.3,       // 사고 강화
+      relationship: 0.85,  // 인연 약간 약화
+      action: 1.4,         // 행동 크게 강화
+      luck: 1.2,           // 행운 강화
+      environment: 0.8     // 환경 약화
+    },
+    month: {
+      foundation: 0.9,
+      thinking: 0.95,
+      relationship: 1.35,  // 인연 크게 강화
+      action: 0.75,        // 행동 약화
+      luck: 1.25,          // 행운 강화
+      environment: 1.1     // 환경 약간 강화
+    },
+    year: {
+      foundation: 1.15,    // 근본 강화
+      thinking: 1.1,       // 사고 약간 강화
+      relationship: 0.95,
+      action: 0.85,        // 행동 약화
+      luck: 0.7,           // 행운 크게 약화
+      environment: 1.3     // 환경 크게 강화
+    }
+  };
+
+  // 개선된 시간대별 데이터 생성 함수
+  const generateTimeBasedScore = (
+    baseScore: number, 
+    weight: number, 
+    variance: number,
+    maxLimit: number = 85
+  ): number => {
+    // 기본 점수를 낮춤 (0.8 배율 적용)
+    const adjustedBase = baseScore * 0.8;
+    
+    // 가중치 적용
+    const weightedScore = adjustedBase * weight;
+    
+    // 변동성 추가 (더 큰 범위)
+    const randomVariance = (Math.random() - 0.5) * variance;
+    const finalScore = weightedScore + randomVariance;
+    
+    // 최소 20, 최대 maxLimit으로 제한
+    return Math.max(20, Math.min(maxLimit, Math.round(finalScore)));
   };
 
   // 시간대별 데이터 메모이제이션
   const timeFrameData = useMemo(() => {
-    const varianceMap = {
-      today: 15,   // 오늘: ±15점 변동
-      month: 10,   // 이번달: ±10점 변동
-      year: 5      // 올해: ±5점 변동
-    };
-    
     const data: { [key in TimeFrame]?: number[] } = {};
     
-    (['today', 'month', 'year'] as const).forEach(timeFrame => {
-      const variance = varianceMap[timeFrame];
-      data[timeFrame] = [
-        generateTimeBasedScore(scores.foundation, variance),
-        generateTimeBasedScore(scores.thinking, variance),
-        generateTimeBasedScore(scores.relationship, variance),
-        generateTimeBasedScore(scores.action, variance),
-        generateTimeBasedScore(scores.luck, variance),
-        generateTimeBasedScore(scores.environment, variance)
-      ];
-    });
+    // 오늘: 행동력 중심, 큰 변동성
+    data.today = [
+      generateTimeBasedScore(scores.foundation, timeFrameWeights.today.foundation, 25),
+      generateTimeBasedScore(scores.thinking, timeFrameWeights.today.thinking, 20),
+      generateTimeBasedScore(scores.relationship, timeFrameWeights.today.relationship, 22),
+      generateTimeBasedScore(scores.action, timeFrameWeights.today.action, 18),
+      generateTimeBasedScore(scores.luck, timeFrameWeights.today.luck, 30),
+      generateTimeBasedScore(scores.environment, timeFrameWeights.today.environment, 25)
+    ];
+    
+    // 이번달: 관계 중심, 중간 변동성
+    data.month = [
+      generateTimeBasedScore(scores.foundation, timeFrameWeights.month.foundation, 18),
+      generateTimeBasedScore(scores.thinking, timeFrameWeights.month.thinking, 16),
+      generateTimeBasedScore(scores.relationship, timeFrameWeights.month.relationship, 15),
+      generateTimeBasedScore(scores.action, timeFrameWeights.month.action, 20),
+      generateTimeBasedScore(scores.luck, timeFrameWeights.month.luck, 22),
+      generateTimeBasedScore(scores.environment, timeFrameWeights.month.environment, 17)
+    ];
+    
+    // 올해: 안정적, 작은 변동성
+    data.year = [
+      generateTimeBasedScore(scores.foundation, timeFrameWeights.year.foundation, 12),
+      generateTimeBasedScore(scores.thinking, timeFrameWeights.year.thinking, 10),
+      generateTimeBasedScore(scores.relationship, timeFrameWeights.year.relationship, 14),
+      generateTimeBasedScore(scores.action, timeFrameWeights.year.action, 15),
+      generateTimeBasedScore(scores.luck, timeFrameWeights.year.luck, 18),
+      generateTimeBasedScore(scores.environment, timeFrameWeights.year.environment, 10)
+    ];
     
     return data;
   }, [scores]);

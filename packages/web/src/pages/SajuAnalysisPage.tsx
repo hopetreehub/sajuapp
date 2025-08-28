@@ -25,12 +25,12 @@ const SajuAnalysisPage: React.FC = () => {
           hour: { heavenly: '계', earthly: '묘' }
         },
         sixAreas: {
-          foundation: 82,
-          thinking: 78,
-          relationship: 85,
-          action: 75,
-          luck: 88,
-          environment: 71
+          foundation: 68,
+          thinking: 62,
+          relationship: 71,
+          action: 58,
+          luck: 73,
+          environment: 55
         },
         fiveElements: {
           wood: 25,
@@ -51,8 +51,8 @@ const SajuAnalysisPage: React.FC = () => {
           jeongin: 12,
           pyeongin: 8
         },
-        totalScore: 479,
-        averageScore: 79.8
+        totalScore: 387,
+        averageScore: 64.5
       };
       setAnalysisResult(result);
       setLoading(false);
