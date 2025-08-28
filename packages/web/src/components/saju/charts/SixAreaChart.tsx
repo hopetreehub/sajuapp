@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -25,9 +25,13 @@ interface SixAreaChartProps {
   birthDate?: string;
 }
 
+type TimeFrame = 'none' | 'today' | 'month' | 'year';
+
 const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
   // 다크모드 실시간 감지
   const [isDarkMode, setIsDarkMode] = useState(false);
+  // 시간대 선택 상태
+  const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrame>('none');
 
   useEffect(() => {
     // 초기 다크모드 상태 확인
@@ -47,6 +51,37 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
     return () => observer.disconnect();
   }, []);
 
+  // 시간대별 데이터 생성 함수
+  const generateTimeBasedScore = (baseScore: number, variance: number): number => {
+    const change = (Math.random() - 0.5) * variance;
+    return Math.max(0, Math.min(100, Math.round(baseScore + change)));
+  };
+
+  // 시간대별 데이터 메모이제이션
+  const timeFrameData = useMemo(() => {
+    const varianceMap = {
+      today: 15,   // 오늘: ±15점 변동
+      month: 10,   // 이번달: ±10점 변동
+      year: 5      // 올해: ±5점 변동
+    };
+    
+    const data: { [key in TimeFrame]?: number[] } = {};
+    
+    (['today', 'month', 'year'] as const).forEach(timeFrame => {
+      const variance = varianceMap[timeFrame];
+      data[timeFrame] = [
+        generateTimeBasedScore(scores.foundation, variance),
+        generateTimeBasedScore(scores.thinking, variance),
+        generateTimeBasedScore(scores.relationship, variance),
+        generateTimeBasedScore(scores.action, variance),
+        generateTimeBasedScore(scores.luck, variance),
+        generateTimeBasedScore(scores.environment, variance)
+      ];
+    });
+    
+    return data;
+  }, [scores]);
+
   // 최고점 찾기 로직
   const scoreValues = [
     scores.foundation,
@@ -59,11 +94,34 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
   const maxScore = Math.max(...scoreValues);
   const maxScoreIndexes = scoreValues.map((score, index) => score === maxScore ? index : -1).filter(index => index !== -1);
   
+  // 시간대별 색상 설정
+  const timeFrameColors = {
+    today: {
+      border: '#ef4444',
+      background: 'rgba(239, 68, 68, 0.2)'
+    },
+    month: {
+      border: '#10b981',
+      background: 'rgba(16, 185, 129, 0.2)'
+    },
+    year: {
+      border: '#3b82f6',
+      background: 'rgba(59, 130, 246, 0.2)'
+    }
+  };
+
+  // 시간대별 라벨
+  const timeFrameLabels = {
+    today: '오늘의 운세',
+    month: '이번달 운세',
+    year: '올해 운세'
+  };
+
   const data = {
     labels: ['근본', '사고', '인연', '행동', '행운', '환경'],
     datasets: [
       {
-        label: '사주 분석 점수',
+        label: '나의 기본 사주',
         data: scoreValues,
         backgroundColor: isDarkMode ? 'rgba(96, 165, 250, 0.4)' : 'rgba(102, 126, 234, 0.2)',
         borderColor: isDarkMode ? 'rgb(96, 165, 250)' : 'rgba(102, 126, 234, 1)',
@@ -100,7 +158,21 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
             : isDarkMode ? 'rgb(96, 165, 250)' : 'rgba(102, 126, 234, 1)'  // 일반점 호버 테두리
         ),
         borderWidth: isDarkMode ? 5 : 3
-      }
+      },
+      // 선택된 시간대 데이터셋 추가
+      ...(selectedTimeFrame !== 'none' && timeFrameData[selectedTimeFrame] ? [{
+        label: timeFrameLabels[selectedTimeFrame],
+        data: timeFrameData[selectedTimeFrame],
+        backgroundColor: timeFrameColors[selectedTimeFrame].background,
+        borderColor: timeFrameColors[selectedTimeFrame].border,
+        pointBackgroundColor: timeFrameColors[selectedTimeFrame].border,
+        pointBorderColor: '#ffffff',
+        pointHoverBackgroundColor: '#ffffff',
+        pointHoverBorderColor: timeFrameColors[selectedTimeFrame].border,
+        borderWidth: 3,
+        pointRadius: 4,
+        pointHoverRadius: 6
+      }] : [])
     ]
   };
 
@@ -109,7 +181,15 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false
+        display: selectedTimeFrame !== 'none',
+        position: 'top' as const,
+        labels: {
+          color: isDarkMode ? '#f8fafc' : '#2c3e50',
+          font: {
+            size: 12
+          },
+          padding: 15
+        }
       },
       tooltip: {
         callbacks: {
@@ -165,8 +245,57 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
         </div>
       )}
 
-      <div className="relative h-96 mb-6">
+      <div className="relative h-96 mb-4">
         <Radar data={data} options={options} />
+      </div>
+
+      {/* Time Frame Toggle Buttons */}
+      <div className="flex items-center justify-center gap-2 mb-6">
+        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">비교 분석:</span>
+        
+        {/* 기본 사주 버튼 (항상 활성화) */}
+        <button
+          className="px-4 py-2 rounded-lg text-sm font-medium bg-purple-500 text-white cursor-default"
+          disabled
+        >
+          ✓ 기본 사주
+        </button>
+        
+        {/* 오늘 버튼 */}
+        <button
+          onClick={() => setSelectedTimeFrame(selectedTimeFrame === 'today' ? 'none' : 'today')}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+            selectedTimeFrame === 'today'
+              ? 'bg-red-500 text-white'
+              : 'border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-red-500 dark:hover:border-red-400'
+          }`}
+        >
+          {selectedTimeFrame === 'today' ? '✓' : '+'} 오늘
+        </button>
+        
+        {/* 이번달 버튼 */}
+        <button
+          onClick={() => setSelectedTimeFrame(selectedTimeFrame === 'month' ? 'none' : 'month')}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+            selectedTimeFrame === 'month'
+              ? 'bg-green-500 text-white'
+              : 'border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-green-500 dark:hover:border-green-400'
+          }`}
+        >
+          {selectedTimeFrame === 'month' ? '✓' : '+'} 이번달
+        </button>
+        
+        {/* 올해 버튼 */}
+        <button
+          onClick={() => setSelectedTimeFrame(selectedTimeFrame === 'year' ? 'none' : 'year')}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+            selectedTimeFrame === 'year'
+              ? 'bg-blue-500 text-white'
+              : 'border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400'
+          }`}
+        >
+          {selectedTimeFrame === 'year' ? '✓' : '+'} 올해
+        </button>
       </div>
 
       {/* Score Cards */}
