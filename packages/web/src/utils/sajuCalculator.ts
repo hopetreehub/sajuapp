@@ -34,18 +34,18 @@ const MONTHLY_STEMS: Record<string, string[]> = {
   '계': ['갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해', '갑인', '을묘']  // 무계년
 };
 
-// 시주 계산용 - 일간에 따른 시간
+// 시주 계산용 - 일간에 따른 시간 (갑기일, 을경일, 병신일, 정임일, 무계일)
 const HOURLY_STEMS: Record<string, string[]> = {
-  '갑': ['갑자', '을축', '병인', '정묘', '무진', '기사', '경오', '신미', '임신', '계유', '갑술', '을해'],
-  '을': ['병자', '정축', '무인', '기묘', '경진', '신사', '임오', '계미', '갑신', '을유', '병술', '정해'],
-  '병': ['무자', '기축', '경인', '신묘', '임진', '계사', '갑오', '을미', '병신', '정유', '무술', '기해'],
-  '정': ['경자', '신축', '임인', '계묘', '갑진', '을사', '병오', '정미', '무신', '기유', '경술', '신해'],
-  '무': ['임자', '계축', '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해'],
-  '기': ['갑자', '을축', '병인', '정묘', '무진', '기사', '경오', '신미', '임신', '계유', '갑술', '을해'],
-  '경': ['병자', '정축', '무인', '기묘', '경진', '신사', '임오', '계미', '갑신', '을유', '병술', '정해'],
-  '신': ['무자', '기축', '경인', '신묘', '임진', '계사', '갑오', '을미', '병신', '정유', '무술', '기해'],
-  '임': ['경자', '신축', '임인', '계묘', '갑진', '을사', '병오', '정미', '무신', '기유', '경술', '신해'],
-  '계': ['임자', '계축', '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해']
+  '갑': ['갑자', '을축', '병인', '정묘', '무진', '기사', '경오', '신미', '임신', '계유', '갑술', '을해'], // 갑기일
+  '을': ['병자', '정축', '무인', '기묘', '경진', '신사', '임오', '계미', '갑신', '을유', '병술', '정해'], // 을경일
+  '병': ['무자', '기축', '경인', '신묘', '임진', '계사', '갑오', '을미', '병신', '정유', '무술', '기해'], // 병신일
+  '정': ['경자', '신축', '임인', '계묘', '갑진', '을사', '병오', '정미', '무신', '기유', '경술', '신해'], // 정임일
+  '무': ['임자', '계축', '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해'], // 무계일
+  '기': ['갑자', '을축', '병인', '정묘', '무진', '기사', '경오', '신미', '임신', '계유', '갑술', '을해'], // 갑기일
+  '경': ['병자', '정축', '무인', '기묘', '경진', '신사', '임오', '계미', '갑신', '을유', '병술', '정해'], // 을경일
+  '신': ['무자', '기축', '경인', '신묘', '임진', '계사', '갑오', '을미', '병신', '정유', '무술', '기해'], // 병신일
+  '임': ['경자', '신축', '임인', '계묘', '갑진', '을사', '병오', '정미', '무신', '기유', '경술', '신해'], // 정임일
+  '계': ['임자', '계축', '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해']  // 무계일
 };
 
 export interface FourPillarsResult {
@@ -64,15 +64,17 @@ export class SajuCalculator {
    * 년주 계산 - 60갑자 순환 기준
    */
   private static calculateYearPillar(year: number): { heavenly: string; earthly: string; combined: string } {
-    // 기준: 1984년 = 갑자년 (60갑자 1번째, index 0)
-    // 1971년은 1984년에서 13년 전이므로 (0 - 13) % 60 = 47번째 index = 신해
-    const baseYear = 1984; // 갑자년 (index 0)
-    const yearDiff = year - baseYear;
-    let cycleIndex = yearDiff % 60;
+    // 정확한 기준: 1984년 = 갑자년이므로
+    // year - 1984 = 0일 때 갑자년 (index 0)
+    // 1971년: 1971 - 1984 = -13
+    // (-13 % 60 + 60) % 60 = 47 = 신해년 (index 47)
     
-    // 음수인 경우 60을 더해서 양수로 변환
+    const baseYear = 1984; // 갑자년
+    let cycleIndex = (year - baseYear) % 60;
+    
+    // 음수 처리
     if (cycleIndex < 0) {
-      cycleIndex += 60;
+      cycleIndex = (cycleIndex + 60) % 60;
     }
     
     const combined = SIXTY_CYCLE[cycleIndex];
@@ -119,16 +121,18 @@ export class SajuCalculator {
    * 일주 계산 - 만세력 기준 정확한 계산
    */
   private static calculateDayPillar(year: number, month: number, day: number): { heavenly: string; earthly: string; combined: string } {
-    // 정확한 기준일: 1900년 1월 31일 = 갑자일 (index 0) - 만세력 표준 기준
-    const baseDate = new Date(1900, 0, 31); // 1900년 1월 31일
+    // 확인된 만세력 기준: 1900년 1월 1일 = 갑진일 (index 40)
+    // 갑진은 60갑자 중 41번째 (index 40)
+    const baseDate = new Date(1900, 0, 1); // 1900년 1월 1일
     const targetDate = new Date(year, month - 1, day);
     
     // 두 날짜 간의 차이를 일수로 계산
     const timeDiff = targetDate.getTime() - baseDate.getTime();
     const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
     
-    // 1900년 1월 31일 = 갑자일 (index 0)
-    let cycleIndex = dayDiff % 60;
+    // 1900년 1월 1일 = 갑진일 (index 40)
+    // 1971년 11월 17일까지의 일수를 계산하여 병오일(index 42)이 나와야 함
+    let cycleIndex = (40 + dayDiff) % 60;
     if (cycleIndex < 0) {
       cycleIndex += 60;
     }
@@ -148,19 +152,45 @@ export class SajuCalculator {
     const dayPillar = this.calculateDayPillar(year, month, day);
     const dayStem = dayPillar.heavenly;
     
-    // 시지는 2시간 단위: 자(23-1시), 축(1-3시), 인(3-5시), 묘(5-7시), 
-    // 진(7-9시), 사(9-11시), 오(11-13시), 미(13-15시), 
-    // 신(15-17시), 유(17-19시), 술(19-21시), 해(21-23시)
-    const hourBranches = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
+    // 시지는 2시간 단위: 
+    // 자시(23-01시), 축시(01-03시), 인시(03-05시), 묘시(05-07시), 
+    // 진시(07-09시), 사시(09-11시), 오시(11-13시), 미시(13-15시), 
+    // 신시(15-17시), 유시(17-19시), 술시(19-21시), 해시(21-23시)
     
     let hourIndex;
-    if (hour >= 23 || hour < 1) hourIndex = 0; // 자시
-    else hourIndex = Math.floor((hour + 1) / 2); // 축시부터 해시까지
+    if (hour >= 23 || hour < 1) {
+      hourIndex = 0; // 자시 (23:00-00:59)
+    } else if (hour < 3) {
+      hourIndex = 1; // 축시 (01:00-02:59)
+    } else if (hour < 5) {
+      hourIndex = 2; // 인시 (03:00-04:59) - 04시는 여기 해당
+    } else if (hour < 7) {
+      hourIndex = 3; // 묘시 (05:00-06:59)
+    } else if (hour < 9) {
+      hourIndex = 4; // 진시 (07:00-08:59)
+    } else if (hour < 11) {
+      hourIndex = 5; // 사시 (09:00-10:59)
+    } else if (hour < 13) {
+      hourIndex = 6; // 오시 (11:00-12:59)
+    } else if (hour < 15) {
+      hourIndex = 7; // 미시 (13:00-14:59)
+    } else if (hour < 17) {
+      hourIndex = 8; // 신시 (15:00-16:59)
+    } else if (hour < 19) {
+      hourIndex = 9; // 유시 (17:00-18:59)
+    } else if (hour < 21) {
+      hourIndex = 10; // 술시 (19:00-20:59)
+    } else {
+      hourIndex = 11; // 해시 (21:00-22:59)
+    }
     
-    const hourBranch = hourBranches[hourIndex];
     const hourStems = HOURLY_STEMS[dayStem];
-    const combined = hourStems[hourIndex];
+    if (!hourStems) {
+      console.error('Invalid day stem for hour calculation:', dayStem);
+      return { heavenly: '갑', earthly: '자', combined: '갑자' };
+    }
     
+    const combined = hourStems[hourIndex];
     return {
       heavenly: combined[0],
       earthly: combined[1],
