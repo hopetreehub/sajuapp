@@ -46,34 +46,65 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
 
     return () => observer.disconnect();
   }, []);
+
+  // 최고점 찾기 로직
+  const scoreValues = [
+    scores.foundation,
+    scores.thinking,
+    scores.relationship,
+    scores.action,
+    scores.luck,
+    scores.environment
+  ];
+  const maxScore = Math.max(...scoreValues);
+  const maxScoreIndexes = scoreValues.map((score, index) => score === maxScore ? index : -1).filter(index => index !== -1);
   
   const data = {
     labels: ['근본', '사고', '인연', '행동', '행운', '환경'],
     datasets: [
       {
         label: '사주 분석 점수',
-        data: [
-          scores.foundation,
-          scores.thinking,
-          scores.relationship,
-          scores.action,
-          scores.luck,
-          scores.environment
-        ],
+        data: scoreValues,
         backgroundColor: isDarkMode ? 'rgba(96, 165, 250, 0.4)' : 'rgba(102, 126, 234, 0.2)',
         borderColor: isDarkMode ? 'rgb(96, 165, 250)' : 'rgba(102, 126, 234, 1)',
-        pointBackgroundColor: isDarkMode ? 'rgb(96, 165, 250)' : 'rgba(102, 126, 234, 1)',
-        pointBorderColor: isDarkMode ? '#ffffff' : '#fff',
-        pointHoverBackgroundColor: isDarkMode ? '#ffffff' : '#fff',
-        pointHoverBorderColor: isDarkMode ? 'rgb(96, 165, 250)' : 'rgba(102, 126, 234, 1)',
-        borderWidth: isDarkMode ? 5 : 3,
-        pointRadius: isDarkMode ? 8 : 6,
-        pointHoverRadius: isDarkMode ? 10 : 8
+        // 최고점은 금색으로, 일반점은 기본 색상으로
+        pointBackgroundColor: scoreValues.map((_, index) => 
+          maxScoreIndexes.includes(index) 
+            ? isDarkMode ? '#fbbf24' : '#f59e0b'  // 금색 (최고점)
+            : isDarkMode ? 'rgb(96, 165, 250)' : 'rgba(102, 126, 234, 1)'  // 기본 색상
+        ),
+        pointBorderColor: scoreValues.map((_, index) => 
+          maxScoreIndexes.includes(index) 
+            ? isDarkMode ? '#ffffff' : '#ffffff'  // 최고점 테두리
+            : isDarkMode ? '#ffffff' : '#fff'     // 기본 테두리
+        ),
+        // 최고점은 더 큰 반지름으로
+        pointRadius: scoreValues.map((_, index) => 
+          maxScoreIndexes.includes(index) 
+            ? isDarkMode ? 10 : 8   // 최고점 크기
+            : isDarkMode ? 6 : 5    // 일반점 크기
+        ),
+        pointHoverRadius: scoreValues.map((_, index) => 
+          maxScoreIndexes.includes(index) 
+            ? isDarkMode ? 12 : 10  // 최고점 호버 크기
+            : isDarkMode ? 8 : 7    // 일반점 호버 크기
+        ),
+        pointHoverBackgroundColor: scoreValues.map((_, index) => 
+          maxScoreIndexes.includes(index) 
+            ? isDarkMode ? '#fbbf24' : '#f59e0b'  // 최고점 호버 색상
+            : isDarkMode ? '#ffffff' : '#fff'     // 일반점 호버 색상
+        ),
+        pointHoverBorderColor: scoreValues.map((_, index) => 
+          maxScoreIndexes.includes(index) 
+            ? isDarkMode ? '#ffffff' : '#ffffff'  // 최고점 호버 테두리
+            : isDarkMode ? 'rgb(96, 165, 250)' : 'rgba(102, 126, 234, 1)'  // 일반점 호버 테두리
+        ),
+        borderWidth: isDarkMode ? 5 : 3
       }
     ]
   };
 
-  const options = {
+  const options: any = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
@@ -107,7 +138,7 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
         suggestedMin: 0,
         suggestedMax: 100,
         ticks: {
-          stepSize: 20,
+          stepSize: 10,
           color: isDarkMode ? '#cbd5e1' : '#7f8c8d',
           backdropColor: 'transparent',
           font: {

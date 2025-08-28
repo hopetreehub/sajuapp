@@ -127,7 +127,7 @@ const EventModal: React.FC<EventModalProps> = ({
       console.log('Event saved successfully:', savedEvent);
       onSave(savedEvent);
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to save event - Full error:', error);
       if (error.response) {
         console.error('Response status:', error.response.status);
@@ -137,7 +137,7 @@ const EventModal: React.FC<EventModalProps> = ({
       } else {
         console.error('Error message:', error.message);
       }
-      alert(`일정 저장에 실패했습니다: ${error.message}`);
+      alert(`일정 저장에 실패했습니다: ${error.message || '알 수 없는 오류'}`);
     }
   };
 

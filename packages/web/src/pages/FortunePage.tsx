@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
+interface PersonalInfo {
+  birthDate: string
+  birthTime: string
+  calendarType: 'solar' | 'lunar'
+  gender: 'male' | 'female' | ''
+  birthPlace: string
+}
+
 interface DailyFortune {
   date: string;
   overallScore: number;
@@ -23,6 +31,41 @@ const FortunePage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [fortune, setFortune] = useState<DailyFortune | null>(null);
   const [loading, setLoading] = useState(false);
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo | null>(null);
+  const [showNoInfoMessage, setShowNoInfoMessage] = useState(false);
+
+  // 개인정보 불러오기
+  useEffect(() => {
+    const loadPersonalInfo = () => {
+      const saved = localStorage.getItem('sajuapp-personal-info');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          setPersonalInfo(parsed);
+          setShowNoInfoMessage(false);
+        } catch (error) {
+          console.error('Failed to parse personal info:', error);
+          setShowNoInfoMessage(true);
+        }
+      } else {
+        setShowNoInfoMessage(true);
+      }
+    };
+
+    loadPersonalInfo();
+
+    // personalInfoUpdated 이벤트 리스너 추가
+    const handlePersonalInfoUpdate = (event: CustomEvent) => {
+      setPersonalInfo(event.detail);
+      setShowNoInfoMessage(false);
+    };
+
+    window.addEventListener('personalInfoUpdated', handlePersonalInfoUpdate as EventListener);
+
+    return () => {
+      window.removeEventListener('personalInfoUpdated', handlePersonalInfoUpdate as EventListener);
+    };
+  }, []);
 
   // 임시 운세 데이터 생성 (실제로는 API 호출)
   const generateFortune = (): DailyFortune => {
@@ -59,13 +102,18 @@ const FortunePage: React.FC = () => {
   };
 
   useEffect(() => {
+    if (!personalInfo || showNoInfoMessage) {
+      setFortune(null);
+      return;
+    }
+
     setLoading(true);
-    // API 호출 시뮬레이션
+    // API 호출 시뮬레이션 - 개인정보 기반 운세 생성
     setTimeout(() => {
       setFortune(generateFortune());
       setLoading(false);
     }, 500);
-  }, [selectedDate]);
+  }, [selectedDate, personalInfo, showNoInfoMessage]);
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600 dark:text-green-400';
@@ -105,6 +153,24 @@ const FortunePage: React.FC = () => {
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        </div>
+      ) : showNoInfoMessage ? (
+        <div className="max-w-md mx-auto text-center">
+          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-8">
+            <div className="text-6xl mb-4">🔮</div>
+            <h3 className="text-xl font-semibold text-yellow-800 dark:text-yellow-200 mb-4">
+              개인정보가 필요합니다
+            </h3>
+            <p className="text-gray-700 dark:text-gray-300 mb-6">
+              정확한 사주 분석을 위해 생년월일, 출생시간 등의 개인정보가 필요합니다.
+            </p>
+            <button
+              onClick={() => window.location.href = '/settings'}
+              className="w-full px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+            >
+              ⚙️ 설정에서 개인정보 입력하기
+            </button>
+          </div>
         </div>
       ) : fortune ? (
         <div className="space-y-6">

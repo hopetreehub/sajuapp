@@ -167,19 +167,19 @@ export default function YearView({ events, onCreateEvent, onEditEvent }: YearVie
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
-                {events.filter(e => e.category === 'personal').length}
+                {events.filter(e => e.type === 'personal').length}
               </div>
               <div className="text-sm text-muted-foreground">개인 일정</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">
-                {events.filter(e => e.category === 'work').length}
+                {events.filter(e => e.type === 'work').length}
               </div>
               <div className="text-sm text-muted-foreground">업무 일정</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">
-                {events.filter(e => e.isAllDay).length}
+                {events.filter(e => e.all_day).length}
               </div>
               <div className="text-sm text-muted-foreground">종일 일정</div>
             </div>

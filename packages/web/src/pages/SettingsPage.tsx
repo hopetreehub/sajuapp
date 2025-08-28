@@ -1,10 +1,39 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
+
+interface PersonalInfo {
+  birthDate: string
+  birthTime: string
+  calendarType: 'solar' | 'lunar'
+  gender: 'male' | 'female' | ''
+  birthPlace: string
+}
 
 export default function SettingsPage() {
   const { settings } = useCalendar()
   const [localSettings, setLocalSettings] = useState(settings)
   const [activeTab, setActiveTab] = useState<'general' | 'calendar' | 'diary' | 'account'>('general')
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
+    birthDate: '',
+    birthTime: '',
+    calendarType: 'solar',
+    gender: '',
+    birthPlace: ''
+  })
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+
+  // localStorage에서 개인정보 불러오기
+  useEffect(() => {
+    const savedPersonalInfo = localStorage.getItem('sajuapp-personal-info')
+    if (savedPersonalInfo) {
+      try {
+        const parsed = JSON.parse(savedPersonalInfo)
+        setPersonalInfo(parsed)
+      } catch (error) {
+        console.error('Failed to parse saved personal info:', error)
+      }
+    }
+  }, [])
 
   const tabs = [
     { id: 'general', label: '일반', icon: '⚙️' },
@@ -13,9 +42,60 @@ export default function SettingsPage() {
     { id: 'account', label: '계정', icon: '👤' }
   ]
 
-  const handleSave = () => {
-    // Save settings
-    console.log('Saving settings:', localSettings)
+  const validatePersonalInfo = () => {
+    if (!personalInfo.birthDate) {
+      alert('생년월일을 입력해주세요.')
+      return false
+    }
+    if (!personalInfo.birthTime) {
+      alert('출생시간을 입력해주세요.')
+      return false
+    }
+    if (!personalInfo.gender) {
+      alert('성별을 선택해주세요.')
+      return false
+    }
+    return true
+  }
+
+  const handleSave = async () => {
+    if (activeTab === 'general' && !validatePersonalInfo()) {
+      return
+    }
+
+    setSaveStatus('saving')
+    
+    try {
+      // 개인정보 저장
+      if (activeTab === 'general') {
+        localStorage.setItem('sajuapp-personal-info', JSON.stringify(personalInfo))
+        
+        // 사주 정보가 저장되었음을 다른 컴포넌트들에게 알림
+        window.dispatchEvent(new CustomEvent('personalInfoUpdated', {
+          detail: personalInfo
+        }))
+      }
+      
+      // 기타 설정 저장 (향후 구현)
+      localStorage.setItem('sajuapp-settings', JSON.stringify(localSettings))
+      
+      setSaveStatus('saved')
+      
+      // 2초 후 상태 초기화
+      setTimeout(() => {
+        setSaveStatus('idle')
+      }, 2000)
+      
+      console.log('Settings saved successfully:', {
+        personalInfo: activeTab === 'general' ? personalInfo : 'not updated',
+        localSettings
+      })
+      
+    } catch (error) {
+      console.error('Failed to save settings:', error)
+      setSaveStatus('error')
+      alert('설정 저장에 실패했습니다. 다시 시도해주세요.')
+    }
   }
 
   return (
@@ -69,6 +149,8 @@ export default function SettingsPage() {
                         </label>
                         <input
                           type="date"
+                          value={personalInfo.birthDate}
+                          onChange={(e) => setPersonalInfo({...personalInfo, birthDate: e.target.value})}
                           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
                           placeholder="YYYY-MM-DD"
                         />
@@ -82,6 +164,8 @@ export default function SettingsPage() {
                         <input
                           type="time"
                           step="1800"
+                          value={personalInfo.birthTime}
+                          onChange={(e) => setPersonalInfo({...personalInfo, birthTime: e.target.value})}
                           className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
                         />
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -94,7 +178,11 @@ export default function SettingsPage() {
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           달력 종류 *
                         </label>
-                        <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                        <select 
+                          value={personalInfo.calendarType}
+                          onChange={(e) => setPersonalInfo({...personalInfo, calendarType: e.target.value as 'solar' | 'lunar'})}
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                        >
                           <option value="solar">양력</option>
                           <option value="lunar">음력</option>
                         </select>
@@ -105,7 +193,11 @@ export default function SettingsPage() {
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                           성별 *
                         </label>
-                        <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200">
+                        <select 
+                          value={personalInfo.gender}
+                          onChange={(e) => setPersonalInfo({...personalInfo, gender: e.target.value as 'male' | 'female' | ''})}
+                          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                        >
                           <option value="">선택해주세요</option>
                           <option value="male">남성</option>
                           <option value="female">여성</option>
@@ -123,6 +215,8 @@ export default function SettingsPage() {
                       </label>
                       <input
                         type="text"
+                        value={personalInfo.birthPlace}
+                        onChange={(e) => setPersonalInfo({...personalInfo, birthPlace: e.target.value})}
                         placeholder="예: 서울시 강남구"
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
                       />
@@ -348,9 +442,18 @@ export default function SettingsPage() {
                 </button>
                 <button
                   onClick={handleSave}
-                  className="px-6 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+                  disabled={saveStatus === 'saving'}
+                  className={`px-6 py-2 rounded-lg transition-colors ${
+                    saveStatus === 'saving' 
+                      ? 'bg-gray-400 cursor-not-allowed text-white'
+                      : saveStatus === 'saved'
+                      ? 'bg-green-500 hover:bg-green-600 text-white'
+                      : 'bg-primary-500 hover:bg-primary-600 text-white'
+                  }`}
                 >
-                  저장
+                  {saveStatus === 'saving' ? '저장 중...' : 
+                   saveStatus === 'saved' ? '✓ 저장 완료' : 
+                   '저장'}
                 </button>
               </div>
             </div>
