@@ -8,13 +8,13 @@ export interface ChartInfo {
 
 export const CHART_NAVIGATION_FLOW: ChartInfo[] = [
   {
-    path: '/fortune',
-    name: '오늘의 운세',
+    path: '/saju',
+    name: '오행균형도',
     icon: '🌟',
-    description: '오늘의 전반적인 운세 정보'
+    description: '목화토금수 균형과 상생상극 관계 분석'
   },
   {
-    path: '/saju',
+    path: '/saju/six-areas',
     name: '6대 영역 분석',
     icon: '📊',
     description: '기본 사주 6개 영역 종합 분석'
@@ -30,6 +30,12 @@ export const CHART_NAVIGATION_FLOW: ChartInfo[] = [
     name: '7대 성향 분석', 
     icon: '🧠',
     description: '개성과 성격 특성 7개 영역 분석'
+  },
+  {
+    path: '/fortune',
+    name: '오늘의 운세',
+    icon: '🍀',
+    description: '오늘의 전반적인 운세 정보'
   }
   // 향후 30개 차트까지 확장 예정
 ];

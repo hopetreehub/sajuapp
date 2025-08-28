@@ -228,8 +228,8 @@ export const CHART_DESIGN_SYSTEM = {
     
     // 시간대 선택
     timeFrameSelector: {
-      container: 'flex flex-wrap gap-3 mb-6',
-      alignment: 'justify-start'
+      container: 'flex flex-wrap justify-center gap-3 mb-6',
+      alignment: 'justify-center'
     },
     
     // 차트 영역

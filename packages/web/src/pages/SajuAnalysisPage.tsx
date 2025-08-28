@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SajuInputForm from '@/components/saju/SajuInputForm';
+import FiveElementsChart from '@/components/saju/charts/FiveElementsChart';
 import SixAreaChart from '@/components/saju/charts/SixAreaChart';
 import ChartNavigation from '@/components/Common/ChartNavigation';
 import UserSelectionPanel from '@/components/User/UserSelectionPanel';
@@ -199,7 +200,7 @@ const SajuAnalysisPage: React.FC = () => {
                       </h4>
                       <div className="space-y-1">
                         <button className="w-full text-left px-3 py-2 text-sm bg-purple-600 text-white rounded-lg">
-                          ▶ 6대 영역 분석
+                          ▶ 오행균형도 분석
                         </button>
                         <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
                           오행 균형도
@@ -235,9 +236,9 @@ const SajuAnalysisPage: React.FC = () => {
               </div>
             ) : analysisResult ? (
               <div className="space-y-8">
-                {/* 6대 영역 차트 */}
-                <SixAreaChart 
-                  scores={analysisResult.sixAreas}
+                {/* 오행균형도 차트 - 첫 번째 차트 */}
+                <FiveElementsChart 
+                  birthInfo={birthInfo!}
                   birthDate={formatBirthDate(birthInfo!)}
                 />
 
