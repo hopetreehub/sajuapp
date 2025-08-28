@@ -52,15 +52,15 @@ export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthV
   }
 
   return (
-    <div className="h-full flex flex-col bg-white">
+    <div className="h-full flex flex-col bg-background">
       {/* Weekday Headers */}
-      <div className="grid grid-cols-7 border-b border-gray-200 bg-gray-50">
+      <div className="grid grid-cols-7 border-b border-border bg-muted">
         {WEEKDAYS.map((day, index) => (
           <div 
             key={day} 
             className={`
               px-2 py-3 text-center text-sm font-semibold
-              ${index === 0 ? 'text-red-600' : index === 6 ? 'text-blue-600' : 'text-gray-700'}
+              ${index === 0 ? 'text-red-600' : index === 6 ? 'text-blue-600' : 'text-foreground'}
             `}
           >
             {day}
@@ -69,7 +69,7 @@ export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthV
       </div>
 
       {/* Calendar Grid */}
-      <div className="flex-1 grid grid-cols-7 grid-rows-6 gap-px bg-gray-200">
+      <div className="flex-1 grid grid-cols-7 grid-rows-6 gap-px bg-border">
         {monthDays.map((day) => {
           const dayOfWeek = getDay(day)
           const isCurrentMonth = isSameMonth(day, currentDate)
@@ -81,10 +81,10 @@ export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthV
               key={day.toISOString()}
               onClick={() => handleDayClick(day)}
               className={`
-                bg-white p-2 cursor-pointer transition-colors
-                hover:bg-gray-50
-                ${!isCurrentMonth ? 'bg-gray-50' : ''}
-                ${isCurrentDay ? 'bg-primary-50' : ''}
+                bg-background p-2 cursor-pointer transition-colors
+                hover:bg-muted/50
+                ${!isCurrentMonth ? 'bg-muted/30' : ''}
+                ${isCurrentDay ? 'bg-primary/10' : ''}
               `}
             >
               {/* Date Number */}
@@ -96,7 +96,7 @@ export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthV
                       ? 'bg-primary-500 text-white rounded-full w-7 h-7 flex items-center justify-center' 
                       : ''
                     }
-                    ${!isCurrentMonth ? 'text-gray-400' : ''}
+                    ${!isCurrentMonth ? 'text-muted-foreground' : ''}
                     ${dayOfWeek === 0 ? 'text-red-600' : ''}
                     ${dayOfWeek === 6 ? 'text-blue-600' : ''}
                   `}
@@ -106,7 +106,7 @@ export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthV
                 
                 {/* Lunar Date (placeholder) */}
                 {isCurrentMonth && (
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-muted-foreground">
                     {/* 음력 날짜는 나중에 구현 */}
                   </span>
                 )}
@@ -132,7 +132,7 @@ export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthV
                 
                 {/* More Events Indicator */}
                 {events.filter(e => isSameDay(new Date(e.start_time), day)).length > 3 && (
-                  <div className="text-xs text-gray-500 font-medium">
+                  <div className="text-xs text-muted-foreground font-medium">
                     +{events.filter(e => isSameDay(new Date(e.start_time), day)).length - 3}개 더보기
                   </div>
                 )}

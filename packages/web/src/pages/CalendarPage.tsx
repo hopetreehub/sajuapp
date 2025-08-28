@@ -3,12 +3,37 @@ import { useCalendar } from '@/contexts/CalendarContext'
 import MonthView from '@/components/Calendar/MonthView'
 import WeekView from '@/components/Calendar/WeekView'
 import DayView from '@/components/Calendar/DayView'
+import DayViewEnhanced from '@/components/Calendar/DayViewEnhanced'
 import YearView from '@/components/Calendar/YearView'
 import EventModal from '@/components/EventModal'
 import { CalendarEvent, eventService } from '@/services/api'
 
+// 임시 아이콘 컴포넌트들
+const ChevronLeftIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+  </svg>
+)
+
+const ChevronRightIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+  </svg>
+)
+
+import { format } from 'date-fns'
+import { ko } from 'date-fns/locale'
+
 export default function CalendarPage() {
-  const { viewMode } = useCalendar()
+  const { 
+    currentDate, 
+    viewMode, 
+    setViewMode, 
+    navigatePrevious, 
+    navigateNext, 
+    navigateToday 
+  } = useCalendar()
+  
   const [events, setEvents] = useState<CalendarEvent[]>([])
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -63,17 +88,97 @@ export default function CalendarPage() {
       case 'week':
         return <WeekView {...viewProps} />
       case 'day':
-        return <DayView {...viewProps} />
+        return <DayViewEnhanced {...viewProps} />
       default:
         return <MonthView {...viewProps} />
     }
   }
 
+  const viewModeLabels = {
+    year: '년',
+    month: '월',
+    week: '주',
+    day: '일'
+  }
+
+  const getDateDisplay = () => {
+    switch (viewMode) {
+      case 'year':
+        return format(currentDate, 'yyyy년', { locale: ko })
+      case 'month':
+        return format(currentDate, 'yyyy년 M월', { locale: ko })
+      case 'week':
+        return format(currentDate, 'yyyy년 M월 w주차', { locale: ko })
+      case 'day':
+        return format(currentDate, 'yyyy년 M월 d일 EEEE', { locale: ko })
+      default:
+        return ''
+    }
+  }
+
   return (
-    <>
-      <div className="h-[calc(100vh-4rem)] overflow-hidden">
+    <div className="h-screen flex flex-col">
+      {/* 캘린더 전용 헤더 */}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+        <div className="flex justify-between items-center">
+          {/* 날짜 표시 */}
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+            {getDateDisplay()}
+          </h1>
+          
+          {/* 컨트롤 */}
+          <div className="flex items-center space-x-4">
+            {/* 뷰 모드 선택 */}
+            <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+              {(['year', 'month', 'week', 'day'] as const).map(mode => (
+                <button
+                  key={mode}
+                  onClick={() => setViewMode(mode)}
+                  className={`
+                    px-3 py-1 rounded-md text-sm font-medium transition-colors
+                    ${viewMode === mode
+                      ? 'bg-white dark:bg-gray-600 text-purple-600 dark:text-purple-400 shadow-sm'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100'
+                    }
+                  `}
+                >
+                  {viewModeLabels[mode]}
+                </button>
+              ))}
+            </div>
+
+            {/* 네비게이션 */}
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={navigatePrevious}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <ChevronLeftIcon className="w-5 h-5" />
+              </button>
+
+              <button
+                onClick={navigateToday}
+                className="px-3 py-1 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                오늘
+              </button>
+
+              <button
+                onClick={navigateNext}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <ChevronRightIcon className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 캘린더 뷰 */}
+      <div className="flex-1 overflow-hidden">
         {renderView()}
       </div>
+
       <EventModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -81,6 +186,6 @@ export default function CalendarPage() {
         event={selectedEvent}
         initialDate={selectedDate || undefined}
       />
-    </>
+    </div>
   )
 }

@@ -8,26 +8,26 @@
 ## 🔧 개발 환경 설정
 
 ### 포트 구성 정책
-⚠️ **중요: 모든 서비스는 반드시 4000 포트만 사용**
+⚠️ **절대 규칙: 프론트엔드는 무조건 4000 포트만 사용**
 
-- **프론트엔드**: 4000 (고정)
-- **백엔드 서비스**: 모두 4000 포트 사용
-- **이유**: 포트 관리 단순화 및 방화벽 정책 통일
-- **예외**: 절대 허용 안함
+- **프론트엔드**: 4000 (절대 불변)
+- **백엔드 API**: 4001 (고정)
+- **이유**: 포트 관리 단순화 및 일관성 유지
+- **예외**: 절대 없음. 다른 포트 사용 금지
 
-### 4000 포트 전용 설정
+### 포트 4000 절대 정책
 
 ### 서버 실행 명령어
 ```bash
-# 프론트엔드 (포트 4000 고정)
+# 프론트엔드 (포트 4000 절대 고정)
 cd packages/web && npx vite --port 4000
 
-# 백엔드 서비스들은 개별 포트가 아닌 4000에서 통합 관리
-# 실제 운영 시에는 Docker로 컨테이너화하여 내부 포트 사용
+# 백엔드 API (포트 4001 고정)
+cd packages/backend/services/calendar && CALENDAR_SERVICE_PORT=4001 npm run dev
 
-# 개발 시 임시 백엔드 실행
-cd packages/backend/services/calendar && npm run dev
-cd packages/backend/api-gateway && npm run dev
+# 포트 충돌 시 해결
+netstat -ano | findstr ":4000"
+taskkill /PID [PID번호] /F
 ```
 
 ### 포트 4000 전용 방화벽 관리

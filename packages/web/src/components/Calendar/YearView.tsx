@@ -57,11 +57,11 @@ export default function YearView({ events, onCreateEvent, onEditEvent }: YearVie
   }
 
   return (
-    <div className="h-full overflow-auto bg-gray-50 p-4">
+    <div className="h-full overflow-auto bg-background p-4">
       <div className="max-w-7xl mx-auto">
         {/* Year Header */}
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-foreground">
             {format(currentDate, 'yyyy년', { locale: ko })}
           </h1>
         </div>
@@ -80,13 +80,13 @@ export default function YearView({ events, onCreateEvent, onEditEvent }: YearVie
             return (
               <div
                 key={monthDate.toISOString()}
-                className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
+                className="bg-background rounded-lg shadow-sm border border-border hover:shadow-md transition-shadow cursor-pointer"
                 onClick={() => handleMonthClick(monthDate)}
               >
                 {/* Month Header */}
-                <div className="px-4 py-3 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+                <div className="px-4 py-3 border-b border-border bg-muted rounded-t-lg">
                   <div className="flex justify-between items-center">
-                    <h3 className="font-semibold text-gray-900">
+                    <h3 className="font-semibold text-foreground">
                       {format(monthDate, 'M월', { locale: ko })}
                     </h3>
                     {monthEventCount > 0 && (
@@ -105,7 +105,7 @@ export default function YearView({ events, onCreateEvent, onEditEvent }: YearVie
                       <div
                         key={day}
                         className={`text-xs text-center py-1 font-medium
-                          ${index === 0 ? 'text-red-500' : index === 6 ? 'text-blue-500' : 'text-gray-500'}
+                          ${index === 0 ? 'text-red-500' : index === 6 ? 'text-blue-500' : 'text-muted-foreground'}
                         `}
                       >
                         {day}
@@ -126,7 +126,7 @@ export default function YearView({ events, onCreateEvent, onEditEvent }: YearVie
                           key={day.toISOString()}
                           className={`
                             aspect-square flex items-center justify-center text-xs relative
-                            ${!isCurrentMonth ? 'text-gray-300' : ''}
+                            ${!isCurrentMonth ? 'text-muted-foreground/50' : ''}
                             ${isCurrentDay ? 'bg-primary-500 text-white rounded-full' : ''}
                             ${dayOfWeek === 0 && isCurrentMonth && !isCurrentDay ? 'text-red-500' : ''}
                             ${dayOfWeek === 6 && isCurrentMonth && !isCurrentDay ? 'text-blue-500' : ''}
@@ -156,32 +156,32 @@ export default function YearView({ events, onCreateEvent, onEditEvent }: YearVie
         </div>
 
         {/* Year Summary */}
-        <div className="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">연간 요약</h2>
+        <div className="mt-8 bg-background rounded-lg shadow-sm border border-border p-6">
+          <h2 className="text-lg font-semibold text-foreground mb-4">연간 요약</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary-600">
                 {events.length}
               </div>
-              <div className="text-sm text-gray-600">총 일정</div>
+              <div className="text-sm text-muted-foreground">총 일정</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600">
                 {events.filter(e => e.category === 'personal').length}
               </div>
-              <div className="text-sm text-gray-600">개인 일정</div>
+              <div className="text-sm text-muted-foreground">개인 일정</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-blue-600">
                 {events.filter(e => e.category === 'work').length}
               </div>
-              <div className="text-sm text-gray-600">업무 일정</div>
+              <div className="text-sm text-muted-foreground">업무 일정</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-purple-600">
                 {events.filter(e => e.isAllDay).length}
               </div>
-              <div className="text-sm text-gray-600">종일 일정</div>
+              <div className="text-sm text-muted-foreground">종일 일정</div>
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useCalendar } from '@/contexts/CalendarContext'
+import ThemeToggle from '@/components/ThemeToggle'
 // 임시 아이콘 컴포넌트들
 const CalendarIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -70,7 +71,7 @@ export default function Layout({ children }: LayoutProps) {
       case 'month':
         return format(currentDate, 'yyyy년 M월', { locale: ko })
       case 'week':
-        return format(currentDate, 'yyyy년 M월 W주차', { locale: ko })
+        return format(currentDate, 'yyyy년 M월 w주차', { locale: ko })
       case 'day':
         return format(currentDate, 'yyyy년 M월 d일 EEEE', { locale: ko })
       default:
@@ -79,14 +80,14 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
+      <header className="sticky top-0 z-50 bg-background border-b border-border">
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo & Navigation */}
             <div className="flex items-center space-x-8">
-              <h1 className="text-xl font-bold text-primary-600">운명나침반</h1>
+              <h1 className="text-xl font-bold text-primary">운명나침반</h1>
               
               <nav className="hidden md:flex space-x-1">
                 {navigationItems.map(item => {
@@ -102,7 +103,7 @@ export default function Layout({ children }: LayoutProps) {
                         transition-colors duration-200
                         ${isActive 
                           ? 'bg-primary-50 text-primary-600' 
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                          : 'text-foreground hover:bg-muted'
                         }
                       `}
                     >
@@ -114,65 +115,71 @@ export default function Layout({ children }: LayoutProps) {
               </nav>
             </div>
 
-            {/* Calendar Controls */}
-            {location.pathname === '/calendar' && (
-              <div className="flex items-center space-x-4">
-                {/* View Mode Selector */}
-                <div className="hidden lg:flex items-center bg-gray-100 rounded-lg p-1">
-                  {(['year', 'month', 'week', 'day'] as const).map(mode => (
+            {/* Right Side Controls */}
+            <div className="flex items-center space-x-4">
+              {/* Calendar Controls - 캘린더 페이지에서만 표시 */}
+              {location.pathname === '/calendar' && (
+                <>
+                  {/* View Mode Selector */}
+                  <div className="hidden lg:flex items-center bg-muted rounded-lg p-1">
+                    {(['year', 'month', 'week', 'day'] as const).map(mode => (
+                      <button
+                        key={mode}
+                        onClick={() => setViewMode(mode)}
+                        className={`
+                          px-3 py-1 rounded-md text-sm font-medium transition-colors
+                          ${viewMode === mode
+                            ? 'bg-background text-primary-600 shadow-sm'
+                            : 'text-muted-foreground hover:text-foreground'
+                          }
+                        `}
+                      >
+                        {viewModeLabels[mode]}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Date Navigation */}
+                  <div className="flex items-center space-x-2">
                     <button
-                      key={mode}
-                      onClick={() => setViewMode(mode)}
-                      className={`
-                        px-3 py-1 rounded-md text-sm font-medium transition-colors
-                        ${viewMode === mode
-                          ? 'bg-white text-primary-600 shadow-sm'
-                          : 'text-gray-600 hover:text-gray-900'
-                        }
-                      `}
+                      onClick={navigatePrevious}
+                      className="p-2 rounded-lg hover:bg-muted transition-colors"
+                      aria-label="이전"
                     >
-                      {viewModeLabels[mode]}
+                      <ChevronLeftIcon className="w-5 h-5 text-muted-foreground" />
                     </button>
-                  ))}
-                </div>
 
-                {/* Date Navigation */}
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={navigatePrevious}
-                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                    aria-label="이전"
-                  >
-                    <ChevronLeftIcon className="w-5 h-5 text-gray-600" />
-                  </button>
+                    <button
+                      onClick={navigateToday}
+                      className="px-3 py-1 text-sm font-medium text-muted-foreground hover:bg-muted rounded-lg transition-colors"
+                    >
+                      오늘
+                    </button>
 
-                  <button
-                    onClick={navigateToday}
-                    className="px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                  >
-                    오늘
-                  </button>
+                    <button
+                      onClick={navigateNext}
+                      className="p-2 rounded-lg hover:bg-muted transition-colors"
+                      aria-label="다음"
+                    >
+                      <ChevronRightIcon className="w-5 h-5 text-muted-foreground" />
+                    </button>
+                  </div>
 
-                  <button
-                    onClick={navigateNext}
-                    className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                    aria-label="다음"
-                  >
-                    <ChevronRightIcon className="w-5 h-5 text-gray-600" />
-                  </button>
-                </div>
-
-                {/* Current Date Display */}
-                <div className="text-lg font-medium text-gray-900">
-                  {getDateDisplay()}
-                </div>
-              </div>
-            )}
+                  {/* Current Date Display */}
+                  <div className="text-lg font-medium text-foreground">
+                    {getDateDisplay()}
+                  </div>
+                </>
+              )}
+              
+              {/* Theme Toggle - 항상 표시 */}
+              <ThemeToggle size="md" />
+            </div>
           </div>
         </div>
 
         {/* Mobile Navigation */}
-        <div className="md:hidden border-t border-gray-200">
+        <div className="md:hidden border-t border-border">
           <nav className="flex justify-around py-2">
             {navigationItems.map(item => {
               const Icon = item.icon
@@ -184,7 +191,7 @@ export default function Layout({ children }: LayoutProps) {
                   to={item.path}
                   className={`
                     flex flex-col items-center space-y-1 px-3 py-2
-                    ${isActive ? 'text-primary-600' : 'text-gray-600'}
+                    ${isActive ? 'text-primary-600' : 'text-muted-foreground'}
                   `}
                 >
                   <Icon className="w-6 h-6" />

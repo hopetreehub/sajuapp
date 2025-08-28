@@ -1,25 +1,40 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import HomePage from '@/pages/HomePage'
 import CalendarPage from '@/pages/CalendarPage'
 import DiaryPage from '@/pages/DiaryPage'
 import SettingsPage from '@/pages/SettingsPage'
-import Layout from '@/components/Common/Layout'
+import FortunePage from '@/pages/FortunePage'
+import SajuAnalysisPage from '@/pages/SajuAnalysisPage'
+import Header from '@/components/Layout/Header'
+import Footer from '@/components/Layout/Footer'
 import { CalendarProvider } from '@/contexts/CalendarContext'
+import { ThemeProvider } from '@/contexts/ThemeContext'
 
 function App() {
   return (
-    <Router>
-      <CalendarProvider>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Navigate to="/calendar" replace />} />
-            <Route path="/calendar" element={<CalendarPage />} />
-            <Route path="/diary" element={<DiaryPage />} />
-            <Route path="/diary/:date" element={<DiaryPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-          </Routes>
-        </Layout>
-      </CalendarProvider>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <CalendarProvider>
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/calendar" element={<CalendarPage />} />
+                <Route path="/fortune" element={<FortunePage />} />
+                <Route path="/saju" element={<SajuAnalysisPage />} />
+                <Route path="/diary" element={<DiaryPage />} />
+                <Route path="/diary/:date" element={<DiaryPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
+                {/* 추가 예정 페이지 */}
+                <Route path="/compatibility" element={<div className="p-8 text-center">궁합 페이지 개발 중...</div>} />
+              </Routes>
+            </main>
+            <Footer />
+          </div>
+        </CalendarProvider>
+      </Router>
+    </ThemeProvider>
   )
 }
 

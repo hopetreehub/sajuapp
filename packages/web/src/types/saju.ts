@@ -1,0 +1,57 @@
+// 사주 데이터 타입 정의
+export interface SajuBirthInfo {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+  isLunar: boolean;
+  name?: string;
+}
+
+export interface FourPillars {
+  year: { heavenly: string; earthly: string };
+  month: { heavenly: string; earthly: string };
+  day: { heavenly: string; earthly: string };
+  hour: { heavenly: string; earthly: string };
+}
+
+export interface SixAreaScores {
+  foundation: number;    // 근본
+  thinking: number;      // 사고
+  relationship: number;  // 인연
+  action: number;        // 행동
+  luck: number;          // 행운
+  environment: number;   // 환경
+}
+
+export interface FiveElements {
+  wood: number;   // 목
+  fire: number;   // 화
+  earth: number;  // 토
+  metal: number;  // 금
+  water: number;  // 수
+}
+
+export interface TenGods {
+  bijeon: number;      // 비견
+  geopjae: number;     // 겁재
+  siksin: number;      // 식신
+  sanggwan: number;    // 상관
+  jeongjae: number;    // 정재
+  pyeonjae: number;    // 편재
+  jeonggwan: number;   // 정관
+  pyeongwan: number;   // 편관
+  jeongin: number;     // 정인
+  pyeongin: number;    // 편인
+}
+
+export interface SajuAnalysisResult {
+  birthInfo: SajuBirthInfo;
+  fourPillars: FourPillars;
+  sixAreas: SixAreaScores;
+  fiveElements: FiveElements;
+  tenGods: TenGods;
+  totalScore: number;
+  averageScore: number;
+}

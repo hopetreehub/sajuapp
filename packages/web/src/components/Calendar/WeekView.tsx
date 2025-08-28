@@ -25,7 +25,7 @@ interface WeekViewProps {
 }
 
 export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekViewProps) {
-  const { currentDate, setSelectedDate } = useCalendar()
+  const { currentDate } = useCalendar()
 
   const weekDays = useMemo(() => {
     const start = startOfWeek(currentDate, { weekStartsOn: 0 })
@@ -34,10 +34,21 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
   }, [currentDate])
 
   const getEventsForDayAndHour = (date: Date, hour: number) => {
+    if (!events || events.length === 0) return []
+    
     return events.filter(event => {
-      const eventStart = new Date(event.start_time)
-      const eventHour = getHours(eventStart)
-      return isSameDay(eventStart, date) && eventHour === hour
+      if (!event.start_time) return false
+      
+      try {
+        const eventStart = new Date(event.start_time)
+        if (isNaN(eventStart.getTime())) return false
+        
+        const eventHour = getHours(eventStart)
+        return isSameDay(eventStart, date) && eventHour === hour
+      } catch (error) {
+        console.warn('Invalid event date:', event.start_time, error)
+        return false
+      }
     })
   }
 
@@ -46,10 +57,10 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
   const currentTimePosition = (currentHour * 60 + currentMinute) / (24 * 60) * 100
 
   return (
-    <div className="h-full flex flex-col bg-white">
+    <div className="h-full flex flex-col bg-background">
       {/* Header with weekdays */}
-      <div className="grid grid-cols-8 border-b border-gray-200 bg-gray-50 sticky top-0 z-10">
-        <div className="p-3 text-center text-sm font-semibold text-gray-700">
+      <div className="grid grid-cols-8 border-b border-border bg-muted sticky top-0 z-10">
+        <div className="p-3 text-center text-sm font-semibold text-muted-foreground">
           시간
         </div>
         {weekDays.map((day) => {
@@ -60,14 +71,14 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
             <div 
               key={day.toISOString()} 
               className={`
-                p-3 text-center border-l border-gray-200
-                ${isCurrentDay ? 'bg-primary-50' : ''}
+                p-3 text-center border-l border-border
+                ${isCurrentDay ? 'bg-primary/10' : ''}
               `}
             >
-              <div className={`text-xs font-medium ${dayOfWeek === 0 ? 'text-red-600' : dayOfWeek === 6 ? 'text-blue-600' : 'text-gray-500'}`}>
+              <div className={`text-xs font-medium ${dayOfWeek === 0 ? 'text-red-600' : dayOfWeek === 6 ? 'text-blue-600' : 'text-muted-foreground'}`}>
                 {format(day, 'EEE', { locale: ko })}
               </div>
-              <div className={`text-lg font-semibold ${isCurrentDay ? 'text-primary-600' : 'text-gray-900'}`}>
+              <div className={`text-lg font-semibold ${isCurrentDay ? 'text-primary' : 'text-foreground'}`}>
                 {format(day, 'd')}
               </div>
             </div>
@@ -94,9 +105,9 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
 
           <div className="grid grid-cols-8">
             {/* Time column */}
-            <div className="border-r border-gray-200">
+            <div className="border-r border-border">
               {HOURS.map(hour => (
-                <div key={hour} className="h-16 px-2 py-1 text-xs text-gray-500 text-right">
+                <div key={hour} className="h-16 px-2 py-1 text-xs text-muted-foreground text-right">
                   {format(new Date().setHours(hour, 0, 0, 0), 'HH:mm')}
                 </div>
               ))}
@@ -107,7 +118,7 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
               const isCurrentDay = isToday(day)
               
               return (
-                <div key={day.toISOString()} className="border-r border-gray-200">
+                <div key={day.toISOString()} className="border-r border-border">
                   {HOURS.map(hour => {
                     const dayEvents = getEventsForDayAndHour(day, hour)
                     
@@ -115,9 +126,9 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
                       <div 
                         key={`${day.toISOString()}-${hour}`} 
                         className={`
-                          h-16 border-b border-gray-100 p-1 cursor-pointer
-                          hover:bg-gray-50 transition-colors
-                          ${isCurrentDay && currentHour === hour ? 'bg-primary-50' : ''}
+                          h-16 border-b border-border/50 p-1 cursor-pointer
+                          hover:bg-muted/50 transition-colors
+                          ${isCurrentDay && currentHour === hour ? 'bg-primary/10' : ''}
                         `}
                         onClick={() => {
                           const selectedDateTime = new Date(day)
@@ -125,23 +136,35 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
                           onCreateEvent(selectedDateTime)
                         }}
                       >
-                        {dayEvents.map(event => (
-                          <div
-                            key={event.id}
-                            className="text-xs p-1 mb-1 rounded truncate cursor-pointer hover:opacity-80"
-                            style={{ 
-                              backgroundColor: `${event.color || '#3b82f6'}20`,
-                              color: event.color || '#3b82f6',
-                              borderLeft: `2px solid ${event.color || '#3b82f6'}`
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              onEditEvent(event)
-                            }}
-                          >
-                            {format(new Date(event.start_time), 'HH:mm')} {event.title}
-                          </div>
-                        ))}
+                        {dayEvents.map(event => {
+                          if (!event.id || !event.start_time || !event.title) return null
+                          
+                          try {
+                            const startTime = new Date(event.start_time)
+                            if (isNaN(startTime.getTime())) return null
+                            
+                            return (
+                              <div
+                                key={event.id}
+                                className="text-xs p-1 mb-1 rounded truncate cursor-pointer hover:opacity-80"
+                                style={{ 
+                                  backgroundColor: `${event.color || '#3b82f6'}20`,
+                                  color: event.color || '#3b82f6',
+                                  borderLeft: `2px solid ${event.color || '#3b82f6'}`
+                                }}
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  onEditEvent(event)
+                                }}
+                              >
+                                {format(startTime, 'HH:mm')} {event.title}
+                              </div>
+                            )
+                          } catch (error) {
+                            console.warn('Error rendering event:', event, error)
+                            return null
+                          }
+                        })}
                       </div>
                     )
                   })}
