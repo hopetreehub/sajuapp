@@ -5,6 +5,7 @@ import DiaryPage from '@/pages/DiaryPage'
 import SettingsPage from '@/pages/SettingsPage'
 import FortunePage from '@/pages/FortunePage'
 import SajuAnalysisPage from '@/pages/SajuAnalysisPage'
+import SixAreasPage from '@/pages/SixAreasPage'
 import DetailedFortunePage from '@/pages/DetailedFortunePage'
 import PersonalityAnalysisPage from '@/pages/PersonalityAnalysisPage'
 import Header from '@/components/Layout/Header'
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/calendar" element={<CalendarPage />} />
                 <Route path="/fortune" element={<FortunePage />} />
                 <Route path="/saju" element={<SajuAnalysisPage />} />
+                <Route path="/saju/six-areas" element={<SixAreasPage />} />
                 <Route path="/saju/detailed" element={<DetailedFortunePage />} />
                 <Route path="/saju/personality" element={<PersonalityAnalysisPage />} />
                 <Route path="/diary" element={<DiaryPage />} />

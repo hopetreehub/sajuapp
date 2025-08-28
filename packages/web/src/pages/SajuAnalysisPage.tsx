@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SajuInputForm from '@/components/saju/SajuInputForm';
 import FiveElementsChart from '@/components/saju/charts/FiveElementsChart';
 import SixAreaChart from '@/components/saju/charts/SixAreaChart';
@@ -10,6 +11,7 @@ import { getCurrentUser, addAnalysisHistory } from '@/utils/userStorage';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 
 const SajuAnalysisPage: React.FC = () => {
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [birthInfo, setBirthInfo] = useState<SajuBirthInfo | null>(null);
   const [analysisResult, setAnalysisResult] = useState<SajuAnalysisResult | null>(null);
@@ -129,6 +131,8 @@ const SajuAnalysisPage: React.FC = () => {
                   currentUser={currentUser}
                   onUserSelect={handleUserSelect}
                   onUserChange={handleUserChange}
+                  alwaysShowAddButton={true}
+                  maxUsers={Infinity}
                 />
                 
                 {/* 직접 입력 옵션 */}
@@ -200,19 +204,31 @@ const SajuAnalysisPage: React.FC = () => {
                       </h4>
                       <div className="space-y-1">
                         <button className="w-full text-left px-3 py-2 text-sm bg-purple-600 text-white rounded-lg">
-                          ▶ 오행균형도 분석
+                          ▶ 오행균형도 분석 (현재)
                         </button>
-                        <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-                          오행 균형도
+                        <button 
+                          onClick={() => navigate('/saju/six-areas')}
+                          className="w-full text-left px-3 py-2 text-sm hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:text-purple-700 dark:hover:text-purple-300 rounded-lg transition-colors"
+                        >
+                          📊 6대 영역 분석
                         </button>
-                        <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-                          십성 분포도
+                        <button 
+                          onClick={() => navigate('/saju/detailed')}
+                          className="w-full text-left px-3 py-2 text-sm hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:text-purple-700 dark:hover:text-purple-300 rounded-lg transition-colors"
+                        >
+                          🔮 17대 운세 분석
                         </button>
-                        <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-                          대운 흐름도
+                        <button 
+                          onClick={() => navigate('/saju/personality')}
+                          className="w-full text-left px-3 py-2 text-sm hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:text-purple-700 dark:hover:text-purple-300 rounded-lg transition-colors"
+                        >
+                          🧠 7대 성향 분석
                         </button>
-                        <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
-                          월별 운세
+                        <button 
+                          onClick={() => navigate('/fortune')}
+                          className="w-full text-left px-3 py-2 text-sm hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:text-purple-700 dark:hover:text-purple-300 rounded-lg transition-colors"
+                        >
+                          🍀 오늘의 운세
                         </button>
                         <div className="text-xs text-gray-500 dark:text-gray-500 mt-2">
                           ... 25개 차트 더보기
