@@ -142,12 +142,18 @@ const DetailedFortunePage: React.FC = () => {
         </div>
 
         {/* 네비게이션 버튼 */}
-        <div className="flex justify-center gap-4 mb-6">
+        <div className="flex flex-wrap justify-center gap-4 mb-6">
           <button
             onClick={() => navigate('/saju')}
             className="px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg shadow hover:shadow-md transition-shadow"
           >
             ← 6대 영역 분석
+          </button>
+          <button
+            onClick={() => navigate('/saju/personality')}
+            className="px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg shadow hover:shadow-md transition-shadow"
+          >
+            🧠 성향 분석
           </button>
           <button
             onClick={() => navigate('/fortune')}

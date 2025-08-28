@@ -164,7 +164,7 @@ const SajuAnalysisPage: React.FC = () => {
                 />
 
                 {/* 17대 운세 버튼 */}
-                <div className="flex justify-center">
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
                   <button
                     onClick={() => window.location.href = '/saju/detailed'}
                     className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
@@ -172,6 +172,17 @@ const SajuAnalysisPage: React.FC = () => {
                     <span className="flex items-center gap-2">
                       <span className="text-xl">🔮</span>
                       <span className="font-semibold">17대 세부운세 상세분석 보기</span>
+                      <span className="text-xl">→</span>
+                    </span>
+                  </button>
+                  
+                  <button
+                    onClick={() => window.location.href = '/saju/personality'}
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-xl">🧠</span>
+                      <span className="font-semibold">7대 성향 분석 보기</span>
                       <span className="text-xl">→</span>
                     </span>
                   </button>

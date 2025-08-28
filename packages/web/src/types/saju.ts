@@ -66,6 +66,16 @@ export interface SeventeenFortuneScores {
   fortune: number;       // 행운운
 }
 
+export interface PersonalityTraits {
+  emotion: number;      // 감성 (0-100)
+  logic: number;        // 논리성 (0-100)
+  artistic: number;     // 예술성 (0-100)
+  rational: number;     // 이성 (0-100)
+  character: number;    // 인성 (0-100)
+  intelligence: number; // 지성 (0-100)
+  learning: number;     // 학습성 (0-100)
+}
+
 export interface SajuAnalysisResult {
   birthInfo: SajuBirthInfo;
   fourPillars: FourPillars;
