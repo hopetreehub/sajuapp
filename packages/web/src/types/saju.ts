@@ -46,6 +46,26 @@ export interface TenGods {
   pyeongin: number;    // 편인
 }
 
+export interface SeventeenFortuneScores {
+  health: number;        // 건강운
+  marriage: number;      // 결혼운
+  power: number;         // 권력운
+  fame: number;          // 명예운
+  accident: number;      // 사고운
+  business: number;      // 사업운
+  movement: number;      // 이동운
+  separation: number;    // 이별운
+  relationship: number;  // 인연운
+  children: number;      // 자식운
+  talent: number;        // 재능운
+  wealth: number;        // 재물운
+  ancestor: number;      // 조상운
+  career: number;        // 직업운
+  family: number;        // 집안운
+  study: number;         // 학업운
+  fortune: number;       // 행운운
+}
+
 export interface SajuAnalysisResult {
   birthInfo: SajuBirthInfo;
   fourPillars: FourPillars;

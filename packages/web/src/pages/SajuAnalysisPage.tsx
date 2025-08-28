@@ -163,6 +163,20 @@ const SajuAnalysisPage: React.FC = () => {
                   birthDate={formatBirthDate(birthInfo!)}
                 />
 
+                {/* 17대 운세 버튼 */}
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => window.location.href = '/saju/detailed'}
+                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-xl">🔮</span>
+                      <span className="font-semibold">17대 세부운세 상세분석 보기</span>
+                      <span className="text-xl">→</span>
+                    </span>
+                  </button>
+                </div>
+
                 {/* 추가 차트 플레이스홀더 */}
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
                   <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
