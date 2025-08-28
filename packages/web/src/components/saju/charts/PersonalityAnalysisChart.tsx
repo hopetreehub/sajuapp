@@ -226,8 +226,13 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
         )}
       </div>
 
-      {/* 시간대 선택 버튼 - 통일된 디자인 */}
-      <div className={CHART_DESIGN_SYSTEM.LAYOUT.timeFrameSelector.container}>
+      {/* 레이더 차트 - 통일된 크기 */}
+      <div className="mb-6" style={{ height: CHART_DESIGN_SYSTEM.DIMENSIONS.height }}>
+        <Radar data={chartData} options={options} />
+      </div>
+
+      {/* 시간대 선택 버튼 - 차트 아래 배치 */}
+      <div className={`${CHART_DESIGN_SYSTEM.LAYOUT.timeFrameSelector.container} mb-6`}>
         {[
           { key: 'base' as TimeFrame, label: '기본', active: 'base' },
           { key: 'today' as TimeFrame, label: '오늘', active: 'today' },
@@ -248,13 +253,8 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
         ))}
       </div>
 
-      {/* 레이더 차트 - 통일된 크기 */}
-      <div className="mb-6" style={{ height: CHART_DESIGN_SYSTEM.DIMENSIONS.height }}>
-        <Radar data={chartData} options={options} />
-      </div>
-
       {/* 성향 유형 표시 */}
-      <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg">
+      <div className="mb-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
         <div className="text-center">
           <div className="text-3xl mb-2">{personalityType.icon}</div>
           <h4 className="text-lg font-bold text-purple-700 dark:text-purple-300">
@@ -281,7 +281,7 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
           </div>
           <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 mt-2">
             <div
-              className="bg-gradient-to-r from-pink-500 to-blue-500 h-2 rounded-full transition-all"
+              className="bg-pink-500 h-2 rounded-full transition-all"
               style={{ 
                 width: `${100 - balanceIndicators.emotionVsRational.balance}%` 
               }}
@@ -302,7 +302,7 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
           </div>
           <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 mt-2">
             <div
-              className="bg-gradient-to-r from-teal-500 to-orange-500 h-2 rounded-full transition-all"
+              className="bg-teal-500 h-2 rounded-full transition-all"
               style={{ 
                 width: `${100 - balanceIndicators.logicVsArtistic.balance}%` 
               }}

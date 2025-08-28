@@ -10,6 +10,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { SeventeenFortuneScores } from '@/types/saju';
+import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 
 ChartJS.register(
   RadialLinearScale,
@@ -340,52 +341,43 @@ const SeventeenFortuneChart: React.FC<SeventeenFortuneChartProps> = ({ scores, b
         <Radar data={data} options={options} />
       </div>
 
-      {/* Time Frame Toggle Buttons */}
-      <div className="flex items-center justify-center gap-2 mb-6">
-        <span className="text-sm font-medium text-gray-600 dark:text-gray-400">비교 분석:</span>
-        
-        {/* 기본 운세 버튼 (항상 활성화) */}
+      {/* 시간대 선택 버튼 - 통일된 디자인 */}
+      <div className={`${CHART_DESIGN_SYSTEM.LAYOUT.timeFrameSelector.container} mb-6`}>
         <button
-          className="px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-500 text-white cursor-default"
+          className={`${CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.base} ${CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.active.base}`}
           disabled
         >
-          ✓ 기본 운세
+          기본
         </button>
-        
-        {/* 오늘 버튼 */}
         <button
           onClick={() => setSelectedTimeFrame(selectedTimeFrame === 'today' ? 'none' : 'today')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          className={`${CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.base} ${
             selectedTimeFrame === 'today'
-              ? 'bg-red-500 text-white'
-              : 'border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-red-500 dark:hover:border-red-400'
+              ? CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.active.today
+              : CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.inactive
           }`}
         >
-          {selectedTimeFrame === 'today' ? '✓' : '+'} 오늘
+          오늘
         </button>
-        
-        {/* 이번달 버튼 */}
         <button
           onClick={() => setSelectedTimeFrame(selectedTimeFrame === 'month' ? 'none' : 'month')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          className={`${CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.base} ${
             selectedTimeFrame === 'month'
-              ? 'bg-green-500 text-white'
-              : 'border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-green-500 dark:hover:border-green-400'
+              ? CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.active.month
+              : CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.inactive
           }`}
         >
-          {selectedTimeFrame === 'month' ? '✓' : '+'} 이번달
+          이달
         </button>
-        
-        {/* 올해 버튼 */}
         <button
           onClick={() => setSelectedTimeFrame(selectedTimeFrame === 'year' ? 'none' : 'year')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+          className={`${CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.base} ${
             selectedTimeFrame === 'year'
-              ? 'bg-blue-500 text-white'
-              : 'border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-blue-500 dark:hover:border-blue-400'
+              ? CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.active.year
+              : CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.inactive
           }`}
         >
-          {selectedTimeFrame === 'year' ? '✓' : '+'} 올해
+          올해
         </button>
       </div>
 

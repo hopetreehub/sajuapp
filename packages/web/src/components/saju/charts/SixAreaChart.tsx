@@ -251,8 +251,13 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
         )}
       </div>
 
-      {/* 시간대 선택 버튼 - 통일된 디자인 */}
-      <div className={CHART_DESIGN_SYSTEM.LAYOUT.timeFrameSelector.container}>
+      {/* 레이더 차트 - 통일된 크기 */}
+      <div className="mb-6" style={{ height: CHART_DESIGN_SYSTEM.DIMENSIONS.height }}>
+        <Radar data={data} options={options} />
+      </div>
+
+      {/* 시간대 선택 버튼 - 차트 아래 배치 */}
+      <div className={`${CHART_DESIGN_SYSTEM.LAYOUT.timeFrameSelector.container} mb-6`}>
         {[
           { key: 'base' as TimeFrame, label: '기본', active: 'base' },
           { key: 'today' as TimeFrame, label: '오늘', active: 'today' },
@@ -271,11 +276,6 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
             {label}
           </button>
         ))}
-      </div>
-
-      {/* 레이더 차트 - 통일된 크기 */}
-      <div className="mb-6" style={{ height: CHART_DESIGN_SYSTEM.DIMENSIONS.height }}>
-        <Radar data={data} options={options} />
       </div>
 
       {/* 점수 카드들 - 통일된 디자인 */}
