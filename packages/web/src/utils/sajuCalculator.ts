@@ -20,8 +20,9 @@ export const SIXTY_CYCLE = [
   '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해'
 ] as const;
 
-// 월주 계산용 - 년간에 따른 월간 (정월부터 12월까지)
+// 월주 계산용 - 년간에 따른 월간 (절기월 기준)
 // 갑기년, 을경년, 병신년, 정임년, 무계년
+// 순서: 인월(정월), 묘월, 진월, 사월, 오월, 미월, 신월, 유월, 술월, 해월, 자월, 축월
 const MONTHLY_STEMS: Record<string, string[]> = {
   '갑': ['병인', '정묘', '무진', '기사', '경오', '신미', '임신', '계유', '갑술', '을해', '병자', '정축'],
   '을': ['무인', '기묘', '경진', '신사', '임오', '계미', '갑신', '을유', '병술', '정해', '무자', '기축'],
@@ -88,14 +89,58 @@ export class SajuCalculator {
   }
 
   /**
-   * 월주 계산 - 년간과 월지의 조합
+   * 절기 기준 월 계산 (간단한 근사값)
+   * 실제로는 정확한 절입 시간을 확인해야 하지만, 근사적으로 계산
    */
-  private static calculateMonthPillar(year: number, month: number): { heavenly: string; earthly: string; combined: string } {
+  private static getSolarMonth(year: number, month: number, day: number): number {
+    // 절기월 근사 계산 (양력 기준)
+    // 인월(1): 2/4~3/5, 묘월(2): 3/6~4/4, 진월(3): 4/5~5/5
+    // 사월(4): 5/6~6/5, 오월(5): 6/6~7/6, 미월(6): 7/7~8/7
+    // 신월(7): 8/8~9/7, 유월(8): 9/8~10/7, 술월(9): 10/8~11/6
+    // 해월(10): 11/7~12/6, 자월(11): 12/7~1/5, 축월(12): 1/6~2/3
+    
+    if (month === 1) {
+      return day >= 6 ? 12 : 11; // 1월 6일 이후는 축월, 이전은 자월
+    } else if (month === 2) {
+      return day >= 4 ? 1 : 12; // 2월 4일 이후는 인월, 이전은 축월
+    } else if (month === 3) {
+      return day >= 6 ? 2 : 1;
+    } else if (month === 4) {
+      return day >= 5 ? 3 : 2;
+    } else if (month === 5) {
+      return day >= 6 ? 4 : 3;
+    } else if (month === 6) {
+      return day >= 6 ? 5 : 4;
+    } else if (month === 7) {
+      return day >= 7 ? 6 : 5;
+    } else if (month === 8) {
+      return day >= 8 ? 7 : 6;
+    } else if (month === 9) {
+      return day >= 8 ? 8 : 7;
+    } else if (month === 10) {
+      return day >= 8 ? 9 : 8;
+    } else if (month === 11) {
+      return day >= 7 ? 10 : 9; // 11월 7일 이후는 해월
+    } else if (month === 12) {
+      return day >= 7 ? 11 : 10; // 12월 7일 이후는 자월
+    }
+    return month;
+  }
+
+  /**
+   * 월주 계산 - 년간과 월지의 조합 (절기 기준)
+   */
+  private static calculateMonthPillar(year: number, month: number, day: number): { heavenly: string; earthly: string; combined: string } {
     const yearPillar = this.calculateYearPillar(year);
     const yearStem = yearPillar.heavenly;
     
-    // 월지는 고정: 인(1월), 묘(2월), 진(3월), 사(4월), 오(5월), 미(6월), 
-    // 신(7월), 유(8월), 술(9월), 해(10월), 자(11월), 축(12월)
+    // 절기월 계산
+    const solarMonth = this.getSolarMonth(year, month, day);
+    
+    // 절기월 인덱스 (인월=1부터 시작하므로 -1)
+    const monthIndex = solarMonth === 11 || solarMonth === 12 
+      ? solarMonth - 1  // 자월(11), 축월(12)
+      : solarMonth - 1; // 인월(1)~해월(10)
     
     // 년간에 따른 월간 계산
     const monthStems = MONTHLY_STEMS[yearStem];
@@ -104,11 +149,18 @@ export class SajuCalculator {
       return { heavenly: '갑', earthly: '자', combined: '갑자' };
     }
     
-    const monthStem = monthStems[month - 1];
+    const monthStem = monthStems[monthIndex];
     if (!monthStem) {
-      console.error('Invalid month index:', month - 1);
+      console.error('Invalid month index:', monthIndex);
       return { heavenly: '갑', earthly: '자', combined: '갑자' };
     }
+    
+    console.log('월주 계산:', {
+      양력: `${year}년 ${month}월 ${day}일`,
+      절기월: solarMonth,
+      년간: yearStem,
+      월주: monthStem
+    });
     
     return {
       heavenly: monthStem[0],
@@ -213,7 +265,7 @@ export class SajuCalculator {
     
     return {
       year: this.calculateYearPillar(year),
-      month: this.calculateMonthPillar(year, month),
+      month: this.calculateMonthPillar(year, month, day),
       day: this.calculateDayPillar(year, month, day),
       hour: this.calculateHourPillar(year, month, day, hour, minute)
     };
