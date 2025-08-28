@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -10,7 +10,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { PersonalityTraits } from '@/types/saju';
-import { CHART_DESIGN_SYSTEM, getTimeFrameColors } from '@/constants/chartDesignSystem';
+import { CHART_DESIGN_SYSTEM, getTimeFrameColors, getChartOptions } from '@/constants/chartDesignSystem';
 
 ChartJS.register(
   RadialLinearScale,
@@ -33,6 +33,25 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
   birthDate 
 }) => {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrame>('base');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // 다크모드 실시간 감지
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    };
+
+    checkDarkMode();
+
+    // MutationObserver로 다크모드 변경 감지
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   // 성향별 아이콘과 색상 정의
   const traitConfig = {
@@ -140,17 +159,13 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
     return { labels, datasets };
   }, [labels, selectedTimeFrame, getTimeFrameData]);
 
-  // 통일된 차트 옵션 사용
-  const options = {
-    ...CHART_DESIGN_SYSTEM.CHART_OPTIONS,
+  // 다크모드 개선된 차트 옵션 사용
+  const options = getChartOptions(isDarkMode, {
     plugins: {
-      ...CHART_DESIGN_SYSTEM.CHART_OPTIONS.plugins,
       legend: {
-        ...CHART_DESIGN_SYSTEM.CHART_OPTIONS.plugins.legend,
         display: selectedTimeFrame !== 'base'
       },
       tooltip: {
-        ...CHART_DESIGN_SYSTEM.CHART_OPTIONS.plugins.tooltip,
         callbacks: {
           label: (context: any) => {
             return `${context.dataset.label}: ${context.parsed.r.toFixed(1)}점`;
@@ -158,7 +173,7 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
         }
       }
     }
-  };
+  });
 
   // 균형 지수 계산
   const balanceIndicators = useMemo(() => {

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PersonalityAnalysisChart from '@/components/saju/charts/PersonalityAnalysisChart';
+import ChartNavigation from '@/components/common/ChartNavigation';
 import { PersonalityTraits } from '@/types/saju';
-import { useNavigate } from 'react-router-dom';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 
 const PersonalityAnalysisPage: React.FC = () => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [personalityTraits, setPersonalityTraits] = useState<PersonalityTraits | null>(null);
   const [personalInfo, setPersonalInfo] = useState<any>(null);
@@ -125,27 +124,8 @@ const PersonalityAnalysisPage: React.FC = () => {
           </p>
         </div>
 
-        {/* 네비게이션 버튼 - 통일된 디자인 */}
-        <div className={CHART_DESIGN_SYSTEM.LAYOUT.navigation.container}>
-          <button
-            onClick={() => navigate('/saju')}
-            className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.navigation}
-          >
-            {CHART_DESIGN_SYSTEM.ICONS.navigation.previous} 6대 영역 분석
-          </button>
-          <button
-            onClick={() => navigate('/saju/detailed')}
-            className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.navigation}
-          >
-            {CHART_DESIGN_SYSTEM.ICONS.seventeen} 17대 운세 분석
-          </button>
-          <button
-            onClick={() => navigate('/fortune')}
-            className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.navigation}
-          >
-            오늘의 운세 {CHART_DESIGN_SYSTEM.ICONS.navigation.next}
-          </button>
-        </div>
+        {/* 자동 네비게이션 */}
+        <ChartNavigation showCenter={true} />
 
         {loading ? (
           <div className={CHART_DESIGN_SYSTEM.LOADING.container}>
@@ -231,7 +211,7 @@ const PersonalityAnalysisPage: React.FC = () => {
                 <p className="text-sm text-yellow-800 dark:text-yellow-200 text-center">
                   💡 더 정확한 분석을 위해 설정에서 개인정보를 입력해주세요.
                   <button
-                    onClick={() => navigate('/settings')}
+                    onClick={() => window.location.href = '/settings'}
                     className="ml-2 underline hover:no-underline"
                   >
                     설정으로 이동

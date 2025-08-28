@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import SeventeenFortuneChart from '@/components/saju/charts/SeventeenFortuneChart';
+import ChartNavigation from '@/components/common/ChartNavigation';
 import { SeventeenFortuneScores } from '@/types/saju';
-import { useNavigate } from 'react-router-dom';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 
 const DetailedFortunePage: React.FC = () => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [fortuneScores, setFortuneScores] = useState<SeventeenFortuneScores | null>(null);
   const [personalInfo, setPersonalInfo] = useState<any>(null);
@@ -142,27 +141,8 @@ const DetailedFortunePage: React.FC = () => {
           </p>
         </div>
 
-        {/* 네비게이션 버튼 - 통일된 디자인 */}
-        <div className={CHART_DESIGN_SYSTEM.LAYOUT.navigation.container}>
-          <button
-            onClick={() => navigate('/saju')}
-            className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.navigation}
-          >
-            {CHART_DESIGN_SYSTEM.ICONS.navigation.previous} 6대 영역 분석
-          </button>
-          <button
-            onClick={() => navigate('/saju/personality')}
-            className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.navigation}
-          >
-            {CHART_DESIGN_SYSTEM.ICONS.personality} 성향 분석
-          </button>
-          <button
-            onClick={() => navigate('/fortune')}
-            className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.navigation}
-          >
-            오늘의 운세 {CHART_DESIGN_SYSTEM.ICONS.navigation.next}
-          </button>
-        </div>
+        {/* 자동 네비게이션 */}
+        <ChartNavigation showCenter={true} />
 
         {loading ? (
           <div className={CHART_DESIGN_SYSTEM.LOADING.container}>

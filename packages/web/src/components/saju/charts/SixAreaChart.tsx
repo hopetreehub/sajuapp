@@ -10,7 +10,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { SixAreaScores } from '@/types/saju';
-import { CHART_DESIGN_SYSTEM, getTimeFrameColors } from '@/constants/chartDesignSystem';
+import { CHART_DESIGN_SYSTEM, getTimeFrameColors, getChartOptions } from '@/constants/chartDesignSystem';
 
 ChartJS.register(
   RadialLinearScale,
@@ -219,17 +219,13 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
     ]
   };
 
-  // 통일된 차트 옵션 사용
-  const options = {
-    ...CHART_DESIGN_SYSTEM.CHART_OPTIONS,
+  // 다크모드 개선된 차트 옵션 사용
+  const options = getChartOptions(isDarkMode, {
     plugins: {
-      ...CHART_DESIGN_SYSTEM.CHART_OPTIONS.plugins,
       legend: {
-        ...CHART_DESIGN_SYSTEM.CHART_OPTIONS.plugins.legend,
         display: selectedTimeFrame !== 'base'
       },
       tooltip: {
-        ...CHART_DESIGN_SYSTEM.CHART_OPTIONS.plugins.tooltip,
         callbacks: {
           label: (context: any) => {
             return `${context.dataset.label}: ${context.parsed.r}점`;
@@ -237,7 +233,7 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
         }
       }
     }
-  };
+  });
 
   const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
   const averageScore = (totalScore / 6).toFixed(1);

@@ -47,7 +47,7 @@ export const CHART_DESIGN_SYSTEM = {
     }
   },
 
-  // 표준 차트 옵션
+  // 표준 차트 옵션 (다크모드 개선 적용)
   CHART_OPTIONS: {
     responsive: true,
     maintainAspectRatio: false,
@@ -55,21 +55,24 @@ export const CHART_DESIGN_SYSTEM = {
       legend: {
         position: 'top' as const,
         labels: {
-          font: { size: 12, weight: 600 },
+          font: { size: 13, weight: 700 },
           padding: 16,
           boxWidth: 12,
-          usePointStyle: true
+          usePointStyle: true,
+          color: '#374151'  // 기본 다크 색상
         }
       },
       tooltip: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
         titleColor: '#ffffff',
         bodyColor: '#ffffff',
         borderColor: '#8b5cf6',
-        borderWidth: 1,
+        borderWidth: 2,
         cornerRadius: 8,
-        padding: 12,
-        displayColors: true
+        padding: 14,
+        displayColors: true,
+        titleFont: { size: 14, weight: 600 },
+        bodyFont: { size: 13 }
       }
     },
     scales: {
@@ -79,21 +82,21 @@ export const CHART_DESIGN_SYSTEM = {
         min: 0,
         ticks: {
           stepSize: 10,
-          font: { size: 10 },
+          font: { size: 12, weight: 600 },
           color: '#6b7280',
           backdropColor: 'transparent',
           showLabelBackdrop: false
         },
         grid: {
-          color: 'rgba(107, 114, 128, 0.2)',
-          lineWidth: 1
+          color: 'rgba(107, 114, 128, 0.4)',
+          lineWidth: 2
         },
         angleLines: {
-          color: 'rgba(107, 114, 128, 0.2)',
-          lineWidth: 1
+          color: 'rgba(107, 114, 128, 0.3)',
+          lineWidth: 2
         },
         pointLabels: {
-          font: { size: 11, weight: 600 },
+          font: { size: 13, weight: 700 },
           color: '#374151'
         }
       }
@@ -107,12 +110,75 @@ export const CHART_DESIGN_SYSTEM = {
     }
   },
 
-  // 버튼 스타일 통일
+  // 다크모드 전용 차트 옵션
+  DARK_MODE_CHART_OPTIONS: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+        labels: {
+          font: { size: 13, weight: 700 },
+          padding: 16,
+          boxWidth: 12,
+          usePointStyle: true,
+          color: '#f1f5f9'  // 다크모드용 밝은 색상
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        titleColor: '#ffffff',
+        bodyColor: '#ffffff',
+        borderColor: '#a78bfa',
+        borderWidth: 2,
+        cornerRadius: 8,
+        padding: 14,
+        displayColors: true,
+        titleFont: { size: 14, weight: 600 },
+        bodyFont: { size: 13 }
+      }
+    },
+    scales: {
+      r: {
+        beginAtZero: true,
+        max: 100,
+        min: 0,
+        ticks: {
+          stepSize: 10,
+          font: { size: 12, weight: 600 },
+          color: '#cbd5e1',  // 다크모드용 밝은 틱
+          backdropColor: 'transparent',
+          showLabelBackdrop: false
+        },
+        grid: {
+          color: 'rgba(156, 163, 175, 0.5)',  // 더 밝은 격자선
+          lineWidth: 2
+        },
+        angleLines: {
+          color: 'rgba(156, 163, 175, 0.4)',  // 더 밝은 각도선
+          lineWidth: 2
+        },
+        pointLabels: {
+          font: { size: 13, weight: 700 },
+          color: '#f1f5f9'  // 다크모드용 밝은 라벨
+        }
+      }
+    },
+    interaction: {
+      intersect: false
+    },
+    animation: {
+      duration: 1000,
+      easing: 'easeInOutQuart' as const
+    }
+  },
+
+  // 버튼 스타일 통일 (그라데이션 제거, 단색 적용)
   BUTTON_STYLES: {
-    // 메인 액션 버튼 (분석별 고유 색상)
-    sixArea: 'px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 font-semibold',
-    seventeen: 'px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 font-semibold',
-    personality: 'px-6 py-3 bg-gradient-to-r from-green-600 to-teal-600 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 font-semibold',
+    // 메인 액션 버튼 (분석별 단색)
+    sixArea: 'px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold',
+    seventeen: 'px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold',
+    personality: 'px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 font-semibold',
     
     // 네비게이션 버튼
     navigation: 'px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg shadow hover:shadow-md transition-shadow border border-gray-200 dark:border-gray-600',
@@ -142,15 +208,15 @@ export const CHART_DESIGN_SYSTEM = {
     }
   },
 
-  // 레이아웃 표준
+  // 레이아웃 표준 (그라데이션 제거)
   LAYOUT: {
-    pageContainer: 'min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900',
+    pageContainer: 'min-h-screen bg-gray-50 dark:bg-gray-900',
     contentContainer: 'max-w-7xl mx-auto px-4 py-8',
     
-    // 페이지 헤더
+    // 페이지 헤더 (단색 적용)
     header: {
       container: 'text-center mb-8',
-      title: 'text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2',
+      title: 'text-3xl md:text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2',
       subtitle: 'text-gray-600 dark:text-gray-300 text-lg'
     },
     
@@ -234,4 +300,28 @@ export const getTimeFrameColors = (timeFrame: 'base' | 'today' | 'month' | 'year
 export const getChartColor = (index: number) => {
   const colors = CHART_DESIGN_SYSTEM.COLORS.primary;
   return colors[index % colors.length];
+};
+
+// 다크모드 감지 및 적절한 차트 옵션 반환
+export const getChartOptions = (isDarkMode: boolean, customOptions?: any) => {
+  const baseOptions = isDarkMode 
+    ? CHART_DESIGN_SYSTEM.DARK_MODE_CHART_OPTIONS 
+    : CHART_DESIGN_SYSTEM.CHART_OPTIONS;
+  
+  if (customOptions) {
+    return {
+      ...baseOptions,
+      ...customOptions,
+      plugins: {
+        ...baseOptions.plugins,
+        ...customOptions.plugins
+      },
+      scales: {
+        ...baseOptions.scales,
+        ...customOptions.scales
+      }
+    };
+  }
+  
+  return baseOptions;
 };

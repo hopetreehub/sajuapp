@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SajuInputForm from '@/components/saju/SajuInputForm';
 import SixAreaChart from '@/components/saju/charts/SixAreaChart';
+import ChartNavigation from '@/components/common/ChartNavigation';
 import { SajuBirthInfo, SajuAnalysisResult } from '@/types/saju';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 
@@ -164,30 +165,8 @@ const SajuAnalysisPage: React.FC = () => {
                   birthDate={formatBirthDate(birthInfo!)}
                 />
 
-                {/* 추가 분석 버튼들 - 통일된 네비게이션 */}
-                <div className={CHART_DESIGN_SYSTEM.LAYOUT.navigation.container}>
-                  <button
-                    onClick={() => window.location.href = '/saju/detailed'}
-                    className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.seventeen}
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="text-xl">{CHART_DESIGN_SYSTEM.ICONS.seventeen}</span>
-                      <span>17대 세부운세 상세분석 보기</span>
-                      <span className="text-xl">{CHART_DESIGN_SYSTEM.ICONS.navigation.next}</span>
-                    </span>
-                  </button>
-                  
-                  <button
-                    onClick={() => window.location.href = '/saju/personality'}
-                    className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.personality}
-                  >
-                    <span className="flex items-center gap-2">
-                      <span className="text-xl">{CHART_DESIGN_SYSTEM.ICONS.personality}</span>
-                      <span>7대 성향 분석 보기</span>
-                      <span className="text-xl">{CHART_DESIGN_SYSTEM.ICONS.navigation.next}</span>
-                    </span>
-                  </button>
-                </div>
+                {/* 자동 네비게이션 - 다음 차트로만 이동 */}
+                <ChartNavigation showCenter={false} />
 
                 {/* 추가 차트 플레이스홀더 */}
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
