@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SeventeenFortuneChart from '@/components/saju/charts/SeventeenFortuneChart';
 import { SeventeenFortuneScores } from '@/types/saju';
 import { useNavigate } from 'react-router-dom';
+import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 
 const DetailedFortunePage: React.FC = () => {
   const navigate = useNavigate();
@@ -129,43 +130,46 @@ const DetailedFortunePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* 페이지 헤더 */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+    <div className={CHART_DESIGN_SYSTEM.LAYOUT.pageContainer}>
+      <div className={CHART_DESIGN_SYSTEM.LAYOUT.contentContainer}>
+        {/* 페이지 헤더 - 통일된 디자인 */}
+        <div className={CHART_DESIGN_SYSTEM.LAYOUT.header.container}>
+          <h1 className={CHART_DESIGN_SYSTEM.LAYOUT.header.title}>
             🔮 17대 세부운세 분석
           </h1>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className={CHART_DESIGN_SYSTEM.LAYOUT.header.subtitle}>
             당신의 인생 전반에 걸친 세부적인 운세를 분석합니다
           </p>
         </div>
 
-        {/* 네비게이션 버튼 */}
-        <div className="flex flex-wrap justify-center gap-4 mb-6">
+        {/* 네비게이션 버튼 - 통일된 디자인 */}
+        <div className={CHART_DESIGN_SYSTEM.LAYOUT.navigation.container}>
           <button
             onClick={() => navigate('/saju')}
-            className="px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg shadow hover:shadow-md transition-shadow"
+            className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.navigation}
           >
-            ← 6대 영역 분석
+            {CHART_DESIGN_SYSTEM.ICONS.navigation.previous} 6대 영역 분석
           </button>
           <button
             onClick={() => navigate('/saju/personality')}
-            className="px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg shadow hover:shadow-md transition-shadow"
+            className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.navigation}
           >
-            🧠 성향 분석
+            {CHART_DESIGN_SYSTEM.ICONS.personality} 성향 분석
           </button>
           <button
             onClick={() => navigate('/fortune')}
-            className="px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg shadow hover:shadow-md transition-shadow"
+            className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.navigation}
           >
-            오늘의 운세 →
+            오늘의 운세 {CHART_DESIGN_SYSTEM.ICONS.navigation.next}
           </button>
         </div>
 
         {loading ? (
-          <div className="flex justify-center items-center h-96">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600"></div>
+          <div className={CHART_DESIGN_SYSTEM.LOADING.container}>
+            <div className={CHART_DESIGN_SYSTEM.LOADING.wrapper}>
+              <div className={CHART_DESIGN_SYSTEM.LOADING.spinner}></div>
+              <p className={CHART_DESIGN_SYSTEM.LOADING.text}>운세를 분석하고 있습니다...</p>
+            </div>
           </div>
         ) : fortuneScores ? (
           <>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SajuInputForm from '@/components/saju/SajuInputForm';
 import SixAreaChart from '@/components/saju/charts/SixAreaChart';
 import { SajuBirthInfo, SajuAnalysisResult } from '@/types/saju';
+import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 
 const SajuAnalysisPage: React.FC = () => {
   const [birthInfo, setBirthInfo] = useState<SajuBirthInfo | null>(null);
@@ -72,14 +73,14 @@ const SajuAnalysisPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* 페이지 헤더 */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-            📜 전문 사주 분석
+    <div className={CHART_DESIGN_SYSTEM.LAYOUT.pageContainer}>
+      <div className={CHART_DESIGN_SYSTEM.LAYOUT.contentContainer}>
+        {/* 페이지 헤더 - 통일된 디자인 */}
+        <div className={CHART_DESIGN_SYSTEM.LAYOUT.header.container}>
+          <h1 className={CHART_DESIGN_SYSTEM.LAYOUT.header.title}>
+            📊 전문 사주 분석
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300">
+          <p className={CHART_DESIGN_SYSTEM.LAYOUT.header.subtitle}>
             생년월일시를 입력하면 30가지 전문 차트로 운명을 분석합니다
           </p>
         </div>
@@ -149,10 +150,10 @@ const SajuAnalysisPage: React.FC = () => {
           {/* 오른쪽: 차트 표시 영역 */}
           <div className="lg:col-span-2">
             {loading ? (
-              <div className="flex items-center justify-center h-96">
-                <div className="text-center">
-                  <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto mb-4"></div>
-                  <p className="text-gray-600 dark:text-gray-400">사주를 분석하고 있습니다...</p>
+              <div className={CHART_DESIGN_SYSTEM.LOADING.container}>
+                <div className={CHART_DESIGN_SYSTEM.LOADING.wrapper}>
+                  <div className={CHART_DESIGN_SYSTEM.LOADING.spinner}></div>
+                  <p className={CHART_DESIGN_SYSTEM.LOADING.text}>사주를 분석하고 있습니다...</p>
                 </div>
               </div>
             ) : analysisResult ? (
@@ -163,27 +164,27 @@ const SajuAnalysisPage: React.FC = () => {
                   birthDate={formatBirthDate(birthInfo!)}
                 />
 
-                {/* 17대 운세 버튼 */}
-                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                {/* 추가 분석 버튼들 - 통일된 네비게이션 */}
+                <div className={CHART_DESIGN_SYSTEM.LAYOUT.navigation.container}>
                   <button
                     onClick={() => window.location.href = '/saju/detailed'}
-                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                    className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.seventeen}
                   >
                     <span className="flex items-center gap-2">
-                      <span className="text-xl">🔮</span>
-                      <span className="font-semibold">17대 세부운세 상세분석 보기</span>
-                      <span className="text-xl">→</span>
+                      <span className="text-xl">{CHART_DESIGN_SYSTEM.ICONS.seventeen}</span>
+                      <span>17대 세부운세 상세분석 보기</span>
+                      <span className="text-xl">{CHART_DESIGN_SYSTEM.ICONS.navigation.next}</span>
                     </span>
                   </button>
                   
                   <button
                     onClick={() => window.location.href = '/saju/personality'}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                    className={CHART_DESIGN_SYSTEM.BUTTON_STYLES.personality}
                   >
                     <span className="flex items-center gap-2">
-                      <span className="text-xl">🧠</span>
-                      <span className="font-semibold">7대 성향 분석 보기</span>
-                      <span className="text-xl">→</span>
+                      <span className="text-xl">{CHART_DESIGN_SYSTEM.ICONS.personality}</span>
+                      <span>7대 성향 분석 보기</span>
+                      <span className="text-xl">{CHART_DESIGN_SYSTEM.ICONS.navigation.next}</span>
                     </span>
                   </button>
                 </div>

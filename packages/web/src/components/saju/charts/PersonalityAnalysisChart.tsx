@@ -10,6 +10,7 @@ import {
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { PersonalityTraits } from '@/types/saju';
+import { CHART_DESIGN_SYSTEM, getTimeFrameColors } from '@/constants/chartDesignSystem';
 
 ChartJS.register(
   RadialLinearScale,
@@ -109,34 +110,28 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
       {
         label: '기본 성향',
         data: baseData,
-        backgroundColor: 'rgba(139, 69, 19, 0.1)',
-        borderColor: '#8b4513',
-        borderWidth: 2,
-        pointBackgroundColor: '#8b4513',
-        pointBorderColor: '#8b4513',
-        pointRadius: 4,
-        pointHoverRadius: 6,
+        backgroundColor: getTimeFrameColors('base').background,
+        borderColor: getTimeFrameColors('base').border,
+        borderWidth: 3,
+        pointBackgroundColor: getTimeFrameColors('base').border,
+        pointBorderColor: '#ffffff',
+        pointRadius: 5,
+        pointHoverRadius: 7,
       }
     ];
 
     // 선택된 시간대 데이터 추가
     if (selectedTimeFrame !== 'base') {
-      const timeFrameColors = {
-        today: { bg: 'rgba(255, 107, 157, 0.15)', border: '#ff6b9d' },
-        month: { bg: 'rgba(78, 205, 196, 0.15)', border: '#4ecdc4' },
-        year: { bg: 'rgba(255, 159, 67, 0.15)', border: '#ff9f43' }
-      };
-      
-      const colors = timeFrameColors[selectedTimeFrame];
+      const colors = getTimeFrameColors(selectedTimeFrame);
       datasets.push({
         label: selectedTimeFrame === 'today' ? '오늘의 성향' : 
                selectedTimeFrame === 'month' ? '이달의 성향' : '올해의 성향',
         data: currentData,
-        backgroundColor: colors.bg,
+        backgroundColor: colors.background,
         borderColor: colors.border,
         borderWidth: 3,
         pointBackgroundColor: colors.border,
-        pointBorderColor: colors.border,
+        pointBorderColor: '#ffffff',
         pointRadius: 5,
         pointHoverRadius: 7,
       });
@@ -145,46 +140,21 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
     return { labels, datasets };
   }, [labels, selectedTimeFrame, getTimeFrameData]);
 
-  // 차트 옵션
+  // 통일된 차트 옵션 사용
   const options = {
-    responsive: true,
-    maintainAspectRatio: false,
+    ...CHART_DESIGN_SYSTEM.CHART_OPTIONS,
     plugins: {
+      ...CHART_DESIGN_SYSTEM.CHART_OPTIONS.plugins,
       legend: {
-        position: 'top' as const,
-        labels: {
-          font: { size: 12, weight: 500 as const },
-          padding: 20
-        }
+        ...CHART_DESIGN_SYSTEM.CHART_OPTIONS.plugins.legend,
+        display: selectedTimeFrame !== 'base'
       },
       tooltip: {
+        ...CHART_DESIGN_SYSTEM.CHART_OPTIONS.plugins.tooltip,
         callbacks: {
           label: (context: any) => {
             return `${context.dataset.label}: ${context.parsed.r.toFixed(1)}점`;
           }
-        }
-      }
-    },
-    scales: {
-      r: {
-        beginAtZero: true,
-        max: 100,
-        min: 0,
-        ticks: {
-          stepSize: 10,
-          font: { size: 10 },
-          color: '#666',
-          backdropColor: 'transparent'
-        },
-        grid: {
-          color: 'rgba(0, 0, 0, 0.1)'
-        },
-        angleLines: {
-          color: 'rgba(0, 0, 0, 0.1)'
-        },
-        pointLabels: {
-          font: { size: 12, weight: 600 as const },
-          color: '#333'
         }
       }
     }
@@ -229,7 +199,7 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
   }, [getTimeFrameData, selectedTimeFrame]);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+    <div className={CHART_DESIGN_SYSTEM.LAYOUT.chartContainer.wrapper}>
       <div className="mb-6">
         <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">
           🧠 7대 성향 분석
@@ -241,21 +211,21 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
         )}
       </div>
 
-      {/* 시간대 선택 버튼 */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      {/* 시간대 선택 버튼 - 통일된 디자인 */}
+      <div className={CHART_DESIGN_SYSTEM.LAYOUT.timeFrameSelector.container}>
         {[
-          { key: 'base' as TimeFrame, label: '기본', color: 'bg-brown-100 text-brown-700' },
-          { key: 'today' as TimeFrame, label: '오늘', color: 'bg-pink-100 text-pink-700' },
-          { key: 'month' as TimeFrame, label: '이달', color: 'bg-teal-100 text-teal-700' },
-          { key: 'year' as TimeFrame, label: '올해', color: 'bg-orange-100 text-orange-700' }
-        ].map(({ key, label, color }) => (
+          { key: 'base' as TimeFrame, label: '기본', active: 'base' },
+          { key: 'today' as TimeFrame, label: '오늘', active: 'today' },
+          { key: 'month' as TimeFrame, label: '이달', active: 'month' },
+          { key: 'year' as TimeFrame, label: '올해', active: 'year' }
+        ].map(({ key, label, active }) => (
           <button
             key={key}
             onClick={() => setSelectedTimeFrame(key)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`${CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.base} ${
               selectedTimeFrame === key
-                ? color
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                ? CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.active[active]
+                : CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.inactive
             }`}
           >
             {label}
@@ -263,8 +233,8 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
         ))}
       </div>
 
-      {/* 레이더 차트 */}
-      <div className="h-96 mb-6">
+      {/* 레이더 차트 - 통일된 크기 */}
+      <div className="mb-6" style={{ height: CHART_DESIGN_SYSTEM.DIMENSIONS.height }}>
         <Radar data={chartData} options={options} />
       </div>
 
@@ -326,34 +296,37 @@ const PersonalityAnalysisChart: React.FC<PersonalityAnalysisChartProps> = ({
         </div>
       </div>
 
-      {/* 성향별 점수 카드 */}
+      {/* 성향별 점수 카드 - 통일된 디자인 */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-        {Object.entries(traitConfig).map(([key, config]) => {
+        {Object.entries(traitConfig).map(([key, config], index) => {
           const currentData = getTimeFrameData(selectedTimeFrame);
           const traitIndex = ['emotion', 'logic', 'artistic', 'rational', 'character', 'intelligence', 'learning'].indexOf(key);
           const score = currentData[traitIndex];
+          const color = CHART_DESIGN_SYSTEM.COLORS.primary[index];
           
           return (
             <div
               key={key}
-              className="p-3 bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600"
+              className={CHART_DESIGN_SYSTEM.SCORE_CARD_STYLES.container}
             >
               <div className="text-center">
-                <div className="text-2xl mb-1">{config.icon}</div>
-                <h5 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <div className={CHART_DESIGN_SYSTEM.SCORE_CARD_STYLES.icon}>
+                  {config.icon}
+                </div>
+                <h5 className={CHART_DESIGN_SYSTEM.SCORE_CARD_STYLES.label}>
                   {config.label}
                 </h5>
                 <div
-                  className="text-lg font-bold"
-                  style={{ color: config.color }}
+                  className={CHART_DESIGN_SYSTEM.SCORE_CARD_STYLES.score}
+                  style={{ color }}
                 >
                   {score.toFixed(0)}
                 </div>
-                <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1 mt-1">
+                <div className={CHART_DESIGN_SYSTEM.SCORE_CARD_STYLES.progressBar.container}>
                   <div
-                    className="h-1 rounded-full transition-all"
+                    className={CHART_DESIGN_SYSTEM.SCORE_CARD_STYLES.progressBar.fill}
                     style={{ 
-                      backgroundColor: config.color,
+                      backgroundColor: color,
                       width: `${score}%` 
                     }}
                   ></div>
