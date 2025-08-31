@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SajuInputForm from '@/components/saju/SajuInputForm';
-import FiveElementsChart from '@/components/saju/charts/FiveElementsChart';
+import { FiveElementsBalanceChart } from '@/components/saju/charts/FiveElementsBalanceChart';
+import { TenGodsDistributionChart } from '@/components/saju/charts/TenGodsDistributionChart';
 import SixAreaChart from '@/components/saju/charts/SixAreaChart';
 import ChartNavigation from '@/components/Common/ChartNavigation';
 import UserSelectionPanel from '@/components/User/UserSelectionPanel';
-import { SajuBirthInfo, SajuAnalysisResult } from '@/types/saju';
+import { SajuBirthInfo, SajuAnalysisResult, SajuData } from '@/types/saju';
 import { UserProfile, AnalysisType } from '@/types/user';
 import { getCurrentUser, addAnalysisHistory } from '@/utils/userStorage';
 import { SajuCalculator, formatFourPillars, formatFourPillarsDetailed, FourPillarsResult } from '@/utils/sajuCalculator';
@@ -117,6 +118,42 @@ const SajuAnalysisPage: React.FC = () => {
 
   const formatFourPillars = (pillars: any) => {
     return `${pillars.year.heavenly}${pillars.year.earthly}년 ${pillars.month.heavenly}${pillars.month.earthly}월 ${pillars.day.heavenly}${pillars.day.earthly}일 ${pillars.hour.heavenly}${pillars.hour.earthly}시`;
+  };
+
+  // SajuAnalysisResult를 SajuData로 변환
+  const convertToSajuData = (result: SajuAnalysisResult): SajuData => {
+    return {
+      ...result,
+      dayMaster: result.fourPillars.day.heavenly,
+      personalityTraits: {
+        emotion: 75,
+        logic: 80,
+        artistic: 65,
+        rational: 70,
+        character: 85,
+        intelligence: 78,
+        learning: 72
+      },
+      seventeenFortunes: {
+        health: 75,
+        marriage: 68,
+        power: 72,
+        fame: 65,
+        accident: 30,
+        business: 78,
+        movement: 60,
+        separation: 35,
+        relationship: 82,
+        children: 70,
+        talent: 85,
+        wealth: 73,
+        ancestor: 65,
+        career: 80,
+        family: 77,
+        study: 75,
+        fortune: 70
+      }
+    };
   };
 
   return (
@@ -285,7 +322,7 @@ const SajuAnalysisPage: React.FC = () => {
                           onClick={() => navigate('/saju/charts')}
                           className="w-full text-left px-3 py-2 text-sm hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:text-purple-700 dark:hover:text-purple-300 rounded-lg transition-colors"
                         >
-                          📈 오행/십성 차트 분석
+                          📈 오행/십성 상세 차트
                         </button>
                         <button 
                           onClick={() => navigate('/saju/six-areas')}
@@ -333,33 +370,24 @@ const SajuAnalysisPage: React.FC = () => {
               </div>
             ) : analysisResult ? (
               <div className="space-y-8">
-                {/* 오행균형도 차트 - 첫 번째 차트 */}
-                <FiveElementsChart 
-                  birthInfo={birthInfo!}
-                  birthDate={formatBirthDate(birthInfo!)}
+                {/* 오행균형도 */}
+                <FiveElementsBalanceChart
+                  sajuData={convertToSajuData(analysisResult)}
+                  height={400}
+                  showLegend={true}
+                  showTooltips={true}
                 />
 
-                {/* 자동 네비게이션 - 다음 차트로만 이동 */}
+                {/* 십성분포도 */}
+                <TenGodsDistributionChart
+                  sajuData={convertToSajuData(analysisResult)}
+                  height={400}
+                  chartType="bar"
+                  showCategory={false}
+                />
+
+                {/* 차트 네비게이션 */}
                 <ChartNavigation showCenter={false} />
-
-                {/* 추가 차트 플레이스홀더 */}
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-                    🎯 오행 균형도
-                  </h3>
-                  <div className="h-64 flex items-center justify-center text-gray-400">
-                    <p>차트 개발 중...</p>
-                  </div>
-                </div>
-
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-                    ⭐ 십성 분포도
-                  </h3>
-                  <div className="h-64 flex items-center justify-center text-gray-400">
-                    <p>차트 개발 중...</p>
-                  </div>
-                </div>
               </div>
             ) : (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12">
