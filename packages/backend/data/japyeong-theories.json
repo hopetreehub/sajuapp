@@ -1,0 +1,345 @@
+{
+  "metadata": {
+    "title": "자평진전 핵심 이론 데이터베이스",
+    "version": "1.0.0",
+    "description": "자평명리학의 핵심 이론과 해석 체계",
+    "source": "자평진전(子平眞詮) 기반",
+    "created_at": "2025-08-31",
+    "last_updated": "2025-08-31"
+  },
+
+  "yongshin_theory": {
+    "concept": "용신론(用神論) - 사주팔자에서 가장 중요한 신(神)을 찾는 이론",
+    "description": "월령의 기운과 일간의 강약을 판단하여 사주를 조후하고 균형을 맞추는 신을 찾는 핵심 이론",
+    "core_principles": {
+      "seasonal_influence": {
+        "spring": {
+          "dominant_element": "wood",
+          "month_qi": "목기(木氣) 왕성",
+          "yongshin_priority": ["fire", "earth"],
+          "description": "봄철에는 목기가 왕성하므로 화토를 용신으로 삼아 설기(洩氣)시킴"
+        },
+        "summer": {
+          "dominant_element": "fire", 
+          "month_qi": "화기(火氣) 왕성",
+          "yongshin_priority": ["earth", "metal"],
+          "description": "여름철에는 화기가 왕성하므로 토금을 용신으로 삼아 설기시킴"
+        },
+        "autumn": {
+          "dominant_element": "metal",
+          "month_qi": "금기(金氣) 왕성", 
+          "yongshin_priority": ["water", "wood"],
+          "description": "가을철에는 금기가 왕성하므로 수목을 용신으로 삼아 설기시킴"
+        },
+        "winter": {
+          "dominant_element": "water",
+          "month_qi": "수기(水氣) 왕성",
+          "yongshin_priority": ["wood", "fire"],
+          "description": "겨울철에는 수기가 왕성하므로 목화를 용신으로 삼아 설기시킴"
+        },
+        "late_summer": {
+          "dominant_element": "earth",
+          "month_qi": "토기(土氣) 왕성",
+          "yongshin_priority": ["metal", "water"],
+          "description": "계하(季夏)에는 토기가 왕성하므로 금수를 용신으로 삼아 설기시킴"
+        }
+      },
+      "strength_weakness": {
+        "strong_day_master": {
+          "criteria": ["월령에서 도움", "인성 많음", "비겁 많음"],
+          "yongshin_type": "설기용신(洩氣用神)",
+          "preferred_elements": "식상, 재성, 관성",
+          "description": "일간이 강할 때는 기운을 빼는 십성을 용신으로"
+        },
+        "weak_day_master": {
+          "criteria": ["월령에서 극", "인성 부족", "비겁 부족"],
+          "yongshin_type": "부조용신(扶助用神)",
+          "preferred_elements": "인성, 비겁",
+          "description": "일간이 약할 때는 기운을 보하는 십성을 용신으로"
+        }
+      },
+      "seasonal_adjustment": {
+        "cold_seasons": {
+          "months": ["11", "12", "1", "2"],
+          "adjustment": "조후(調候) - 따뜻한 기운 필요",
+          "preferred": "화기(火氣)",
+          "description": "추위를 막기 위한 따뜻한 기운이 우선"
+        },
+        "hot_seasons": {
+          "months": ["5", "6", "7"],
+          "adjustment": "조후(調候) - 차가운 기운 필요", 
+          "preferred": "수기(水氣)",
+          "description": "더위를 막기 위한 차가운 기운이 우선"
+        },
+        "dry_seasons": {
+          "months": ["3", "6", "9", "12"],
+          "adjustment": "윤조(潤燥) - 습한 기운 필요",
+          "preferred": "수기(水氣)",
+          "description": "건조함을 막기 위한 습한 기운이 우선"
+        }
+      }
+    }
+  },
+
+  "gyeogguk_theory": {
+    "concept": "격국론(格局論) - 사주팔자의 기본 구조와 패턴을 분류하는 이론",
+    "description": "월간을 중심으로 사주의 기본 격을 정하고 그에 따른 길흉을 판단",
+    "regular_patterns": {
+      "jeonggwan_gyeok": {
+        "name": "정관격(正官格)",
+        "condition": "월간에 정관이 투간",
+        "characteristics": ["품격 높음", "명예 추구", "질서 중시"],
+        "yongshin": "인성으로 관을 생하고 일간을 돕는 구조",
+        "taboos": ["상관 견관", "비겁 탈재"],
+        "fortune_tendency": "안정적이고 꾸준한 상승"
+      },
+      "pyeongwan_gyeok": {
+        "name": "편관격(偏官格)",
+        "condition": "월간에 편관이 투간",
+        "characteristics": ["개척 정신", "추진력", "변화 추구"],
+        "yongshin": "인성으로 관을 설기하거나 식상으로 제어",
+        "taboos": ["재성 조관", "비겁 합관"],
+        "fortune_tendency": "역동적이고 변화무쌍"
+      },
+      "jeongjae_gyeok": {
+        "name": "정재격(正財格)",
+        "condition": "월간에 정재가 투간",
+        "characteristics": ["근면성", "절약정신", "계획성"],
+        "yongshin": "관성으로 재를 보호하거나 비겁으로 재를 취함",
+        "taboos": ["비겁 탈재", "인성 파재"],
+        "fortune_tendency": "꾸준하고 안정적인 재물 증가"
+      },
+      "pyeonjae_gyeok": {
+        "name": "편재격(偏財格)",
+        "condition": "월간에 편재가 투간", 
+        "characteristics": ["사교성", "활동력", "기회 포착"],
+        "yongshin": "관성으로 재를 보호하거나 식상으로 재를 생함",
+        "taboos": ["인성 파재", "비겁 탈재"],
+        "fortune_tendency": "변동이 크지만 기회가 많음"
+      },
+      "jeongin_gyeok": {
+        "name": "정인격(正印格)",
+        "condition": "월간에 정인이 투간",
+        "characteristics": ["학습능력", "인덕", "보호본능"],
+        "yongshin": "관성으로 인을 생하거나 재성으로 인을 제어",
+        "taboos": ["재성 파인", "식상 설기"],
+        "fortune_tendency": "학문이나 정신적 영역에서 성공"
+      },
+      "pyeongin_gyeok": {
+        "name": "편인격(偏印格)",
+        "condition": "월간에 편인이 투간",
+        "characteristics": ["직감력", "독창성", "신비성"],
+        "yongshin": "관성으로 인을 생하거나 비겁으로 인을 설기",
+        "taboos": ["재성 파인", "식신 탈기"],
+        "fortune_tendency": "특수 분야나 예술 영역에서 두각"
+      },
+      "siksin_gyeok": {
+        "name": "식신격(食神格)",
+        "condition": "월간에 식신이 투간",
+        "characteristics": ["재능", "표현력", "유쾌함"],
+        "yongshin": "재성으로 식신을 설기하거나 인성으로 일간을 돕기",
+        "taboos": ["편인 탈기", "편관 제압"],
+        "fortune_tendency": "재능을 통한 재물과 명예 획득"
+      },
+      "sanggwan_gyeok": {
+        "name": "상관격(傷官格)",
+        "condition": "월간에 상관이 투간",
+        "characteristics": ["창조력", "혁신성", "반항성"],
+        "yongshin": "재성으로 상관을 설기하거나 인성으로 일간을 돕기",
+        "taboos": ["정관 견관", "편인 탈기"],
+        "fortune_tendency": "창조적 활동을 통한 성공"
+      }
+    },
+    "special_patterns": {
+      "congwang": {
+        "name": "종왕격(從旺格)",
+        "condition": "일간이 극도로 강하여 다른 기운이 없음",
+        "yongshin": "비겁, 식상",
+        "description": "강함을 따라가는 특수격"
+      },
+      "congjae": {
+        "name": "종재격(從財格)",
+        "condition": "재성이 극도로 강하고 인비가 전무",
+        "yongshin": "재성, 관성, 식상",
+        "description": "재물의 기운을 따라가는 특수격"
+      },
+      "congsha": {
+        "name": "종살격(從殺格)",
+        "condition": "편관이 극도로 강하고 인비가 전무",
+        "yongshin": "편관, 재성",
+        "description": "살기를 따라가는 특수격"
+      }
+    }
+  },
+
+  "shishine_relationships": {
+    "concept": "십신관계(十神關係) - 십성 간의 상호작용과 길흉 판단",
+    "description": "십성이 만날 때 발생하는 길흉의 변화와 그 해석",
+    "beneficial_combinations": {
+      "gwan_in_sangsheng": {
+        "combination": ["정관", "정인"],
+        "description": "관인상생 - 관성이 인성을 생하여 학문과 명예 동시 획득",
+        "effects": ["학업 성취", "사회적 지위 향상", "품격 있는 삶"],
+        "best_timing": "청년기~중년기"
+      },
+      "jae_gwan_sangui": {
+        "combination": ["정재", "정관"],
+        "description": "재관상의 - 재성이 관성을 생하여 부와 권력 동시 획득",
+        "effects": ["사업 성공", "사회적 인정", "경제적 안정"],
+        "best_timing": "중년기 이후"
+      },
+      "siksin_saejae": {
+        "combination": ["식신", "정재"],
+        "description": "식신생재 - 재능이 재물을 만들어내는 이상적 구조",
+        "effects": ["재능 발휘", "경제적 성공", "안정된 수입"],
+        "best_timing": "전 생애"
+      }
+    },
+    "harmful_combinations": {
+      "sanggwan_jiangwan": {
+        "combination": ["상관", "정관"],
+        "description": "상관견관 - 상관이 정관을 극하여 명예와 지위에 손상",
+        "effects": ["관재수", "명예 실추", "권위 도전"],
+        "caution": "관직이나 공직 종사시 특히 주의"
+      },
+      "pyeongin_talgishisin": {
+        "combination": ["편인", "식신"],
+        "description": "편인탈기 - 편인이 식신을 극하여 재능 발휘 저해",
+        "effects": ["표현력 저하", "재능 매몰", "의욕 상실"],
+        "caution": "창작이나 예술 활동시 장애"
+      },
+      "bigub_talja": {
+        "combination": ["비견/겁재", "재성"],
+        "description": "비겁탈재 - 비겁이 재성을 빼앗아 재물 손실",
+        "effects": ["금전 손실", "투자 실패", "동업 트러블"],
+        "caution": "재정 관리와 투자시 신중"
+      }
+    }
+  },
+
+  "daeun_analysis": {
+    "concept": "대운분석(大運分析) - 10년 단위 운세의 흐름과 변화",
+    "description": "생년월일시로부터 산출된 대운의 십성 변화와 그에 따른 인생 흐름",
+    "life_cycle_patterns": {
+      "youth_period": {
+        "age_range": "0~20세",
+        "characteristics": "기초 형성기",
+        "favorable_dahun": ["인성", "비겁"],
+        "analysis_focus": ["학업", "성장", "기반 형성"],
+        "caution": "너무 이른 재성이나 관성 대운은 조숙할 수 있음"
+      },
+      "young_adult": {
+        "age_range": "20~40세",
+        "characteristics": "발전 추진기",
+        "favorable_dahun": ["식상", "재성", "관성"],
+        "analysis_focus": ["진로", "결혼", "사회 진출"],
+        "caution": "편인이나 비겁 대운은 방향성 혼란 가능"
+      },
+      "middle_age": {
+        "age_range": "40~60세",
+        "characteristics": "성취 완성기",
+        "favorable_dahun": ["재성", "관성"],
+        "analysis_focus": ["사업", "지위", "재산 형성"],
+        "caution": "상관이나 편관 대운은 변화와 도전 가능"
+      },
+      "senior": {
+        "age_range": "60세 이후",
+        "characteristics": "안정 향유기",
+        "favorable_dahun": ["인성", "식상"],
+        "analysis_focus": ["건강", "여유", "후진 양성"],
+        "caution": "비겁이나 관성 대운은 불필요한 경쟁 가능"
+      }
+    },
+    "daeun_transition_effects": {
+      "concept": "대운 교체기의 특징과 주의사항",
+      "transition_period": "대운 교체 전후 1~2년",
+      "common_effects": [
+        "환경 변화",
+        "중요한 결정",
+        "인생 전환점",
+        "기존 패턴 종료"
+      ],
+      "preparation_advice": [
+        "미리 변화 준비",
+        "새로운 방향 모색",
+        "인맥 정리 및 확장",
+        "건강 관리 중점"
+      ]
+    }
+  },
+
+  "practical_application": {
+    "career_guidance": {
+      "by_yongshin": {
+        "fire_yongshin": {
+          "suitable_careers": ["교육", "문화", "예술", "IT", "에너지"],
+          "characteristics": "창의적이고 열정적인 분야",
+          "success_keys": ["표현력", "리더십", "열정"]
+        },
+        "earth_yongshin": {
+          "suitable_careers": ["부동산", "건축", "농업", "서비스", "관리"],
+          "characteristics": "안정적이고 실용적인 분야", 
+          "success_keys": ["신뢰성", "꾸준함", "실용성"]
+        },
+        "metal_yongshin": {
+          "suitable_careers": ["금융", "법률", "의료", "기계", "정밀"],
+          "characteristics": "정확하고 체계적인 분야",
+          "success_keys": ["전문성", "정확성", "원칙"]
+        },
+        "water_yongshin": {
+          "suitable_careers": ["유통", "운송", "관광", "서비스", "상담"],
+          "characteristics": "유연하고 소통이 중요한 분야",
+          "success_keys": ["적응력", "소통력", "유연성"]
+        },
+        "wood_yongshin": {
+          "suitable_careers": ["교육", "출판", "문화", "환경", "성장산업"],
+          "characteristics": "성장과 발전이 중요한 분야",
+          "success_keys": ["성장성", "확장성", "개발력"]
+        }
+      }
+    },
+    "relationship_compatibility": {
+      "marriage_analysis": {
+        "favorable_combinations": {
+          "gwan_jae_balance": "배우자궁에 관재균형시 이상적 결혼",
+          "shiksin_strong": "식신 왕성시 자녀복과 가정화목",
+          "in_wang": "인성 왕성시 현명한 배우자와 인연"
+        },
+        "caution_signs": {
+          "sanggwan_wang": "상관 왕성시 배우자와 갈등 가능",
+          "bigub_duo": "비겁 많을 시 이혼이나 별거 위험",
+          "guan_sha_hon": "관살혼잡시 복잡한 이성관계"
+        }
+      }
+    },
+    "health_guidance": {
+      "by_weak_elements": {
+        "wood_weak": {
+          "health_risks": ["간담", "신경", "눈", "근육"],
+          "care_methods": ["충분한 수면", "스트레스 관리", "눈 보호"],
+          "beneficial_foods": ["녹색 채소", "신선한 과일", "견과류"]
+        },
+        "fire_weak": {
+          "health_risks": ["심장", "혈관", "정신", "소화"],
+          "care_methods": ["적당한 운동", "마음의 안정", "따뜻한 환경"],
+          "beneficial_foods": ["붉은 음식", "매운맛", "따뜻한 차"]
+        },
+        "earth_weak": {
+          "health_risks": ["위장", "비장", "피부", "근육"],
+          "care_methods": ["규칙적 식사", "소화 관리", "적당한 단맛"],
+          "beneficial_foods": ["곡류", "고구마", "노란 음식"]
+        },
+        "metal_weak": {
+          "health_risks": ["폐", "대장", "피부", "호흡기"],
+          "care_methods": ["공기 질 관리", "호흡 운동", "건조 주의"],
+          "beneficial_foods": ["흰 음식", "매운맛", "견과류"]
+        },
+        "water_weak": {
+          "health_risks": ["신장", "방광", "생식기", "뼈"],
+          "care_methods": ["충분한 수분", "하체 보온", "과로 금지"],
+          "beneficial_foods": ["검은 음식", "짠맛", "해산물"]
+        }
+      }
+    }
+  }
+}

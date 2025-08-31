@@ -1,0 +1,405 @@
+{
+  "metadata": {
+    "title": "자평명리 해석 규칙 시스템",
+    "version": "1.0.0", 
+    "description": "십성과 오행 분석을 통한 성격, 운세, 적성 해석 규칙",
+    "created_at": "2025-08-31",
+    "last_updated": "2025-08-31"
+  },
+
+  "personality_interpretation": {
+    "ten_gods_dominant": {
+      "bijeon_strong": {
+        "threshold": 15,
+        "traits": {
+          "positive": ["독립적", "자존심 강함", "공정함", "협력적"],
+          "negative": ["고집이 셈", "타협 어려움", "자기중심적"],
+          "overall": "동등한 관계를 중시하며 자아가 뚜렷한 성격"
+        },
+        "life_advice": ["팀워크 중시", "타인 의견 경청", "융통성 기르기"],
+        "career_tendency": "동업이나 파트너십 사업 적합"
+      },
+      "geopjae_strong": {
+        "threshold": 15,
+        "traits": {
+          "positive": ["도전적", "추진력 강함", "변화 적응력", "개척정신"],
+          "negative": ["성급함", "충동적", "불안정", "파괴적 경향"],
+          "overall": "변화와 도전을 즐기는 역동적 성격"
+        },
+        "life_advice": ["신중함 기르기", "계획성 보완", "안정성 추구"],
+        "career_tendency": "새로운 분야 개척, 혁신적 사업"
+      },
+      "siksin_strong": {
+        "threshold": 15,
+        "traits": {
+          "positive": ["재능있음", "표현력 우수", "유쾌함", "창의적"],
+          "negative": ["방만할 수 있음", "현실 도피", "의존적 경향"],
+          "overall": "재능과 표현력이 뛰어난 예술적 성격"
+        },
+        "life_advice": ["재능 개발", "꾸준한 노력", "현실감각 기르기"],
+        "career_tendency": "예술, 엔터테인먼트, 서비스업"
+      },
+      "sanggwan_strong": {
+        "threshold": 15,
+        "traits": {
+          "positive": ["창조적", "혁신적", "독창적", "예술적 감각"],
+          "negative": ["반항적", "비판적", "극단적", "불안정"],
+          "overall": "창조와 혁신을 추구하는 독창적 성격"
+        },
+        "life_advice": ["건설적 비판", "협력 정신", "감정 조절"],
+        "career_tendency": "창작, 예술, 혁신 기술 분야"
+      },
+      "pyeonjae_strong": {
+        "threshold": 15,
+        "traits": {
+          "positive": ["사교적", "활동적", "기회 포착", "유연함"],
+          "negative": ["산만함", "불안정", "투기성", "낭비 경향"],
+          "overall": "활동적이고 사교적인 외향적 성격"
+        },
+        "life_advice": ["집중력 기르기", "계획적 소비", "안정성 추구"],
+        "career_tendency": "영업, 마케팅, 서비스, 유통업"
+      },
+      "jeongjae_strong": {
+        "threshold": 15,
+        "traits": {
+          "positive": ["근면함", "절약 정신", "계획적", "안정 추구"],
+          "negative": ["보수적", "소심함", "경직성", "물질 중시"],
+          "overall": "근면하고 계획적인 안정 지향적 성격"
+        },
+        "life_advice": ["도전 정신", "유연성 기르기", "관계 중시"],
+        "career_tendency": "관리, 회계, 금융, 안정적 직업"
+      },
+      "pyeongwan_strong": {
+        "threshold": 15,
+        "traits": {
+          "positive": ["개척적", "추진력", "결단력", "리더십"],
+          "negative": ["독선적", "권위적", "성급함", "강압적"],
+          "overall": "리더십이 강한 개척자적 성격"
+        },
+        "life_advice": ["겸손함", "소통 능력", "타인 배려"],
+        "career_tendency": "경영, 관리직, 개척 사업"
+      },
+      "jeonggwan_strong": {
+        "threshold": 15,
+        "traits": {
+          "positive": ["책임감", "신뢰성", "품격", "리더십"],
+          "negative": ["보수적", "형식적", "권위 의존", "소극적"],
+          "overall": "품격 있고 책임감 강한 리더 성격"
+        },
+        "life_advice": ["적극성", "혁신적 사고", "유연함"],
+        "career_tendency": "관리직, 공직, 교육, 상담"
+      },
+      "pyeongin_strong": {
+        "threshold": 15,
+        "traits": {
+          "positive": ["직감력", "독창성", "신비적", "특별함"],
+          "negative": ["외로움", "비현실적", "변덕", "까다로움"],
+          "overall": "직감적이고 독창적인 신비주의 성격"
+        },
+        "life_advice": ["현실감각", "소통 능력", "협력 정신"],
+        "career_tendency": "연구, 상담, 치료, 특수 분야"
+      },
+      "jeongin_strong": {
+        "threshold": 15,
+        "traits": {
+          "positive": ["학습력", "인덕", "보호 본능", "지혜"],
+          "negative": ["의존적", "소극적", "현실 도피", "게으름"],
+          "overall": "학습 능력이 뛰어나고 인덕이 있는 성격"
+        },
+        "life_advice": ["적극성", "독립성", "실천력"],
+        "career_tendency": "교육, 학습, 상담, 보육"
+      }
+    },
+
+    "ten_gods_weak": {
+      "threshold": 3,
+      "interpretation_method": "부족한 십성의 특성을 보완하는 방향으로 해석",
+      "general_advice": "약한 십성의 기능을 의식적으로 개발하고 강화할 필요"
+    },
+
+    "five_elements_balance": {
+      "wood_dominant": {
+        "threshold": 25,
+        "personality": ["성장 지향", "확장성", "창의력", "인내심"],
+        "caution": ["완고함", "우유부단", "감정적"],
+        "development": "금기로 절제력, 화기로 추진력 보완"
+      },
+      "fire_dominant": {
+        "threshold": 25,
+        "personality": ["열정적", "활동적", "리더십", "표현력"],
+        "caution": ["성급함", "극단적", "감정 기복"],
+        "development": "토기로 안정감, 수기로 냉정함 보완"
+      },
+      "earth_dominant": {
+        "threshold": 25,
+        "personality": ["안정적", "신뢰성", "포용력", "실용적"],
+        "caution": ["보수적", "변화 기피", "답답함"],
+        "development": "목기로 성장성, 금기로 결단력 보완"
+      },
+      "metal_dominant": {
+        "threshold": 25,
+        "personality": ["정확성", "원칙적", "결단력", "완벽주의"],
+        "caution": ["경직성", "냉정함", "비타협적"],
+        "development": "수기로 유연성, 목기로 온화함 보완"
+      },
+      "water_dominant": {
+        "threshold": 25,
+        "personality": ["지혜", "유연성", "적응력", "포용력"],
+        "caution": ["우유부단", "의존적", "소극적"],
+        "development": "화기로 추진력, "토기로 안정감 보완"
+      }
+    }
+  },
+
+  "fortune_interpretation": {
+    "annual_fortune": {
+      "favorable_years": {
+        "yongshin_year": {
+          "description": "용신에 해당하는 간지의 해",
+          "effects": ["전반적 상승", "좋은 기회", "목표 달성"],
+          "advice": "적극적으로 도전하고 기회를 잡을 때"
+        },
+        "complementary_year": {
+          "description": "사주 부족한 부분을 보완하는 해",
+          "effects": ["균형 회복", "약점 보완", "안정감"],
+          "advice": "부족했던 분야를 개발하고 강화할 때"
+        }
+      },
+      "challenging_years": {
+        "taboo_year": {
+          "description": "기신(忌神)에 해당하는 간지의 해",
+          "effects": ["어려움 증가", "장애물", "주의 필요"],
+          "advice": "신중하게 행동하고 무리하지 말 것"
+        },
+        "conflict_year": {
+          "description": "사주와 충돌하거나 형해가 되는 해",
+          "effects": ["변화와 변동", "관계 갈등", "환경 변화"],
+          "advice": "변화에 대비하고 관계 관리에 신경 쓸 것"
+        }
+      }
+    },
+
+    "monthly_fortune": {
+      "calculation_method": "년간과 월간의 관계, 계절의 영향 고려",
+      "seasonal_influence": {
+        "spring_months": {
+          "wood_people": "왕성한 기운으로 좋은 시기",
+          "metal_people": "극을 받아 어려운 시기",
+          "general": "새로운 시작과 성장의 계절"
+        },
+        "summer_months": {
+          "fire_people": "왕성한 기운으로 좋은 시기", 
+          "water_people": "극을 받아 어려운 시기",
+          "general": "활발한 활동과 성취의 계절"
+        },
+        "autumn_months": {
+          "metal_people": "왕성한 기운으로 좋은 시기",
+          "wood_people": "극을 받아 어려운 시기",
+          "general": "수확과 정리의 계절"
+        },
+        "winter_months": {
+          "water_people": "왕성한 기운으로 좋은 시기",
+          "fire_people": "극을 받아 어려운 시기",
+          "general": "휴식과 준비의 계절"
+        }
+      }
+    }
+  },
+
+  "career_interpretation": {
+    "aptitude_analysis": {
+      "leadership_roles": {
+        "indicators": ["정관 강함", "편관 적당", "화기 왕성"],
+        "suitable_positions": ["CEO", "관리직", "공직", "교육자"],
+        "success_factors": ["책임감", "결단력", "품격"],
+        "development_areas": ["소통 능력", "유연성", "창의성"]
+      },
+      "creative_roles": {
+        "indicators": ["식신 강함", "상관 적당", "목기/화기 조화"],
+        "suitable_positions": ["예술가", "디자이너", "작가", "크리에이터"],
+        "success_factors": ["창의성", "표현력", "감성"],
+        "development_areas": ["지속성", "현실감각", "협업 능력"]
+      },
+      "business_roles": {
+        "indicators": ["재성 강함", "식상 적당", "토기/금기 조화"],
+        "suitable_positions": ["사업가", "영업직", "마케터", "상인"],
+        "success_factors": ["기회 포착", "실용성", "관계 구축"],
+        "development_areas": ["위험 관리", "장기 계획", "전문성"]
+      },
+      "professional_roles": {
+        "indicators": ["인성 강함", "관성 적당", "수기/목기 조화"],
+        "suitable_positions": ["전문직", "연구원", "상담사", "의료진"],
+        "success_factors": ["전문성", "학습 능력", "신뢰성"],
+        "development_areas": ["적극성", "네트워킹", "실무 능력"]
+      }
+    },
+
+    "career_timing": {
+      "best_career_periods": {
+        "early_career": {
+          "age": "25-35",
+          "favorable_dahun": ["식상운", "재성운"],
+          "focus": "기술 습득, 경험 축적, 네트워킹",
+          "caution": "너무 이른 관성운은 부담"
+        },
+        "prime_career": {
+          "age": "35-50", 
+          "favorable_dahun": ["재성운", "관성운"],
+          "focus": "성취, 지위 확립, 사업 확장",
+          "caution": "과도한 욕심은 금물"
+        },
+        "mature_career": {
+          "age": "50-65",
+          "favorable_dahun": ["관성운", "인성운"],
+          "focus": "완성, 후진 양성, 전문성 발휘",
+          "caution": "변화보다는 안정 추구"
+        }
+      },
+      "career_change_timing": {
+        "favorable_conditions": [
+          "대운 교체기",
+          "용신운 시작",
+          "식상운이나 재성운",
+          "사주와 조화로운 년도"
+        ],
+        "avoid_conditions": [
+          "기신운 한가운데",
+          "충돌이 많은 시기",
+          "건강운이 약한 때",
+          "가족사가 복잡한 시기"
+        ]
+      }
+    }
+  },
+
+  "relationship_interpretation": {
+    "marriage_compatibility": {
+      "favorable_combinations": {
+        "complementary_elements": {
+          "description": "서로 부족한 오행을 보완하는 관계",
+          "examples": ["목-토", "화-금", "토-수"],
+          "effects": "상호 발전과 성장, 균형잡힌 관계"
+        },
+        "mutual_generation": {
+          "description": "오행 상생 관계",
+          "examples": ["목-화", "화-토", "토-금", "금-수", "수-목"],
+          "effects": "서로를 도와주고 발전시키는 관계"
+        }
+      },
+      "challenging_combinations": {
+        "mutual_destruction": {
+          "description": "오행 상극 관계",
+          "examples": ["목-금", "화-수", "토-목"],
+          "caution": "갈등과 마찰이 있을 수 있음",
+          "solution": "중간 오행으로 중재, 이해와 배려"
+        },
+        "same_element_excess": {
+          "description": "같은 오행이 과도한 경우",
+          "caution": "경쟁과 갈등, 극단적 성향",
+          "solution": "다양성 추구, 균형감 유지"
+        }
+      }
+    },
+
+    "parent_child_relationship": {
+      "favorable_patterns": {
+        "parent_supports_child": {
+          "pattern": "부모 십성이 자녀에게 도움",
+          "example": "부모 인성, 자녀 비겁",
+          "effects": "좋은 교육과 양육 환경"
+        },
+        "child_honors_parent": {
+          "pattern": "자녀가 부모에게 효를 다함",
+          "example": "부모 관성, 자녀 재성",
+          "effects": "효성이 지극하고 부모 공경"
+        }
+      },
+      "challenging_patterns": {
+        "generational_conflict": {
+          "pattern": "세대간 가치관 충돌",
+          "example": "부모 정관, 자녀 상관",
+          "caution": "권위 도전, 갈등 가능",
+          "solution": "상호 이해와 소통"
+        }
+      }
+    }
+  },
+
+  "health_interpretation": {
+    "constitutional_analysis": {
+      "by_dominant_element": {
+        "wood_constitution": {
+          "strengths": ["성장력", "회복력", "유연성"],
+          "vulnerabilities": ["간담계", "신경계", "눈"],
+          "care_methods": ["스트레스 관리", "규칙적 생활", "충분한 휴식"],
+          "beneficial_activities": ["산책", "요가", "명상"]
+        },
+        "fire_constitution": {
+          "strengths": ["활력", "면역력", "순환"],
+          "vulnerabilities": ["심혈관계", "정신계", "소화계"],
+          "care_methods": ["감정 조절", "적당한 운동", "마음의 평화"],
+          "beneficial_activities": ["가벼운 운동", "음악감상", "사교활동"]
+        },
+        "earth_constitution": {
+          "strengths": ["소화력", "안정성", "지구력"],
+          "vulnerabilities": ["소화계", "근육계", "피부"],
+          "care_methods": ["규칙적 식사", "적당한 단맛", "마사지"],
+          "beneficial_activities": ["걷기", "등산", "원예"]
+        },
+        "metal_constitution": {
+          "strengths": ["면역력", "정화력", "구조"],
+          "vulnerabilities": ["호흡계", "피부", "대장"],
+          "care_methods": ["공기 질 관리", "호흡 운동", "적당한 매운맛"],
+          "beneficial_activities": ["호흡 운동", "수영", "등산"]
+        },
+        "water_constitution": {
+          "strengths": ["정화력", "유연성", "저장력"],
+          "vulnerabilities": ["신장계", "생식계", "뼈"],
+          "care_methods": ["충분한 수분", "하체 보온", "과로 금지"],
+          "beneficial_activities": ["수영", "온천", "족욕"]
+        }
+      }
+    },
+
+    "seasonal_health_care": {
+      "spring_care": {
+        "focus": "간담 건강, 해독",
+        "activities": ["봄나물 섭취", "가벼운 운동", "생활 리듬 정비"],
+        "caution": "과도한 활동, 스트레스 누적"
+      },
+      "summer_care": {
+        "focus": "심혈관 건강, 열 관리",
+        "activities": ["충분한 수분", "시원한 환경", "감정 조절"],
+        "caution": "과열, 과도한 흥분, 냉방병"
+      },
+      "autumn_care": {
+        "focus": "폐 건강, 면역력",
+        "activities": ["호흡 운동", "적당한 매운맛", "보습"],
+        "caution": "건조함, 감기, 우울감"
+      },
+      "winter_care": {
+        "focus": "신장 건강, 보온",
+        "activities": ["충분한 휴식", "따뜻한 음식", "하체 보온"],
+        "caution": "과로, "추위, 우울감"
+      }
+    }
+  },
+
+  "decision_making_rules": {
+    "priority_system": {
+      "level_1": "용신과 기신 판별 - 가장 기본적이고 중요한 판단 기준",
+      "level_2": "십성의 강약과 조화 - 성격과 능력의 핵심 지표",
+      "level_3": "오행의 균형 - 전체적인 조화와 건강의 기준",
+      "level_4": "대운과 세운 - 시기별 변화와 흐름의 고려",
+      "level_5": "계절과 환경 - 외부 조건과 상황의 영향"
+    },
+
+    "interpretation_guidelines": {
+      "holistic_approach": "개별 요소가 아닌 전체적 조화를 우선 고려",
+      "balance_perspective": "극단보다는 균형과 조화를 추구",
+      "timing_consideration": "현재 시점과 앞으로의 변화를 함께 고려",
+      "practical_application": "이론적 완벽보다는 실용적 도움을 우선",
+      "positive_guidance": "문제점 지적보다는 건설적 조언을 중시"
+    }
+  }
+}
