@@ -1,0 +1,446 @@
+{
+  "metadata": {
+    "title": "연해자평 시결론 및 종합 통합 데이터베이스",
+    "version": "1.0.0",
+    "description": "연해자평의 시결론과 명리학 5대 고전의 최종 통합 체계",
+    "source": "연해자평(淵海子平) - 서대승(徐大升) 저",
+    "integration": "자평진전 + 궁통보감 + 삼명통회 + 적천수 + 연해자평 통합",
+    "created_at": "2025-08-31",
+    "last_updated": "2025-08-31",
+    "phase": "Phase 4 - 연해자평 시결론 및 최종 통합 완료"
+  },
+
+  "yeonhae_sigyeol_theory": {
+    "concept": "연해자평 시결론(時訣論) - 시간과 실증 중심의 사주 해석법",
+    "description": "서대승이 정리한 서자평의 일간 중심 체계와 시결(時訣) 위주 해석법",
+    "historical_significance": "고법에서 신법으로 전환하는 과도기의 집대성 서적",
+    
+    "core_principles": {
+      "time_formula_method": {
+        "concept": "시결법(時訣法)",
+        "description": "출생 시간과 계절의 조합에 따른 정형화된 해석 공식",
+        "formula_types": {
+          "seasonal_formulas": {
+            "spring_birth": {
+              "wood_day_masters": {
+                "갑목춘생": {
+                  "formula": "갑목생어춘 조후최긴요",
+                  "meaning": "갑목이 봄에 태어나면 조후(調候)가 가장 중요",
+                  "interpretation": "목기가 왕성한 봄철에는 화기로 따뜻하게 해야 함",
+                  "yongshin_priority": ["정화", "병화", "무토"]
+                },
+                "을목춘생": {
+                  "formula": "을목춘월 양인격",
+                  "meaning": "을목이 봄철에는 양인격이 되기 쉬움",
+                  "interpretation": "너무 강한 목기로 인한 극단성 주의",
+                  "yongshin_priority": ["금기제어", "토기소모"]
+                }
+              },
+              "fire_day_masters": {
+                "병화춘생": {
+                  "formula": "병화춘생 목다화염",
+                  "meaning": "병화가 봄에 태어나면 목이 많아 화염이 치솟음",
+                  "interpretation": "목생화로 인한 과열 주의, 토기로 설기 필요",
+                  "yongshin_priority": ["무토", "기토", "임수"]
+                }
+              }
+            },
+            
+            "summer_birth": {
+              "fire_day_masters": {
+                "병화하생": {
+                  "formula": "병화하생 견수방길",
+                  "meaning": "병화가 여름에 태어나면 물을 보아야 길함",
+                  "interpretation": "극도로 뜨거운 화기를 수기로 조절해야 함",
+                  "yongshin_priority": ["임수", "계수", "해수"]
+                },
+                "정화하생": {
+                  "formula": "정화하월 불가무계",
+                  "meaning": "정화가 여름달에는 임계수가 없으면 안됨",
+                  "interpretation": "온화한 정화도 여름에는 수기 조절 필수",
+                  "yongshin_priority": ["계수우선", "임수보조", "금생수"]
+                }
+              },
+              "earth_day_masters": {
+                "무토하생": {
+                  "formula": "무토하생 갑목소통",
+                  "meaning": "무토가 여름에 태어나면 갑목으로 소통시켜야 함",
+                  "interpretation": "뜨거운 토기를 목기로 소통하고 수기로 윤택",
+                  "yongshin_priority": ["갑목", "임수", "계수"]
+                }
+              }
+            },
+            
+            "autumn_birth": {
+              "metal_day_masters": {
+                "경금추생": {
+                  "formula": "경금추생 정화단련",
+                  "meaning": "경금이 가을에 태어나면 정화로 단련해야 함",
+                  "interpretation": "왕성한 금기를 화기로 단련하여 재능 발휘",
+                  "yongshin_priority": ["정화", "병화", "사화"]
+                },
+                "신금추생": {
+                  "formula": "신금추월 임수조후",
+                  "meaning": "신금이 가을달에는 임수로 조후해야 함",
+                  "interpretation": "건조한 금기를 수기로 윤택하게 만들기",
+                  "yongshin_priority": ["임수", "정화", "갑목"]
+                }
+              },
+              "wood_day_masters": {
+                "갑목추생": {
+                  "formula": "갑목추생 정계병정",
+                  "meaning": "갑목이 가을에 태어나면 정화, 계수, 병화가 모두 필요",
+                  "interpretation": "금극목의 불리함을 화기와 수기로 보완",
+                  "yongshin_priority": ["정화온화", "계수생조", "병화보조"]
+                }
+              }
+            },
+            
+            "winter_birth": {
+              "water_day_masters": {
+                "임수동생": {
+                  "formula": "임수동생 무토제수",
+                  "meaning": "임수가 겨울에 태어나면 무토로 물을 제어해야 함",
+                  "interpretation": "넘치는 수기를 토기로 제어하고 화기로 온양",
+                  "yongshin_priority": ["무토", "정화", "병화"]
+                },
+                "계수동생": {
+                  "formula": "계수동월 병정온조",
+                  "meaning": "계수가 겨울달에는 병화정화로 온조해야 함",
+                  "interpretation": "차가운 수기를 화기로 따뜻하게 조절",
+                  "yongshin_priority": ["병화", "정화", "사화"]
+                }
+              },
+              "fire_day_masters": {
+                "병화동생": {
+                  "formula": "병화동생 갑목인수",
+                  "meaning": "병화가 겨울에 태어나면 갑목으로 인수해야 함",
+                  "interpretation": "약한 화기를 목기로 생조하여 기운 회복",
+                  "yongshin_priority": ["갑목", "을목", "인목"]
+                }
+              }
+            }
+          },
+          
+          "combination_formulas": {
+            "favorable_combinations": {
+              "관인상생": {
+                "formula": "관인상생 부귀장수",
+                "pattern": "정관 + 정인 조합",
+                "interpretation": "관성이 인성을 생하고 인성이 일간을 생하는 이상적 구조",
+                "outcomes": ["사회적 성공", "학문적 성취", "품격 있는 삶", "장수와 건강"]
+              },
+              "재관상의": {
+                "formula": "재관상의 부귀쌍전",
+                "pattern": "정재 + 정관 조합",
+                "interpretation": "재성이 관성을 생하여 부와 권력을 동시에 획득",
+                "outcomes": ["경제적 성공", "사회적 지위", "안정된 기반", "명예로운 삶"]
+              },
+              "식신생재": {
+                "formula": "식신생재 의식풍족",
+                "pattern": "식신 + 재성 조합",
+                "interpretation": "재능이 재물을 만들어내는 자연스러운 흐름",
+                "outcomes": ["기술로 성공", "창조적 수입", "안정된 생활", "여유로운 삶"]
+              }
+            },
+            
+            "challenging_combinations": {
+              "상관견관": {
+                "formula": "상관견관 화근무궁",
+                "pattern": "상관 + 정관 충돌",
+                "interpretation": "창조 기운과 질서 기운의 갈등으로 문제 발생",
+                "challenges": ["권위 도전", "관재수 위험", "직장 내 갈등", "법적 문제"],
+                "resolution": ["상관을 재성으로 설기", "인성으로 관성 보호"]
+              },
+              "양인탈재": {
+                "formula": "양인탈재 처자유별",
+                "pattern": "양인 + 재성 충돌",
+                "interpretation": "극단적 기운이 재물과 인연을 해침",
+                "challenges": ["금전 손실", "배우자와 별거", "인간관계 갈등", "충동적 행동"],
+                "resolution": ["관성으로 양인 제어", "식상으로 양인 설기"]
+              },
+              "편인탈식": {
+                "formula": "편인탈식 자식난육",
+                "pattern": "편인 + 식신 충돌",
+                "interpretation": "편중된 인성이 표현력과 자식 운을 해침",
+                "challenges": ["자녀와 인연 박함", "표현력 저하", "창의성 억제", "소화 불량"],
+                "resolution": ["재성으로 편인 제어", "비겁으로 편인 설기"]
+              }
+            }
+          }
+        }
+      },
+      
+      "practical_case_studies": {
+        "concept": "실증 사례 중심 해석법",
+        "description": "이론보다는 실제 사례를 통한 검증과 해석",
+        "case_categories": {
+          "success_cases": {
+            "scholarly_success": {
+              "pattern": "인성 + 관성 조합",
+              "examples": [
+                "정인격에 천을귀인이 있어 학자로 대성",
+                "문창귀인과 학당귀인이 함께 있어 문장가로 명성",
+                "관인상생격에 월덕귀인까지 있어 덕망 있는 관리"
+              ],
+              "common_features": ["꾸준한 학습", "도덕적 품격", "사회적 기여"]
+            },
+            
+            "business_success": {
+              "pattern": "재성 + 식상 조합",
+              "examples": [
+                "식신생재격으로 요식업에서 대성공",
+                "편재격에 장성이 있어 무역업으로 부자",
+                "재관상의격으로 기업 경영에서 성취"
+              ],
+              "common_features": ["실용적 재능", "시장 감각", "인맥 활용"]
+            },
+            
+            "artistic_success": {
+              "pattern": "식상 + 화개 조합",
+              "examples": [
+                "상관격에 화개가 있어 예술가로 인정",
+                "식신격에 문곡귀인이 있어 문화계 명사",
+                "상관격에 홍화가 있어 연예계에서 성공"
+              ],
+              "common_features": ["독창적 감각", "표현력", "대중적 어필"]
+            }
+          },
+          
+          "challenge_cases": {
+            "career_obstacles": {
+              "pattern": "상관견관, 양인과다",
+              "examples": [
+                "상관견관으로 공직 진출 어려움",
+                "양인과다로 사업 파트너와 갈등",
+                "편관과다로 직장에서 압박감"
+              ],
+              "resolution_strategies": ["적성에 맞는 분야 선택", "독립적 활동", "창조적 출구 모색"]
+            },
+            
+            "relationship_difficulties": {
+              "pattern": "비겁과다, 관살혼잡",
+              "examples": [
+                "비겁과다로 배우자와 금전 갈등",
+                "관살혼잡으로 복잡한 이성관계",
+                "상관왕으로 시부모와 불화"
+              ],
+              "resolution_strategies": ["상호 이해", "경계 설정", "소통 개선"]
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "integrated_comprehensive_system": {
+    "five_classics_integration": {
+      "concept": "명리학 5대 고전 통합 해석 체계",
+      "description": "각 고전의 장점을 취합하여 종합적이고 실용적인 해석 시스템 구축",
+      "integration_framework": {
+        "step_1_basic_analysis": {
+          "source": "자평진전 + 연해자평",
+          "focus": "기본 구조 분석",
+          "elements": [
+            "사주팔자 정확한 도출",
+            "일간 강약 판별",
+            "용신 기신 확정",
+            "격국 분류 및 평가"
+          ]
+        },
+        
+        "step_2_climate_adjustment": {
+          "source": "궁통보감 조후론",
+          "focus": "계절적 조화 분석",
+          "elements": [
+            "출생월의 기후 특성 파악",
+            "한난조습 조정 필요성 판단",
+            "조후용신 우선순위 결정",
+            "월별 세부 조후 방법 적용"
+          ]
+        },
+        
+        "step_3_spiritual_influences": {
+          "source": "삼명통회 신살론",
+          "focus": "특수 길흉 요소 분석",
+          "elements": [
+            "주요 길신 흉신 확인",
+            "신살 간의 상호작용 분석",
+            "활성화 조건 및 시기 판단",
+            "대응책 및 활용법 제시"
+          ]
+        },
+        
+        "step_4_philosophical_integration": {
+          "source": "적천수 철학",
+          "focus": "깊이 있는 해석과 지혜",
+          "elements": [
+            "전체적 맥락과 흐름 파악",
+            "역설적 상황의 진정한 의미",
+            "다차원적 관점 통합",
+            "실생활 적용 지혜 도출"
+          ]
+        },
+        
+        "step_5_practical_application": {
+          "source": "연해자평 시결론",
+          "focus": "실증적 검증과 적용",
+          "elements": [
+            "유사 사례와 비교 검증",
+            "시기별 변화 예측",
+            "구체적 실천 방안 제시",
+            "지속적 모니터링 가이드"
+          ]
+        }
+      }
+    },
+    
+    "modern_interpretation_protocol": {
+      "concept": "현대적 해석 프로토콜",
+      "description": "전통 이론을 현대 상황에 맞게 적용하는 체계적 방법론",
+      "protocol_stages": {
+        "stage_1_data_collection": {
+          "birth_information": [
+            "정확한 출생 연월일시",
+            "출생 지역 및 시간대",
+            "음력/양력 구분",
+            "윤달 여부 확인"
+          ],
+          "background_context": [
+            "교육 배경 및 환경",
+            "가족 구성 및 관계",
+            "현재 상황 및 관심사",
+            "고민이나 질문 사항"
+          ]
+        },
+        
+        "stage_2_comprehensive_analysis": {
+          "technical_analysis": [
+            "기본 십성 오행 분석",
+            "용신 기신 확정",
+            "대운 세운 흐름 파악",
+            "특수 패턴 및 신살 확인"
+          ],
+          "contextual_analysis": [
+            "계절적 기후 요인",
+            "시대적 환경 변화",
+            "개인적 성향 특성",
+            "사회적 역할 기대"
+          ]
+        },
+        
+        "stage_3_integrated_interpretation": {
+          "holistic_perspective": [
+            "강점과 약점의 균형적 이해",
+            "도전과 기회의 통합적 관점",
+            "과거 현재 미래의 연결",
+            "개인과 사회의 조화"
+          ],
+          "practical_guidance": [
+            "구체적 발전 방향 제시",
+            "단계적 실행 계획",
+            "주의사항 및 대비책",
+            "지속적 성장 전략"
+          ]
+        },
+        
+        "stage_4_personalized_application": {
+          "individual_customization": [
+            "개인별 맞춤 조언",
+            "상황별 대응 방안",
+            "시기별 주의사항",
+            "장기적 발전 로드맵"
+          ],
+          "follow_up_system": [
+            "정기적 점검 및 평가",
+            "상황 변화에 따른 조정",
+            "새로운 도전 과제 설정",
+            "지속적 동기 부여"
+          ]
+        }
+      }
+    }
+  },
+
+  "comprehensive_application_guidelines": {
+    "usage_principles": {
+      "accuracy_priority": {
+        "principle": "정확성을 최우선으로",
+        "guidelines": [
+          "출생시간의 정확성 확인",
+          "계산 과정의 검증",
+          "해석의 논리적 일관성",
+          "예외상황에 대한 신중한 접근"
+        ]
+      },
+      
+      "balance_perspective": {
+        "principle": "균형잡힌 관점 유지",
+        "guidelines": [
+          "장점과 단점의 공정한 제시",
+          "희망과 현실의 적절한 조화",
+          "개인적 욕구와 사회적 책임의 균형",
+          "전통적 지혜와 현대적 적용의 조화"
+        ]
+      },
+      
+      "constructive_approach": {
+        "principle": "건설적 접근법",
+        "guidelines": [
+          "문제 지적보다는 해결책 중심",
+          "비관보다는 희망적 관점",
+          "제한보다는 가능성 강조",
+          "의존보다는 자립 독려"
+        ]
+      }
+    },
+    
+    "ethical_standards": {
+      "respect_for_individual": {
+        "standard": "개인의 존엄성 존중",
+        "practices": [
+          "운명론적 체념 방지",
+          "개인의 노력과 선택 중시",
+          "다양성과 개성 인정",
+          "차별이나 편견 배제"
+        ]
+      },
+      
+      "responsible_guidance": {
+        "standard": "책임감 있는 조언",
+        "practices": [
+          "과도한 의존 방지",
+          "현실적이고 실행 가능한 조언",
+          "부작용이나 위험 요소 설명",
+          "전문가 상담 필요시 안내"
+        ]
+      },
+      
+      "continuous_learning": {
+        "standard": "지속적 학습과 발전",
+        "practices": [
+          "새로운 지식과 경험 수용",
+          "오류나 한계 인정과 개선",
+          "다른 관점과 방법론 학습",
+          "시대 변화에 따른 적응"
+        ]
+      }
+    },
+    
+    "quality_assurance": {
+      "verification_process": {
+        "step_1": "기본 계산의 정확성 검증",
+        "step_2": "해석의 논리적 일관성 확인",
+        "step_3": "실제 상황과의 부합성 점검",
+        "step_4": "조언의 실행 가능성 평가"
+      },
+      
+      "feedback_integration": {
+        "method_1": "사용자 피드백 수집 및 분석",
+        "method_2": "결과 추적 및 효과 측정",
+        "method_3": "개선 사항 도출 및 적용",
+        "method_4": "지속적 품질 향상 노력"
+      }
+    }
+  }
+}
