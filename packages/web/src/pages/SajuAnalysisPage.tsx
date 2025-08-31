@@ -10,6 +10,7 @@ import { SajuBirthInfo, SajuAnalysisResult, SajuData } from '@/types/saju';
 import { UserProfile, AnalysisType } from '@/types/user';
 import { getCurrentUser, addAnalysisHistory } from '@/utils/userStorage';
 import { SajuCalculator, formatFourPillars, formatFourPillarsDetailed, FourPillarsResult } from '@/utils/sajuCalculator';
+import { calculateSajuData } from '@/utils/sajuDataCalculator';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 
 const SajuAnalysisPage: React.FC = () => {
@@ -64,45 +65,20 @@ const SajuAnalysisPage: React.FC = () => {
 
     // 시뮬레이션: 1초 대기 후 결과 생성
     setTimeout(() => {
-      // 계산된 사주로 분석 결과 생성
+      // 실제 사주 데이터 계산
+      const sajuData = calculateSajuData(info);
+      
+      // SajuAnalysisResult 형식으로 변환
       const result: SajuAnalysisResult = {
-        birthInfo: info,
-        fourPillars: {
-          year: { heavenly: calculatedPillars.year.heavenly, earthly: calculatedPillars.year.earthly },
-          month: { heavenly: calculatedPillars.month.heavenly, earthly: calculatedPillars.month.earthly },
-          day: { heavenly: calculatedPillars.day.heavenly, earthly: calculatedPillars.day.earthly },
-          hour: { heavenly: calculatedPillars.hour.heavenly, earthly: calculatedPillars.hour.earthly }
-        },
-        sixAreas: {
-          foundation: 68,
-          thinking: 62,
-          relationship: 71,
-          action: 58,
-          luck: 73,
-          environment: 55
-        },
-        fiveElements: {
-          wood: 25,
-          fire: 20,
-          earth: 15,
-          metal: 22,
-          water: 18
-        },
-        tenGods: {
-          bijeon: 10,
-          geopjae: 8,
-          siksin: 12,
-          sanggwan: 9,
-          jeongjae: 11,
-          pyeonjae: 7,
-          jeonggwan: 13,
-          pyeongwan: 10,
-          jeongin: 12,
-          pyeongin: 8
-        },
-        totalScore: 387,
-        averageScore: 64.5
+        birthInfo: sajuData.birthInfo,
+        fourPillars: sajuData.fourPillars,
+        sixAreas: sajuData.sixAreas,
+        fiveElements: sajuData.fiveElements,
+        tenGods: sajuData.tenGods,
+        totalScore: sajuData.totalScore,
+        averageScore: sajuData.averageScore
       };
+      
       setAnalysisResult(result);
       setLoading(false);
     }, 1000);
@@ -122,38 +98,8 @@ const SajuAnalysisPage: React.FC = () => {
 
   // SajuAnalysisResult를 SajuData로 변환
   const convertToSajuData = (result: SajuAnalysisResult): SajuData => {
-    return {
-      ...result,
-      dayMaster: result.fourPillars.day.heavenly,
-      personalityTraits: {
-        emotion: 75,
-        logic: 80,
-        artistic: 65,
-        rational: 70,
-        character: 85,
-        intelligence: 78,
-        learning: 72
-      },
-      seventeenFortunes: {
-        health: 75,
-        marriage: 68,
-        power: 72,
-        fame: 65,
-        accident: 30,
-        business: 78,
-        movement: 60,
-        separation: 35,
-        relationship: 82,
-        children: 70,
-        talent: 85,
-        wealth: 73,
-        ancestor: 65,
-        career: 80,
-        family: 77,
-        study: 75,
-        fortune: 70
-      }
-    };
+    // 실제 사주 데이터 재계산하여 완전한 SajuData 생성
+    return calculateSajuData(result.birthInfo);
   };
 
   return (

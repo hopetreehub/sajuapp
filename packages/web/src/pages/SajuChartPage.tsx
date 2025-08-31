@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSajuSettingsStore } from '@/stores/sajuSettingsStore'
-import { SajuCalculator, formatFourPillarsDetailed } from '@/utils/sajuCalculator'
+import { calculateSajuData } from '@/utils/sajuDataCalculator'
 import { FiveElementsBalanceChart } from '@/components/saju/charts/FiveElementsBalanceChart'
 import { TenGodsDistributionChart } from '@/components/saju/charts/TenGodsDistributionChart'
 import { BirthInfoHeader } from '@/components/saju/BirthInfoHeader'
@@ -18,77 +18,8 @@ const SajuChartPage: React.FC = () => {
     if (!birthInfo) return null
     
     try {
-      const fourPillars = SajuCalculator.calculateFourPillars(birthInfo)
-      const result = {
-        birthInfo,
-        fourPillars: {
-          year: { heavenly: fourPillars.year.heavenly, earthly: fourPillars.year.earthly },
-          month: { heavenly: fourPillars.month.heavenly, earthly: fourPillars.month.earthly },
-          day: { heavenly: fourPillars.day.heavenly, earthly: fourPillars.day.earthly },
-          hour: { heavenly: fourPillars.hour.heavenly, earthly: fourPillars.hour.earthly }
-        },
-        sixAreas: {
-          foundation: 75,
-          thinking: 68,
-          relationship: 82,
-          action: 71,
-          luck: 65,
-          environment: 78
-        },
-        fiveElements: {
-          wood: 22,
-          fire: 18,
-          earth: 25,
-          metal: 20,
-          water: 15
-        },
-        tenGods: {
-          bijeon: 12,
-          geopjae: 8,
-          siksin: 10,
-          sanggwan: 7,
-          jeongjae: 11,
-          pyeonjae: 9,
-          jeonggwan: 13,
-          pyeongwan: 10,
-          jeongin: 11,
-          pyeongin: 9
-        },
-        totalScore: 439,
-        averageScore: 73.2
-      }
-      return {
-        ...result,
-        dayMaster: fourPillars.day.heavenly,
-        personalityTraits: {
-          emotion: 75,
-          logic: 80,
-          artistic: 65,
-          rational: 70,
-          character: 85,
-          intelligence: 78,
-          learning: 72
-        },
-        seventeenFortunes: {
-          health: 75,
-          marriage: 68,
-          power: 72,
-          fame: 65,
-          accident: 30,
-          business: 78,
-          movement: 60,
-          separation: 35,
-          relationship: 82,
-          children: 70,
-          talent: 85,
-          wealth: 73,
-          ancestor: 65,
-          career: 80,
-          family: 77,
-          study: 75,
-          fortune: 70
-        }
-      }
+      // 실제 사주 데이터 계산
+      return calculateSajuData(birthInfo)
     } catch (error) {
       console.error('사주 계산 오류:', error)
       return null
