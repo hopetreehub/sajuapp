@@ -6,6 +6,7 @@ import { SajuAnalysisResult, SajuBirthInfo } from '@/types/saju';
 import { UserProfile } from '@/types/user';
 import { getCurrentUser } from '@/utils/userStorage';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
+import { calculateSajuData } from '@/utils/sajuDataCalculator';
 
 const SixAreasPage: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
@@ -23,45 +24,19 @@ const SixAreasPage: React.FC = () => {
     }
   }, [navigate]);
 
-  // 임시 사주 분석 결과 생성 (실제로는 백엔드에서 가져옴)
+  // 실제 사주 분석 결과 생성
   const generateAnalysisResult = (birthInfo: SajuBirthInfo): SajuAnalysisResult => {
+    // 실제 사주 데이터 계산
+    const sajuData = calculateSajuData(birthInfo);
+    
     return {
-      birthInfo,
-      fourPillars: {
-        year: { heavenly: '병', earthly: '술' },
-        month: { heavenly: '신', earthly: '묘' },
-        day: { heavenly: '임', earthly: '진' },
-        hour: { heavenly: '계', earthly: '묘' }
-      },
-      sixAreas: {
-        foundation: 68,
-        thinking: 62,
-        relationship: 71,
-        action: 58,
-        luck: 73,
-        environment: 55
-      },
-      fiveElements: {
-        wood: 25,
-        fire: 20,
-        earth: 15,
-        metal: 22,
-        water: 18
-      },
-      tenGods: {
-        bijeon: 10,
-        geopjae: 8,
-        siksin: 12,
-        sanggwan: 9,
-        jeongjae: 11,
-        pyeonjae: 7,
-        jeonggwan: 13,
-        pyeongwan: 10,
-        jeongin: 12,
-        pyeongin: 8
-      },
-      totalScore: 387,
-      averageScore: 64.5
+      birthInfo: sajuData.birthInfo,
+      fourPillars: sajuData.fourPillars,
+      sixAreas: sajuData.sixAreas,
+      fiveElements: sajuData.fiveElements,
+      tenGods: sajuData.tenGods,
+      totalScore: sajuData.totalScore,
+      averageScore: sajuData.averageScore
     };
   };
 

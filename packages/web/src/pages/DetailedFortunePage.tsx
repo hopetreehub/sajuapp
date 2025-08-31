@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import SeventeenFortuneChart from '@/components/saju/charts/SeventeenFortuneChart';
 import ChartNavigation from '@/components/Common/ChartNavigation';
-import { SeventeenFortuneScores } from '@/types/saju';
+import { SeventeenFortuneScores, SajuBirthInfo } from '@/types/saju';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
+import { calculateSajuData } from '@/utils/sajuDataCalculator';
 
 const DetailedFortunePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [fortuneScores, setFortuneScores] = useState<SeventeenFortuneScores | null>(null);
-  const [personalInfo, setPersonalInfo] = useState<any>(null);
+  const [personalInfo, setPersonalInfo] = useState<SajuBirthInfo | null>(null);
 
   useEffect(() => {
     // 개인정보 불러오기
@@ -16,9 +17,25 @@ const DetailedFortunePage: React.FC = () => {
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          setPersonalInfo(parsed);
-          // 개인정보가 있으면 운세 점수 생성
-          generateFortuneScores();
+          // SettingsPage 형식을 SajuBirthInfo 형식으로 변환
+          if (parsed.birthDate && parsed.birthTime) {
+            const date = new Date(parsed.birthDate);
+            const [hour, minute] = parsed.birthTime.split(':').map(Number);
+            
+            const sajuBirthInfo: SajuBirthInfo = {
+              year: date.getFullYear(),
+              month: date.getMonth() + 1,
+              day: date.getDate(),
+              hour: hour || 0,
+              minute: minute || 0,
+              isLunar: parsed.calendarType === 'lunar',
+              gender: parsed.gender as 'male' | 'female' | undefined
+            };
+            
+            setPersonalInfo(sajuBirthInfo);
+          } else {
+            generateDefaultScores();
+          }
         } catch (error) {
           console.error('Failed to parse personal info:', error);
           generateDefaultScores();
@@ -32,35 +49,64 @@ const DetailedFortunePage: React.FC = () => {
     loadPersonalInfo();
   }, []);
 
+  // personalInfo가 설정되면 운세 점수 생성
+  useEffect(() => {
+    if (personalInfo) {
+      generateFortuneScores();
+    }
+  }, [personalInfo]);
+
   // 운세 점수 생성 (개인정보 기반)
   const generateFortuneScores = () => {
+    if (!personalInfo) {
+      generateDefaultScores();
+      return;
+    }
+    
     setLoading(true);
     
-    // 시뮬레이션: 실제로는 개인정보 기반으로 계산
+    // 실제 사주 데이터로 계산
     setTimeout(() => {
-      const scores: SeventeenFortuneScores = {
-        health: Math.floor(Math.random() * 30) + 45,       // 45-75
-        marriage: Math.floor(Math.random() * 35) + 40,     // 40-75
-        power: Math.floor(Math.random() * 25) + 35,        // 35-60
-        fame: Math.floor(Math.random() * 30) + 45,         // 45-75
-        accident: Math.floor(Math.random() * 30) + 25,     // 25-55 (낮을수록 좋음)
-        business: Math.floor(Math.random() * 35) + 50,     // 50-85
-        movement: Math.floor(Math.random() * 30) + 40,     // 40-70
-        separation: Math.floor(Math.random() * 25) + 30,   // 30-55 (낮을수록 좋음)
-        relationship: Math.floor(Math.random() * 35) + 55, // 55-90
-        children: Math.floor(Math.random() * 30) + 45,     // 45-75
-        talent: Math.floor(Math.random() * 35) + 50,       // 50-85
-        wealth: Math.floor(Math.random() * 35) + 45,       // 45-80
-        ancestor: Math.floor(Math.random() * 25) + 50,     // 50-75
-        career: Math.floor(Math.random() * 30) + 50,       // 50-80
-        family: Math.floor(Math.random() * 30) + 55,       // 55-85
-        study: Math.floor(Math.random() * 35) + 45,        // 45-80
-        fortune: Math.floor(Math.random() * 30) + 50       // 50-80
-      };
-      
-      setFortuneScores(scores);
-      setLoading(false);
+      try {
+        const sajuData = calculateSajuData(personalInfo);
+        // seventeenFortunes가 있으면 사용, 없으면 기본값 생성
+        const scores = sajuData.seventeenFortunes || generateSeventeenFortunesFromSaju(sajuData);
+        
+        setFortuneScores(scores);
+        setLoading(false);
+      } catch (error) {
+        console.error('사주 계산 오류:', error);
+        generateDefaultScores();
+      }
     }, 1500);
+  };
+  
+  // 사주 데이터로부터 17대 운세 점수 생성
+  const generateSeventeenFortunesFromSaju = (sajuData: any): SeventeenFortuneScores => {
+    // 오행과 십성 데이터를 기반으로 17대 운세 점수 계산
+    const fiveElements = sajuData.fiveElements;
+    const tenGods = sajuData.tenGods;
+    const sixAreas = sajuData.sixAreas;
+    
+    return {
+      health: Math.min(100, Math.max(0, fiveElements.water * 0.7 + fiveElements.wood * 0.3)),
+      marriage: Math.min(100, Math.max(0, tenGods.jeongjae * 0.5 + tenGods.pyeonjae * 0.3 + sixAreas.relationship * 0.2)),
+      power: Math.min(100, Math.max(0, tenGods.jeonggwan * 0.5 + tenGods.pyeongwan * 0.3 + fiveElements.metal * 0.2)),
+      fame: Math.min(100, Math.max(0, tenGods.siksin * 0.4 + sixAreas.luck * 0.3 + fiveElements.fire * 0.3)),
+      accident: Math.min(100, Math.max(0, 100 - (tenGods.geopjae * 0.5 + tenGods.sanggwan * 0.5))), // 낮을수록 좋음
+      business: Math.min(100, Math.max(0, tenGods.jeongjae * 0.4 + sixAreas.action * 0.3 + fiveElements.earth * 0.3)),
+      movement: Math.min(100, Math.max(0, sixAreas.action * 0.5 + fiveElements.wood * 0.3 + tenGods.pyeongin * 0.2)),
+      separation: Math.min(100, Math.max(0, 100 - (sixAreas.relationship * 0.5 + tenGods.jeongin * 0.5))), // 낮을수록 좋음
+      relationship: Math.min(100, Math.max(0, sixAreas.relationship * 0.6 + tenGods.jeongin * 0.4)),
+      children: Math.min(100, Math.max(0, tenGods.siksin * 0.5 + sixAreas.foundation * 0.3 + fiveElements.water * 0.2)),
+      talent: Math.min(100, Math.max(0, tenGods.siksin * 0.4 + sixAreas.thinking * 0.4 + fiveElements.fire * 0.2)),
+      wealth: Math.min(100, Math.max(0, tenGods.jeongjae * 0.4 + tenGods.pyeonjae * 0.4 + fiveElements.metal * 0.2)),
+      ancestor: Math.min(100, Math.max(0, sixAreas.foundation * 0.5 + sixAreas.environment * 0.3 + fiveElements.earth * 0.2)),
+      career: Math.min(100, Math.max(0, tenGods.jeonggwan * 0.4 + sixAreas.action * 0.4 + fiveElements.water * 0.2)),
+      family: Math.min(100, Math.max(0, sixAreas.foundation * 0.4 + sixAreas.relationship * 0.4 + tenGods.jeongin * 0.2)),
+      study: Math.min(100, Math.max(0, sixAreas.thinking * 0.5 + tenGods.jeongin * 0.3 + fiveElements.water * 0.2)),
+      fortune: Math.min(100, Math.max(0, sixAreas.luck * 0.6 + (fiveElements.wood + fiveElements.fire) * 0.2))
+    };
   };
 
   // 기본 점수 생성
@@ -96,15 +142,10 @@ const DetailedFortunePage: React.FC = () => {
   const formatBirthDate = () => {
     if (!personalInfo) return null;
     
-    const { birthDate, birthTime, calendarType } = personalInfo;
-    if (!birthDate) return null;
+    const { year, month, day, hour, minute, isLunar } = personalInfo;
+    if (!year || !month || !day) return null;
     
-    const date = new Date(birthDate);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    
-    return `${year}년 ${month}월 ${day}일 ${birthTime || '00:00'} (${calendarType === 'lunar' ? '음력' : '양력'})`;
+    return `${year}년 ${month}월 ${day}일 ${hour}시 ${minute || 0}분 (${isLunar ? '음력' : '양력'})`;
   };
 
   // 운세별 설명

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import PersonalityAnalysisChart from '@/components/saju/charts/PersonalityAnalysisChart';
 import ChartNavigation from '@/components/Common/ChartNavigation';
-import { PersonalityTraits } from '@/types/saju';
+import { PersonalityTraits, SajuBirthInfo } from '@/types/saju';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
+import { calculateSajuData } from '@/utils/sajuDataCalculator';
 
 const PersonalityAnalysisPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [personalityTraits, setPersonalityTraits] = useState<PersonalityTraits | null>(null);
-  const [personalInfo, setPersonalInfo] = useState<any>(null);
+  const [personalInfo, setPersonalInfo] = useState<SajuBirthInfo | null>(null);
 
   useEffect(() => {
     // 개인정보 불러오기
@@ -16,9 +17,25 @@ const PersonalityAnalysisPage: React.FC = () => {
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          setPersonalInfo(parsed);
-          // 개인정보가 있으면 성향 분석 생성
-          generatePersonalityTraits(parsed);
+          // SettingsPage 형식을 SajuBirthInfo 형식으로 변환
+          if (parsed.birthDate && parsed.birthTime) {
+            const date = new Date(parsed.birthDate);
+            const [hour, minute] = parsed.birthTime.split(':').map(Number);
+            
+            const sajuBirthInfo: SajuBirthInfo = {
+              year: date.getFullYear(),
+              month: date.getMonth() + 1,
+              day: date.getDate(),
+              hour: hour || 0,
+              minute: minute || 0,
+              isLunar: parsed.calendarType === 'lunar',
+              gender: parsed.gender as 'male' | 'female' | undefined
+            };
+            
+            setPersonalInfo(sajuBirthInfo);
+          } else {
+            generateDefaultTraits();
+          }
         } catch (error) {
           console.error('Failed to parse personal info:', error);
           generateDefaultTraits();
@@ -32,38 +49,54 @@ const PersonalityAnalysisPage: React.FC = () => {
     loadPersonalInfo();
   }, []);
 
+  // personalInfo가 설정되면 성향 분석 생성
+  useEffect(() => {
+    if (personalInfo) {
+      generatePersonalityTraits();
+    }
+  }, [personalInfo]);
+
   // 성향 분석 생성 (개인정보 기반)
-  const generatePersonalityTraits = (info: any) => {
+  const generatePersonalityTraits = () => {
+    if (!personalInfo) {
+      generateDefaultTraits();
+      return;
+    }
+    
     setLoading(true);
     
-    // 시뮬레이션: 실제로는 개인정보와 사주 정보 기반으로 계산
+    // 실제 사주 데이터로 계산
     setTimeout(() => {
-      // 생년월일과 성별을 기반으로 성향 특성 반영
-      const birthDate = new Date(info.birthDate);
-      const year = birthDate.getFullYear();
-      const month = birthDate.getMonth() + 1;
-      const day = birthDate.getDate();
-      const gender = info.gender;
-      
-      // 간단한 알고리즘으로 개인별 특성 반영
-      const yearSeed = (year % 100) / 100;
-      const monthSeed = month / 12;
-      const daySeed = day / 31;
-      const genderModifier = gender === 'female' ? 1.1 : 0.9;
-      
-      const traits: PersonalityTraits = {
-        emotion: Math.floor(40 + (yearSeed * 30 + monthSeed * 20) * genderModifier),
-        logic: Math.floor(45 + (daySeed * 25 + (1 - yearSeed) * 20) * (2 - genderModifier)),
-        artistic: Math.floor(35 + (monthSeed * 35 + yearSeed * 15) * genderModifier),
-        rational: Math.floor(50 + ((1 - monthSeed) * 25 + daySeed * 15) * (2 - genderModifier)),
-        character: Math.floor(55 + (yearSeed + monthSeed + daySeed) * 15),
-        intelligence: Math.floor(50 + ((1 - daySeed) * 20 + monthSeed * 20)),
-        learning: Math.floor(45 + (yearSeed * 25 + (1 - monthSeed) * 20))
-      };
-      
-      setPersonalityTraits(traits);
-      setLoading(false);
+      try {
+        const sajuData = calculateSajuData(personalInfo);
+        // personalityTraits가 있으면 사용, 없으면 기본값 생성
+        const traits = sajuData.personalityTraits || generatePersonalityFromSaju(sajuData);
+        
+        setPersonalityTraits(traits);
+        setLoading(false);
+      } catch (error) {
+        console.error('사주 계산 오류:', error);
+        generateDefaultTraits();
+      }
     }, 1500);
+  };
+  
+  // 사주 데이터로부터 성향 분석 생성
+  const generatePersonalityFromSaju = (sajuData: any): PersonalityTraits => {
+    // 오행과 십성 데이터를 기반으로 성향 분석
+    const fiveElements = sajuData.fiveElements;
+    const tenGods = sajuData.tenGods;
+    const sixAreas = sajuData.sixAreas;
+    
+    return {
+      emotion: Math.min(100, Math.max(0, fiveElements.fire * 0.5 + tenGods.siksin * 0.3 + sixAreas.thinking * 0.2)),
+      logic: Math.min(100, Math.max(0, fiveElements.metal * 0.5 + tenGods.jeonggwan * 0.3 + sixAreas.thinking * 0.2)),
+      artistic: Math.min(100, Math.max(0, fiveElements.water * 0.4 + tenGods.siksin * 0.4 + sixAreas.luck * 0.2)),
+      rational: Math.min(100, Math.max(0, fiveElements.earth * 0.4 + tenGods.bijeon * 0.3 + sixAreas.action * 0.3)),
+      character: Math.min(100, Math.max(0, tenGods.jeongin * 0.5 + sixAreas.foundation * 0.3 + fiveElements.wood * 0.2)),
+      intelligence: Math.min(100, Math.max(0, fiveElements.water * 0.4 + sixAreas.thinking * 0.4 + tenGods.jeongin * 0.2)),
+      learning: Math.min(100, Math.max(0, tenGods.jeongin * 0.4 + sixAreas.thinking * 0.3 + fiveElements.water * 0.3))
+    };
   };
 
   // 기본 성향 분석 생성
@@ -89,15 +122,10 @@ const PersonalityAnalysisPage: React.FC = () => {
   const formatBirthDate = () => {
     if (!personalInfo) return null;
     
-    const { birthDate, birthTime, calendarType } = personalInfo;
-    if (!birthDate) return null;
+    const { year, month, day, hour, minute, isLunar } = personalInfo;
+    if (!year || !month || !day) return null;
     
-    const date = new Date(birthDate);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    
-    return `${year}년 ${month}월 ${day}일 ${birthTime || '00:00'} (${calendarType === 'lunar' ? '음력' : '양력'})`;
+    return `${year}년 ${month}월 ${day}일 ${hour}시 ${minute || 0}분 (${isLunar ? '음력' : '양력'})`;
   };
 
   // 성향별 설명
