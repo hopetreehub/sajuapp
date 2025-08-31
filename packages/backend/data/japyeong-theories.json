@@ -1,11 +1,15 @@
 {
   "metadata": {
-    "title": "자평진전 핵심 이론 데이터베이스",
-    "version": "1.0.0",
-    "description": "자평명리학의 핵심 이론과 해석 체계",
-    "source": "자평진전(子平眞詮) 기반",
+    "title": "자평진전 + 궁통보감 통합 이론 데이터베이스",
+    "version": "1.1.0",
+    "description": "자평명리학의 핵심 이론과 궁통보감 조후론 통합 체계",
+    "sources": [
+      "자평진전(子平眞詮) - 용신론, 격국론 기반",
+      "궁통보감(窮通寶鑑) - 조후론, 계절 조화 이론"
+    ],
     "created_at": "2025-08-31",
-    "last_updated": "2025-08-31"
+    "last_updated": "2025-08-31",
+    "phase": "Phase 1 - 궁통보감 조후론 통합 완료"
   },
 
   "yongshin_theory": {
@@ -338,6 +342,329 @@
           "health_risks": ["신장", "방광", "생식기", "뼈"],
           "care_methods": ["충분한 수분", "하체 보온", "과로 금지"],
           "beneficial_foods": ["검은 음식", "짠맛", "해산물"]
+        }
+      }
+    }
+  },
+
+  "goongtong_johoo_theory": {
+    "concept": "궁통보감 조후론(調候論) - 계절과 기후를 고려한 사주 조화 이론",
+    "description": "여춘태(呂春台)의 궁통보감에서 제시한 계절의 한난온습(寒暖溫濕)을 고려하여 사주의 조화를 맞추는 핵심 이론",
+    "source": "궁통보감(窮通寶鑑) - 명말청초 여춘태 저",
+    
+    "core_principles": {
+      "johoo_concept": {
+        "definition": "조후(調候) - 기후를 고르게 조절한다는 의미",
+        "purpose": "사주의 한난조습을 균형있게 맞춰 최적의 상태로 조화시키는 것",
+        "priority": "일반적인 용신론보다 계절적 조화를 우선 고려"
+      },
+      
+      "seasonal_climate_analysis": {
+        "spring_johoo": {
+          "months": ["정월", "2월", "3월"],
+          "climate_characteristics": ["목기 왕성", "따뜻해짐", "생기 발동"],
+          "johoo_needs": {
+            "primary": "화기로 온도 보완",
+            "secondary": "토기로 뿌리 안정",
+            "avoid": "과도한 수기는 냉기 유발"
+          },
+          "day_masters": {
+            "wood_daymaster": {
+              "condition": "득령하여 매우 강함",
+              "johoo_method": "화기로 설기, 토기로 소모",
+              "preferred_elements": ["정화", "기토", "무토"]
+            },
+            "fire_daymaster": {
+              "condition": "목생화로 점점 강해짐", 
+              "johoo_method": "토기로 설기, 금기로 제어",
+              "preferred_elements": ["무토", "기토", "경금"]
+            },
+            "metal_daymaster": {
+              "condition": "목극금으로 매우 약함",
+              "johoo_method": "토생금으로 부조, 화기로 온화",
+              "preferred_elements": ["무토", "기토", "정화"]
+            }
+          }
+        },
+        
+        "summer_johoo": {
+          "months": ["4월", "5월", "6월"],
+          "climate_characteristics": ["화기 왕성", "뜨거워짐", "만물 성장"],
+          "johoo_needs": {
+            "primary": "수기로 온도 조절",
+            "secondary": "토기로 화기 설기",
+            "avoid": "더 뜨거운 화기 추가"
+          },
+          "day_masters": {
+            "fire_daymaster": {
+              "condition": "득령하여 극도로 강함",
+              "johoo_method": "토기로 설기, 수기로 제어",
+              "preferred_elements": ["무토", "기토", "임수", "계수"]
+            },
+            "water_daymaster": {
+              "condition": "화극수로 매우 약함",
+              "johoo_method": "금생수로 부조, 토기로 화기 완충",
+              "preferred_elements": ["경금", "신금", "무토"]
+            },
+            "wood_daymaster": {
+              "condition": "화설목으로 기력 소모",
+              "johoo_method": "수기로 근본 보강, 적당한 토기",
+              "preferred_elements": ["임수", "계수", "기토"]
+            }
+          }
+        },
+        
+        "autumn_johoo": {
+          "months": ["7월", "8월", "9월"],
+          "climate_characteristics": ["금기 왕성", "서늘해짐", "수렴 기운"],
+          "johoo_needs": {
+            "primary": "화기로 온기 보존",
+            "secondary": "목기로 금기 소모",
+            "avoid": "과도한 수기는 냉기 가중"
+          },
+          "day_masters": {
+            "metal_daymaster": {
+              "condition": "득령하여 매우 강함",
+              "johoo_method": "화기로 단련, 수기로 설기",
+              "preferred_elements": ["정화", "병화", "임수"]
+            },
+            "wood_daymaster": {
+              "condition": "금극목으로 매우 약함", 
+              "johoo_method": "화기로 온화, 수기로 생조",
+              "preferred_elements": ["정화", "병화", "임수", "계수"]
+            },
+            "earth_daymaster": {
+              "condition": "금설토로 기력 소모",
+              "johoo_method": "화기로 온양, 목기로 소통",
+              "preferred_elements": ["정화", "병화", "갑목", "을목"]
+            }
+          }
+        },
+        
+        "winter_johoo": {
+          "months": ["10월", "11월", "12월"],
+          "climate_characteristics": ["수기 왕성", "추워짐", "폐장 기운"],
+          "johoo_needs": {
+            "primary": "화기로 온양 필수",
+            "secondary": "목기로 수기 설기",  
+            "avoid": "더 차가운 금수기 추가"
+          },
+          "day_masters": {
+            "water_daymaster": {
+              "condition": "득령하여 극도로 강함",
+              "johoo_method": "화기로 온양, 토기로 제수",
+              "preferred_elements": ["정화", "병화", "무토", "기토"]
+            },
+            "fire_daymaster": {
+              "condition": "수극화로 매우 약함",
+              "johoo_method": "목생화로 부조, 토기로 수기 차단",
+              "preferred_elements": ["갑목", "을목", "무토", "기토"]
+            },
+            "earth_daymaster": {
+              "condition": "수토교전으로 혼탁",
+              "johoo_method": "화기로 온조, 목기로 소통",
+              "preferred_elements": ["정화", "병화", "갑목"]
+            }
+          }
+        }
+      },
+      
+      "climate_adjustment_priorities": {
+        "temperature_control": {
+          "cold_months": {
+            "period": "10월~2월",
+            "priority": "온양(溫陽) - 따뜻한 기운 우선",
+            "required_elements": ["화기", "양토"],
+            "avoid_elements": ["수기", "금기"],
+            "johoo_principle": "추위를 막는 것이 다른 모든 조화보다 우선"
+          },
+          "hot_months": {
+            "period": "5월~8월", 
+            "priority": "청량(清凉) - 차가운 기운 우선",
+            "required_elements": ["수기", "음금"],
+            "avoid_elements": ["화기", "조토"],
+            "johoo_principle": "더위를 식히는 것이 다른 모든 조화보다 우선"
+          }
+        },
+        
+        "humidity_control": {
+          "dry_seasons": {
+            "period": "3월, 6월, 9월, 12월",
+            "priority": "윤조(潤燥) - 습한 기운으로 건조함 해결",
+            "required_elements": ["수기", "음목"],
+            "avoid_elements": ["조화", "연토"],
+            "johoo_principle": "건조함을 해결해야 다른 조화 가능"
+          },
+          "humid_seasons": {
+            "period": "장마철, 습한 시기",
+            "priority": "조습(燥濕) - 마른 기운으로 습기 제거", 
+            "required_elements": ["화기", "조토"],
+            "avoid_elements": ["수기", "습토"],
+            "johoo_principle": "과습을 제거해야 건강한 기운 흐름"
+          }
+        }
+      }
+    },
+    
+    "monthly_detailed_johoo": {
+      "lunar_month_1": {
+        "season": "늦겨울 초봄",
+        "dominant_qi": "인목 + 잔추위",
+        "johoo_priority": "화기로 추위 제거 후 목기 조화",
+        "best_combinations": ["갑목+정화", "을목+병화", "인목+사화"],
+        "avoid_combinations": ["수기과다", "금기충돌", "토기매몰"]
+      },
+      
+      "lunar_month_2": {
+        "season": "정춘",
+        "dominant_qi": "묘목 왕성",
+        "johoo_priority": "화기로 온양, 토기로 뿌리 안정",
+        "best_combinations": ["을목+정화+기토", "갑목+병화+무토"],
+        "avoid_combinations": ["금기극목", "수기과습", "화기과열"]
+      },
+      
+      "lunar_month_3": {
+        "season": "만춘",
+        "dominant_qi": "진토 + 목여기",
+        "johoo_priority": "금기로 목기 수렴, 수기로 토기 윤택",
+        "best_combinations": ["진토+임수+경금", "갑목+계수+신금"],
+        "avoid_combinations": ["순목기", "화기조열", "토기폐색"]
+      },
+      
+      "lunar_month_4": {
+        "season": "초여름",
+        "dominant_qi": "사화 + 온기상승",
+        "johoo_priority": "토기로 화기 설기, 적당한 수기로 조절",
+        "best_combinations": ["정화+기토+임수", "병화+무토+계수"],
+        "avoid_combinations": ["화기과왕", "금기충돌", "목기조열"]
+      },
+      
+      "lunar_month_5": {
+        "season": "한여름", 
+        "dominant_qi": "오화 극성",
+        "johoo_priority": "수기로 온도 조절이 절대 우선",
+        "best_combinations": ["임수+기토", "계수+무토", "해수+사화"],
+        "avoid_combinations": ["화기추가", "조토매립", "목기연소"]
+      },
+      
+      "lunar_month_6": {
+        "season": "늦여름",
+        "dominant_qi": "미토 + 화여기",
+        "johoo_priority": "수기로 열기 제거, 금기로 토기 소통",
+        "best_combinations": ["미토+임수+신금", "기토+계수+경금"],
+        "avoid_combinations": ["화토연소", "목기극토", "순조기"]
+      },
+      
+      "lunar_month_7": {
+        "season": "초가을",
+        "dominant_qi": "신금 + 서늘함",
+        "johoo_priority": "화기로 온기 보존, 수기로 금기 설기",
+        "best_combinations": ["신금+정화+임수", "경금+병화+계수"],
+        "avoid_combinations": ["금기과왕", "수기과냉", "토기폐색"]
+      },
+      
+      "lunar_month_8": {
+        "season": "중가을",
+        "dominant_qi": "유금 극성",
+        "johoo_priority": "화기로 금기 단련이 필수",
+        "best_combinations": ["정화+신금", "병화+경금", "사화+유금"],
+        "avoid_combinations": ["순금기", "수기결빙", "토금매몰"]
+      },
+      
+      "lunar_month_9": {
+        "season": "만가을",
+        "dominant_qi": "술토 + 금여기",
+        "johoo_priority": "화기로 온양, 목기로 토기 소통",
+        "best_combinations": ["술토+정화+갑목", "무토+병화+을목"],
+        "avoid_combinations": ["금토폐색", "수기한냉", "순조기"]
+      },
+      
+      "lunar_month_10": {
+        "season": "초겨울",
+        "dominant_qi": "해수 + 한기시작",
+        "johoo_priority": "화기로 온양이 절대 우선",
+        "best_combinations": ["해수+정화", "임수+병화", "계수+사화"],
+        "avoid_combinations": ["수기과다", "금수한냉", "토수혼탁"]
+      },
+      
+      "lunar_month_11": {
+        "season": "한겨울",
+        "dominant_qi": "자수 극성",
+        "johoo_priority": "화기 없이는 모든 것이 무의미",
+        "best_combinations": ["자수+오화", "임수+정화+목", "계수+병화+목"],
+        "avoid_combinations": ["순수기", "금수결빙", "토수진흙"]
+      },
+      
+      "lunar_month_12": {
+        "season": "늦겨울",
+        "dominant_qi": "축토 + 수여기",
+        "johoo_priority": "화기로 토기 온조, 목기로 소통",
+        "best_combinations": ["축토+정화+을목", "기토+병화+갑목"],
+        "avoid_combinations": ["토수혼탁", "금토매몰", "순한기"]
+      }
+    },
+    
+    "practical_johoo_application": {
+      "yongshin_johoo_integration": {
+        "principle": "조후가 해결되면 용신이 제 기능 발휘 가능",
+        "process": [
+          "1단계: 출생월의 기후 특성 파악",
+          "2단계: 일간이 받는 기후 영향 분석",
+          "3단계: 조후 우선순위 결정",
+          "4단계: 조후용신 확정",
+          "5단계: 일반 용신과 조화 방안 모색"
+        ]
+      },
+      
+      "career_johoo_guidance": {
+        "spring_born": {
+          "suitable_careers": ["성장산업", "교육", "환경", "바이오"],
+          "work_environment": "따뜻하고 밝은 환경",
+          "avoid_careers": ["냉동업", "금속가공", "지하작업"]
+        },
+        "summer_born": {
+          "suitable_careers": ["수산업", "음료", "냉각", "IT"],
+          "work_environment": "시원하고 습한 환경", 
+          "avoid_careers": ["용광로", "고온작업", "사막지역"]
+        },
+        "autumn_born": {
+          "suitable_careers": ["금융", "정밀", "의료", "기계"],
+          "work_environment": "온화하고 정돈된 환경",
+          "avoid_careers": ["임업", "농업", "과도한 실외작업"]
+        },
+        "winter_born": {
+          "suitable_careers": ["난방", "에너지", "요리", "문화"],
+          "work_environment": "따뜻하고 활기찬 환경",
+          "avoid_careers": ["냉장", "수영", "한랭지 근무"]
+        }
+      },
+      
+      "health_johoo_care": {
+        "seasonal_constitution": {
+          "spring_constitution": {
+            "characteristics": ["목기 체질", "성장 지향", "간담 중요"],
+            "johoo_care": ["적당한 온기 유지", "과로 금지", "스트레스 관리"],
+            "beneficial_season": "따뜻한 봄가을",
+            "caution_season": "혹한혹서시"
+          },
+          "summer_constitution": {
+            "characteristics": ["화기 체질", "활동적", "심혈관 중요"],
+            "johoo_care": ["충분한 수분", "과열 주의", "감정 조절"],
+            "beneficial_season": "시원한 여름가을", 
+            "caution_season": "혹서혹한시"
+          },
+          "autumn_constitution": {
+            "characteristics": ["금기 체질", "정확성", "폐대장 중요"],
+            "johoo_care": ["온기 보존", "건조 주의", "호흡 관리"],
+            "beneficial_season": "온화한 가을겨울",
+            "caution_season": "혹건혹습시"
+          },
+          "winter_constitution": {
+            "characteristics": ["수기 체질", "지혜형", "신장방광 중요"],
+            "johoo_care": ["온양 필수", "과로 금지", "하체 보온"],
+            "beneficial_season": "따뜻한 겨울봄",
+            "caution_season": "혹한혹습시"
+          }
         }
       }
     }
