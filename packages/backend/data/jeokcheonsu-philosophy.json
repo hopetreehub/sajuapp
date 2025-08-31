@@ -1,0 +1,419 @@
+{
+  "metadata": {
+    "title": "적천수 철학 원리 데이터베이스",
+    "version": "1.0.0",
+    "description": "적천수의 핵심 철학과 명리학 해석 원리",
+    "source": "적천수(滴天髓) - 유백온(劉佰溫) 저",
+    "characteristics": "추상적이고 근본적인 명리학 원리 제시",
+    "created_at": "2025-08-31",
+    "last_updated": "2025-08-31",
+    "phase": "Phase 3 - 적천수 철학 원리 통합"
+  },
+
+  "fundamental_principles": {
+    "cosmic_harmony": {
+      "concept": "천지인 삼재(天地人 三才) 조화론",
+      "description": "하늘, 땅, 사람의 기운이 조화를 이루어야 완전한 명이 됨",
+      "core_elements": {
+        "heaven_element": {
+          "representation": "천간(天干)",
+          "meaning": "하늘의 기운과 정신적 영역",
+          "influence": "이상, 정신, 방향성, 목표",
+          "interpretation_key": "무엇을 지향하고 추구하는가"
+        },
+        "earth_element": {
+          "representation": "지지(地支)",
+          "meaning": "땅의 기운과 물질적 영역", 
+          "influence": "현실, 물질, 환경, 기반",
+          "interpretation_key": "어떤 환경과 조건에서 살아가는가"
+        },
+        "human_element": {
+          "representation": "간지조합",
+          "meaning": "사람의 기운과 실현 영역",
+          "influence": "실천, 행동, 성취, 관계",
+          "interpretation_key": "어떻게 실현하고 표현하는가"
+        }
+      },
+      "harmony_conditions": {
+        "perfect_harmony": "천지인이 서로 생조하고 순환하는 구조",
+        "partial_harmony": "두 요소는 조화롭지만 한 요소가 부족",
+        "discord": "삼재가 상극하거나 극단적으로 불균형",
+        "transformation": "부조화에서 조화로 변화하는 과정"
+      }
+    },
+
+    "yin_yang_dynamics": {
+      "concept": "음양변화(陰陽變化)의 근본 원리",
+      "description": "모든 변화와 발전은 음양의 상호작용에서 비롯됨",
+      "core_principles": {
+        "mutual_dependence": {
+          "principle": "음양상의(陰陽相依) - 음과 양은 서로 의존",
+          "manifestation": "남녀, 강약, 동정, 허실의 상호 보완",
+          "application": "극단보다는 균형, 대립보다는 조화 추구"
+        },
+        "cyclical_transformation": {
+          "principle": "음양순환(陰陽循環) - 음양은 끊임없이 순환",
+          "manifestation": "성쇠, 길흉, 성패의 주기적 변화",
+          "application": "현재 상태가 영원하지 않음을 인식하고 대비"
+        },
+        "dynamic_balance": {
+          "principle": "음양조화(陰陽調和) - 상황에 맞는 동적 균형",
+          "manifestation": "때로는 음이, 때로는 양이 우세한 자연스러운 흐름",
+          "application": "고정된 기준보다는 상황에 맞는 유연한 대응"
+        }
+      }
+    },
+
+    "five_elements_philosophy": {
+      "concept": "오행철학(五行哲學)의 심층 원리",
+      "description": "단순한 상생상극을 넘어선 오행의 철학적 의미",
+      "deep_meanings": {
+        "wood_philosophy": {
+          "essence": "생장(生長)의 원리",
+          "qualities": ["창조", "발전", "확장", "희망"],
+          "life_lesson": "끊임없는 성장과 발전을 통한 자아실현",
+          "wisdom": "구부러져도 꺾이지 않는 유연함과 인내"
+        },
+        "fire_philosophy": {
+          "essence": "변화(變化)의 원리",
+          "qualities": ["열정", "변화", "밝음", "활력"],
+          "life_lesson": "열정과 에너지로 세상을 밝히는 삶",
+          "wisdom": "타는 것을 두려워하지 않는 용기와 희생"
+        },
+        "earth_philosophy": {
+          "essence": "포용(包容)의 원리", 
+          "qualities": ["포용", "안정", "신뢰", "중화"],
+          "life_lesson": "모든 것을 받아들이고 길러내는 어머니 같은 사랑",
+          "wisdom": "묵묵히 견디며 모든 것을 품는 포용력"
+        },
+        "metal_philosophy": {
+          "essence": "정의(正義)의 원리",
+          "qualities": ["정확", "원칙", "결단", "정의"],
+          "life_lesson": "옳고 그름을 분명히 하는 정의로운 삶",
+          "wisdom": "구부러지지 않는 원칙과 올바른 판단력"
+        },
+        "water_philosophy": {
+          "essence": "지혜(智慧)의 원리",
+          "qualities": ["지혜", "유연", "깊이", "포용"],
+          "life_lesson": "낮은 곳으로 흘러 모든 것을 적시는 겸손함",
+          "wisdom": "모든 것을 포용하고 정화하는 깊은 지혜"
+        }
+      }
+    }
+  },
+
+  "interpretive_wisdom": {
+    "holistic_perspective": {
+      "concept": "전체관적 해석법(全體觀的 解釋法)",
+      "description": "개별 요소가 아닌 전체적 맥락과 흐름에서 해석",
+      "application_methods": {
+        "context_reading": {
+          "principle": "부분이 아닌 전체의 맥락에서 이해",
+          "example": "편관이 있어도 전체적으로 조화되면 길함",
+          "wisdom": "나무가 아닌 숲을 보는 안목"
+        },
+        "timing_integration": {
+          "principle": "과거-현재-미래의 통합적 관점",
+          "example": "현재 어려움도 미래 성공의 밑거름",
+          "wisdom": "시간의 흐름 속에서 의미 찾기"
+        },
+        "relationship_dynamics": {
+          "principle": "관계 속에서 드러나는 진정한 의미",
+          "example": "개인의 운명도 타인과의 관계에서 완성",
+          "wisdom": "혼자가 아닌 함께 만들어가는 운명"
+        }
+      }
+    },
+
+    "paradox_understanding": {
+      "concept": "역설적 지혜(逆說的 智慧)",
+      "description": "표면적 길흉과 실제 길흉이 다를 수 있다는 깊은 통찰",
+      "paradoxical_cases": {
+        "weakness_as_strength": {
+          "principle": "약함이 때로는 강함이 됨",
+          "examples": [
+            "약한 일간이 귀격을 이루는 경우",
+            "부족한 오행이 오히려 특별함을 만드는 경우",
+            "겸손함이 더 큰 성취를 가져오는 경우"
+          ],
+          "wisdom": "완벽함보다는 부족함 속에서 피는 아름다움"
+        },
+        "conflict_as_growth": {
+          "principle": "갈등과 충돌이 성장의 동력이 됨",
+          "examples": [
+            "상관견관이 오히려 창의성을 키우는 경우",
+            "어려운 대운이 인격을 단련시키는 경우", 
+            "시련이 더 큰 지혜를 가져다주는 경우"
+          ],
+          "wisdom": "편안함 속에서는 성장이 없다"
+        },
+        "excess_as_deficiency": {
+          "principle": "과함이 때로는 부족함과 같음",
+          "examples": [
+            "과도한 길신이 오히려 해가 되는 경우",
+            "너무 강한 용신이 균형을 해치는 경우",
+            "지나친 완벽이 경직성을 만드는 경우"
+          ],
+          "wisdom": "중용과 절제의 중요성"
+        }
+      }
+    },
+
+    "practical_wisdom": {
+      "life_guidance_principles": {
+        "acceptance_principle": {
+          "concept": "운명 수용(運命 受容)의 지혜",
+          "teaching": "바꿀 수 없는 것은 받아들이고, 바꿀 수 있는 것에 집중",
+          "applications": [
+            "타고난 기질과 성향은 인정하되 발전 방향 모색",
+            "불리한 대운도 그 안에서 최선의 선택 찾기",
+            "완벽하지 않은 사주도 그 나름의 아름다움 발견"
+          ]
+        },
+        "timing_wisdom": {
+          "concept": "때를 아는 지혜(時機 認識)",
+          "teaching": "모든 것에는 때가 있으니 서두르지도 늦추지도 말라",
+          "applications": [
+            "좋은 운세일 때는 적극적으로 도전",
+            "어려운 시기에는 인내하며 기다림",
+            "변화의 징조를 민감하게 포착하여 대비"
+          ]
+        },
+        "balance_pursuit": {
+          "concept": "균형 추구(均衡 追求)의 지혜",
+          "teaching": "극단보다는 중용, 편중보다는 조화를 추구하라",
+          "applications": [
+            "강한 부분은 겸손하게, 약한 부분은 보완하기",
+            "과하면 덜어내고, 부족하면 채워 넣기",
+            "자신만의 고유한 균형점 찾기"
+          ]
+        }
+      }
+    }
+  },
+
+  "advanced_interpretation_methods": {
+    "multi_dimensional_analysis": {
+      "concept": "다차원적 분석법(多次元的 分析法)",
+      "description": "한 가지 관점이 아닌 여러 각도에서 종합적으로 해석",
+      "analysis_dimensions": {
+        "temporal_dimension": {
+          "past_influence": "타고난 기질과 어린 시절 환경의 영향",
+          "present_state": "현재의 상황과 선택, 노력의 결과",
+          "future_potential": "앞으로의 가능성과 발전 방향",
+          "integration": "과거-현재-미래의 연결고리 찾기"
+        },
+        "relationship_dimension": {
+          "individual_aspect": "개인의 고유한 특성과 능력",
+          "interpersonal_aspect": "타인과의 관계에서 드러나는 모습",
+          "social_aspect": "사회와 환경 속에서의 역할",
+          "cosmic_aspect": "우주적 흐름과 시대적 변화와의 조화"
+        },
+        "consciousness_dimension": {
+          "unconscious_level": "무의식적 성향과 본능적 반응",
+          "conscious_level": "의식적 선택과 노력의 방향",
+          "transcendent_level": "자아를 초월한 더 큰 목적과 사명",
+          "integration": "의식과 무의식의 통합적 이해"
+        }
+      }
+    },
+
+    "dynamic_interpretation": {
+      "concept": "역동적 해석법(力動的 解釋法)",
+      "description": "고정된 해석이 아닌 상황과 시간에 따라 변화하는 해석",
+      "dynamic_factors": {
+        "situational_adaptation": {
+          "principle": "같은 사주라도 상황에 따라 다른 의미",
+          "examples": [
+            "평상시 단점이 위기상황에서는 장점이 됨",
+            "젊을 때 문제가 나이들어서는 지혜가 됨",
+            "한 분야의 실패가 다른 분야의 성공 밑거름"
+          ]
+        },
+        "evolutionary_perspective": {
+          "principle": "운명은 고정된 것이 아니라 진화하는 것",
+          "stages": [
+            "1단계: 타고난 기질과 성향의 발현",
+            "2단계: 환경과 교육을 통한 발전",
+            "3단계: 자각과 노력을 통한 변화",
+            "4단계: 지혜와 깨달음을 통한 초월"
+          ]
+        }
+      }
+    },
+
+    "wisdom_integration": {
+      "concept": "지혜 통합법(智慧 統合法)",
+      "description": "명리학적 분석과 인생 지혜의 통합",
+      "integration_levels": {
+        "technical_level": {
+          "focus": "정확한 계산과 분석",
+          "methods": ["십성 계산", "오행 분석", "격국 판별", "용신 확정"],
+          "outcome": "객관적이고 체계적인 기본 해석"
+        },
+        "intuitive_level": {
+          "focus": "직관적 통찰과 감성적 이해",
+          "methods": ["전체적 인상", "에너지 느낌", "상징적 의미", "은유적 표현"],
+          "outcome": "살아있고 생동감 있는 해석"
+        },
+        "wisdom_level": {
+          "focus": "인생 지혜와 실용적 조언",
+          "methods": ["경험적 통찰", "철학적 성찰", "실용적 적용", "영적 깨달음"],
+          "outcome": "실제 삶에 도움이 되는 깊이 있는 조언"
+        }
+      }
+    }
+  },
+
+  "philosophical_maxims": {
+    "classic_sayings": {
+      "destiny_understanding": {
+        "maxim": "知命者 不憂 (지명자 불우)",
+        "meaning": "운명을 아는 자는 근심하지 않는다",
+        "interpretation": "자신의 운명을 올바로 이해하면 불필요한 걱정과 조급함에서 벗어날 수 있다",
+        "practical_application": [
+          "자신의 강점과 약점을 정확히 파악하기",
+          "주어진 조건 안에서 최선의 선택하기",
+          "결과보다는 과정과 노력에 집중하기",
+          "남과 비교하지 말고 자신만의 길 걷기"
+        ]
+      },
+      
+      "timing_wisdom": {
+        "maxim": "時來鐵樹開花 (시래철수개화)",
+        "meaning": "때가 오면 철나무에도 꽃이 핀다",
+        "interpretation": "좋은 때가 오면 불가능해 보이던 일도 이루어진다",
+        "practical_application": [
+          "어려운 시기에도 희망을 잃지 않기",
+          "준비를 게을리하지 말고 기회를 기다리기",
+          "급하게 서두르지 말고 때를 기다리기",
+          "작은 변화의 신호에 민감하게 반응하기"
+        ]
+      },
+
+      "harmony_principle": {
+        "maxim": "中和之道 最貴 (중화지도 최귀)",
+        "meaning": "중화의 도가 가장 귀하다",
+        "interpretation": "어떤 것이든 지나치거나 모자라지 않는 균형이 최고의 상태",
+        "practical_application": [
+          "극단적 성향보다는 절제와 균형",
+          "독선보다는 포용과 이해",
+          "성급함보다는 차분함과 인내",
+          "과욕보다는 만족과 감사"
+        ]
+      }
+    },
+
+    "life_philosophy_guidance": {
+      "personal_development": {
+        "self_awareness": {
+          "principle": "자기 인식이 모든 발전의 시작",
+          "methods": [
+            "정기적인 자기 성찰과 점검",
+            "타인의 피드백에 귀 기울이기",
+            "명상이나 조용한 시간 갖기",
+            "일기나 기록을 통한 패턴 파악"
+          ]
+        },
+        "strength_utilization": {
+          "principle": "강점은 최대한 활용하되 교만하지 말기",
+          "guidance": [
+            "타고난 재능을 발견하고 개발하기",
+            "강점을 사회에 도움이 되는 방향으로 사용",
+            "성공해도 겸손함과 감사 마음 유지",
+            "강점으로 타인을 도와주는 나눔 실천"
+          ]
+        },
+        "weakness_transformation": {
+          "principle": "약점은 보완하되 자책하지 말기", 
+          "guidance": [
+            "약점을 인정하고 받아들이기",
+            "보완할 수 있는 방법 꾸준히 모색",
+            "약점 때문에 자신을 비하하지 않기",
+            "약점이 오히려 다른 장점을 만들 수 있음 인식"
+          ]
+        }
+      },
+
+      "relationship_wisdom": {
+        "understanding_others": {
+          "principle": "상대방의 사주적 성향 이해하기",
+          "benefits": [
+            "불필요한 갈등과 오해 줄이기",
+            "각자의 특성에 맞는 소통 방법 찾기",
+            "서로의 차이를 인정하고 존중하기",
+            "상호 보완적 관계 만들기"
+          ]
+        },
+        "harmonious_interaction": {
+          "principle": "조화로운 관계 만들기",
+          "methods": [
+            "상대방의 강점 인정하고 격려하기",
+            "약점은 비판하기보다 도움 주기",
+            "갈등 상황에서 중재자 역할 하기",
+            "서로 다름을 다양성으로 받아들이기"
+          ]
+        }
+      },
+
+      "life_decision_wisdom": {
+        "major_decisions": {
+          "career_choice": {
+            "considerations": ["타고난 적성", "시대적 흐름", "개인적 가치관", "사회적 기여"],
+            "wisdom": "돈이나 명예만이 아닌 의미와 가치 추구"
+          },
+          "relationship_choice": {
+            "considerations": ["성향의 조화", "가치관 일치", "상호 성장", "장기적 안정"],
+            "wisdom": "완벽한 상대가 아닌 함께 성장할 수 있는 상대"
+          },
+          "life_direction": {
+            "considerations": ["개인적 만족", "사회적 기여", "가족의 행복", "영적 성장"],
+            "wisdom": "개인의 행복과 사회의 발전이 조화되는 방향"
+          }
+        }
+      }
+    }
+  },
+
+  "modern_application_philosophy": {
+    "contemporary_relevance": {
+      "concept": "현대적 활용의 철학적 기반",
+      "description": "고전 이론을 현대 상황에 맞게 재해석하는 지혜",
+      "adaptation_principles": {
+        "essence_preservation": {
+          "principle": "본질은 지키되 형식은 시대에 맞게",
+          "application": "핵심 원리는 유지하면서 표현과 적용은 현대적으로"
+        },
+        "practical_utility": {
+          "principle": "이론을 위한 이론이 아닌 삶을 위한 이론",
+          "application": "실제 삶의 문제 해결과 발전에 도움이 되는 방향으로"
+        },
+        "scientific_approach": {
+          "principle": "맹신이 아닌 합리적 활용",
+          "application": "경험과 검증을 통해 유용한 부분만 선별적 활용"
+        }
+      }
+    },
+
+    "ethical_considerations": {
+      "responsible_interpretation": {
+        "principle": "해석의 책임감",
+        "guidelines": [
+          "절망보다는 희망을 주는 해석",
+          "운명론적 체념이 아닌 적극적 개선 방향 제시",
+          "개인의 존엄성과 가능성을 인정하는 해석",
+          "미신이나 맹신을 조장하지 않는 합리적 접근"
+        ]
+      },
+      "constructive_guidance": {
+        "principle": "건설적 조언",
+        "approaches": [
+          "문제점 지적보다는 해결책 제시",
+          "비관적 전망보다는 개선 가능성 강조",
+          "타인 비난보다는 자기 발전 방향 제시",
+          "운명 탓보다는 노력과 선택의 중요성 강조"
+        ]
+      }
+    }
+  }
+}
