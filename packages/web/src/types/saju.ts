@@ -7,6 +7,7 @@ export interface SajuBirthInfo {
   minute: number;
   isLunar: boolean;
   name?: string;
+  gender?: 'male' | 'female';
 }
 
 export interface FourPillars {
@@ -84,4 +85,11 @@ export interface SajuAnalysisResult {
   tenGods: TenGods;
   totalScore: number;
   averageScore: number;
+}
+
+// SajuData 타입 추가 (기존 코드와의 호환성을 위해)
+export interface SajuData extends SajuAnalysisResult {
+  dayMaster: string; // 일간 (일주의 천간)
+  personalityTraits?: PersonalityTraits;
+  seventeenFortunes?: SeventeenFortuneScores;
 }

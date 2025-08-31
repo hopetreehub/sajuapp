@@ -282,6 +282,12 @@ const SajuAnalysisPage: React.FC = () => {
                           ▶ 오행균형도 분석 (현재)
                         </button>
                         <button 
+                          onClick={() => navigate('/saju/charts')}
+                          className="w-full text-left px-3 py-2 text-sm hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:text-purple-700 dark:hover:text-purple-300 rounded-lg transition-colors"
+                        >
+                          📈 오행/십성 차트 분석
+                        </button>
+                        <button 
                           onClick={() => navigate('/saju/six-areas')}
                           className="w-full text-left px-3 py-2 text-sm hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:text-purple-700 dark:hover:text-purple-300 rounded-lg transition-colors"
                         >
