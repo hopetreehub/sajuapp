@@ -320,7 +320,11 @@ const ITEM_OHHAENG_MAPPING: Record<string, OhHaeng[]> = {
   '투자운': ['금', '수'],
   '학운': ['수', '목'],
   '해외운': ['수', '목'],
-  '혼인운': ['화', '토']
+  '혼인운': ['화', '토'],
+  
+  // 오늘의 운세 카테고리
+  '연애운': ['화', '목'],
+  '애정운': ['화', '수']
 };
 
 // 오행 상생상극 관계 점수
@@ -627,6 +631,19 @@ function calculateBalanceBonus(
   });
   
   return bonus;
+}
+
+// 지배적인 오행 찾기
+export function getDominantOhhaeng(ohHaengBalance: Record<OhHaeng, number>): OhHaeng {
+  return Object.entries(ohHaengBalance)
+    .reduce((a, b) => a[1] > b[1] ? a : b)[0] as OhHaeng;
+}
+
+// 행운의 숫자 계산
+export function calculateLuckyNumber(sajuData: SajuData): number {
+  const dayGan = sajuData.day.gan;
+  const ganIndex = CHEONGAN.indexOf(dayGan);
+  return ((ganIndex + 1) % 9) || 9; // 1-9 범위
 }
 
 // 샘플 사주 데이터 생성 (테스트용)

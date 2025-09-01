@@ -1,10 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
 import { format, isSameDay } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { CalendarEvent } from '@/services/api'
 import TodayFortuneWidget from '@/components/Fortune/TodayFortuneWidget'
 import DiaryModal from '@/components/DiaryModal'
+import { getCustomerById, Customer } from '@/services/customerApi'
+import { SajuData } from '@/utils/sajuScoreCalculator'
 
 interface DayViewEnhancedProps {
   events: CalendarEvent[]
@@ -17,6 +19,27 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
   const [newTodo, setNewTodo] = useState('')
   const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false)
   const [diaryEntry, setDiaryEntry] = useState<any>(null)
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
+  const [customerSajuData, setCustomerSajuData] = useState<SajuData | null>(null)
+  
+  // LocalStorage에서 마지막 선택 고객 복원
+  useEffect(() => {
+    const lastCustomerId = localStorage.getItem('lastSelectedCustomerId')
+    if (lastCustomerId) {
+      loadCustomerData(parseInt(lastCustomerId))
+    }
+  }, [])
+  
+  const loadCustomerData = async (customerId: number) => {
+    try {
+      const response = await getCustomerById(customerId)
+      setSelectedCustomer(response.data)
+      setCustomerSajuData(response.data.saju_data)
+      localStorage.setItem('lastSelectedCustomerId', customerId.toString())
+    } catch (error) {
+      console.error('Error loading customer data:', error)
+    }
+  }
 
   const dayEvents = useMemo(() => {
     return events.filter(event => {
@@ -293,7 +316,10 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
 
           {/* 오른쪽 영역 (2/5) - 오늘의 운세 */}
           <div className="lg:col-span-2">
-            <TodayFortuneWidget />
+            <TodayFortuneWidget 
+              sajuData={customerSajuData}
+              customerName={selectedCustomer?.name}
+            />
           </div>
         </div>
 
