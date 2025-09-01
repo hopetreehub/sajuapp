@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import HomePage from '@/pages/HomePage'
 import CalendarPage from '@/pages/CalendarPage'
@@ -14,8 +15,14 @@ import Header from '@/components/Layout/Header'
 import Footer from '@/components/Layout/Footer'
 import { CalendarProvider } from '@/contexts/CalendarContext'
 import { ThemeProvider } from '@/contexts/ThemeContext'
+import { initializeNotifications } from '@/utils/notifications'
 
 function App() {
+  // 알림 시스템 초기화
+  useEffect(() => {
+    initializeNotifications()
+  }, [])
+
   return (
     <ThemeProvider>
       <Router>

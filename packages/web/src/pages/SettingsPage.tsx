@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
+import NotificationSettings from '@/components/NotificationSettings'
 
 interface PersonalInfo {
   birthDate: string
@@ -12,7 +13,7 @@ interface PersonalInfo {
 export default function SettingsPage() {
   const { settings } = useCalendar()
   const [localSettings, setLocalSettings] = useState(settings)
-  const [activeTab, setActiveTab] = useState<'general' | 'calendar' | 'diary' | 'account'>('general')
+  const [activeTab, setActiveTab] = useState<'general' | 'calendar' | 'diary' | 'notifications' | 'account'>('general')
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     birthDate: '',
     birthTime: '',
@@ -39,6 +40,7 @@ export default function SettingsPage() {
     { id: 'general', label: '일반', icon: '⚙️' },
     { id: 'calendar', label: '캘린더', icon: '📅' },
     { id: 'diary', label: '다이어리', icon: '📝' },
+    { id: 'notifications', label: '알림', icon: '🔔' },
     { id: 'account', label: '계정', icon: '👤' }
   ]
 
@@ -382,6 +384,14 @@ export default function SettingsPage() {
                       작성 중인 내용을 30초마다 자동으로 저장합니다.
                     </p>
                   </div>
+                </div>
+              )}
+
+              {/* Notification Settings */}
+              {activeTab === 'notifications' && (
+                <div className="space-y-6">
+                  <h2 className="text-lg font-semibold text-foreground mb-4">알림 설정</h2>
+                  <NotificationSettings />
                 </div>
               )}
 
