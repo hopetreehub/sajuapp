@@ -4,10 +4,14 @@ import { SajuRadarData } from '@/types/sajuRadar';
 import SajuCategoryNavigation from '@/components/saju/SajuCategoryNavigation';
 import SajuSubcategoryTabs from '@/components/saju/SajuSubcategoryTabs';
 import UnifiedSajuRadarChart from '@/components/saju/charts/UnifiedSajuRadarChart';
+import CustomerSelector from '@/components/saju/CustomerSelector';
+import { Customer, getCustomerById } from '@/services/customerApi';
 
 export default function UnifiedSajuAnalysisPage() {
   const [selectedCategory, setSelectedCategory] = useState('jubon');
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [customerSajuData, setCustomerSajuData] = useState<any>(null);
 
   const currentCategory = SAJU_RADAR_CATEGORIES.find(cat => cat.id === selectedCategory);
 
@@ -17,6 +21,24 @@ export default function UnifiedSajuAnalysisPage() {
       setSelectedSubcategory(currentCategory.subcategories[0].id);
     }
   }, [selectedCategory, currentCategory]);
+
+  // 고객 선택 시 사주 데이터 로드
+  useEffect(() => {
+    if (selectedCustomer?.id) {
+      loadCustomerSajuData(selectedCustomer.id);
+    } else {
+      setCustomerSajuData(null);
+    }
+  }, [selectedCustomer]);
+
+  const loadCustomerSajuData = async (customerId: number) => {
+    try {
+      const response = await getCustomerById(customerId);
+      setCustomerSajuData(response.data.saju_data);
+    } catch (error) {
+      console.error('Error loading customer saju data:', error);
+    }
+  };
 
   // 현재 선택된 차트 데이터 생성
   const chartData: SajuRadarData | null = useMemo(() => {
@@ -38,8 +60,10 @@ export default function UnifiedSajuAnalysisPage() {
     };
   }, [selectedCategory, selectedSubcategory, currentCategory]);
 
-  // 임시 생년월일 (설정에서 가져올 예정)
-  const birthDate = '1990-01-01 12:00';
+  // 생년월일 정보
+  const birthDate = selectedCustomer 
+    ? `${selectedCustomer.birth_date} ${selectedCustomer.birth_time}`
+    : '고객을 선택해주세요';
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -56,6 +80,29 @@ export default function UnifiedSajuAnalysisPage() {
           <div className="mt-2 text-sm text-purple-600 dark:text-purple-400">
             기존 6대/17대/7대 성향 차트가 통합된 새로운 분석 시스템
           </div>
+        </div>
+
+        {/* 고객 선택 */}
+        <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+          <CustomerSelector 
+            onSelect={setSelectedCustomer}
+            selectedCustomer={selectedCustomer}
+          />
+          {selectedCustomer && customerSajuData && (
+            <div className="mt-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <div className="text-sm text-purple-700 dark:text-purple-300">
+                <div className="font-semibold mb-1">사주 팔자:</div>
+                <div>{customerSajuData.fullSaju}</div>
+                <div className="mt-2 grid grid-cols-5 gap-2 text-xs">
+                  <div>목: {customerSajuData.ohHaengBalance?.목}%</div>
+                  <div>화: {customerSajuData.ohHaengBalance?.화}%</div>
+                  <div>토: {customerSajuData.ohHaengBalance?.토}%</div>
+                  <div>금: {customerSajuData.ohHaengBalance?.금}%</div>
+                  <div>수: {customerSajuData.ohHaengBalance?.수}%</div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 대항목 네비게이션 */}
@@ -102,6 +149,7 @@ export default function UnifiedSajuAnalysisPage() {
             <UnifiedSajuRadarChart
               data={chartData}
               birthDate={birthDate}
+              sajuData={customerSajuData}
             />
           </div>
         )}

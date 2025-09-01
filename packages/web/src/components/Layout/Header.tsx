@@ -11,6 +11,7 @@ const Header: React.FC = () => {
     { path: '/', label: '홈', icon: '🏠' },
     { path: '/dashboard', label: '대시보드', icon: '📊' },
     { path: '/calendar', label: '캘린더', icon: '📅' },
+    { path: '/customers', label: '고객관리', icon: '👥' },
     { path: '/saju', label: '사주분석', icon: '🔮' },
     { path: '/compatibility', label: '궁합', icon: '💑' },
     { path: '/settings', label: '설정', icon: '⚙️' },
