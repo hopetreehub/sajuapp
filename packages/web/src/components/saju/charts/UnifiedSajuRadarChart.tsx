@@ -113,8 +113,14 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
   const timeFrameData = useMemo(() => {
     const result: { [key in TimeFrame]?: number[] } = {};
     
-    // 기본 데이터
-    result.base = data.items.map(item => item.baseScore);
+    // 기본 데이터 - 사주 데이터가 있으면 동적 계산, 없으면 정적 값 사용
+    if (sajuData) {
+      result.base = data.items.map(item => 
+        calculateTimeBasedScore(item.name, sajuData, 'base')
+      );
+    } else {
+      result.base = data.items.map(item => item.baseScore);
+    }
     
     // 사주 데이터가 있으면 사주 기반 계산, 없으면 랜덤 변동성
     if (sajuData) {
@@ -150,8 +156,8 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     return result;
   }, [data.items, sajuData]);
 
-  // 최고점 찾기 로직 (기존과 동일)
-  const scoreValues = data.items.map(item => item.baseScore);
+  // 최고점 찾기 로직 - 동적 기본 점수 사용
+  const scoreValues = timeFrameData.base || data.items.map(item => item.baseScore);
   const maxScore = Math.max(...scoreValues);
   const maxScoreIndexes = scoreValues.map((score, index) => score === maxScore ? index : -1).filter(index => index !== -1);
   
