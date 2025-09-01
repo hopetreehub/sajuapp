@@ -271,7 +271,118 @@ const OHHAENG_RELATIONS = {
   }
 };
 
-// 시간대별 점수 계산을 위한 헬퍼 함수
+// 계절별 오행 강약
+const SEASONAL_OHHAENG_STRENGTH = {
+  1: { 수: 20, 토: 15 }, // 1월: 겨울 끝, 토왕용사
+  2: { 목: 20, 화: 10, 금: -10 }, // 2월: 봄 시작
+  3: { 목: 20, 화: 10, 금: -10 }, // 3월: 봄
+  4: { 목: 15, 토: 20, 금: -5 }, // 4월: 환절기
+  5: { 화: 20, 토: 10, 수: -10 }, // 5월: 여름 시작
+  6: { 화: 20, 토: 10, 수: -10 }, // 6월: 여름
+  7: { 화: 15, 토: 20, 수: -5 }, // 7월: 환절기
+  8: { 금: 20, 수: 10, 목: -10 }, // 8월: 가을 시작
+  9: { 금: 20, 수: 10, 목: -10 }, // 9월: 가을
+  10: { 금: 15, 토: 20, 목: -5 }, // 10월: 환절기
+  11: { 수: 20, 목: 10, 화: -10 }, // 11월: 겨울 시작
+  12: { 수: 20, 목: 10, 화: -10 }  // 12월: 겨울
+};
+
+// 시간대별 오행 강약
+const HOURLY_OHHAENG_STRENGTH = {
+  23: { 수: 15 }, 0: { 수: 15 }, 1: { 수: 15 }, // 자시
+  3: { 목: 15 }, 4: { 목: 15 }, 5: { 목: 15 }, // 인시, 묘시
+  7: { 토: 10 }, 8: { 토: 10 }, // 진시
+  9: { 화: 15 }, 10: { 화: 15 }, 11: { 화: 15 }, 12: { 화: 15 }, // 사시, 오시
+  13: { 토: 10 }, 14: { 토: 10 }, // 미시
+  15: { 금: 15 }, 16: { 금: 15 }, 17: { 금: 15 }, 18: { 금: 15 }, // 신시, 유시
+  19: { 토: 10 }, 20: { 토: 10 }, // 술시
+  21: { 수: 15 }, 22: { 수: 15 } // 해시
+};
+
+// 천간지지 일치 보너스 계산
+function calculateExactMatchBonus(
+  sajuData: SajuData,
+  currentGan: CheonGan,
+  currentJi: JiJi,
+  timeFrame: 'today' | 'month' | 'year'
+): number {
+  let bonus = 0;
+  
+  switch (timeFrame) {
+    case 'today':
+      if (sajuData.day.gan === currentGan) bonus += 20; // 천간 일치
+      if (sajuData.day.ji === currentJi) bonus += 15;   // 지지 일치
+      break;
+    case 'month':
+      if (sajuData.month.gan === currentGan) bonus += 18;
+      if (sajuData.month.ji === currentJi) bonus += 12;
+      break;
+    case 'year':
+      if (sajuData.year.gan === currentGan) bonus += 15;
+      if (sajuData.year.ji === currentJi) bonus += 10;
+      break;
+  }
+  
+  return bonus;
+}
+
+// 오행 관계 점수 계산 (개선된 버전)
+function calculateOhhaengRelation(
+  itemOhhaeng: OhHaeng[],
+  currentOhhaeng: OhHaeng,
+  timeFrame: 'today' | 'month' | 'year'
+): number {
+  let score = 0;
+  
+  // 시간대별 가중치
+  const weights = {
+    today: { 상생: 25, 비화: 15, 상극: -15 },
+    month: { 상생: 20, 비화: 12, 상극: -12 },
+    year: { 상생: 15, 비화: 10, 상극: -10 }
+  };
+  
+  const weight = weights[timeFrame];
+  
+  itemOhhaeng.forEach(oh => {
+    if (OHHAENG_RELATIONS.상생[currentOhhaeng] === oh) {
+      score += weight.상생; // 상생: 큰 가산점
+    } else if (currentOhhaeng === oh) {
+      score += weight.비화; // 같은 오행: 중간 가산점
+    } else if (OHHAENG_RELATIONS.상극[currentOhhaeng] === oh) {
+      score += weight.상극; // 상극: 적당한 감점
+    }
+  });
+  
+  return score;
+}
+
+// 계절 보정 계산
+function calculateSeasonalBonus(itemOhhaeng: OhHaeng[], month: number): number {
+  const seasonalStrength = SEASONAL_OHHAENG_STRENGTH[month] || {};
+  let bonus = 0;
+  
+  itemOhhaeng.forEach(oh => {
+    const strength = seasonalStrength[oh] || 0;
+    bonus += strength * 0.5; // 50% 반영
+  });
+  
+  return bonus;
+}
+
+// 시간 보정 계산
+function calculateHourlyBonus(itemOhhaeng: OhHaeng[], hour: number): number {
+  const hourlyStrength = HOURLY_OHHAENG_STRENGTH[hour] || {};
+  let bonus = 0;
+  
+  itemOhhaeng.forEach(oh => {
+    const strength = hourlyStrength[oh] || 0;
+    bonus += strength * 0.3; // 30% 반영
+  });
+  
+  return bonus;
+}
+
+// 시간대별 점수 계산을 위한 헬퍼 함수 (완전 개선된 버전)
 export function calculateTimeBasedScore(
   itemName: string,
   sajuData: SajuData,
@@ -281,87 +392,69 @@ export function calculateTimeBasedScore(
   
   if (timeFrame === 'base') return baseScore;
   
-  // 현재 날짜 기반 운세 계산
+  // 현재 날짜/시간 정보
   const now = new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth() + 1;
   const currentDay = now.getDate();
+  const currentHour = now.getHours();
   
-  // 항목의 오행
+  // 항목의 오행 속성
   const itemOhhaeng = ITEM_OHHAENG_MAPPING[itemName] || [];
   if (itemOhhaeng.length === 0) return baseScore;
   
-  let modifier = 0;
+  // 1. 기본 보정값 (평균적으로 양수가 되도록)
+  let modifier = 8;
   
+  let currentGan: CheonGan;
+  let currentJi: JiJi;
+  let currentOhhaeng: OhHaeng;
+  
+  // 2. 시간대별 천간지지 계산
   switch (timeFrame) {
-    case 'today': {
-      // 오늘의 일진과 비교
-      const todayGan = CHEONGAN[(currentDay % 10)];
-      const todayJi = JIJI[(currentDay % 12)];
-      const todayOhhaeng = CHEONGAN_OHHAENG[todayGan];
+    case 'today':
+      // 오늘의 일진
+      currentGan = CHEONGAN[Math.abs((currentDay - 1) % 10)];
+      currentJi = JIJI[Math.abs((currentDay - 1) % 12)];
+      currentOhhaeng = CHEONGAN_OHHAENG[currentGan];
       
-      // 상생 관계면 점수 증가
-      itemOhhaeng.forEach(oh => {
-        if (OHHAENG_RELATIONS.상생[todayOhhaeng] === oh) {
-          modifier += 15;
-        } else if (OHHAENG_RELATIONS.상극[todayOhhaeng] === oh) {
-          modifier -= 10;
-        }
-      });
-      
-      // 일주와의 궁합
-      if (sajuData.day.gan === todayGan) {
-        modifier += 10; // 같은 천간일 때 가산
-      }
+      // 시간 보정
+      modifier += calculateHourlyBonus(itemOhhaeng, currentHour);
       break;
-    }
-    
-    case 'month': {
-      // 이번 달의 월운과 비교
-      const monthGan = CHEONGAN[(currentMonth % 10)];
-      const monthJi = JIJI[(currentMonth % 12)];
-      const monthOhhaeng = CHEONGAN_OHHAENG[monthGan];
       
-      itemOhhaeng.forEach(oh => {
-        if (OHHAENG_RELATIONS.상생[monthOhhaeng] === oh) {
-          modifier += 12;
-        } else if (OHHAENG_RELATIONS.상극[monthOhhaeng] === oh) {
-          modifier -= 8;
-        }
-      });
+    case 'month':
+      // 이번 달의 월주
+      currentGan = CHEONGAN[Math.abs((currentMonth - 1) % 10)];
+      currentJi = JIJI[Math.abs((currentMonth - 1) % 12)];
+      currentOhhaeng = CHEONGAN_OHHAENG[currentGan];
       
-      // 월지와의 합충
-      if (sajuData.month.ji === monthJi) {
-        modifier += 8;
-      }
+      // 계절 보정
+      modifier += calculateSeasonalBonus(itemOhhaeng, currentMonth);
       break;
-    }
-    
-    case 'year': {
-      // 올해의 세운과 비교
-      const yearGan = CHEONGAN[(currentYear % 10)];
-      const yearJi = JIJI[(currentYear % 12)];
-      const yearOhhaeng = CHEONGAN_OHHAENG[yearGan];
       
-      itemOhhaeng.forEach(oh => {
-        if (OHHAENG_RELATIONS.상생[yearOhhaeng] === oh) {
-          modifier += 10;
-        } else if (OHHAENG_RELATIONS.상극[yearOhhaeng] === oh) {
-          modifier -= 5;
-        }
-      });
-      
-      // 년지와의 관계
-      if (sajuData.year.ji === yearJi) {
-        modifier += 5;
-      }
+    case 'year':
+      // 올해의 년주
+      currentGan = CHEONGAN[Math.abs((currentYear - 1984) % 10)];
+      currentJi = JIJI[Math.abs((currentYear - 1984) % 12)];
+      currentOhhaeng = CHEONGAN_OHHAENG[currentGan];
       break;
-    }
+      
+    default:
+      return baseScore;
   }
   
-  // 최종 점수 계산 (20-85 범위)
-  const finalScore = baseScore + modifier;
-  return Math.max(20, Math.min(85, Math.round(finalScore)));
+  // 3. 천간지지 일치 보너스 (큰 가산점)
+  modifier += calculateExactMatchBonus(sajuData, currentGan, currentJi, timeFrame as any);
+  
+  // 4. 오행 관계 점수 (균형있게 조정)
+  modifier += calculateOhhaengRelation(itemOhhaeng, currentOhhaeng, timeFrame as any);
+  
+  // 5. 랜덤 요소 (약간의 변동성)
+  modifier += (Math.random() - 0.5) * 8;
+  
+  // 6. 최종 점수 계산 (20-90 범위)
+  const finalScore = Math.round(baseScore + modifier);
+  return Math.max(20, Math.min(90, finalScore));
 }
 
 // 사주 기반 점수 계산 함수
