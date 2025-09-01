@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
 import { 
   startOfMonth, 
@@ -24,7 +24,8 @@ interface MonthViewProps {
 }
 
 export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthViewProps) {
-  const { currentDate, setSelectedDate, setViewMode } = useCalendar()
+  const { currentDate, setSelectedDate, setViewMode, getTodosForDate } = useCalendar()
+  const [hoveredDate, setHoveredDate] = useState<Date | null>(null)
 
   const monthDays = useMemo(() => {
     const start = startOfMonth(currentDate)
@@ -40,6 +41,44 @@ export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthV
       const eventDate = new Date(event.start_time)
       return isSameDay(eventDate, date)
     }).slice(0, 3) // 최대 3개만 표시
+  }
+
+  // 날짜별 할일 데이터 메모이제이션
+  const todosForMonth = useMemo(() => {
+    const todosMap = new Map<string, ReturnType<typeof getTodosForDate>>()
+    monthDays.forEach(day => {
+      const dateKey = format(day, 'yyyy-MM-dd')
+      todosMap.set(dateKey, getTodosForDate(day))
+    })
+    return todosMap
+  }, [monthDays, getTodosForDate])
+
+  // 우선순위별 색상 정의
+  const getPriorityColor = (priority: 'high' | 'medium' | 'low') => {
+    switch (priority) {
+      case 'high':
+        return 'bg-red-500'
+      case 'medium':
+        return 'bg-yellow-500'
+      case 'low':
+        return 'bg-green-500'
+      default:
+        return 'bg-gray-500'
+    }
+  }
+
+  // 우선순위별 아이콘
+  const getPriorityIcon = (priority: 'high' | 'medium' | 'low') => {
+    switch (priority) {
+      case 'high':
+        return '🔴'
+      case 'medium':
+        return '🟡'
+      case 'low':
+        return '🟢'
+      default:
+        return '⚪'
+    }
   }
 
   const handleDayClick = (date: Date) => {
@@ -75,13 +114,19 @@ export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthV
           const isCurrentMonth = isSameMonth(day, currentDate)
           const isCurrentDay = isToday(day)
           const dayEvents = getEventsForDay(day)
+          const dateKey = format(day, 'yyyy-MM-dd')
+          const dayTodos = todosForMonth.get(dateKey) || []
+          const incompleteTodos = dayTodos.filter(todo => !todo.completed)
+          const completedTodos = dayTodos.filter(todo => todo.completed)
           
           return (
             <div
               key={day.toISOString()}
               onClick={() => handleDayClick(day)}
+              onMouseEnter={() => setHoveredDate(day)}
+              onMouseLeave={() => setHoveredDate(null)}
               className={`
-                bg-background p-2 cursor-pointer transition-colors
+                bg-background p-2 cursor-pointer transition-colors relative
                 hover:bg-muted/50
                 ${!isCurrentMonth ? 'bg-muted/30' : ''}
                 ${isCurrentDay ? 'bg-primary/10' : ''}
@@ -104,11 +149,32 @@ export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthV
                   {format(day, 'd')}
                 </span>
                 
-                {/* Lunar Date (placeholder) */}
-                {isCurrentMonth && (
-                  <span className="text-xs text-muted-foreground">
-                    {/* 음력 날짜는 나중에 구현 */}
-                  </span>
+                {/* 할일 개수 표시 */}
+                {isCurrentMonth && dayTodos.length > 0 && (
+                  <div className="flex items-center gap-1">
+                    {/* 우선순위별 할일 개수 표시 */}
+                    {incompleteTodos.filter(t => t.priority === 'high').length > 0 && (
+                      <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+                        {incompleteTodos.filter(t => t.priority === 'high').length}
+                      </span>
+                    )}
+                    {incompleteTodos.filter(t => t.priority === 'medium').length > 0 && (
+                      <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-yellow-500 rounded-full">
+                        {incompleteTodos.filter(t => t.priority === 'medium').length}
+                      </span>
+                    )}
+                    {incompleteTodos.filter(t => t.priority === 'low').length > 0 && (
+                      <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-green-500 rounded-full">
+                        {incompleteTodos.filter(t => t.priority === 'low').length}
+                      </span>
+                    )}
+                    {/* 완료된 할일 */}
+                    {completedTodos.length > 0 && (
+                      <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-gray-500 bg-gray-200 rounded-full">
+                        ✓
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
 
@@ -137,6 +203,30 @@ export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthV
                   </div>
                 )}
               </div>
+
+              {/* 할일 미리보기 툴팁 */}
+              {hoveredDate && isSameDay(hoveredDate, day) && dayTodos.length > 0 && (
+                <div className="absolute z-50 top-full left-0 mt-2 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
+                  <div className="text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200">
+                    할일 목록 ({dayTodos.length}개)
+                  </div>
+                  <div className="space-y-1 max-h-48 overflow-y-auto">
+                    {dayTodos.slice(0, 5).map((todo) => (
+                      <div key={todo.id} className="flex items-start gap-2 text-xs">
+                        <span>{getPriorityIcon(todo.priority)}</span>
+                        <span className={`flex-1 ${todo.completed ? 'line-through text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>
+                          {todo.text}
+                        </span>
+                      </div>
+                    ))}
+                    {dayTodos.length > 5 && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                        +{dayTodos.length - 5}개 더보기
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           )
         })}

@@ -87,6 +87,69 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
       createdAt: new Date(),
       updatedAt: new Date()
     },
+    {
+      id: '4',
+      text: '팀 미팅 준비',
+      completed: false,
+      priority: 'high',
+      date: format(new Date(), 'yyyy-MM-dd'),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: '5',
+      text: '이메일 확인',
+      completed: true,
+      priority: 'medium',
+      date: format(new Date(), 'yyyy-MM-dd'),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: '6',
+      text: '코드 리뷰',
+      completed: false,
+      priority: 'high',
+      date: format(new Date(new Date().setDate(new Date().getDate() + 1)), 'yyyy-MM-dd'),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: '7',
+      text: '프로젝트 계획서 작성',
+      completed: false,
+      priority: 'high',
+      date: format(new Date(new Date().setDate(new Date().getDate() + 2)), 'yyyy-MM-dd'),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: '8',
+      text: '책 읽기',
+      completed: false,
+      priority: 'low',
+      date: format(new Date(new Date().setDate(new Date().getDate() + 3)), 'yyyy-MM-dd'),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: '9',
+      text: '병원 예약',
+      completed: false,
+      priority: 'medium',
+      date: format(new Date(new Date().setDate(new Date().getDate() + 5)), 'yyyy-MM-dd'),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: '10',
+      text: '친구 생일 선물 준비',
+      completed: false,
+      priority: 'medium',
+      date: format(new Date(new Date().setDate(new Date().getDate() + 7)), 'yyyy-MM-dd'),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
   ])
   
   const [settings] = useState<UserSettings>({
