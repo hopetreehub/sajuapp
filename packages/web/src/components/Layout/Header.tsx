@@ -9,6 +9,7 @@ const Header: React.FC = () => {
 
   const navItems = [
     { path: '/', label: '홈', icon: '🏠' },
+    { path: '/dashboard', label: '대시보드', icon: '📊' },
     { path: '/calendar', label: '캘린더', icon: '📅' },
     { path: '/saju', label: '사주분석', icon: '📜' },
     { path: '/compatibility', label: '궁합', icon: '💑' },

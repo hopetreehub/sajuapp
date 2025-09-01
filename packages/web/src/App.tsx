@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import HomePage from '@/pages/HomePage'
+import DashboardPage from '@/pages/DashboardPage'
 import CalendarPage from '@/pages/CalendarPage'
 import DiaryPage from '@/pages/DiaryPage'
 import SettingsPage from '@/pages/SettingsPage'
@@ -32,6 +33,7 @@ function App() {
             <main className="flex-1">
               <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/calendar" element={<CalendarPage />} />
                 <Route path="/fortune" element={<FortunePage />} />
                 <Route path="/saju" element={<SajuAnalysisPage />} />
