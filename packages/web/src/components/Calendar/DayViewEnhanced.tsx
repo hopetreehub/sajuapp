@@ -303,7 +303,6 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
           isOpen={isDiaryModalOpen}
           onClose={() => setIsDiaryModalOpen(false)}
           date={currentDate}
-          existingEntry={diaryEntry}
           onSave={handleDiarySave}
         />
       </div>
