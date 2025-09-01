@@ -7,6 +7,7 @@ import TodayFortuneWidget from '@/components/Fortune/TodayFortuneWidget'
 import DiaryModal from '@/components/DiaryModal'
 import { getCustomerById, Customer } from '@/services/customerApi'
 import { SajuData } from '@/utils/sajuScoreCalculator'
+import { getPersonalInfoFromStorage, convertPersonalInfoToSaju, isPersonalInfoValid } from '@/utils/personalInfoToSaju'
 
 interface DayViewEnhancedProps {
   events: CalendarEvent[]
@@ -21,14 +22,42 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
   const [diaryEntry, setDiaryEntry] = useState<any>(null)
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
   const [customerSajuData, setCustomerSajuData] = useState<SajuData | null>(null)
+  const [personalSajuData, setPersonalSajuData] = useState<SajuData | null>(null)
+  const [dataSource, setDataSource] = useState<'personal' | 'customer' | 'sample'>('sample')
   
-  // LocalStorage에서 마지막 선택 고객 복원
+  // 설정 페이지의 개인 사주 정보 읽기
   useEffect(() => {
+    loadPersonalSajuData()
+    
+    // 설정 변경 이벤트 리스너
+    const handlePersonalInfoUpdate = () => {
+      loadPersonalSajuData()
+    }
+    
+    window.addEventListener('personalInfoUpdated', handlePersonalInfoUpdate)
+    
+    // 고객 데이터는 개인 사주가 없을 때만 로드
     const lastCustomerId = localStorage.getItem('lastSelectedCustomerId')
-    if (lastCustomerId) {
+    if (lastCustomerId && !personalSajuData) {
       loadCustomerData(parseInt(lastCustomerId))
     }
+    
+    return () => {
+      window.removeEventListener('personalInfoUpdated', handlePersonalInfoUpdate)
+    }
   }, [])
+  
+  const loadPersonalSajuData = () => {
+    const personalInfo = getPersonalInfoFromStorage()
+    if (isPersonalInfoValid(personalInfo)) {
+      const sajuData = convertPersonalInfoToSaju(personalInfo!)
+      if (sajuData) {
+        setPersonalSajuData(sajuData)
+        setDataSource('personal')
+        console.log('설정 페이지 사주 데이터 로드:', sajuData)
+      }
+    }
+  }
   
   const loadCustomerData = async (customerId: number) => {
     try {
@@ -36,6 +65,10 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
       setSelectedCustomer(response.data)
       setCustomerSajuData(response.data.saju_data)
       localStorage.setItem('lastSelectedCustomerId', customerId.toString())
+      // 개인 사주가 없을 때만 고객 데이터 사용
+      if (!personalSajuData) {
+        setDataSource('customer')
+      }
     } catch (error) {
       console.error('Error loading customer data:', error)
     }
@@ -317,10 +350,17 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
           {/* 오른쪽 영역 (2/5) - 오늘의 운세 */}
           <div className="lg:col-span-2">
             <TodayFortuneWidget 
-              sajuData={customerSajuData}
-              customerName={selectedCustomer?.name}
+              sajuData={personalSajuData || customerSajuData}
+              customerName={personalSajuData ? '나' : selectedCustomer?.name}
               selectedDate={currentDate}
             />
+            
+            {/* 데이터 소스 표시 */}
+            <div className="mt-2 text-xs text-center text-gray-500 dark:text-gray-400">
+              {dataSource === 'personal' && '설정에서 입력한 본인 사주 사용 중'}
+              {dataSource === 'customer' && `${selectedCustomer?.name}님의 사주 사용 중`}
+              {dataSource === 'sample' && '기본 샘플 데이터 사용 중'}
+            </div>
           </div>
         </div>
 

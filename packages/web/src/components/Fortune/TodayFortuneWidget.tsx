@@ -172,11 +172,11 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
       {/* 고객 이름 표시 */}
       {customerName ? (
         <div className="text-sm text-purple-600 dark:text-purple-400 mb-2 text-center">
-          {customerName}님의 운세
+          {customerName === '나' ? '나의 운세' : `${customerName}님의 운세`}
         </div>
       ) : (
         <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 text-center">
-          기본 운세 (고객을 선택하면 개인 운세를 확인할 수 있습니다)
+          기본 운세 (설정에서 생년월일시를 입력하면 개인 운세를 확인할 수 있습니다)
         </div>
       )}
       

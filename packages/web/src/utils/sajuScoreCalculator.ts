@@ -32,7 +32,7 @@ const CHEONGAN: CheonGan[] = ['갑', '을', '병', '정', '무', '기', '경', '
 const JIJI: JiJi[] = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
 
 // 천간의 오행 매핑
-const CHEONGAN_OHHAENG: Record<CheonGan, OhHaeng> = {
+export const CHEONGAN_OHHAENG: Record<CheonGan, OhHaeng> = {
   '갑': '목', '을': '목',
   '병': '화', '정': '화',
   '무': '토', '기': '토',
@@ -41,7 +41,7 @@ const CHEONGAN_OHHAENG: Record<CheonGan, OhHaeng> = {
 };
 
 // 지지의 오행 매핑
-const JIJI_OHHAENG: Record<JiJi, OhHaeng> = {
+export const JIJI_OHHAENG: Record<JiJi, OhHaeng> = {
   '인': '목', '묘': '목',
   '사': '화', '오': '화',
   '진': '토', '술': '토', '축': '토', '미': '토',
