@@ -77,6 +77,20 @@ const services = {
         message: 'Please try again later'
       })
     }
+  },
+  '/api/interpretation': {
+    target: process.env.SAJU_SERVICE_URL || 'http://localhost:4002',
+    changeOrigin: true,
+    pathRewrite: {
+      '^/api/interpretation': '/api/interpretation'
+    },
+    onError: (err: any, req: any, res: any) => {
+      console.error('Saju interpretation service error:', err)
+      res.status(503).json({
+        error: 'Saju interpretation service unavailable',
+        message: 'Please try again later'
+      })
+    }
   }
 }
 
