@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { InterpretationResponse } from '../../services/api';
+import { Info, Sparkles, Briefcase, Users, Activity } from 'lucide-react';
 
 interface InterpretationPanelProps {
   interpretation: InterpretationResponse | null;
@@ -17,15 +18,16 @@ const InterpretationPanel: React.FC<InterpretationPanelProps> = ({
   category = 'basic'
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [activeTab, setActiveTab] = useState<'basic' | 'personality' | 'fortune' | 'career' | 'relationship' | 'health'>(
-    category === 'spiritual' || category === 'johoo' ? 'basic' : category
+  type TabType = 'basic' | 'personality' | 'fortune' | 'career' | 'relationship' | 'health';
+  const [activeTab, setActiveTab] = useState<TabType>(
+    (category === 'spiritual' || category === 'johoo') ? 'basic' : category as TabType
   );
 
   useEffect(() => {
     if (category === 'spiritual' || category === 'johoo') {
       setActiveTab('basic');
     } else {
-      setActiveTab(category);
+      setActiveTab(category as TabType);
     }
   }, [category]);
 
@@ -402,7 +404,7 @@ const InterpretationPanel: React.FC<InterpretationPanelProps> = ({
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => setActiveTab(tab.id as TabType)}
                   className={`flex items-center px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
                     activeTab === tab.id
                       ? 'text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400'

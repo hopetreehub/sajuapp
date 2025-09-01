@@ -12,7 +12,7 @@ import { Radar } from 'react-chartjs-2';
 import { SixAreaScores } from '@/types/saju';
 import { CHART_DESIGN_SYSTEM, getTimeFrameColors, getChartOptions } from '@/constants/chartDesignSystem';
 import InterpretationPanel from '@/components/charts/InterpretationPanel';
-import { interpretationService, InterpretationResponse } from '@/services/api';
+import { interpretationService, type InterpretationResponse } from '@/services/api';
 
 ChartJS.register(
   RadialLinearScale,
@@ -26,15 +26,21 @@ ChartJS.register(
 interface SixAreaChartProps {
   scores: SixAreaScores;
   birthDate?: string;
+  sajuData?: any;
 }
 
 type TimeFrame = 'base' | 'today' | 'month' | 'year';
 
-const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
+const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate, sajuData }) => {
   // 다크모드 실시간 감지
   const [isDarkMode, setIsDarkMode] = useState(false);
   // 시간대 선택 상태
   const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrame>('base');
+  
+  // 해석 데이터 상태
+  const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null);
+  const [interpretationLoading, setInterpretationLoading] = useState(false);
+  const [interpretationError, setInterpretationError] = useState<string | null>(null);
 
   useEffect(() => {
     // 초기 다크모드 상태 확인
@@ -53,6 +59,28 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
 
     return () => observer.disconnect();
   }, []);
+
+  // 해석 데이터 로드
+  useEffect(() => {
+    const loadInterpretation = async () => {
+      if (!sajuData) return;
+      
+      setInterpretationLoading(true);
+      setInterpretationError(null);
+      
+      try {
+        const response = await interpretationService.getFortuneInterpretation(sajuData);
+        setInterpretation({ fortune: response });
+      } catch (error) {
+        console.error('운세 해석 데이터 로드 실패:', error);
+        setInterpretationError('운세 해석 데이터를 불러올 수 없습니다.');
+      } finally {
+        setInterpretationLoading(false);
+      }
+    };
+
+    loadInterpretation();
+  }, [sajuData]);
 
   // 시간대별 영역 가중치 정의
   const timeFrameWeights = {
