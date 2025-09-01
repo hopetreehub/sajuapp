@@ -6,9 +6,12 @@ import {
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement
 } from 'chart.js';
-import { Radar } from 'react-chartjs-2';
+import { Radar, Bar } from 'react-chartjs-2';
 import { SajuRadarData, SajuRadarItem, TimeFrame, TimeFrameWeights } from '@/types/sajuRadar';
 import { CHART_DESIGN_SYSTEM, getTimeFrameColors, getChartOptions } from '@/constants/chartDesignSystem';
 
@@ -18,7 +21,10 @@ ChartJS.register(
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement
 );
 
 interface UnifiedSajuRadarChartProps {
@@ -220,6 +226,75 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
   const totalScore = scoreValues.reduce((sum, score) => sum + score, 0);
   const averageScore = (totalScore / data.items.length).toFixed(1);
 
+  // 2개 항목일 때 바 차트용 데이터와 옵션
+  const barChartData = {
+    labels: data.items.map(item => item.name),
+    datasets: [
+      {
+        label: '나의 기본 사주',
+        data: scoreValues,
+        backgroundColor: scoreValues.map((_, index) => 
+          maxScoreIndexes.includes(index) 
+            ? '#f59e0b'  // 금색 (최고점)
+            : getTimeFrameColors('base').background
+        ),
+        borderColor: scoreValues.map((_, index) => 
+          maxScoreIndexes.includes(index) 
+            ? '#f59e0b'  // 금색 (최고점)
+            : getTimeFrameColors('base').border
+        ),
+        borderWidth: 2,
+        borderRadius: 8,
+        borderSkipped: false
+      }
+    ]
+  };
+
+  const barOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        backgroundColor: isDarkMode ? '#374151' : '#f3f4f6',
+        titleColor: isDarkMode ? '#ffffff' : '#000000',
+        bodyColor: isDarkMode ? '#ffffff' : '#000000',
+        borderColor: isDarkMode ? '#6b7280' : '#d1d5db',
+        borderWidth: 1,
+        callbacks: {
+          label: (context: any) => {
+            return `${context.dataset.label}: ${context.parsed.y}점`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false
+        },
+        ticks: {
+          color: isDarkMode ? '#9ca3af' : '#6b7280'
+        }
+      },
+      y: {
+        beginAtZero: true,
+        max: 100,
+        grid: {
+          color: isDarkMode ? '#374151' : '#e5e7eb'
+        },
+        ticks: {
+          color: isDarkMode ? '#9ca3af' : '#6b7280'
+        }
+      }
+    }
+  };
+
+  // 2개 이하 항목일 때는 바 차트 사용
+  const useBarChart = data.items.length <= 2;
+
   return (
     <div className={CHART_DESIGN_SYSTEM.LAYOUT.chartContainer.wrapper}>
       <div className="mb-6">
@@ -231,11 +306,20 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
             출생정보: {birthDate}
           </p>
         )}
+        {useBarChart && (
+          <p className="text-sm text-yellow-600 dark:text-yellow-400 mt-1">
+            💡 항목이 적어 막대 차트로 표시됩니다
+          </p>
+        )}
       </div>
 
-      {/* 레이더 차트 - 통일된 크기 (기존과 동일) */}
+      {/* 차트 영역 - 조건부 렌더링 */}
       <div className="mb-6" style={{ height: CHART_DESIGN_SYSTEM.DIMENSIONS.height }}>
-        <Radar data={chartData} options={options} />
+        {useBarChart ? (
+          <Bar data={barChartData} options={barOptions} />
+        ) : (
+          <Radar data={chartData} options={options} />
+        )}
       </div>
 
       {/* 시간대 선택 버튼 - 차트 아래 배치 (기존과 동일) */}
