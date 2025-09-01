@@ -29,6 +29,7 @@ export default function CustomerSelector({ onSelect, selectedCustomer }: Custome
   };
 
   const handleSelect = (customer: Customer) => {
+    console.log('[CustomerSelector] 고객 선택됨:', customer);
     onSelect(customer);
     setIsOpen(false);
     setSearchQuery('');

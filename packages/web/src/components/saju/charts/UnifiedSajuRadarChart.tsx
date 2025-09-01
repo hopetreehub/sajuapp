@@ -39,6 +39,8 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
   birthDate, 
   sajuData 
 }) => {
+  console.log('[차트 컴포넌트] 받은 사주 데이터:', sajuData);
+  
   // 다크모드 실시간 감지 (기존과 동일)
   const [isDarkMode, setIsDarkMode] = useState(false);
   // 시간대 선택 상태 (기존과 동일)
@@ -111,14 +113,19 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
 
   // 시간대별 데이터 메모이제이션
   const timeFrameData = useMemo(() => {
+    console.log('[useMemo 실행] sajuData:', sajuData);
     const result: { [key in TimeFrame]?: number[] } = {};
     
     // 기본 데이터 - 사주 데이터가 있으면 동적 계산, 없으면 정적 값 사용
     if (sajuData) {
-      result.base = data.items.map(item => 
-        calculateTimeBasedScore(item.name, sajuData, 'base')
-      );
+      console.log('[기본 점수 계산] sajuData 존재함:', sajuData.fullSaju);
+      result.base = data.items.map(item => {
+        const score = calculateTimeBasedScore(item.name, sajuData, 'base');
+        console.log(`[항목 점수] ${item.name}: ${score}점`);
+        return score;
+      });
     } else {
+      console.log('[경고] sajuData가 없음 - 정적 점수 사용');
       result.base = data.items.map(item => item.baseScore);
     }
     

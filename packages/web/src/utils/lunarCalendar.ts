@@ -13,21 +13,37 @@ export interface LunarDate {
  * 양력 날짜를 음력으로 변환
  */
 export const solarToLunar = (date: Date): LunarDate => {
-  const calendar = new KoreanLunarCalendar()
-  
-  calendar.setSolarDate(
-    date.getFullYear(),
-    date.getMonth() + 1, // JavaScript months are 0-indexed
-    date.getDate()
-  )
-  
-  return {
-    year: calendar.getLunarYear(),
-    month: calendar.getLunarMonth(),
-    day: calendar.getLunarDay(),
-    isLeapMonth: calendar.getLunarLeapMonth(),
-    zodiac: calendar.getZodiac(),
-    chineseYear: calendar.getChineseYear()
+  try {
+    const calendar = new KoreanLunarCalendar()
+    
+    calendar.setSolarDate(
+      date.getFullYear(),
+      date.getMonth() + 1, // JavaScript months are 0-indexed
+      date.getDate()
+    )
+    
+    // getLunarCalendar() 메서드로 음력 정보 가져오기
+    const lunarData = calendar.getLunarCalendar()
+    
+    return {
+      year: lunarData.year || date.getFullYear(),
+      month: lunarData.month || (date.getMonth() + 1),
+      day: lunarData.day || date.getDate(),
+      isLeapMonth: lunarData.leapMonth || false,
+      zodiac: lunarData.zodiac || '',
+      chineseYear: lunarData.chineseYear || ''
+    }
+  } catch (error) {
+    console.error('Error converting solar to lunar:', error)
+    // 에러 시 기본값 반환
+    return {
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      day: date.getDate(),
+      isLeapMonth: false,
+      zodiac: '',
+      chineseYear: ''
+    }
   }
 }
 
@@ -35,15 +51,24 @@ export const solarToLunar = (date: Date): LunarDate => {
  * 음력 날짜를 양력으로 변환
  */
 export const lunarToSolar = (year: number, month: number, day: number, isLeapMonth: boolean = false): Date => {
-  const calendar = new KoreanLunarCalendar()
-  
-  calendar.setLunarDate(year, month, day, isLeapMonth)
-  
-  return new Date(
-    calendar.getSolarYear(),
-    calendar.getSolarMonth() - 1, // Convert to 0-indexed
-    calendar.getSolarDay()
-  )
+  try {
+    const calendar = new KoreanLunarCalendar()
+    
+    calendar.setLunarDate(year, month, day, isLeapMonth)
+    
+    // getSolarCalendar() 메서드로 양력 정보 가져오기
+    const solarData = calendar.getSolarCalendar()
+    
+    return new Date(
+      solarData.year || year,
+      (solarData.month || month) - 1, // Convert to 0-indexed
+      solarData.day || day
+    )
+  } catch (error) {
+    console.error('Error converting lunar to solar:', error)
+    // 에러 시 기본값 반환
+    return new Date(year, month - 1, day)
+  }
 }
 
 /**

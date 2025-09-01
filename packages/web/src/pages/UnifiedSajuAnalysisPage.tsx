@@ -34,13 +34,18 @@ export default function UnifiedSajuAnalysisPage() {
 
   const loadCustomerSajuData = async (customerId: number) => {
     try {
+      console.log('[데이터 로드 시작] 고객 ID:', customerId);
       const response = await getCustomerById(customerId);
+      console.log('[API 응답]', response.data);
       const sajuData = response.data.saju_data;
+      console.log('[사주 데이터 수신]', sajuData);
+      
       setCustomerSajuData(sajuData);
       // 전역 사주 데이터 설정 (모든 차트에 반영)
       setGlobalSajuData(sajuData);
+      console.log('[전역 사주 데이터 설정 완료]', sajuData);
     } catch (error) {
-      console.error('Error loading customer saju data:', error);
+      console.error('[에러] 고객 사주 데이터 로딩 실패:', error);
       setGlobalSajuData(null);
     }
   };
@@ -151,6 +156,7 @@ export default function UnifiedSajuAnalysisPage() {
         {/* 통합 레이더차트 */}
         {chartData && (
           <div className="mb-8">
+            {console.log('[차트 렌더링] customerSajuData:', customerSajuData)}
             <UnifiedSajuRadarChart
               data={chartData}
               birthDate={birthDate}

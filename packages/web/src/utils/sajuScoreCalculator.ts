@@ -22,7 +22,14 @@ export interface SajuData {
     금: number;
     수: number;
   };
+  fullSaju?: string;
 }
+
+// 천간 배열 (갑을병정무기경신임계)
+const CHEONGAN: CheonGan[] = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
+
+// 지지 배열 (자축인묘진사오미신유술해)
+const JIJI: JiJi[] = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
 
 // 천간의 오행 매핑
 const CHEONGAN_OHHAENG: Record<CheonGan, OhHaeng> = {
@@ -624,9 +631,6 @@ function calculateBalanceBonus(
 
 // 샘플 사주 데이터 생성 (테스트용)
 export function generateSampleSajuData(): SajuData {
-  const gans: CheonGan[] = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
-  const jijis: JiJi[] = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
-  
   return {
     year: { gan: '갑', ji: '자' },
     month: { gan: '병', ji: '인' },
@@ -638,6 +642,7 @@ export function generateSampleSajuData(): SajuData {
       토: 20,
       금: 15,
       수: 10
-    }
+    },
+    fullSaju: '갑자 병인 무진 경신'
   };
 }
