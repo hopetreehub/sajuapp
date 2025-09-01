@@ -1,12 +1,13 @@
-// 주문차트 PDF 기반 정확한 7개 대항목 데이터 구조
+// 9개 대항목 구조로 완전 재편성된 데이터
 import { SajuRadarCategory } from '@/types/sajuRadar'
 
 export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
+  // 1. 주본 (기존 4개 + 주운 추가)
   {
     id: 'jubon',
     name: '주본',
     icon: '🎯',
-    description: '근본본, 성향, 욕정, 주격 분석',
+    description: '근본본, 성향, 욕정, 주격, 주운 분석',
     subcategories: [
       {
         id: 'geunbonbon',
@@ -70,18 +71,10 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'haprijeogin', name: '합리적', baseScore: 75 },
           { id: 'heuisaengjeogin', name: '희생적', baseScore: 65 }
         ]
-      }
-    ]
-  },
-  {
-    id: 'juun',
-    name: '주운',
-    icon: '🍀',
-    description: '22개 운세 항목 분석',
-    subcategories: [
+      },
       {
-        id: 'jeonche',
-        name: '전체',
+        id: 'juun',
+        name: '주운',
         items: [
           { id: 'geongangun', name: '건강운', baseScore: 70 },
           { id: 'gyeolhonun', name: '결혼운', baseScore: 65 },
@@ -104,42 +97,13 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
       }
     ]
   },
-  {
-    id: 'noe',
-    name: '뇌',
-    icon: '🧠',
-    description: '17개 뇌 부위 분석',
-    subcategories: [
-      {
-        id: 'jeonche',
-        name: '전체',
-        items: [
-          { id: 'gannoe', name: '간뇌', baseScore: 65 },
-          { id: 'noehasuche', name: '뇌하수체', baseScore: 68 },
-          { id: 'daenoe', name: '대뇌', baseScore: 75 },
-          { id: 'duchungeop', name: '두충엽', baseScore: 60 },
-          { id: 'byeongyeongeop', name: '변연엽', baseScore: 62 },
-          { id: 'sonoe', name: '소뇌', baseScore: 70 },
-          { id: 'sisang', name: '시상', baseScore: 65 },
-          { id: 'sisanghabu', name: '시상하부', baseScore: 68 },
-          { id: 'yeonsu', name: '연수', baseScore: 72 },
-          { id: 'jeondueop', name: '전두엽', baseScore: 75 },
-          { id: 'jeoneop', name: '전엽', baseScore: 70 },
-          { id: 'jungnoe', name: '중뇌', baseScore: 68 },
-          { id: 'jungeop', name: '중엽', baseScore: 65 },
-          { id: 'cheoksu', name: '척수', baseScore: 60 },
-          { id: 'cheukdueop', name: '측두엽', baseScore: 70 },
-          { id: 'hutueop', name: '후투엽', baseScore: 65 },
-          { id: 'hueop', name: '후엽', baseScore: 68 }
-        ]
-      }
-    ]
-  },
+
+  // 2. 주건 (기존 5개 + 뇌 추가)
   {
     id: 'jugeon',
     name: '주건',
     icon: '💪',
-    description: '비만, 심리, 인체계, 정력, 질환 분석',
+    description: '비만, 심리, 인체계, 정력, 질환, 뇌 분석',
     subcategories: [
       {
         id: 'biman',
@@ -241,14 +205,101 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'horumon', name: '호르몬질환', baseScore: 40 },
           { id: 'hoheup', name: '호흡질환', baseScore: 45 }
         ]
+      },
+      {
+        id: 'noe',
+        name: '뇌',
+        items: [
+          { id: 'gannoe', name: '간뇌', baseScore: 65 },
+          { id: 'noehasuche', name: '뇌하수체', baseScore: 68 },
+          { id: 'daenoe', name: '대뇌', baseScore: 75 },
+          { id: 'duchungeop', name: '두충엽', baseScore: 60 },
+          { id: 'byeongyeongeop', name: '변연엽', baseScore: 62 },
+          { id: 'sonoe', name: '소뇌', baseScore: 70 },
+          { id: 'sisang', name: '시상', baseScore: 65 },
+          { id: 'sisanghabu', name: '시상하부', baseScore: 68 },
+          { id: 'yeonsu', name: '연수', baseScore: 72 },
+          { id: 'jeondueop', name: '전두엽', baseScore: 75 },
+          { id: 'jeoneop', name: '전엽', baseScore: 70 },
+          { id: 'jungnoe', name: '중뇌', baseScore: 68 },
+          { id: 'jungeop', name: '중엽', baseScore: 65 },
+          { id: 'cheoksu', name: '척수', baseScore: 60 },
+          { id: 'cheukdueop', name: '측두엽', baseScore: 70 },
+          { id: 'hutueop', name: '후투엽', baseScore: 65 },
+          { id: 'hueop', name: '후엽', baseScore: 68 }
+        ]
       }
     ]
   },
+
+  // 3. 주물 (새로 추가)
+  {
+    id: 'jumul',
+    name: '주물',
+    icon: '💰',
+    description: '부동산, 재물, 투자 분석',
+    subcategories: [
+      {
+        id: 'budongsan',
+        name: '부동산',
+        items: [
+          { id: 'geonmul', name: '건물', baseScore: 65 },
+          { id: 'gongjang', name: '공장', baseScore: 60 },
+          { id: 'dagagu', name: '다가구', baseScore: 62 },
+          { id: 'budongsan_item', name: '부동산', baseScore: 70 },
+          { id: 'dasedae', name: '다세대', baseScore: 63 },
+          { id: 'dandok', name: '단독', baseScore: 68 },
+          { id: 'daeji', name: '대지', baseScore: 65 },
+          { id: 'sangga', name: '상가', baseScore: 72 },
+          { id: 'apateu', name: '아파트', baseScore: 75 },
+          { id: 'yeonrip', name: '연립', baseScore: 60 },
+          { id: 'opiseu', name: '오피스', baseScore: 70 },
+          { id: 'jusangbokhap', name: '주상복합', baseScore: 68 },
+          { id: 'jutaek', name: '주택', baseScore: 67 }
+        ]
+      },
+      {
+        id: 'jaemul',
+        name: '재물',
+        items: [
+          { id: 'daeyeo', name: '대여', baseScore: 55 },
+          { id: 'dongsan', name: '동산', baseScore: 60 },
+          { id: 'budongsan_jaemul', name: '부동산', baseScore: 70 },
+          { id: 'saeop', name: '사업', baseScore: 65 },
+          { id: 'jusik', name: '주식', baseScore: 62 },
+          { id: 'chaegwon', name: '채권', baseScore: 58 },
+          { id: 'tuja', name: '투자', baseScore: 60 },
+          { id: 'peondeu', name: '펀드', baseScore: 57 },
+          { id: 'hyeongeum', name: '현금', baseScore: 75 }
+        ]
+      },
+      {
+        id: 'tuja_jumul',
+        name: '투자',
+        items: [
+          { id: 'daeyeo_tuja', name: '대여', baseScore: 55 },
+          { id: 'dongsan_tuja', name: '동산', baseScore: 58 },
+          { id: 'budongsan_tuja', name: '부동산', baseScore: 70 },
+          { id: 'jusik_tuja', name: '주식', baseScore: 65 },
+          { id: 'chaegwon_tuja', name: '채권', baseScore: 60 },
+          { id: 'peondeu_tuja', name: '펀드', baseScore: 58 },
+          { id: 'gisul', name: '기술', baseScore: 68 },
+          { id: 'bangsong', name: '방송', baseScore: 62 },
+          { id: 'seonmul', name: '선물', baseScore: 55 },
+          { id: 'yeneung', name: '예능', baseScore: 60 },
+          { id: 'inryeok', name: '인력', baseScore: 63 },
+          { id: 'jepum', name: '제품', baseScore: 65 }
+        ]
+      }
+    ]
+  },
+
+  // 4. 주연 (기존 7개 + 가정, 가족 추가)
   {
     id: 'juyeon',
     name: '주연',
     icon: '🤝',
-    description: '외가, 이성, 인연, 선배, 친가, 친구, 후배 분석',
+    description: '외가, 이성, 인연, 선배, 친가, 친구, 후배, 가정, 가족 분석',
     subcategories: [
       {
         id: 'oega',
@@ -352,9 +403,33 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'iseonghubae', name: '이성후배', baseScore: 65 },
           { id: 'hoesahubae', name: '회사후배', baseScore: 70 }
         ]
+      },
+      {
+        id: 'gajeong',
+        name: '가정',
+        items: [
+          { id: 'ttal', name: '딸', baseScore: 75 },
+          { id: 'baeuja_gajeong', name: '배우자', baseScore: 80 },
+          { id: 'adeul', name: '아들', baseScore: 75 }
+        ]
+      },
+      {
+        id: 'gajok_juyeon',
+        name: '가족',
+        items: [
+          { id: 'nuna', name: '누나', baseScore: 68 },
+          { id: 'dongsaeng', name: '동생', baseScore: 65 },
+          { id: 'abeoji', name: '아버지', baseScore: 78 },
+          { id: 'eomeoni', name: '어머니', baseScore: 80 },
+          { id: 'halmeoni', name: '할머니', baseScore: 72 },
+          { id: 'harabeoji', name: '할아버지', baseScore: 70 },
+          { id: 'hyeong', name: '형', baseScore: 68 }
+        ]
       }
     ]
   },
+
+  // 5. 주재 (기존 유지 - 3개 중항목)
   {
     id: 'jujae',
     name: '주재',
@@ -453,6 +528,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
       }
     ]
   },
+
+  // 6. 주업 (기존 유지 - 5개 중항목)
   {
     id: 'jueop',
     name: '주업',
@@ -559,7 +636,6 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
         id: 'jigeop',
         name: '직업',
         items: [
-          // 매우 많은 직업들이 있지만 일부만 포함 (PDF에서 전체 목록 확인 필요)
           { id: 'gongmuwon', name: '공무원', baseScore: 70 },
           { id: 'gyosa', name: '교사', baseScore: 72 },
           { id: 'ganhoha', name: '간호사', baseScore: 68 },
@@ -573,5 +649,381 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
         ]
       }
     ]
+  },
+
+  // 7. 주생 (새로 추가 - 17개 중항목)
+  {
+    id: 'jusaeng',
+    name: '주생',
+    icon: '🌱',
+    description: '일상 생활 전반 분석',
+    subcategories: [
+      {
+        id: 'gajok_jusaeng',
+        name: '가족',
+        items: [
+          { id: 'gyeyak', name: '계약', baseScore: 65 },
+          { id: 'gyoyuk', name: '교육', baseScore: 70 },
+          { id: 'daehwa', name: '대화', baseScore: 72 },
+          { id: 'moim', name: '모임', baseScore: 68 },
+          { id: 'syoping', name: '쇼핑', baseScore: 65 },
+          { id: 'eonjaeng', name: '언쟁', baseScore: 45 },
+          { id: 'yeohaeng', name: '여행', baseScore: 70 },
+          { id: 'oesik', name: '외식', baseScore: 68 },
+          { id: 'isa', name: '이사', baseScore: 60 },
+          { id: 'jaesan', name: '재산', baseScore: 65 },
+          { id: 'haengsa', name: '행사', baseScore: 68 }
+        ]
+      },
+      {
+        id: 'geongang',
+        name: '건강',
+        items: [
+          { id: 'geongangsikpum_geongang', name: '건강식품', baseScore: 70 },
+          { id: 'boyak_geongang', name: '보약', baseScore: 62 },
+          { id: 'sangdam_geongang', name: '상담', baseScore: 65 },
+          { id: 'sumyeon_geongang', name: '수면', baseScore: 72 },
+          { id: 'undong_geongang', name: '운동', baseScore: 75 },
+          { id: 'eumsik_geongang', name: '음식', baseScore: 68 },
+          { id: 'geomsa', name: '검사', baseScore: 60 },
+          { id: 'yeohaeng_geongang', name: '여행', baseScore: 70 },
+          { id: 'masaji', name: '마사지', baseScore: 68 },
+          { id: 'myeongsang', name: '명상', baseScore: 65 },
+          { id: 'biman_geongang', name: '비만', baseScore: 50 },
+          { id: 'sauna', name: '사우나', baseScore: 62 },
+          { id: 'chimi', name: '취미', baseScore: 70 },
+          { id: 'hyusik', name: '휴식', baseScore: 75 }
+        ]
+      },
+      {
+        id: 'gyeolhon',
+        name: '결혼',
+        items: [
+          { id: 'sago_gyeolhon', name: '사고', baseScore: 40 },
+          { id: 'iseong_gyeolhon', name: '이성', baseScore: 70 },
+          { id: 'sekseu_gyeolhon', name: '섹스', baseScore: 65 },
+          { id: 'saeop_gyeolhon', name: '사업', baseScore: 62 },
+          { id: 'gyoyuk_gyeolhon', name: '교육', baseScore: 68 },
+          { id: 'isa_gyeolhon', name: '이사', baseScore: 60 },
+          { id: 'jaesan_gyeolhon', name: '재산', baseScore: 65 },
+          { id: 'geongang_gyeolhon', name: '건강', baseScore: 70 },
+          { id: 'bumo', name: '부모', baseScore: 72 },
+          { id: 'bunjaeng', name: '분쟁', baseScore: 45 },
+          { id: 'yusan', name: '유산', baseScore: 60 },
+          { id: 'jasik', name: '자식', baseScore: 75 },
+          { id: 'jonggyo', name: '종교', baseScore: 55 },
+          { id: 'jigeop_gyeolhon', name: '직업', baseScore: 68 }
+        ]
+      },
+      {
+        id: 'gyeyak_jusaeng',
+        name: '계약',
+        items: [
+          { id: 'daeyeo_gyeyak', name: '대여', baseScore: 58 },
+          { id: 'dongsan_gyeyak', name: '동산', baseScore: 60 },
+          { id: 'budongsan_gyeyak', name: '부동산', baseScore: 70 },
+          { id: 'saeop_gyeyak', name: '사업', baseScore: 65 },
+          { id: 'jusik_gyeyak', name: '주식', baseScore: 62 },
+          { id: 'chaegwon_gyeyak', name: '채권', baseScore: 58 },
+          { id: 'peondeu_gyeyak', name: '펀드', baseScore: 55 },
+          { id: 'gumae', name: '구매', baseScore: 65 },
+          { id: 'gongjeung', name: '공증', baseScore: 60 },
+          { id: 'bojeung', name: '보증', baseScore: 55 },
+          { id: 'bunsil', name: '분실', baseScore: 40 },
+          { id: 'sinyong', name: '신용', baseScore: 72 }
+        ]
+      },
+      {
+        id: 'byuti',
+        name: '뷰티',
+        items: [
+          { id: 'geongangsikpum_byuti', name: '건강식품', baseScore: 65 },
+          { id: 'boyak_byuti', name: '보약', baseScore: 60 },
+          { id: 'sangdam_byuti', name: '상담', baseScore: 62 },
+          { id: 'chiryo_byuti', name: '치료', baseScore: 68 },
+          { id: 'masaji_byuti', name: '마사지', baseScore: 70 },
+          { id: 'gyojeong', name: '교정', baseScore: 65 },
+          { id: 'neilateu', name: '네일아트', baseScore: 62 },
+          { id: 'seupa', name: '스파', baseScore: 68 },
+          { id: 'anmyeon', name: '안면', baseScore: 70 },
+          { id: 'oemo', name: '외모', baseScore: 72 },
+          { id: 'heeo', name: '헤어', baseScore: 68 },
+          { id: 'hwajangpum', name: '화장품', baseScore: 65 }
+        ]
+      },
+      {
+        id: 'sago_jusaeng',
+        name: '사고',
+        items: [
+          { id: 'segeum_sago', name: '세금', baseScore: 50 },
+          { id: 'sosong_sago', name: '소송', baseScore: 45 },
+          { id: 'eonjaeng_sago', name: '언쟁', baseScore: 48 },
+          { id: 'jaesan_sago', name: '재산', baseScore: 55 },
+          { id: 'bunjaeng_sago', name: '분쟁', baseScore: 45 },
+          { id: 'bunsil_sago', name: '분실', baseScore: 40 },
+          { id: 'gyotong', name: '교통', baseScore: 50 },
+          { id: 'dansok', name: '단속', baseScore: 48 },
+          { id: 'donan', name: '도난', baseScore: 35 },
+          { id: 'mangsin', name: '망신', baseScore: 38 },
+          { id: 'sagi', name: '사기', baseScore: 30 },
+          { id: 'wiban', name: '위반', baseScore: 45 },
+          { id: 'wiheom', name: '위험', baseScore: 40 },
+          { id: 'pokhaeng', name: '폭행', baseScore: 25 }
+        ]
+      },
+      {
+        id: 'saeop_jusaeng',
+        name: '사업',
+        items: [
+          { id: 'gwanri_saeop', name: '관리', baseScore: 68 },
+          { id: 'jusik_saeop', name: '주식', baseScore: 62 },
+          { id: 'tuja_saeop', name: '투자', baseScore: 60 },
+          { id: 'gaebal_saeop', name: '개발', baseScore: 70 },
+          { id: 'gumae_saeop', name: '구매', baseScore: 65 },
+          { id: 'saengsan_saeop', name: '생산', baseScore: 68 },
+          { id: 'sosong_saeop', name: '소송', baseScore: 45 },
+          { id: 'yeongop_saeop', name: '영업', baseScore: 70 },
+          { id: 'jageum_saeop', name: '자금', baseScore: 65 },
+          { id: 'gyeyak_saeop', name: '계약', baseScore: 68 },
+          { id: 'gihoek', name: '기획', baseScore: 72 },
+          { id: 'dongeop', name: '동업', baseScore: 60 }
+        ]
+      },
+      {
+        id: 'yeonae',
+        name: '연애',
+        items: [
+          { id: 'iseong_yeonae', name: '이성', baseScore: 72 },
+          { id: 'keondisyeon_yeonae', name: '컨디션', baseScore: 68 },
+          { id: 'sekseu_yeonae', name: '섹스', baseScore: 65 },
+          { id: 'eonjaeng_yeonae', name: '언쟁', baseScore: 45 },
+          { id: 'yeohaeng_yeonae', name: '여행', baseScore: 75 },
+          { id: 'chimi_yeonae', name: '취미', baseScore: 70 },
+          { id: 'gamjeong', name: '감정', baseScore: 72 },
+          { id: 'gwanram', name: '관람', baseScore: 68 },
+          { id: 'simri', name: '심리', baseScore: 65 },
+          { id: 'ibyeol', name: '이별', baseScore: 40 },
+          { id: 'hogam', name: '호감', baseScore: 75 }
+        ]
+      },
+      {
+        id: 'siheom',
+        name: '시험',
+        items: [
+          { id: 'sumyeon_siheom', name: '수면', baseScore: 70 },
+          { id: 'keondisyeon_siheom', name: '컨디션', baseScore: 72 },
+          { id: 'gieok_siheom', name: '기억', baseScore: 68 },
+          { id: 'jipjung_siheom', name: '집중', baseScore: 75 },
+          { id: 'bokseup_siheom', name: '복습', baseScore: 70 },
+          { id: 'seontaek_siheom', name: '선택', baseScore: 65 },
+          { id: 'yeseup_siheom', name: '예습', baseScore: 68 },
+          { id: 'eungyong_siheom', name: '응용', baseScore: 72 },
+          { id: 'puri_siheom', name: '풀이', baseScore: 70 },
+          { id: 'geongang_siheom', name: '건강', baseScore: 68 },
+          { id: 'siheom_item', name: '시험', baseScore: 65 },
+          { id: 'junbimul', name: '준비물', baseScore: 60 }
+        ]
+      },
+      {
+        id: 'undong_jusaeng',
+        name: '운동',
+        items: [
+          { id: 'gwanri_undong', name: '관리', baseScore: 68 },
+          { id: 'gisul_undong', name: '기술', baseScore: 70 },
+          { id: 'pyeonghaeng_undong', name: '평행', baseScore: 65 },
+          { id: 'banbok_undong', name: '반복', baseScore: 62 },
+          { id: 'gonggangam', name: '공간감', baseScore: 68 },
+          { id: 'gigu', name: '기구', baseScore: 65 },
+          { id: 'giryeok', name: '기력', baseScore: 70 },
+          { id: 'danche', name: '단체', baseScore: 68 },
+          { id: 'jeongsinryeok', name: '정신력', baseScore: 72 },
+          { id: 'jiguryeok', name: '지구력', baseScore: 75 },
+          { id: 'hoejeon', name: '회전', baseScore: 65 },
+          { id: 'heureum', name: '흐름', baseScore: 68 }
+        ]
+      },
+      {
+        id: 'idong',
+        name: '이동',
+        items: [
+          { id: 'iseong_idong', name: '이성', baseScore: 65 },
+          { id: 'saeop_idong', name: '사업', baseScore: 68 },
+          { id: 'gajok_idong', name: '가족', baseScore: 70 },
+          { id: 'chingu_idong', name: '친구', baseScore: 68 },
+          { id: 'chuljang_idong', name: '출장', baseScore: 62 },
+          { id: 'yeohaeng_idong', name: '여행', baseScore: 75 },
+          { id: 'isa_idong', name: '이사', baseScore: 60 },
+          { id: 'haengsa_idong', name: '행사', baseScore: 65 },
+          { id: 'gohyang', name: '고향', baseScore: 68 },
+          { id: 'guknae', name: '국내', baseScore: 70 },
+          { id: 'gugoe', name: '국외', baseScore: 65 },
+          { id: 'seom', name: '섬', baseScore: 60 },
+          { id: 'hageop_idong', name: '학업', baseScore: 68 }
+        ]
+      },
+      {
+        id: 'ilsang',
+        name: '일상',
+        items: [
+          { id: 'sago_ilsang', name: '사고', baseScore: 45 },
+          { id: 'undong_ilsang', name: '운동', baseScore: 70 },
+          { id: 'saeop_ilsang', name: '사업', baseScore: 65 },
+          { id: 'gajok_ilsang', name: '가족', baseScore: 72 },
+          { id: 'isa_ilsang', name: '이사', baseScore: 58 },
+          { id: 'geongang_ilsang', name: '건강', baseScore: 70 },
+          { id: 'jonggyo_ilsang', name: '종교', baseScore: 55 },
+          { id: 'hageop_ilsang', name: '학업', baseScore: 68 },
+          { id: 'bongsa', name: '봉사', baseScore: 65 },
+          { id: 'yeonae_ilsang', name: '연애', baseScore: 70 },
+          { id: 'jaemul_ilsang', name: '재물', baseScore: 62 }
+        ]
+      },
+      {
+        id: 'jayeongeop',
+        name: '자영업',
+        items: [
+          { id: 'gwanri_jayeong', name: '관리', baseScore: 68 },
+          { id: 'sangdam_jayeong', name: '상담', baseScore: 65 },
+          { id: 'gumae_jayeong', name: '구매', baseScore: 62 },
+          { id: 'segeum_jayeong', name: '세금', baseScore: 55 },
+          { id: 'yeongop_jayeong', name: '영업', baseScore: 70 },
+          { id: 'gyeyak_jayeong', name: '계약', baseScore: 68 },
+          { id: 'dansok_jayeong', name: '단속', baseScore: 50 },
+          { id: 'napum', name: '납품', baseScore: 65 },
+          { id: 'yeyak', name: '예약', baseScore: 62 },
+          { id: 'jaego', name: '재고', baseScore: 60 },
+          { id: 'chaeyong', name: '채용', baseScore: 65 },
+          { id: 'chinjeol', name: '친절', baseScore: 72 }
+        ]
+      },
+      {
+        id: 'jaeneung',
+        name: '재능',
+        items: [
+          { id: 'undong_jaeneung', name: '운동', baseScore: 68 },
+          { id: 'gisul_jaeneung', name: '기술', baseScore: 70 },
+          { id: 'misul_jaeneung', name: '미술', baseScore: 65 },
+          { id: 'eumak_jaeneung', name: '음악', baseScore: 68 },
+          { id: 'jejak_jaeneung', name: '제작', baseScore: 65 },
+          { id: 'gyesan_jaeneung', name: '계산', baseScore: 70 },
+          { id: 'hageop_jaeneung', name: '학업', baseScore: 72 },
+          { id: 'dokseo', name: '독서', baseScore: 70 },
+          { id: 'deutgi', name: '듣기', baseScore: 68 },
+          { id: 'malhagi', name: '말하기', baseScore: 70 },
+          { id: 'sseugi', name: '쓰기', baseScore: 68 },
+          { id: 'oegugeo', name: '외국어', baseScore: 65 }
+        ]
+      },
+      {
+        id: 'jeongchi',
+        name: '정치',
+        items: [
+          { id: 'jageum_jeongchi', name: '자금', baseScore: 60 },
+          { id: 'gyeyak_jeongchi', name: '계약', baseScore: 62 },
+          { id: 'moim_jeongchi', name: '모임', baseScore: 65 },
+          { id: 'geongang_jeongchi', name: '건강', baseScore: 68 },
+          { id: 'bunjaeng_jeongchi', name: '분쟁', baseScore: 50 },
+          { id: 'gyeoljeong', name: '결정', baseScore: 70 },
+          { id: 'gwonryeok', name: '권력', baseScore: 65 },
+          { id: 'myeonggye', name: '명예', baseScore: 68 },
+          { id: 'balpyo', name: '발표', baseScore: 65 },
+          { id: 'jeongchaek', name: '정책', baseScore: 70 },
+          { id: 'julma', name: '줄마', baseScore: 55 },
+          { id: 'huwon', name: '후원', baseScore: 62 }
+        ]
+      },
+      {
+        id: 'jikjang',
+        name: '직장',
+        items: [
+          { id: 'keondisyeon_jikjang', name: '컨디션', baseScore: 70 },
+          { id: 'tuja_jikjang', name: '투자', baseScore: 60 },
+          { id: 'gaebal_jikjang', name: '개발', baseScore: 72 },
+          { id: 'moim_jikjang', name: '모임', baseScore: 65 },
+          { id: 'geongang_jikjang', name: '건강', baseScore: 68 },
+          { id: 'hogam_jikjang', name: '호감', baseScore: 70 },
+          { id: 'balpyo_jikjang', name: '발표', baseScore: 65 },
+          { id: 'gyeoljae', name: '결재', baseScore: 68 },
+          { id: 'bogoseo', name: '보고서', baseScore: 65 },
+          { id: 'siljeok', name: '실적', baseScore: 70 },
+          { id: 'jeopdae', name: '접대', baseScore: 62 },
+          { id: 'jingeup', name: '진급', baseScore: 68 }
+        ]
+      },
+      {
+        id: 'chieop',
+        name: '취업',
+        items: [
+          { id: 'keondisyeon_chieop', name: '컨디션', baseScore: 70 },
+          { id: 'gisul_chieop', name: '기술', baseScore: 72 },
+          { id: 'gaebal_chieop', name: '개발', baseScore: 70 },
+          { id: 'gyeyak_chieop', name: '계약', baseScore: 65 },
+          { id: 'geongang_chieop', name: '건강', baseScore: 68 },
+          { id: 'siheom_chieop', name: '시험', baseScore: 70 },
+          { id: 'balpyo_chieop', name: '발표', baseScore: 65 },
+          { id: 'geunsim', name: '근심', baseScore: 50 },
+          { id: 'myeonjeop', name: '면접', baseScore: 68 },
+          { id: 'jeongong', name: '전공', baseScore: 72 },
+          { id: 'chucheon', name: '추천', baseScore: 65 },
+          { id: 'chieop_item', name: '취업', baseScore: 70 }
+        ]
+      },
+      {
+        id: 'chimi_jusaeng',
+        name: '취미',
+        items: [
+          { id: 'undong_chimi', name: '운동', baseScore: 70 },
+          { id: 'eumsik_chimi', name: '음식', baseScore: 68 },
+          { id: 'geim_chimi', name: '게임', baseScore: 65 },
+          { id: 'misul_chimi', name: '미술', baseScore: 65 },
+          { id: 'eumak_chimi', name: '음악', baseScore: 70 },
+          { id: 'jejak_chimi', name: '제작', baseScore: 62 },
+          { id: 'moim_chimi', name: '모임', baseScore: 68 },
+          { id: 'syoping_chimi', name: '쇼핑', baseScore: 65 },
+          { id: 'yeohaeng_chimi', name: '여행', baseScore: 75 },
+          { id: 'gwanram_chimi', name: '관람', baseScore: 68 },
+          { id: 'bongsa_chimi', name: '봉사', baseScore: 62 },
+          { id: 'dokseo_chimi', name: '독서', baseScore: 70 },
+          { id: 'gongye', name: '공예', baseScore: 65 },
+          { id: 'daenseu', name: '댄스', baseScore: 68 }
+        ]
+      },
+      {
+        id: 'haksaeng',
+        name: '학생',
+        items: [
+          { id: 'iseong_haksaeng', name: '이성', baseScore: 65 },
+          { id: 'gajok_haksaeng', name: '가족', baseScore: 70 },
+          { id: 'seuseung', name: '스승', baseScore: 72 },
+          { id: 'chingu_haksaeng', name: '친구', baseScore: 68 },
+          { id: 'moim_haksaeng', name: '모임', baseScore: 65 },
+          { id: 'geongang_haksaeng', name: '건강', baseScore: 68 },
+          { id: 'oemo_haksaeng', name: '외모', baseScore: 62 },
+          { id: 'siheom_haksaeng', name: '시험', baseScore: 70 },
+          { id: 'ibyeol_haksaeng', name: '이별', baseScore: 45 },
+          { id: 'hageop_haksaeng', name: '학업', baseScore: 72 },
+          { id: 'balpyo_haksaeng', name: '발표', baseScore: 65 },
+          { id: 'geunsim_haksaeng', name: '근심', baseScore: 50 }
+        ]
+      }
+    ]
+  },
+
+  // 8. 주능 (새로 추가 - 중항목은 나중에 추가 예정)
+  {
+    id: 'juneung',
+    name: '주능',
+    icon: '⚡',
+    description: '능력과 잠재력 분석',
+    subcategories: []
+  },
+
+  // 9. 주흉 (새로 추가 - 중항목은 나중에 추가 예정)
+  {
+    id: 'juhyung',
+    name: '주흉',
+    icon: '⚠️',
+    description: '위험과 주의사항 분석',
+    subcategories: []
   }
 ]

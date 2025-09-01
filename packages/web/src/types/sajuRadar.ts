@@ -18,7 +18,7 @@ export interface SajuSubcategory {
 }
 
 export interface SajuRadarCategory {
-  id: 'jubon' | 'juun' | 'noe' | 'jugeon' | 'juyeon' | 'jujae' | 'jueop' // 정확한 7개만
+  id: 'jubon' | 'jugeon' | 'jumul' | 'juyeon' | 'jujae' | 'jueop' | 'jusaeng' | 'juneung' | 'juhyung' // 정확한 9개
   name: string
   icon: string
   description: string

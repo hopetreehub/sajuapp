@@ -51,7 +51,7 @@ export default function UnifiedSajuAnalysisPage() {
             🔮 통합 사주 레이더 분석
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-lg">
-            주문차트 기반 7개 대항목 상세 분석 시스템
+            주문차트 기반 9개 대항목 상세 분석 시스템
           </p>
           <div className="mt-2 text-sm text-purple-600 dark:text-purple-400">
             기존 6대/17대/7대 성향 차트가 통합된 새로운 분석 시스템
@@ -119,7 +119,7 @@ export default function UnifiedSajuAnalysisPage() {
         {/* 통계 정보 */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold">7</div>
+            <div className="text-2xl font-bold">9</div>
             <div className="text-sm">대항목</div>
           </div>
           <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-4 text-center">
