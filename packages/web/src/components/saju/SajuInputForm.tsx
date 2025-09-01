@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SajuBirthInfo } from '@/types/saju';
+import { lunarToSolar } from '@/utils/lunarCalendar';
 
 interface SajuInputFormProps {
   onSubmit: (birthInfo: SajuBirthInfo) => void;
@@ -27,7 +28,21 @@ const SajuInputForm: React.FC<SajuInputFormProps> = ({ onSubmit }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    
+    // 음력인 경우 양력으로 변환
+    if (formData.isLunar) {
+      const solarDate = lunarToSolar(formData.year, formData.month, formData.day);
+      const convertedData = {
+        ...formData,
+        year: solarDate.getFullYear(),
+        month: solarDate.getMonth() + 1,
+        day: solarDate.getDate(),
+        isLunar: false // 변환 후에는 양력으로 저장
+      };
+      onSubmit(convertedData);
+    } else {
+      onSubmit(formData);
+    }
   };
 
   const currentYear = new Date().getFullYear();
@@ -148,18 +163,43 @@ const SajuInputForm: React.FC<SajuInputFormProps> = ({ onSubmit }) => {
         </div>
 
         {/* 음력/양력 선택 */}
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="isLunar"
-            name="isLunar"
-            checked={formData.isLunar}
-            onChange={handleChange}
-            className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500"
-          />
-          <label htmlFor="isLunar" className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            음력으로 입력
+        <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            달력 유형
           </label>
+          <div className="flex items-center space-x-4">
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="radio"
+                name="calendarType"
+                value="solar"
+                checked={!formData.isLunar}
+                onChange={() => setFormData(prev => ({ ...prev, isLunar: false }))}
+                className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500"
+              />
+              <span className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                양력 (그레고리력)
+              </span>
+            </label>
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="radio"
+                name="calendarType"
+                value="lunar"
+                checked={formData.isLunar}
+                onChange={() => setFormData(prev => ({ ...prev, isLunar: true }))}
+                className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500"
+              />
+              <span className="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+                음력 (태음력)
+              </span>
+            </label>
+          </div>
+          {formData.isLunar && (
+            <p className="mt-2 text-xs text-blue-600 dark:text-blue-400">
+              ℹ️ 음력 날짜는 자동으로 양력으로 변환되어 분석됩니다.
+            </p>
+          )}
         </div>
 
         {/* 제출 버튼 */}

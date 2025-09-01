@@ -14,6 +14,7 @@ import {
 } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { CalendarEvent } from '@/services/api'
+import { formatLunarDate, getSpecialLunarDay } from '@/utils/lunarCalendar'
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -134,20 +135,32 @@ export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthV
             >
               {/* Date Number */}
               <div className="flex items-start justify-between mb-1">
-                <span 
-                  className={`
-                    text-sm font-medium
-                    ${isCurrentDay 
-                      ? 'bg-primary-500 text-white rounded-full w-7 h-7 flex items-center justify-center' 
-                      : ''
-                    }
-                    ${!isCurrentMonth ? 'text-muted-foreground' : ''}
-                    ${dayOfWeek === 0 ? 'text-red-600' : ''}
-                    ${dayOfWeek === 6 ? 'text-blue-600' : ''}
-                  `}
-                >
-                  {format(day, 'd')}
-                </span>
+                <div className="flex flex-col">
+                  <span 
+                    className={`
+                      text-sm font-medium
+                      ${isCurrentDay 
+                        ? 'bg-primary-500 text-white rounded-full w-7 h-7 flex items-center justify-center' 
+                        : ''
+                      }
+                      ${!isCurrentMonth ? 'text-muted-foreground' : ''}
+                      ${dayOfWeek === 0 ? 'text-red-600' : ''}
+                      ${dayOfWeek === 6 ? 'text-blue-600' : ''}
+                    `}
+                  >
+                    {format(day, 'd')}
+                  </span>
+                  {/* 음력 날짜 표시 */}
+                  <span className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">
+                    {formatLunarDate(day, false)}
+                  </span>
+                  {/* 특별한 음력 날짜 표시 */}
+                  {getSpecialLunarDay(day) && (
+                    <span className="text-[10px] text-red-500 font-semibold">
+                      {getSpecialLunarDay(day)}
+                    </span>
+                  )}
+                </div>
                 
                 {/* 할일 개수 표시 */}
                 {isCurrentMonth && dayTodos.length > 0 && (
