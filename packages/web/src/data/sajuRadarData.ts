@@ -359,7 +359,7 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
     id: 'jujae',
     name: '주재',
     icon: '🎨',
-    description: '논리, 예술, 학습, 능력, 성향, 투자 분석',
+    description: '논리, 예술, 학습 분석',
     subcategories: [
       {
         id: 'nonri',
@@ -450,7 +450,15 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'puri', name: '풀이', baseScore: 70 },
           { id: 'haeseok', name: '해석', baseScore: 72 }
         ]
-      },
+      }
+    ]
+  },
+  {
+    id: 'jueop',
+    name: '주업',
+    icon: '💼',
+    description: '능력, 성향, 업무, 업종, 직업 분석',
+    subcategories: [
       {
         id: 'neungryeok',
         name: '능력',
@@ -495,7 +503,7 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
         ]
       },
       {
-        id: 'seonghyang_jujae',
+        id: 'seonghyang_jueop',
         name: '성향',
         items: [
           { id: 'gwangyeseong', name: '관계성', baseScore: 70 },
@@ -507,22 +515,6 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'hwaldongseong', name: '활동성', baseScore: 68 }
         ]
       },
-      {
-        id: 'tuja',
-        name: '투자',
-        items: [
-          { id: 'as', name: 'AS', baseScore: 60 },
-          { id: 'tuja_item', name: '투자', baseScore: 55 }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'jueop',
-    name: '주업',
-    icon: '💼',
-    description: '업무, 업종, 직업 분석',
-    subcategories: [
       {
         id: 'eommu',
         name: '업무',
