@@ -9,6 +9,7 @@ import SixAreasPage from '@/pages/SixAreasPage'
 import DetailedFortunePage from '@/pages/DetailedFortunePage'
 import PersonalityAnalysisPage from '@/pages/PersonalityAnalysisPage'
 import SajuChartPage from '@/pages/SajuChartPage'
+import InterpretationPage from '@/pages/InterpretationPage'
 import Header from '@/components/Layout/Header'
 import Footer from '@/components/Layout/Footer'
 import { CalendarProvider } from '@/contexts/CalendarContext'
@@ -30,7 +31,8 @@ function App() {
                 <Route path="/saju/six-areas" element={<SixAreasPage />} />
                 <Route path="/saju/detailed" element={<DetailedFortunePage />} />
                 <Route path="/saju/personality" element={<PersonalityAnalysisPage />} />
-                <Route path="/saju/charts" element={<SajuChartPage />} />
+                <Route path="/saju-chart" element={<SajuChartPage />} />
+                <Route path="/saju/interpretation" element={<InterpretationPage />} />
                 <Route path="/diary" element={<DiaryPage />} />
                 <Route path="/diary/:date" element={<DiaryPage />} />
                 <Route path="/settings" element={<SettingsPage />} />

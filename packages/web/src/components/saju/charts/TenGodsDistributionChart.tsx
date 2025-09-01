@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,6 +14,8 @@ import { Bar, Doughnut } from 'react-chartjs-2'
 import { TenGodsAnalyzer } from '@/utils/tenGodsAnalyzer'
 import { TEN_GODS_INFO, TEN_GODS_CATEGORIES } from '@/types/tenGods'
 import { SajuData } from '@/types/saju'
+import InterpretationPanel from '@/components/charts/InterpretationPanel'
+import { interpretationService, InterpretationResponse } from '@/services/api'
 
 // Chart.js 컴포넌트 등록
 ChartJS.register(
@@ -42,10 +44,37 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
   showCategory = false
 }) => {
   const [viewMode, setViewMode] = useState<'individual' | 'category'>('individual')
+  
+  // 해석 데이터 상태
+  const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null)
+  const [interpretationLoading, setInterpretationLoading] = useState(false)
+  const [interpretationError, setInterpretationError] = useState<string | null>(null)
 
   // 십성 데이터 분석
   const analysis = useMemo(() => {
     return TenGodsAnalyzer.performFullAnalysis(sajuData)
+  }, [sajuData])
+
+  // 해석 데이터 로드
+  useEffect(() => {
+    const loadInterpretation = async () => {
+      if (!sajuData) return
+      
+      setInterpretationLoading(true)
+      setInterpretationError(null)
+      
+      try {
+        const response = await interpretationService.getPersonalityAnalysis(sajuData)
+        setInterpretation({ personality: response })
+      } catch (error) {
+        console.error('성격 분석 데이터 로드 실패:', error)
+        setInterpretationError('성격 분석 데이터를 불러올 수 없습니다.')
+      } finally {
+        setInterpretationLoading(false)
+      }
+    }
+
+    loadInterpretation()
   }, [sajuData])
 
   // 개별 십성 차트 데이터
@@ -358,6 +387,16 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
             </div>
           </div>
         ))}
+      </div>
+
+      {/* 해석 패널 추가 */}
+      <div className="mt-6">
+        <InterpretationPanel
+          interpretation={interpretation}
+          loading={interpretationLoading}
+          error={interpretationError}
+          category="personality"
+        />
       </div>
     </div>
   )

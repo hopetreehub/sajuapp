@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SixAreaChart from '@/components/saju/charts/SixAreaChart';
 import ChartNavigation from '@/components/Common/ChartNavigation';
@@ -86,6 +86,19 @@ const SixAreasPage: React.FC = () => {
   }
 
   const analysisResult = generateAnalysisResult(currentUser.birthInfo);
+  
+  // 사주 데이터 계산 (해석 패널용)
+  const sajuData = useMemo(() => {
+    if (!currentUser.birthInfo) return null;
+    
+    try {
+      const { calculateSajuData } = require('@/utils/sajuDataCalculator');
+      return calculateSajuData(currentUser.birthInfo);
+    } catch (error) {
+      console.error('사주 계산 오류:', error);
+      return null;
+    }
+  }, [currentUser.birthInfo]);
 
   return (
     <div className={CHART_DESIGN_SYSTEM.LAYOUT.pageContainer}>
@@ -115,6 +128,7 @@ const SixAreasPage: React.FC = () => {
           <SixAreaChart 
             scores={analysisResult.sixAreas}
             birthDate={formatBirthDate(currentUser.birthInfo)}
+            sajuData={sajuData}
           />
         </div>
 

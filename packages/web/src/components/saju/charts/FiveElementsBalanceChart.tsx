@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import {
   Chart as ChartJS,
   ArcElement,
@@ -10,6 +10,8 @@ import { Doughnut } from 'react-chartjs-2'
 import { FiveElementsData } from '@/types/fiveElements'
 import { FiveElementsAnalyzer } from '@/utils/fiveElementsAnalyzer'
 import { SajuData } from '@/types/saju'
+import InterpretationPanel from '@/components/charts/InterpretationPanel'
+import { interpretationService, InterpretationResponse } from '@/services/api'
 
 // Chart.js 컴포넌트 등록
 ChartJS.register(ArcElement, Tooltip, Legend)
@@ -29,6 +31,10 @@ export const FiveElementsBalanceChart: React.FC<FiveElementsBalanceChartProps> =
   showLegend = true,
   showTooltips = true
 }) => {
+  // 해석 데이터 상태
+  const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null)
+  const [interpretationLoading, setInterpretationLoading] = useState(false)
+  const [interpretationError, setInterpretationError] = useState<string | null>(null)
   // 사주 데이터로부터 오행 분석
   const elementsData = useMemo(() => {
     return FiveElementsAnalyzer.analyzeFromSaju(sajuData)
@@ -48,6 +54,28 @@ export const FiveElementsBalanceChart: React.FC<FiveElementsBalanceChartProps> =
   const elementDetails = useMemo(() => {
     return FiveElementsAnalyzer.getElementDetails()
   }, [])
+
+  // 해석 데이터 로드
+  useEffect(() => {
+    const loadInterpretation = async () => {
+      if (!sajuData) return
+      
+      setInterpretationLoading(true)
+      setInterpretationError(null)
+      
+      try {
+        const response = await interpretationService.getComprehensiveInterpretation(sajuData)
+        setInterpretation(response)
+      } catch (error) {
+        console.error('해석 데이터 로드 실패:', error)
+        setInterpretationError('해석 데이터를 불러올 수 없습니다.')
+      } finally {
+        setInterpretationLoading(false)
+      }
+    }
+
+    loadInterpretation()
+  }, [sajuData])
 
   // Chart.js용 데이터 생성
   const chartData = useMemo(() => {
@@ -256,6 +284,16 @@ export const FiveElementsBalanceChart: React.FC<FiveElementsBalanceChartProps> =
             </div>
           )}
         </div>
+      </div>
+
+      {/* 해석 패널 추가 */}
+      <div className="mt-6">
+        <InterpretationPanel
+          interpretation={interpretation}
+          loading={interpretationLoading}
+          error={interpretationError}
+          category="basic"
+        />
       </div>
     </div>
   )

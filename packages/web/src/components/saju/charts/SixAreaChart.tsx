@@ -340,6 +340,18 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
            Number(averageScore) >= 40 ? ' 평범한 사주' : ' 노력이 필요한 사주'}
         </div>
       </div>
+
+      {/* 해석 패널 추가 */}
+      {sajuData && (
+        <div className="mt-6">
+          <InterpretationPanel
+            interpretation={interpretation}
+            loading={interpretationLoading}
+            error={interpretationError}
+            category="fortune"
+          />
+        </div>
+      )}
     </div>
   );
 };

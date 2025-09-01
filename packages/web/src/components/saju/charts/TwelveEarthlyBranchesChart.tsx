@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -13,6 +13,8 @@ import { Radar } from 'react-chartjs-2'
 import { TwelveEarthlyBranchesAnalyzer } from '@/utils/twelveEarthlyBranchesAnalyzer'
 import { EARTHLY_BRANCHES_INFO, RELATIONSHIP_TYPES } from '@/types/twelveEarthlyBranches'
 import { SajuData } from '@/types/saju'
+import InterpretationPanel from '@/components/charts/InterpretationPanel'
+import { interpretationService, InterpretationResponse } from '@/services/api'
 
 // Chart.js 컴포넌트 등록
 ChartJS.register(
@@ -40,10 +42,37 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
   showSeasonalBalance = true
 }) => {
   const [viewMode, setViewMode] = useState<'branches' | 'seasonal'>('branches')
+  
+  // 해석 데이터 상태
+  const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null)
+  const [interpretationLoading, setInterpretationLoading] = useState(false)
+  const [interpretationError, setInterpretationError] = useState<string | null>(null)
 
   // 12간지 데이터 분석
   const analysis = useMemo(() => {
     return TwelveEarthlyBranchesAnalyzer.performFullAnalysis(sajuData)
+  }, [sajuData])
+
+  // 해석 데이터 로드
+  useEffect(() => {
+    const loadInterpretation = async () => {
+      if (!sajuData) return
+      
+      setInterpretationLoading(true)
+      setInterpretationError(null)
+      
+      try {
+        const response = await interpretationService.getSpiritualAnalysis(sajuData)
+        setInterpretation({ spiritual: response })
+      } catch (error) {
+        console.error('신살 분석 데이터 로드 실패:', error)
+        setInterpretationError('신살 분석 데이터를 불러올 수 없습니다.')
+      } finally {
+        setInterpretationLoading(false)
+      }
+    }
+
+    loadInterpretation()
   }, [sajuData])
 
   // 12간지 레이더 차트 데이터
@@ -341,6 +370,16 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
           </div>
         </div>
       )}
+
+      {/* 해석 패널 추가 */}
+      <div className="mt-6">
+        <InterpretationPanel
+          interpretation={interpretation}
+          loading={interpretationLoading}
+          error={interpretationError}
+          category="spiritual"
+        />
+      </div>
     </div>
   )
 }
