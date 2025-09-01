@@ -7,6 +7,7 @@ import { errorHandler } from './middleware/errorHandler'
 import { requestLogger } from './middleware/requestLogger'
 import eventsRouter from './routes/events-sqlite'
 import healthRouter from './routes/health-sqlite'
+import tagsRouter from './routes/tags'
 import { initDatabase } from './database/sqlite-connection'
 
 dotenv.config()
@@ -26,6 +27,7 @@ app.use(requestLogger)
 // Routes
 app.use('/health', healthRouter)
 app.use('/api/calendar/events', eventsRouter)
+app.use('/api/calendar/tags', tagsRouter)
 
 // Error handling
 app.use(errorHandler)

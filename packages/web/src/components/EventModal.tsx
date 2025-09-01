@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { CalendarEvent, eventService } from '../services/api';
+import { CalendarEvent, eventService, Tag, tagService } from '../services/api';
 import { useCalendar } from '../contexts/CalendarContext';
+import TagSelector from './TagSelector';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -29,8 +30,11 @@ const EventModal: React.FC<EventModalProps> = ({
     location: '',
     type: 'personal',
     color: '#3b82f6',
-    reminder_minutes: 15
+    reminder_minutes: 15,
+    tags: []
   });
+
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
   const [todoData, setTodoData] = useState({
     text: '',
@@ -41,6 +45,7 @@ const EventModal: React.FC<EventModalProps> = ({
   useEffect(() => {
     if (event) {
       setFormData(event);
+      setSelectedTags(event.tags || []);
       setActiveTab('event');
     } else if (initialDate) {
       setFormData(prev => ({
@@ -119,10 +124,21 @@ const EventModal: React.FC<EventModalProps> = ({
       if (event?.id) {
         console.log('Updating event with ID:', event.id);
         savedEvent = await eventService.updateEvent(event.id, apiData);
+        // Update tags for existing event
+        if (selectedTags.length > 0) {
+          await tagService.addTagsToEvent(event.id, selectedTags.map(t => t.id));
+        }
       } else {
         console.log('Creating new event...');
         savedEvent = await eventService.createEvent(apiData as any);
+        // Add tags to new event
+        if (savedEvent.id && selectedTags.length > 0) {
+          await tagService.addTagsToEvent(savedEvent.id, selectedTags.map(t => t.id));
+        }
       }
+      
+      // Add tags to the saved event object for display
+      savedEvent.tags = selectedTags;
       
       console.log('Event saved successfully:', savedEvent);
       onSave(savedEvent);
@@ -331,6 +347,16 @@ const EventModal: React.FC<EventModalProps> = ({
                   value={formData.color || '#3b82f6'}
                   onChange={(e) => setFormData({ ...formData, color: e.target.value })}
                   className="w-full h-10 border border-border rounded-md bg-background"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1 text-foreground">태그</label>
+                <TagSelector
+                  selectedTags={selectedTags}
+                  onTagsChange={setSelectedTags}
+                  placeholder="태그를 선택하거나 새로 만들기"
+                  allowCreate={true}
                 />
               </div>
 

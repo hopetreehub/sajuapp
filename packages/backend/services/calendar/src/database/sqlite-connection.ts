@@ -2,6 +2,7 @@ import sqlite3 from 'sqlite3'
 import { open } from 'sqlite'
 import path from 'path'
 import logger from '../utils/logger'
+import { createTagTable, createEventTagTable } from '../models/tag.model'
 
 let db: any = null
 
@@ -111,6 +112,8 @@ const createTables = async (): Promise<void> => {
     await db.exec(createUsersTableQuery)
     await db.exec(createEventsTableQuery)
     await db.exec(createDiaryTableQuery)
+    await db.exec(createTagTable)
+    await db.exec(createEventTagTable)
     await db.exec(createIndexesQuery)
     
     // Insert a default user for testing
@@ -119,6 +122,18 @@ const createTables = async (): Promise<void> => {
       VALUES ('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'test@example.com', 'Test User')
     `
     await db.exec(defaultUser)
+    
+    // Insert default tags for testing
+    const defaultTags = `
+      INSERT OR IGNORE INTO tags (id, name, color, user_id)
+      VALUES 
+        ('tag-1', '업무', '#3B82F6', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
+        ('tag-2', '개인', '#10B981', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
+        ('tag-3', '가족', '#F59E0B', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
+        ('tag-4', '중요', '#EF4444', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'),
+        ('tag-5', '건강', '#8B5CF6', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11')
+    `
+    await db.exec(defaultTags)
     
     logger.info('Database tables created/verified successfully')
   } catch (error) {
