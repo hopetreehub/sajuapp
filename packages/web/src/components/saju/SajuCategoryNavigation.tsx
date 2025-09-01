@@ -14,7 +14,7 @@ export default function SajuCategoryNavigation({
 }: SajuCategoryNavigationProps) {
   return (
     <div className="mb-8">
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
         {categories.map(category => (
           <button
             key={category.id}
