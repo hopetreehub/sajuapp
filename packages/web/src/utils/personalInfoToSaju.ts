@@ -1,4 +1,5 @@
 import { SajuData, CheonGan, JiJi, OhHaeng, CHEONGAN_OHHAENG, JIJI_OHHAENG } from './sajuScoreCalculator';
+import { SajuCalculator } from './sajuCalculator';
 
 // 설정 페이지의 PersonalInfo 타입
 interface PersonalInfo {
@@ -7,36 +8,6 @@ interface PersonalInfo {
   calendarType: 'solar' | 'lunar';
   gender: 'male' | 'female' | '';
   birthPlace: string;
-}
-
-// 천간 배열
-const CHEONGAN: CheonGan[] = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
-// 지지 배열  
-const JIJI: JiJi[] = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
-
-// 간단한 사주 계산 (임시 - 나중에 정확한 계산으로 대체)
-function calculateSimpleSaju(year: number, month: number, day: number, hour: number) {
-  // 60갑자 기준으로 간단히 계산
-  const yearGan = CHEONGAN[(year - 4) % 10];
-  const yearJi = JIJI[(year - 4) % 12];
-  
-  const monthGan = CHEONGAN[(month - 1) % 10];
-  const monthJi = JIJI[(month - 1) % 12];
-  
-  const dayGan = CHEONGAN[day % 10];
-  const dayJi = JIJI[day % 12];
-  
-  // 시간을 12시진으로 변환
-  const shiJinIndex = Math.floor((hour + 1) / 2) % 12;
-  const timeGan = CHEONGAN[(shiJinIndex * 2) % 10];
-  const timeJi = JIJI[shiJinIndex];
-  
-  return {
-    year: { gan: yearGan, ji: yearJi },
-    month: { gan: monthGan, ji: monthJi },
-    day: { gan: dayGan, ji: dayJi },
-    time: { gan: timeGan, ji: timeJi }
-  };
 }
 
 // PersonalInfo를 SajuData로 변환
@@ -50,10 +21,25 @@ export function convertPersonalInfoToSaju(personalInfo: PersonalInfo): SajuData 
     const [year, month, day] = personalInfo.birthDate.split('-').map(Number);
     
     // 시간 파싱
-    const [hour] = personalInfo.birthTime.split(':').map(Number);
+    const [hour, minute = 0] = personalInfo.birthTime.split(':').map(Number);
     
-    // 간단한 사주 계산
-    const sajuResult = calculateSimpleSaju(year, month, day, hour);
+    // 정확한 사주 계산 (SajuCalculator 사용)
+    const fourPillars = SajuCalculator.calculateFourPillars({
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      isLunar: personalInfo.calendarType === 'lunar'
+    });
+    
+    console.log('사주 계산 결과:', {
+      입력: `${year}년 ${month}월 ${day}일 ${hour}시 ${minute}분`,
+      년주: fourPillars.year.combined,
+      월주: fourPillars.month.combined,
+      일주: fourPillars.day.combined,
+      시주: fourPillars.hour.combined
+    });
 
     // 오행 균형 계산
     const ohHaengBalance: Record<OhHaeng, number> = {
@@ -65,10 +51,10 @@ export function convertPersonalInfoToSaju(personalInfo: PersonalInfo): SajuData 
     };
 
     // 천간의 오행 계산
-    const yearGanOhhaeng = CHEONGAN_OHHAENG[sajuResult.year.gan];
-    const monthGanOhhaeng = CHEONGAN_OHHAENG[sajuResult.month.gan];
-    const dayGanOhhaeng = CHEONGAN_OHHAENG[sajuResult.day.gan];
-    const timeGanOhhaeng = CHEONGAN_OHHAENG[sajuResult.time.gan];
+    const yearGanOhhaeng = CHEONGAN_OHHAENG[fourPillars.year.heavenly as CheonGan];
+    const monthGanOhhaeng = CHEONGAN_OHHAENG[fourPillars.month.heavenly as CheonGan];
+    const dayGanOhhaeng = CHEONGAN_OHHAENG[fourPillars.day.heavenly as CheonGan];
+    const timeGanOhhaeng = CHEONGAN_OHHAENG[fourPillars.hour.heavenly as CheonGan];
     
     ohHaengBalance[yearGanOhhaeng] += 12.5;
     ohHaengBalance[monthGanOhhaeng] += 12.5;
@@ -76,24 +62,41 @@ export function convertPersonalInfoToSaju(personalInfo: PersonalInfo): SajuData 
     ohHaengBalance[timeGanOhhaeng] += 12.5;
 
     // 지지의 오행 계산
-    const yearJiOhhaeng = JIJI_OHHAENG[sajuResult.year.ji];
-    const monthJiOhhaeng = JIJI_OHHAENG[sajuResult.month.ji];
-    const dayJiOhhaeng = JIJI_OHHAENG[sajuResult.day.ji];
-    const timeJiOhhaeng = JIJI_OHHAENG[sajuResult.time.ji];
+    const yearJiOhhaeng = JIJI_OHHAENG[fourPillars.year.earthly as JiJi];
+    const monthJiOhhaeng = JIJI_OHHAENG[fourPillars.month.earthly as JiJi];
+    const dayJiOhhaeng = JIJI_OHHAENG[fourPillars.day.earthly as JiJi];
+    const timeJiOhhaeng = JIJI_OHHAENG[fourPillars.hour.earthly as JiJi];
     
     ohHaengBalance[yearJiOhhaeng] += 12.5;
     ohHaengBalance[monthJiOhhaeng] += 12.5;
     ohHaengBalance[dayJiOhhaeng] += 12.5;
     ohHaengBalance[timeJiOhhaeng] += 12.5;
 
-    return {
-      year: sajuResult.year,
-      month: sajuResult.month,
-      day: sajuResult.day,
-      time: sajuResult.time,
+    // SajuData 형식으로 변환
+    const sajuData: SajuData = {
+      year: { 
+        gan: fourPillars.year.heavenly as CheonGan, 
+        ji: fourPillars.year.earthly as JiJi 
+      },
+      month: { 
+        gan: fourPillars.month.heavenly as CheonGan, 
+        ji: fourPillars.month.earthly as JiJi 
+      },
+      day: { 
+        gan: fourPillars.day.heavenly as CheonGan, 
+        ji: fourPillars.day.earthly as JiJi 
+      },
+      time: { 
+        gan: fourPillars.hour.heavenly as CheonGan, 
+        ji: fourPillars.hour.earthly as JiJi 
+      },
       ohHaengBalance,
-      fullSaju: `${sajuResult.year.gan}${sajuResult.year.ji} ${sajuResult.month.gan}${sajuResult.month.ji} ${sajuResult.day.gan}${sajuResult.day.ji} ${sajuResult.time.gan}${sajuResult.time.ji}`
+      fullSaju: `${fourPillars.year.combined} ${fourPillars.month.combined} ${fourPillars.day.combined} ${fourPillars.hour.combined}`
     };
+    
+    console.log('최종 SajuData:', sajuData);
+    
+    return sajuData;
   } catch (error) {
     console.error('PersonalInfo를 SajuData로 변환 중 오류:', error);
     return null;
@@ -122,4 +125,24 @@ export function isPersonalInfoValid(info: PersonalInfo | null): boolean {
     info.gender &&
     info.calendarType
   );
+}
+
+// 테스트 함수
+export function testSajuCalculation(): void {
+  console.log('=== PersonalInfo → SajuData 변환 테스트 ===');
+  
+  const testInfo: PersonalInfo = {
+    birthDate: '1971-11-17',
+    birthTime: '04:00',
+    calendarType: 'solar',
+    gender: 'male',
+    birthPlace: '서울'
+  };
+  
+  const result = convertPersonalInfoToSaju(testInfo);
+  console.log('테스트 입력:', testInfo);
+  console.log('변환 결과:', result);
+  console.log('기대값: 신해 기해 병오 경인');
+  console.log('실제값:', result?.fullSaju);
+  console.log('검증:', result?.fullSaju === '신해 기해 병오 경인' ? '✅ 정확' : '❌ 오류');
 }
