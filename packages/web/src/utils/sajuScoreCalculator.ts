@@ -460,14 +460,15 @@ function calculateHourlyBonus(itemOhhaeng: OhHaeng[], hour: number): number {
 export function calculateTimeBasedScore(
   itemName: string,
   sajuData: SajuData,
-  timeFrame: 'base' | 'today' | 'month' | 'year'
+  timeFrame: 'base' | 'today' | 'month' | 'year',
+  targetDate?: Date
 ): number {
   const baseScore = calculateSajuScore(itemName, sajuData);
   
   if (timeFrame === 'base') return baseScore;
   
-  // 현재 날짜/시간 정보
-  const now = new Date();
+  // 현재 날짜/시간 정보 (타겟 날짜가 있으면 해당 날짜 사용)
+  const now = targetDate || new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth() + 1;
   const currentDay = now.getDate();

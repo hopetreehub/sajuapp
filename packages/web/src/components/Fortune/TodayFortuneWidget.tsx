@@ -29,37 +29,42 @@ interface DailyFortune {
 interface TodayFortuneWidgetProps {
   sajuData?: SajuData | null;
   customerName?: string;
+  selectedDate?: Date;
 }
 
-const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, customerName }) => {
+const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, customerName, selectedDate }) => {
   // 사주 데이터가 없으면 샘플 데이터 사용
   const activeSajuData = sajuData || generateSampleSajuData();
   
+  // 선택된 날짜 또는 오늘 날짜
+  const targetDate = selectedDate || new Date();
+  const isToday = targetDate.toDateString() === new Date().toDateString();
+  
   // 카테고리별 점수 계산
-  const calculateCategoryScores = (saju: SajuData) => {
+  const calculateCategoryScores = (saju: SajuData, date: Date) => {
     return [
       { 
         icon: '💰', 
         label: '금전운', 
-        score: calculateTimeBasedScore('금전운', saju, 'today'),
+        score: calculateTimeBasedScore('금전운', saju, 'today', date),
         stars: 0 
       },
       { 
         icon: '❤️', 
         label: '연애운', 
-        score: calculateTimeBasedScore('연애운', saju, 'today'),
+        score: calculateTimeBasedScore('연애운', saju, 'today', date),
         stars: 0 
       },
       { 
         icon: '💼', 
         label: '직장운', 
-        score: calculateTimeBasedScore('직장운', saju, 'today'),
+        score: calculateTimeBasedScore('직장운', saju, 'today', date),
         stars: 0 
       },
       { 
         icon: '🏃', 
         label: '건강운', 
-        score: calculateTimeBasedScore('건강운', saju, 'today'),
+        score: calculateTimeBasedScore('건강운', saju, 'today', date),
         stars: 0 
       },
     ].map(cat => ({
@@ -126,9 +131,9 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
     advice: "새로운 도전을 두려워하지 마세요. 오늘은 당신의 능력을 발휘할 좋은 기회입니다."
   });
   
-  // 사주 데이터 변경 시 운세 재계산
+  // 사주 데이터 또는 날짜 변경 시 운세 재계산
   useEffect(() => {
-    const categories = calculateCategoryScores(activeSajuData);
+    const categories = calculateCategoryScores(activeSajuData, targetDate);
     const totalScore = Math.round(categories.reduce((sum, cat) => sum + cat.score, 0) / categories.length);
     const message = generateMessage(categories);
     const luckyItems = getLuckyItems(activeSajuData);
@@ -147,7 +152,7 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
       luckyItems,
       advice
     });
-  }, [sajuData]);
+  }, [sajuData, selectedDate]);
 
   const renderStars = (count: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -161,7 +166,7 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
     <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6">
       <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
         <span className="mr-2">🔮</span>
-        오늘의 운세
+        {isToday ? '오늘의 운세' : `${targetDate.getMonth() + 1}월 ${targetDate.getDate()}일 운세`}
       </h3>
       
       {/* 고객 이름 표시 */}

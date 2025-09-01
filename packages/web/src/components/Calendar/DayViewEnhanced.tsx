@@ -319,6 +319,7 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
             <TodayFortuneWidget 
               sajuData={customerSajuData}
               customerName={selectedCustomer?.name}
+              selectedDate={currentDate}
             />
           </div>
         </div>
