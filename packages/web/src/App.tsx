@@ -12,6 +12,7 @@ import DetailedFortunePage from '@/pages/DetailedFortunePage'
 import PersonalityAnalysisPage from '@/pages/PersonalityAnalysisPage'
 import SajuChartPage from '@/pages/SajuChartPage'
 import InterpretationPage from '@/pages/InterpretationPage'
+import UnifiedSajuAnalysisPage from '@/pages/UnifiedSajuAnalysisPage'
 import Header from '@/components/Layout/Header'
 import Footer from '@/components/Layout/Footer'
 import { CalendarProvider } from '@/contexts/CalendarContext'
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/saju/personality" element={<PersonalityAnalysisPage />} />
                 <Route path="/saju-chart" element={<SajuChartPage />} />
                 <Route path="/saju/interpretation" element={<InterpretationPage />} />
+                <Route path="/saju-unified" element={<UnifiedSajuAnalysisPage />} />
                 <Route path="/diary" element={<DiaryPage />} />
                 <Route path="/diary/:date" element={<DiaryPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
