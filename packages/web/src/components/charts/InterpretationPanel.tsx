@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, ChevronUp, Info, Sparkles, AlertCircle, Heart, Briefcase, Users, Activity } from 'lucide-react';
 import { InterpretationResponse } from '../../services/api';
 
 interface InterpretationPanelProps {
@@ -45,7 +44,7 @@ const InterpretationPanel: React.FC<InterpretationPanelProps> = ({
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
         <div className="flex items-center text-red-600 dark:text-red-400">
-          <AlertCircle className="w-5 h-5 mr-2" />
+          <span className="mr-2">⚠️</span>
           <span>해석 데이터를 불러올 수 없습니다: {error}</span>
         </div>
       </div>
@@ -382,14 +381,14 @@ const InterpretationPanel: React.FC<InterpretationPanelProps> = ({
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-            <Sparkles className="w-5 h-5 mr-2 text-indigo-600" />
+            <span className="mr-2">✨</span>
             사주 해석 분석
           </h3>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
           >
-            {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            <span>{isExpanded ? '▲' : '▼'}</span>
           </button>
         </div>
       </div>

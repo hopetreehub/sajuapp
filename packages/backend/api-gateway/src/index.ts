@@ -37,7 +37,7 @@ app.get('/health', (req, res) => {
 // Service routes
 const services = {
   '/api/calendar': {
-    target: process.env.CALENDAR_SERVICE_URL || 'http://localhost:4003',
+    target: process.env.CALENDAR_SERVICE_URL || 'http://localhost:4001',
     changeOrigin: true,
     pathRewrite: {
       '^/api/calendar': '/api/calendar'

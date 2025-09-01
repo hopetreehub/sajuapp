@@ -45,6 +45,14 @@ app.get('/health', (req, res) => {
   });
 });
 
+app.get('/api/interpretation/health', (req, res) => {
+  res.json({
+    status: 'healthy',
+    service: 'saju-interpretation',
+    timestamp: new Date().toISOString()
+  });
+});
+
 /**
  * 종합 해석 생성
  * POST /api/interpretation/comprehensive
@@ -264,10 +272,58 @@ app.post('/api/admin/reload', async (req, res) => {
 });
 
 /**
+ * 카테고리 전체 데이터 가져오기
+ * GET /api/data/:category
+ */
+app.get('/api/data/:category', async (req, res) => {
+  try {
+    const { category } = req.params;
+    let data = null;
+    
+    switch(category) {
+      case 'japyeong':
+        data = dataLoaderService.getJapyeongTheories();
+        break;
+      case 'interpretation':
+        data = dataLoaderService.getInterpretationRules();
+        break;
+      case 'spiritual':
+        data = dataLoaderService.getSpiritualInfluences();
+        break;
+      case 'philosophical':
+        data = dataLoaderService.getPhilosophicalPrinciples();
+        break;
+      case 'time-formulas':
+        data = dataLoaderService.getTimeFormulas();
+        break;
+      case 'classical-texts':
+        data = dataLoaderService.getClassicalTexts();
+        break;
+      default:
+        return res.status(404).json({
+          success: false,
+          error: '존재하지 않는 카테고리입니다'
+        });
+    }
+    
+    res.json({
+      success: true,
+      data
+    });
+  } catch (error) {
+    console.error('데이터 조회 오류:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+/**
  * 특정 이론 데이터 가져오기
  * GET /api/data/:category/:item
  */
-app.get('/api/data/:category/:item?', async (req, res) => {
+app.get('/api/data/:category/:item', async (req, res) => {
   try {
     const { category, item } = req.params;
     let data = null;
