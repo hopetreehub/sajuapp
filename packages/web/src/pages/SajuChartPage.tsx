@@ -4,13 +4,14 @@ import { useSajuSettingsStore } from '@/stores/sajuSettingsStore'
 import { calculateSajuData } from '@/utils/sajuDataCalculator'
 import { FiveElementsBalanceChart } from '@/components/saju/charts/FiveElementsBalanceChart'
 import { TenGodsDistributionChart } from '@/components/saju/charts/TenGodsDistributionChart'
+import { TwelveEarthlyBranchesChart } from '@/components/saju/charts/TwelveEarthlyBranchesChart'
 import { BirthInfoHeader } from '@/components/saju/BirthInfoHeader'
 import { SajuData } from '@/types/saju'
 
 const SajuChartPage: React.FC = () => {
   const navigate = useNavigate()
   const { birthInfo } = useSajuSettingsStore()
-  const [activeChart, setActiveChart] = useState<'fiveElements' | 'tenGods'>('fiveElements')
+  const [activeChart, setActiveChart] = useState<'fiveElements' | 'tenGods' | 'twelveEarthly'>('fiveElements')
   const [chartType, setChartType] = useState<'bar' | 'doughnut'>('bar')
 
   // 사주 데이터 계산
@@ -94,6 +95,16 @@ const SajuChartPage: React.FC = () => {
               >
                 ⭐ 십성분포도
               </button>
+              <button
+                onClick={() => setActiveChart('twelveEarthly')}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                  activeChart === 'twelveEarthly'
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
+              >
+                🐲 12간지상호작용
+              </button>
             </div>
 
             {/* 차트 타입 선택 (십성분포도일 때만) */}
@@ -138,12 +149,19 @@ const SajuChartPage: React.FC = () => {
                 showLegend={true}
                 showTooltips={true}
               />
-            ) : (
+            ) : activeChart === 'tenGods' ? (
               <TenGodsDistributionChart
                 sajuData={sajuData}
                 height={450}
                 chartType={chartType}
                 showCategory={true}
+              />
+            ) : (
+              <TwelveEarthlyBranchesChart
+                sajuData={sajuData}
+                height={450}
+                showRelationships={true}
+                showSeasonalBalance={true}
               />
             )}
           </div>

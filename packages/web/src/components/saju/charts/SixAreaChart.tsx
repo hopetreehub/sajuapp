@@ -11,6 +11,8 @@ import {
 import { Radar } from 'react-chartjs-2';
 import { SixAreaScores } from '@/types/saju';
 import { CHART_DESIGN_SYSTEM, getTimeFrameColors, getChartOptions } from '@/constants/chartDesignSystem';
+import InterpretationPanel from '@/components/charts/InterpretationPanel';
+import { interpretationService, InterpretationResponse } from '@/services/api';
 
 ChartJS.register(
   RadialLinearScale,
@@ -269,7 +271,7 @@ const SixAreaChart: React.FC<SixAreaChartProps> = ({ scores, birthDate }) => {
             onClick={() => setSelectedTimeFrame(key)}
             className={`${CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.base} ${
               selectedTimeFrame === key
-                ? CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.active[active]
+                ? CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.active[key as keyof typeof CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.active]
                 : CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.inactive
             }`}
           >
