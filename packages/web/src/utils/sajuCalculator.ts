@@ -174,7 +174,7 @@ export class SajuCalculator {
    * 1971년 11월 17일 = 병오일
    * 1976년 9월 16일 = 신미일
    */
-  private static calculateDayPillar(year: number, month: number, day: number): { heavenly: string; earthly: string; combined: string } {
+  public static calculateDayPillar(year: number, month: number, day: number): { heavenly: string; earthly: string; combined: string } {
     // 기준일: 1971년 11월 17일 = 병오일 (index 42)
     const baseDate = new Date(1971, 10, 17); // 월은 0부터 시작하므로 11월 = 10
     const targetDate = new Date(year, month - 1, day);

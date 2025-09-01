@@ -2,16 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { 
   calculateTimeBasedScore, 
   SajuData, 
-  getDominantOhhaeng,
-  calculateLuckyNumber,
   generateSampleSajuData 
 } from '@/utils/sajuScoreCalculator';
+import { 
+  getLuckyItemsByDate, 
+  getDailyFortuneModifier,
+  generateDailyFortuneMessage,
+  getDailyPillar
+} from '@/utils/dailyFortune';
 
 interface FortuneCategory {
   icon: string;
   label: string;
   score: number;
-  stars: number;
+  color: string;
 }
 
 interface DailyFortune {
@@ -19,9 +23,14 @@ interface DailyFortune {
   message: string;
   categories: FortuneCategory[];
   luckyItems: {
-    color: string;
-    number: number;
-    direction: string;
+    색상: string;
+    숫자: number;
+    방향: string;
+    시간대: string;
+    음식: string;
+    활동: string;
+    보석: string;
+    일진: string;
   };
   advice: string;
 }
@@ -32,6 +41,37 @@ interface TodayFortuneWidgetProps {
   selectedDate?: Date;
 }
 
+// 막대그래프 컴포넌트
+const BarChart: React.FC<{ categories: FortuneCategory[] }> = ({ categories }) => {
+  return (
+    <div className="space-y-2">
+      {categories.map((category, index) => (
+        <div key={index} className="flex items-center space-x-3">
+          <span className="text-lg w-6">{category.icon}</span>
+          <span className="text-xs font-medium text-gray-600 dark:text-gray-400 w-12">
+            {category.label}
+          </span>
+          <div className="flex-1 flex items-center space-x-2">
+            <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-6 overflow-hidden">
+              <div 
+                className="h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2"
+                style={{ 
+                  width: `${category.score}%`,
+                  backgroundColor: category.color
+                }}
+              >
+                <span className="text-xs text-white font-semibold">
+                  {category.score}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, customerName, selectedDate }) => {
   // 사주 데이터가 없으면 샘플 데이터 사용
   const activeSajuData = sajuData || generateSampleSajuData();
@@ -40,103 +80,75 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
   const targetDate = selectedDate || new Date();
   const isToday = targetDate.toDateString() === new Date().toDateString();
   
-  // 카테고리별 점수 계산
+  // 오늘의 일진 정보
+  const dailyPillar = getDailyPillar(targetDate);
+  
+  // 카테고리별 점수 계산 (날짜 보정 포함)
   const calculateCategoryScores = (saju: SajuData, date: Date) => {
-    return [
+    const categories = [
       { 
         icon: '💰', 
-        label: '금전운', 
-        score: calculateTimeBasedScore('금전운', saju, 'today', date),
-        stars: 0 
+        label: '금전', 
+        baseName: '금전운',
+        color: '#f59e0b' // amber
       },
       { 
         icon: '❤️', 
-        label: '연애운', 
-        score: calculateTimeBasedScore('연애운', saju, 'today', date),
-        stars: 0 
+        label: '연애', 
+        baseName: '연애운',
+        color: '#ef4444' // red
       },
       { 
         icon: '💼', 
-        label: '직장운', 
-        score: calculateTimeBasedScore('직장운', saju, 'today', date),
-        stars: 0 
+        label: '직장', 
+        baseName: '직장운',
+        color: '#3b82f6' // blue
       },
       { 
         icon: '🏃', 
-        label: '건강운', 
-        score: calculateTimeBasedScore('건강운', saju, 'today', date),
-        stars: 0 
+        label: '건강', 
+        baseName: '건강운',
+        color: '#10b981' // emerald
       },
-    ].map(cat => ({
-      ...cat,
-      stars: Math.min(5, Math.max(1, Math.round(cat.score / 20)))
-    }));
-  };
-  
-  // 행운 아이템 생성
-  const getLuckyItems = (saju: SajuData) => {
-    const dominantOhhaeng = getDominantOhhaeng(saju.ohHaengBalance);
+    ];
     
-    const luckyColors: Record<string, string> = {
-      '목': '초록색',
-      '화': '빨간색',
-      '토': '노란색',
-      '금': '흰색',
-      '수': '검은색'
-    };
-    
-    const luckyDirections: Record<string, string> = {
-      '목': '동쪽',
-      '화': '남쪽',
-      '토': '중앙',
-      '금': '서쪽',
-      '수': '북쪽'
-    };
-    
-    return {
-      color: luckyColors[dominantOhhaeng] || '파란색',
-      direction: luckyDirections[dominantOhhaeng] || '동쪽',
-      number: calculateLuckyNumber(saju)
-    };
-  };
-  
-  // 메시지 생성
-  const generateMessage = (categories: FortuneCategory[]) => {
-    const maxCategory = categories.reduce((a, b) => a.score > b.score ? a : b);
-    
-    const messages: Record<string, string> = {
-      '금전운': "재물과 관련된 좋은 소식이 있을 수 있습니다.",
-      '연애운': "인연과 관련된 특별한 만남이 기대됩니다.",
-      '직장운': "업무에서 성과를 인정받을 수 있는 날입니다.",
-      '건강운': "활력이 넘치고 에너지가 충만한 하루입니다."
-    };
-    
-    return messages[maxCategory.label] || "오늘은 새로운 기회가 찾아올 수 있는 날입니다.";
+    return categories.map(cat => {
+      const baseScore = calculateTimeBasedScore(cat.baseName, saju, 'today', date);
+      const modifier = getDailyFortuneModifier(date, saju, cat.baseName);
+      const finalScore = Math.min(100, Math.max(0, baseScore + modifier));
+      
+      return {
+        icon: cat.icon,
+        label: cat.label,
+        score: finalScore,
+        color: cat.color
+      };
+    });
   };
   
   const [fortune, setFortune] = useState<DailyFortune>({
     totalScore: 85,
     message: "오늘은 새로운 기회가 찾아올 수 있는 날입니다.",
-    categories: [
-      { icon: '💰', label: '금전운', score: 85, stars: 4 },
-      { icon: '❤️', label: '연애운', score: 72, stars: 3 },
-      { icon: '💼', label: '직장운', score: 90, stars: 5 },
-      { icon: '🏃', label: '건강운', score: 68, stars: 3 },
-    ],
+    categories: [],
     luckyItems: {
-      color: '파란색',
-      number: 7,
-      direction: '동쪽',
+      색상: '파란색',
+      숫자: 7,
+      방향: '동쪽',
+      시간대: '09-11시',
+      음식: '샐러드',
+      활동: '산책',
+      보석: '사파이어',
+      일진: '갑자'
     },
-    advice: "새로운 도전을 두려워하지 마세요. 오늘은 당신의 능력을 발휘할 좋은 기회입니다."
+    advice: "새로운 도전을 두려워하지 마세요."
   });
   
   // 사주 데이터 또는 날짜 변경 시 운세 재계산
   useEffect(() => {
     const categories = calculateCategoryScores(activeSajuData, targetDate);
     const totalScore = Math.round(categories.reduce((sum, cat) => sum + cat.score, 0) / categories.length);
-    const message = generateMessage(categories);
-    const luckyItems = getLuckyItems(activeSajuData);
+    const message = generateDailyFortuneMessage(targetDate, activeSajuData);
+    const luckyItems = getLuckyItemsByDate(targetDate, activeSajuData);
     
     // 조언 생성
     const advice = totalScore >= 70 
@@ -149,24 +161,30 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
       totalScore,
       message,
       categories,
-      luckyItems,
+      luckyItems: {
+        색상: luckyItems.색상,
+        숫자: luckyItems.숫자,
+        방향: luckyItems.방향,
+        시간대: luckyItems.시간대,
+        음식: luckyItems.음식,
+        활동: luckyItems.활동,
+        보석: luckyItems.보석,
+        일진: luckyItems.일진
+      },
       advice
     });
   }, [sajuData, selectedDate]);
 
-  const renderStars = (count: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <span key={i} className={i < count ? 'text-yellow-400' : 'text-gray-300'}>
-        ★
-      </span>
-    ));
-  };
-
   return (
     <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6">
-      <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center">
-        <span className="mr-2">🔮</span>
-        {isToday ? '오늘의 운세' : `${targetDate.getMonth() + 1}월 ${targetDate.getDate()}일 운세`}
+      <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4 flex items-center justify-between">
+        <span className="flex items-center">
+          <span className="mr-2">🔮</span>
+          {isToday ? '오늘의 운세' : `${targetDate.getMonth() + 1}월 ${targetDate.getDate()}일 운세`}
+        </span>
+        <span className="text-sm font-normal text-purple-600 dark:text-purple-400">
+          {fortune.luckyItems.일진}일
+        </span>
       </h3>
       
       {/* 고객 이름 표시 */}
@@ -180,7 +198,7 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
         </div>
       )}
       
-      {/* 종합 점수 */}
+      {/* 종합 점수 및 메시지 */}
       <div className="text-center mb-6 p-4 bg-white/60 dark:bg-gray-800/60 rounded-lg">
         <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 mb-1">
           {fortune.totalScore}점
@@ -190,51 +208,69 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
         </div>
       </div>
       
-      {/* 카테고리별 운세 */}
-      <div className="space-y-3 mb-6">
-        {fortune.categories.map((category, index) => (
-          <div key={index} className="flex items-center justify-between p-3 bg-white/40 dark:bg-gray-800/40 rounded-lg">
-            <div className="flex items-center space-x-3">
-              <span className="text-xl">{category.icon}</span>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                {category.label}
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="text-xs">
-                {renderStars(category.stars)}
-              </div>
-              <span className="text-sm font-bold text-gray-800 dark:text-gray-200">
-                {category.score}점
-              </span>
-            </div>
-          </div>
-        ))}
+      {/* 카테고리별 운세 - 막대그래프 */}
+      <div className="mb-6 p-4 bg-white/40 dark:bg-gray-800/40 rounded-lg">
+        <BarChart categories={fortune.categories} />
       </div>
       
-      {/* 행운 아이템 */}
+      {/* 행운 아이템 - 확장된 버전 */}
       <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 mb-4">
         <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-          🍀 행운 아이템
+          🍀 오늘의 행운 아이템
         </h4>
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">색상</div>
-            <div className="text-sm font-medium text-gray-800 dark:text-gray-200">
-              {fortune.luckyItems.color}
-            </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">🎨</span>
+            <span className="text-xs text-gray-600 dark:text-gray-300">색상:</span>
+            <span className="text-xs font-medium text-gray-800 dark:text-gray-200">
+              {fortune.luckyItems.색상}
+            </span>
           </div>
-          <div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">숫자</div>
-            <div className="text-sm font-medium text-gray-800 dark:text-gray-200">
-              {fortune.luckyItems.number}
-            </div>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">🔢</span>
+            <span className="text-xs text-gray-600 dark:text-gray-300">숫자:</span>
+            <span className="text-xs font-medium text-gray-800 dark:text-gray-200">
+              {fortune.luckyItems.숫자}
+            </span>
           </div>
-          <div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">방향</div>
-            <div className="text-sm font-medium text-gray-800 dark:text-gray-200">
-              {fortune.luckyItems.direction}
-            </div>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">🧭</span>
+            <span className="text-xs text-gray-600 dark:text-gray-300">방향:</span>
+            <span className="text-xs font-medium text-gray-800 dark:text-gray-200">
+              {fortune.luckyItems.방향}
+            </span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">⏰</span>
+            <span className="text-xs text-gray-600 dark:text-gray-300">시간:</span>
+            <span className="text-xs font-medium text-gray-800 dark:text-gray-200">
+              {fortune.luckyItems.시간대}
+            </span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">🍽️</span>
+            <span className="text-xs text-gray-600 dark:text-gray-300">음식:</span>
+            <span className="text-xs font-medium text-gray-800 dark:text-gray-200">
+              {fortune.luckyItems.음식}
+            </span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">🏃</span>
+            <span className="text-xs text-gray-600 dark:text-gray-300">활동:</span>
+            <span className="text-xs font-medium text-gray-800 dark:text-gray-200">
+              {fortune.luckyItems.활동}
+            </span>
+          </div>
+        </div>
+        
+        {/* 보석은 별도 표시 */}
+        <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-600">
+          <div className="flex items-center justify-center space-x-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">💎</span>
+            <span className="text-xs text-gray-600 dark:text-gray-300">오늘의 보석:</span>
+            <span className="text-sm font-medium text-purple-600 dark:text-purple-400">
+              {fortune.luckyItems.보석}
+            </span>
           </div>
         </div>
       </div>
