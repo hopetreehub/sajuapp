@@ -37,13 +37,13 @@ function App() {
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/calendar" element={<CalendarPage />} />
                 <Route path="/fortune" element={<FortunePage />} />
-                <Route path="/saju" element={<SajuAnalysisPage />} />
-                <Route path="/saju/six-areas" element={<SixAreasPage />} />
-                <Route path="/saju/detailed" element={<DetailedFortunePage />} />
-                <Route path="/saju/personality" element={<PersonalityAnalysisPage />} />
+                <Route path="/saju" element={<UnifiedSajuAnalysisPage />} />
+                {/* 기존 사주 서브페이지들은 통합 시스템으로 교체됨 */}
+                <Route path="/saju/six-areas" element={<div className="p-8 text-center">6대 영역 분석이 통합 시스템으로 이전되었습니다. <a href="/saju" className="text-purple-600">새로운 사주분석</a>으로 이동하세요.</div>} />
+                <Route path="/saju/detailed" element={<div className="p-8 text-center">17대 세부운세가 통합 시스템으로 이전되었습니다. <a href="/saju" className="text-purple-600">새로운 사주분석</a>으로 이동하세요.</div>} />
+                <Route path="/saju/personality" element={<div className="p-8 text-center">7대 성향 분석이 통합 시스템으로 이전되었습니다. <a href="/saju" className="text-purple-600">새로운 사주분석</a>으로 이동하세요.</div>} />
                 <Route path="/saju-chart" element={<SajuChartPage />} />
                 <Route path="/saju/interpretation" element={<InterpretationPage />} />
-                <Route path="/saju-unified" element={<UnifiedSajuAnalysisPage />} />
                 <Route path="/diary" element={<DiaryPage />} />
                 <Route path="/diary/:date" element={<DiaryPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
