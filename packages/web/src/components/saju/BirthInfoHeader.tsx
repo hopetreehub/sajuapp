@@ -69,16 +69,25 @@ export const BirthInfoHeader: React.FC<BirthInfoHeaderProps> = ({
     return elementMap[heavenly] || ''
   }
 
-  // 지지 오행 매핑  
+  // 지지 오행 매핑 (12지지 완전 매핑)
   const getEarthlyElement = (earthly: string) => {
     const elementMap: Record<string, string> = {
-      '자': '水(수)', '해': '水(수)', // 수
-      '축': '土(토)', '진': '土(토)', '미': '土(토)', '술': '土(토)', // 토
-      '인': '木(목)', '묘': '木(목)', // 목
-      '사': '火(화)', '오': '火(화)', // 화
-      '신': '金(금)', '유': '金(금)' // 금
+      // 수(水) - 2개
+      '자': '水(수)', '해': '水(수)',
+      
+      // 토(土) - 4개
+      '축': '土(토)', '진': '土(토)', '미': '土(토)', '술': '土(토)',
+      
+      // 목(木) - 2개
+      '인': '木(목)', '묘': '木(목)',
+      
+      // 화(火) - 2개
+      '사': '火(화)', '오': '火(화)',
+      
+      // 금(金) - 2개
+      '신': '金(금)', '유': '金(금)'
     }
-    return elementMap[earthly] || ''
+    return elementMap[earthly] || `${earthly}(?)`
   }
 
   return (
