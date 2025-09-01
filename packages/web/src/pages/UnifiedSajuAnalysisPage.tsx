@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { SAJU_RADAR_CATEGORIES } from '@/data/sajuRadarData';
+import { SAJU_RADAR_CATEGORIES, setGlobalSajuData } from '@/data/sajuRadarData';
 import { SajuRadarData } from '@/types/sajuRadar';
 import SajuCategoryNavigation from '@/components/saju/SajuCategoryNavigation';
 import SajuSubcategoryTabs from '@/components/saju/SajuSubcategoryTabs';
@@ -28,15 +28,20 @@ export default function UnifiedSajuAnalysisPage() {
       loadCustomerSajuData(selectedCustomer.id);
     } else {
       setCustomerSajuData(null);
+      setGlobalSajuData(null); // 전역 사주 데이터도 초기화
     }
   }, [selectedCustomer]);
 
   const loadCustomerSajuData = async (customerId: number) => {
     try {
       const response = await getCustomerById(customerId);
-      setCustomerSajuData(response.data.saju_data);
+      const sajuData = response.data.saju_data;
+      setCustomerSajuData(sajuData);
+      // 전역 사주 데이터 설정 (모든 차트에 반영)
+      setGlobalSajuData(sajuData);
     } catch (error) {
       console.error('Error loading customer saju data:', error);
+      setGlobalSajuData(null);
     }
   };
 

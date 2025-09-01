@@ -2,13 +2,20 @@
 import { SajuRadarCategory } from '@/types/sajuRadar'
 import { calculateSajuScore, generateSampleSajuData, SajuData } from '@/utils/sajuScoreCalculator'
 
-// 사주 데이터 (나중에 사용자 입력으로 대체)
-const userSajuData: SajuData = generateSampleSajuData();
+// 전역 사주 데이터 관리
+let globalSajuData: SajuData | null = null;
+
+// 사주 데이터 설정 함수 (외부에서 호출)
+export function setGlobalSajuData(sajuData: SajuData | null) {
+  globalSajuData = sajuData;
+}
 
 // 사주 기반 점수 계산 헬퍼 함수
 function getSajuScore(itemName: string, defaultScore: number): number {
   try {
-    return calculateSajuScore(itemName, userSajuData);
+    // 전역 사주 데이터가 있으면 사용, 없으면 샘플 데이터 사용
+    const sajuData = globalSajuData || generateSampleSajuData();
+    return calculateSajuScore(itemName, sajuData);
   } catch {
     return defaultScore; // 에러 시 기본값 사용
   }

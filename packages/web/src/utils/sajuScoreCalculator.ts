@@ -271,6 +271,99 @@ const OHHAENG_RELATIONS = {
   }
 };
 
+// 시간대별 점수 계산을 위한 헬퍼 함수
+export function calculateTimeBasedScore(
+  itemName: string,
+  sajuData: SajuData,
+  timeFrame: 'base' | 'today' | 'month' | 'year'
+): number {
+  const baseScore = calculateSajuScore(itemName, sajuData);
+  
+  if (timeFrame === 'base') return baseScore;
+  
+  // 현재 날짜 기반 운세 계산
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1;
+  const currentDay = now.getDate();
+  
+  // 항목의 오행
+  const itemOhhaeng = ITEM_OHHAENG_MAPPING[itemName] || [];
+  if (itemOhhaeng.length === 0) return baseScore;
+  
+  let modifier = 0;
+  
+  switch (timeFrame) {
+    case 'today': {
+      // 오늘의 일진과 비교
+      const todayGan = CHEONGAN[(currentDay % 10)];
+      const todayJi = JIJI[(currentDay % 12)];
+      const todayOhhaeng = CHEONGAN_OHHAENG[todayGan];
+      
+      // 상생 관계면 점수 증가
+      itemOhhaeng.forEach(oh => {
+        if (OHHAENG_RELATIONS.상생[todayOhhaeng] === oh) {
+          modifier += 15;
+        } else if (OHHAENG_RELATIONS.상극[todayOhhaeng] === oh) {
+          modifier -= 10;
+        }
+      });
+      
+      // 일주와의 궁합
+      if (sajuData.day.gan === todayGan) {
+        modifier += 10; // 같은 천간일 때 가산
+      }
+      break;
+    }
+    
+    case 'month': {
+      // 이번 달의 월운과 비교
+      const monthGan = CHEONGAN[(currentMonth % 10)];
+      const monthJi = JIJI[(currentMonth % 12)];
+      const monthOhhaeng = CHEONGAN_OHHAENG[monthGan];
+      
+      itemOhhaeng.forEach(oh => {
+        if (OHHAENG_RELATIONS.상생[monthOhhaeng] === oh) {
+          modifier += 12;
+        } else if (OHHAENG_RELATIONS.상극[monthOhhaeng] === oh) {
+          modifier -= 8;
+        }
+      });
+      
+      // 월지와의 합충
+      if (sajuData.month.ji === monthJi) {
+        modifier += 8;
+      }
+      break;
+    }
+    
+    case 'year': {
+      // 올해의 세운과 비교
+      const yearGan = CHEONGAN[(currentYear % 10)];
+      const yearJi = JIJI[(currentYear % 12)];
+      const yearOhhaeng = CHEONGAN_OHHAENG[yearGan];
+      
+      itemOhhaeng.forEach(oh => {
+        if (OHHAENG_RELATIONS.상생[yearOhhaeng] === oh) {
+          modifier += 10;
+        } else if (OHHAENG_RELATIONS.상극[yearOhhaeng] === oh) {
+          modifier -= 5;
+        }
+      });
+      
+      // 년지와의 관계
+      if (sajuData.year.ji === yearJi) {
+        modifier += 5;
+      }
+      break;
+    }
+  }
+  
+  // 최종 점수 계산 (20-85 범위)
+  const finalScore = baseScore + modifier;
+  return Math.max(20, Math.min(85, Math.round(finalScore)));
+}
+
 // 사주 기반 점수 계산 함수
 export function calculateSajuScore(
   itemName: string,

@@ -14,6 +14,7 @@ import {
 import { Radar, Bar } from 'react-chartjs-2';
 import { SajuRadarData, SajuRadarItem, TimeFrame, TimeFrameWeights } from '@/types/sajuRadar';
 import { CHART_DESIGN_SYSTEM, getTimeFrameColors, getChartOptions } from '@/constants/chartDesignSystem';
+import { calculateTimeBasedScore, SajuData } from '@/utils/sajuScoreCalculator';
 
 ChartJS.register(
   RadialLinearScale,
@@ -30,7 +31,7 @@ ChartJS.register(
 interface UnifiedSajuRadarChartProps {
   data: SajuRadarData;
   birthDate?: string;
-  sajuData?: any;
+  sajuData?: SajuData | null;
 }
 
 const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({ 
@@ -115,23 +116,39 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     // 기본 데이터
     result.base = data.items.map(item => item.baseScore);
     
-    // 오늘: 큰 변동성
-    result.today = data.items.map(item => 
-      generateTimeBasedScore(item.baseScore, 1.0, 25)
-    );
-    
-    // 이번달: 중간 변동성
-    result.month = data.items.map(item => 
-      generateTimeBasedScore(item.baseScore, 1.0, 18)
-    );
-    
-    // 올해: 작은 변동성
-    result.year = data.items.map(item => 
-      generateTimeBasedScore(item.baseScore, 1.0, 12)
-    );
+    // 사주 데이터가 있으면 사주 기반 계산, 없으면 랜덤 변동성
+    if (sajuData) {
+      // 오늘: 사주 기반 일운 계산
+      result.today = data.items.map(item => 
+        calculateTimeBasedScore(item.name, sajuData, 'today')
+      );
+      
+      // 이번달: 사주 기반 월운 계산
+      result.month = data.items.map(item => 
+        calculateTimeBasedScore(item.name, sajuData, 'month')
+      );
+      
+      // 올해: 사주 기반 세운 계산
+      result.year = data.items.map(item => 
+        calculateTimeBasedScore(item.name, sajuData, 'year')
+      );
+    } else {
+      // 사주 데이터가 없으면 기존 랜덤 방식
+      result.today = data.items.map(item => 
+        generateTimeBasedScore(item.baseScore, 1.0, 25)
+      );
+      
+      result.month = data.items.map(item => 
+        generateTimeBasedScore(item.baseScore, 1.0, 18)
+      );
+      
+      result.year = data.items.map(item => 
+        generateTimeBasedScore(item.baseScore, 1.0, 12)
+      );
+    }
     
     return result;
-  }, [data.items]);
+  }, [data.items, sajuData]);
 
   // 최고점 찾기 로직 (기존과 동일)
   const scoreValues = data.items.map(item => item.baseScore);
