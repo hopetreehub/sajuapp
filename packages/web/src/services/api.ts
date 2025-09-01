@@ -242,4 +242,78 @@ export const interpretationService = {
   },
 };
 
+// Diary Entry interface
+export interface DiaryEntry {
+  id?: string;
+  user_id?: string;
+  date: string; // YYYY-MM-DD
+  content: string;
+  mood?: string;
+  weather?: string;
+  tags?: string[];
+  created_at?: string;
+  updated_at?: string;
+}
+
+// Diary service
+export const diaryService = {
+  // Get all diary entries (with pagination)
+  getDiaries: async (params?: {
+    page?: number;
+    limit?: number;
+    month?: string;
+  }): Promise<DiaryEntry[]> => {
+    const response = await axios.get('http://localhost:4004/api/diaries', { 
+      params,
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+    });
+    return response.data;
+  },
+
+  // Get diary entry by date
+  getDiaryByDate: async (date: string): Promise<DiaryEntry> => {
+    const response = await axios.get(`http://localhost:4004/api/diaries/${date}`, {
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+    });
+    return response.data;
+  },
+
+  // Create diary entry
+  createDiary: async (diary: Omit<DiaryEntry, 'id' | 'created_at' | 'updated_at' | 'user_id'>): Promise<DiaryEntry> => {
+    const response = await axios.post('http://localhost:4004/api/diaries', diary, {
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+    });
+    return response.data;
+  },
+
+  // Update diary entry
+  updateDiary: async (id: string, diary: Partial<DiaryEntry>): Promise<DiaryEntry> => {
+    const response = await axios.put(`http://localhost:4004/api/diaries/${id}`, diary, {
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+    });
+    return response.data;
+  },
+
+  // Delete diary entry
+  deleteDiary: async (id: string): Promise<void> => {
+    await axios.delete(`http://localhost:4004/api/diaries/${id}`, {
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+    });
+  },
+
+  // Search diary entries
+  searchDiaries: async (params: {
+    q?: string;
+    mood?: string;
+    startDate?: string;
+    endDate?: string;
+  }): Promise<DiaryEntry[]> => {
+    const response = await axios.get('http://localhost:4004/api/diaries/search', {
+      params,
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+    });
+    return response.data;
+  },
+};
+
 export default api;
