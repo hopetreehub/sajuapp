@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
+import AddItemModal from '@/components/AddItemModal'
 import { 
   startOfWeek, 
   endOfWeek,
@@ -26,6 +27,9 @@ interface WeekViewProps {
 
 export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekViewProps) {
   const { currentDate, getTodosForDate, addTodo, updateTodo, deleteTodo, toggleTodo } = useCalendar()
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [selectedHour, setSelectedHour] = useState<number | undefined>()
 
   const weekDays = useMemo(() => {
     const start = startOfWeek(currentDate, { weekStartsOn: 0 })
@@ -151,9 +155,9 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
                           ${isCurrentDay && currentHour === hour ? 'bg-primary/10' : ''}
                         `}
                         onClick={() => {
-                          const selectedDateTime = new Date(day)
-                          selectedDateTime.setHours(hour, 0, 0, 0)
-                          onCreateEvent(selectedDateTime)
+                          setSelectedDate(new Date(day))
+                          setSelectedHour(hour)
+                          setShowAddModal(true)
                         }}
                       >
                         {dayEvents.map(event => {
@@ -248,24 +252,30 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
                     ))}
                   </div>
                   
-                  {/* 할일 추가 */}
-                  <button
-                    onClick={() => {
-                      const newTodoText = prompt('새 할일을 입력하세요:')
-                      if (newTodoText) {
-                        handleAddTodo(day, newTodoText)
-                      }
-                    }}
-                    className="w-full text-xs text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 py-1 border border-dashed border-gray-300 rounded hover:border-purple-300 transition-colors"
-                  >
-                    + 할일 추가
-                  </button>
+                  {/* 할일 추가 버튼 제거됨 - 타임라인 클릭으로 통합 */}
                 </div>
               )
             })}
           </div>
         </div>
       </div>
+
+      {/* 통합 추가 모달 */}
+      {showAddModal && (
+        <AddItemModal
+          date={selectedDate}
+          hour={selectedHour}
+          onClose={() => setShowAddModal(false)}
+          onAddEvent={(event) => {
+            onCreateEvent(new Date(event.start_time))
+            setShowAddModal(false)
+          }}
+          onAddTodo={(todo) => {
+            addTodo(todo)
+            setShowAddModal(false)
+          }}
+        />
+      )}
     </div>
   )
 }
