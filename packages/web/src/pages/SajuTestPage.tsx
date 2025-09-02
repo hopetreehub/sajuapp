@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { calculateCompleteSaju, testSajuCalculation } from '@/utils/sajuCalculatorNew';
-import { runBaziTest, convertToKorean } from '@/utils/testBaziCalculator';
 import { testAccurateSaju, calculateCompleteSaju as calculateAccurate } from '@/utils/accurateSajuCalculator';
-import { BaziCalculator } from 'bazi-calculator-by-alvamind';
 
 export default function SajuTestPage() {
   const [birthDate, setBirthDate] = useState('1971-11-17');
@@ -41,15 +39,6 @@ export default function SajuTestPage() {
   const runTests = () => {
     testSajuCalculation();
     
-    // BaZi Calculator 테스트
-    console.log('\n=== BaZi Calculator 테스트 ===');
-    try {
-      const baziResult = runBaziTest();
-      console.log('BaZi 결과:', baziResult);
-    } catch (error) {
-      console.log('BaZi 패키지 오류:', error);
-    }
-    
     // 정확한 사주 계산 테스트
     console.log('\n=== 정확한 사주 계산 테스트 ===');
     const accurateResult = testAccurateSaju();
@@ -57,24 +46,8 @@ export default function SajuTestPage() {
   };
   
   const calculateWithBazi = () => {
-    const [year, month, day] = birthDate.split('-').map(Number);
-    const [hour, minute] = birthTime.split(':').map(Number);
-    
-    try {
-      const calculator = new BaziCalculator(year, month, day, hour, 'male');
-      const baziString = calculator.toString();
-      const koreanBazi = convertToKorean(baziString);
-      
-      console.log('BaZi Calculator 결과:');
-      console.log('Original:', baziString);
-      console.log('Korean:', koreanBazi);
-      
-      alert(`BaZi 계산 결과: ${koreanBazi}`);
-    } catch (error) {
-      console.log('BaZi 패키지 오류:', error);
-      alert('대체 계산 방법을 사용합니다.');
-      calculateWithAccurate();
-    }
+    // BaZi 패키지가 없으므로 정확한 계산기 사용
+    calculateWithAccurate();
   };
   
   const calculateWithAccurate = () => {
