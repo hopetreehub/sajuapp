@@ -4,6 +4,7 @@ import { searchService, SearchResult, SearchOptions } from '@/services/searchSer
 import { useCalendar } from '@/contexts/CalendarContext'
 import { useDebounce, getCategoryLabel, groupResultsByType } from '@/utils/searchUtils'
 import SearchResultItem from './SearchResultItem'
+import { parseISO } from 'date-fns'
 
 interface SearchBarProps {
   onSearch?: (results: SearchResult[]) => void
@@ -25,7 +26,7 @@ export default function SearchBar({
   const [selectedCategories, setSelectedCategories] = useState<string[]>(['all'])
   const [error, setError] = useState<string | null>(null)
   
-  const { todos } = useCalendar()
+  const { todos, setCurrentDate, setViewMode, setSelectedDate } = useCalendar()
   const debouncedQuery = useDebounce(query, 300)
   const searchRef = useRef<HTMLDivElement>(null)
   
@@ -113,16 +114,31 @@ export default function SearchBar({
     // 결과에 따른 네비게이션 처리
     switch (result.type) {
       case 'event':
-        // TODO: 이벤트 상세 보기 또는 해당 날짜로 이동
-        console.log('Navigate to event:', result.data)
+        // 이벤트 날짜로 이동하고 일간 뷰로 전환
+        if (result.date) {
+          const eventDate = parseISO(result.date)
+          setCurrentDate(eventDate)
+          setSelectedDate(eventDate)
+          setViewMode('day')
+        }
         break
       case 'todo':
-        // TODO: 할일 편집 모달 또는 해당 날짜로 이동
-        console.log('Navigate to todo:', result.data)
+        // 할일 날짜로 이동하고 일간 뷰로 전환
+        if (result.date) {
+          const todoDate = parseISO(result.date)
+          setCurrentDate(todoDate)
+          setSelectedDate(todoDate)
+          setViewMode('day')
+        }
         break
       case 'diary':
-        // TODO: 일기 보기 모달 열기
-        console.log('Navigate to diary:', result.data)
+        // 일기 날짜로 이동하고 일간 뷰로 전환
+        if (result.date) {
+          const diaryDate = parseISO(result.date)
+          setCurrentDate(diaryDate)
+          setSelectedDate(diaryDate)
+          setViewMode('dayEnhanced') // 일기는 향상된 일간 뷰로 이동
+        }
         break
     }
   }
