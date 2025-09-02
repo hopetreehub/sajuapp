@@ -8,6 +8,7 @@ import { requestLogger } from './middleware/requestLogger'
 import eventsRouter from './routes/events-sqlite'
 import healthRouter from './routes/health-sqlite'
 import tagsRouter from './routes/tags'
+import customersRouter from './routes/customers'
 import { initDatabase } from './database/sqlite-connection'
 
 dotenv.config()
@@ -28,6 +29,7 @@ app.use(requestLogger)
 app.use('/health', healthRouter)
 app.use('/api/calendar/events', eventsRouter)
 app.use('/api/calendar/tags', tagsRouter)
+app.use('/api/customers', customersRouter)
 
 // Error handling
 app.use(errorHandler)
