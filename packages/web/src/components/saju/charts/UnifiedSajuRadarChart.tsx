@@ -116,35 +116,65 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     console.log('[useMemo 실행] sajuData:', sajuData);
     const result: { [key in TimeFrame]?: number[] } = {};
     
+    // 사주 데이터 유효성 검증
+    const isValidSajuData = (data: any): data is SajuData => {
+      if (!data) return false;
+      return data.year?.gan && data.year?.ji &&
+             data.month?.gan && data.month?.ji &&
+             data.day?.gan && data.day?.ji &&
+             data.time?.gan && data.time?.ji &&
+             data.ohHaengBalance;
+    };
+    
     // 기본 데이터 - 사주 데이터가 있으면 동적 계산, 없으면 정적 값 사용
-    if (sajuData) {
-      console.log('[기본 점수 계산] sajuData 존재함:', sajuData.fullSaju);
+    if (isValidSajuData(sajuData)) {
+      console.log('[기본 점수 계산] 유효한 sajuData 존재함:', sajuData.fullSaju);
       result.base = data.items.map(item => {
-        const score = calculateTimeBasedScore(item.name, sajuData, 'base');
-        console.log(`[항목 점수] ${item.name}: ${score}점`);
-        return score;
+        try {
+          const score = calculateTimeBasedScore(item.name, sajuData, 'base');
+          console.log(`[항목 점수] ${item.name}: ${score}점`);
+          return score;
+        } catch (error) {
+          console.error(`[점수 계산 오류] ${item.name}:`, error);
+          return item.baseScore;
+        }
       });
     } else {
-      console.log('[경고] sajuData가 없음 - 정적 점수 사용');
+      console.log('[경고] 유효한 sajuData가 없음 - 정적 점수 사용');
       result.base = data.items.map(item => item.baseScore);
     }
     
     // 사주 데이터가 있으면 사주 기반 계산, 없으면 랜덤 변동성
-    if (sajuData) {
+    if (isValidSajuData(sajuData)) {
       // 오늘: 사주 기반 일운 계산
-      result.today = data.items.map(item => 
-        calculateTimeBasedScore(item.name, sajuData, 'today')
-      );
+      result.today = data.items.map(item => {
+        try {
+          return calculateTimeBasedScore(item.name, sajuData, 'today');
+        } catch (error) {
+          console.error(`[오늘 점수 계산 오류] ${item.name}:`, error);
+          return generateTimeBasedScore(item.baseScore, 1.0, 25);
+        }
+      });
       
       // 이번달: 사주 기반 월운 계산
-      result.month = data.items.map(item => 
-        calculateTimeBasedScore(item.name, sajuData, 'month')
-      );
+      result.month = data.items.map(item => {
+        try {
+          return calculateTimeBasedScore(item.name, sajuData, 'month');
+        } catch (error) {
+          console.error(`[이번달 점수 계산 오류] ${item.name}:`, error);
+          return generateTimeBasedScore(item.baseScore, 1.0, 18);
+        }
+      });
       
       // 올해: 사주 기반 세운 계산
-      result.year = data.items.map(item => 
-        calculateTimeBasedScore(item.name, sajuData, 'year')
-      );
+      result.year = data.items.map(item => {
+        try {
+          return calculateTimeBasedScore(item.name, sajuData, 'year');
+        } catch (error) {
+          console.error(`[올해 점수 계산 오류] ${item.name}:`, error);
+          return generateTimeBasedScore(item.baseScore, 1.0, 12);
+        }
+      });
     } else {
       // 사주 데이터가 없으면 기존 랜덤 방식
       result.today = data.items.map(item => 

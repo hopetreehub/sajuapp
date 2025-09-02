@@ -544,6 +544,13 @@ export function calculateSajuScore(
   // 기본 점수 (50점에서 시작)
   let score = 50;
   
+  // 사주 데이터 유효성 검증
+  if (!sajuData || !sajuData.year?.gan || !sajuData.month?.gan || 
+      !sajuData.day?.gan || !sajuData.time?.gan) {
+    console.log(`[경고] 유효하지 않은 사주 데이터 - 랜덤 점수 사용`);
+    return Math.floor(Math.random() * 30) + 40; // 40-70점
+  }
+  
   // 디버그 로그
   console.log(`[사주 점수 계산] 항목: ${itemName}, 사주: ${sajuData.fullSaju}`);
   
@@ -561,17 +568,22 @@ export function calculateSajuScore(
   // 2. 사주의 오행 분포 계산
   const userOhhaeng: OhHaeng[] = [];
   
-  // 천간 오행
-  userOhhaeng.push(CHEONGAN_OHHAENG[sajuData.year.gan]);
-  userOhhaeng.push(CHEONGAN_OHHAENG[sajuData.month.gan]);
-  userOhhaeng.push(CHEONGAN_OHHAENG[sajuData.day.gan]);
-  userOhhaeng.push(CHEONGAN_OHHAENG[sajuData.time.gan]);
-  
-  // 지지 오행
-  userOhhaeng.push(JIJI_OHHAENG[sajuData.year.ji]);
-  userOhhaeng.push(JIJI_OHHAENG[sajuData.month.ji]);
-  userOhhaeng.push(JIJI_OHHAENG[sajuData.day.ji]);
-  userOhhaeng.push(JIJI_OHHAENG[sajuData.time.ji]);
+  try {
+    // 천간 오행
+    userOhhaeng.push(CHEONGAN_OHHAENG[sajuData.year.gan]);
+    userOhhaeng.push(CHEONGAN_OHHAENG[sajuData.month.gan]);
+    userOhhaeng.push(CHEONGAN_OHHAENG[sajuData.day.gan]);
+    userOhhaeng.push(CHEONGAN_OHHAENG[sajuData.time.gan]);
+    
+    // 지지 오행
+    userOhhaeng.push(JIJI_OHHAENG[sajuData.year.ji]);
+    userOhhaeng.push(JIJI_OHHAENG[sajuData.month.ji]);
+    userOhhaeng.push(JIJI_OHHAENG[sajuData.day.ji]);
+    userOhhaeng.push(JIJI_OHHAENG[sajuData.time.ji]);
+  } catch (error) {
+    console.error('[오행 분포 계산 오류]', error);
+    return Math.floor(Math.random() * 30) + 40; // 40-70점
+  }
   
   // 3. 오행 균형 점수 계산
   itemOhhaeng.forEach(itemOh => {

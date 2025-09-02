@@ -37,7 +37,18 @@ export default function UnifiedSajuAnalysisPage() {
       console.log('[데이터 로드 시작] 고객 ID:', customerId);
       const response = await getCustomerById(customerId);
       console.log('[API 응답]', response.data);
-      const sajuData = response.data.saju_data;
+      
+      // saju_data가 문자열인 경우 JSON 파싱
+      let sajuData = response.data.saju_data;
+      if (typeof sajuData === 'string') {
+        try {
+          sajuData = JSON.parse(sajuData);
+          console.log('[사주 데이터 파싱 완료]', sajuData);
+        } catch (e) {
+          console.error('[사주 데이터 파싱 실패]', e);
+          sajuData = null;
+        }
+      }
       console.log('[사주 데이터 수신]', sajuData);
       
       setCustomerSajuData(sajuData);
