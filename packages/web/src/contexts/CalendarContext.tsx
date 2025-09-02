@@ -84,6 +84,9 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
       completed: false,
       priority: 'high',
       date: format(new Date(), 'yyyy-MM-dd'),
+      hasTime: true,
+      startTime: '14:00',
+      endTime: '15:00',
       createdAt: new Date(),
       updatedAt: new Date()
     },
@@ -102,6 +105,9 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
       completed: false,
       priority: 'high',
       date: format(new Date(new Date().setDate(new Date().getDate() + 1)), 'yyyy-MM-dd'),
+      hasTime: true,
+      startTime: '10:30',
+      endTime: '11:30',
       createdAt: new Date(),
       updatedAt: new Date()
     },
