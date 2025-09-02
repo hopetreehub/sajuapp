@@ -1,4 +1,5 @@
 import { SajuBirthInfo } from '@/types/saju';
+import { lunarToSolar } from './lunarCalendar';
 
 // 천간(天干) - 10개
 export const HEAVENLY_STEMS = [
@@ -256,12 +257,20 @@ export class SajuCalculator {
    * 전체 사주(四柱) 계산 메인 함수
    */
   public static calculateFourPillars(birthInfo: SajuBirthInfo): FourPillarsResult {
-    const { year, month, day, hour, minute = 0 } = birthInfo;
+    let { year, month, day, hour, minute = 0 } = birthInfo;
     
-    // TODO: 음력 변환 로직 추가 필요 (현재는 양력만 처리)
-    // if (birthInfo.isLunar) {
-    //   // 음력을 양력으로 변환하는 로직 필요
-    // }
+    // 음력 변환 처리
+    if (birthInfo.isLunar) {
+      try {
+        const solarDate = lunarToSolar(year, month, day, birthInfo.isLeapMonth);
+        year = solarDate.getFullYear();
+        month = solarDate.getMonth() + 1; // 0-indexed를 1-indexed로 변환
+        day = solarDate.getDate();
+      } catch (error) {
+        console.error('음력 변환 오류:', error);
+        // 오류 발생 시 원래 값 사용
+      }
+    }
     
     return {
       year: this.calculateYearPillar(year),
