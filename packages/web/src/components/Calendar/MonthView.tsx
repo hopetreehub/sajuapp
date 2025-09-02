@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
+import { Todo } from '@/types/todo'
 import { 
   startOfMonth, 
   endOfMonth, 

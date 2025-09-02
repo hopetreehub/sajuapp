@@ -1,17 +1,8 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react'
 import { ViewMode, UserSettings } from '@/types/calendar'
+import { Todo } from '@/types/todo'
 import { CalendarEvent } from '@/services/api'
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, format } from 'date-fns'
-
-interface Todo {
-  id: string;
-  text: string;
-  completed: boolean;
-  priority: 'high' | 'medium' | 'low';
-  date: string; // YYYY-MM-DD
-  createdAt: Date;
-  updatedAt: Date;
-}
 
 interface CalendarContextType {
   currentDate: Date

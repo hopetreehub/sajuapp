@@ -1,11 +1,12 @@
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay } from 'date-fns'
 import { eventService, diaryService, CalendarEvent, DiaryEntry } from './api'
+import { Todo } from '@/types/todo'
 
 // 대시보드 통계 타입
 export interface DashboardStats {
   today: {
     events: CalendarEvent[]
-    todos: any[] // TODO: Todo 타입 정의 후 변경
+    todos: Todo[]
     diary: DiaryEntry | null
     hasScheduledEvents: boolean
     completedTodos: number

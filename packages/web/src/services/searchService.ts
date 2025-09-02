@@ -1,15 +1,5 @@
 import { diaryService, eventService } from './api'
-
-// Todo 타입 임시 정의
-interface Todo {
-  id: string
-  title: string
-  description?: string
-  date: string
-  priority: 'high' | 'medium' | 'low'
-  completed: boolean
-  tags?: string[]
-}
+import { Todo } from '@/types/todo'
 
 export interface SearchOptions {
   query: string
@@ -104,7 +94,8 @@ const searchTodos = (todos: Todo[], options: SearchOptions): SearchResult[] => {
   
   return todos
     .filter(todo => {
-      const matchesQuery = todo.title.toLowerCase().includes(query) ||
+      const title = todo.title || todo.text
+      const matchesQuery = title.toLowerCase().includes(query) ||
                           todo.description?.toLowerCase().includes(query)
       
       const matchesDate = (!options.startDate || new Date(todo.date) >= new Date(options.startDate)) &&
@@ -112,16 +103,19 @@ const searchTodos = (todos: Todo[], options: SearchOptions): SearchResult[] => {
       
       return matchesQuery && matchesDate
     })
-    .map(todo => ({
-      type: 'todo' as const,
-      id: todo.id,
-      title: todo.title,
-      content: todo.description,
-      date: todo.date,
-      highlight: highlightText(todo.title, options.query),
+    .map(todo => {
+      const title = todo.title || todo.text
+      return {
+        type: 'todo' as const,
+        id: todo.id,
+        title: title,
+        content: todo.description,
+        date: todo.date,
+        highlight: highlightText(title, options.query),
       score: calculateScore(todo, options.query),
       data: todo
-    }))
+    }
+  })
     .slice(0, options.limit || 10)
 }
 
