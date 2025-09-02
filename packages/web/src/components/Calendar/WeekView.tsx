@@ -76,6 +76,28 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
     })
   }
 
+  // 시간이 지정된 할일을 가져오는 함수
+  const getTodosForDayAndHour = (date: Date, hour: number) => {
+    const dayTodos = getTodosForDate(date)
+    return dayTodos.filter(todo => {
+      if (!todo.hasTime || !todo.startTime) return false
+      
+      try {
+        const [todoHour] = todo.startTime.split(':').map(Number)
+        return todoHour === hour
+      } catch (error) {
+        console.warn('Invalid todo time:', todo.startTime, error)
+        return false
+      }
+    })
+  }
+
+  // 시간이 지정되지 않은 할일만 가져오는 함수
+  const getUntimedTodosForDate = (date: Date) => {
+    const dayTodos = getTodosForDate(date)
+    return dayTodos.filter(todo => !todo.hasTime || !todo.startTime)
+  }
+
   const currentHour = new Date().getHours()
   const currentMinute = new Date().getMinutes()
   const currentTimePosition = (currentHour * 60 + currentMinute) / (24 * 60) * 100
@@ -145,6 +167,7 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
                 <div key={day.toISOString()} className="border-r border-border">
                   {HOURS.map(hour => {
                     const dayEvents = getEventsForDayAndHour(day, hour)
+                    const hourTodos = getTodosForDayAndHour(day, hour)
                     
                     return (
                       <div 
@@ -160,6 +183,7 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
                           setShowAddModal(true)
                         }}
                       >
+                        {/* 일정 표시 */}
                         {dayEvents.map(event => {
                           if (!event.id || !event.start_time || !event.title) return null
                           
@@ -189,6 +213,43 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
                             return null
                           }
                         })}
+                        
+                        {/* 시간별 할일 표시 */}
+                        {hourTodos.map(todo => (
+                          <div
+                            key={todo.id}
+                            className="text-xs p-1 mb-1 rounded truncate cursor-pointer hover:opacity-80 flex items-center space-x-1"
+                            style={{
+                              backgroundColor: '#f59e0b20',
+                              color: '#f59e0b',
+                              borderLeft: '2px solid #f59e0b'
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              // 할일 편집 로직 추가 가능
+                            }}
+                          >
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                toggleTodo(todo.id)
+                              }}
+                              className={`
+                                w-2 h-2 rounded-full border flex items-center justify-center text-xs
+                                ${todo.completed 
+                                  ? 'bg-green-500 border-green-500 text-white' 
+                                  : 'border-orange-400'
+                                }
+                              `}
+                            >
+                              {todo.completed && '✓'}
+                            </button>
+                            <span className="text-xs">{getPriorityIcon(todo.priority)}</span>
+                            <span className={`flex-1 ${todo.completed ? 'line-through opacity-60' : ''}`}>
+                              {todo.startTime} {todo.text}
+                            </span>
+                          </div>
+                        ))}
                       </div>
                     )
                   })}
@@ -204,9 +265,9 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
               할일
             </div>
             
-            {/* 각 요일의 할일 */}
+            {/* 각 요일의 시간이 지정되지 않은 할일 */}
             {weekDays.map(day => {
-              const dayTodos = getTodosForDate(day)
+              const dayTodos = getUntimedTodosForDate(day)
               const isCurrentDay = isToday(day)
               
               return (
