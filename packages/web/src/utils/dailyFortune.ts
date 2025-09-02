@@ -1,5 +1,16 @@
 import { SajuCalculator } from './sajuCalculator';
 import { SajuData, CheonGan, JiJi, OhHaeng, CHEONGAN_OHHAENG, JIJI_OHHAENG } from './sajuScoreCalculator';
+import { 
+  calculateEnhancedLuckyNumber, 
+  calculateMonthlyFortune,
+  checkCheonganClash,
+  checkCheonganHarmony,
+  checkJijiClash,
+  checkJijiHarmony,
+  isVoidDay,
+  isNobleHelperDay,
+  calculate12LifeStage
+} from './sajuRelations';
 
 // 오행별 행운 아이템 매핑
 export const LUCKY_ITEMS_BY_OHHAENG = {
@@ -106,23 +117,12 @@ function selectLuckyItem(items: string[], date: Date): string {
   return items[index];
 }
 
-// 날짜와 사주를 조합한 행운의 숫자 계산
+// 날짜와 사주를 조합한 행운의 숫자 계산 (하도/낙서 체계 활용)
 function calculateLuckyNumber(date: Date, sajuData: SajuData): number {
-  const dailyPillar = getDailyPillar(date);
-  
-  // 천간을 숫자로 변환 (갑=1, 을=2, ... 계=10)
-  const CHEONGAN: CheonGan[] = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
-  const dayGanNumber = CHEONGAN.indexOf(dailyPillar.gan) + 1;
-  const birthGanNumber = CHEONGAN.indexOf(sajuData.day.gan) + 1;
-  
-  // 두 숫자를 조합 (1-9 범위)
-  let luckyNumber = (dayGanNumber + birthGanNumber) % 9;
-  if (luckyNumber === 0) luckyNumber = 9;
-  
-  return luckyNumber;
+  return calculateEnhancedLuckyNumber(date, sajuData);
 }
 
-// 날짜에 따른 운세 보정값 계산
+// 날짜에 따른 운세 보정값 계산 (확장된 변동성)
 export function getDailyFortuneModifier(date: Date, sajuData: SajuData, category: string): number {
   const dailyPillar = getDailyPillar(date);
   const dayGanOhhaeng = CHEONGAN_OHHAENG[dailyPillar.gan];
@@ -141,12 +141,12 @@ export function getDailyFortuneModifier(date: Date, sajuData: SajuData, category
   
   // 일간 오행이 선호 오행과 일치하면 가산점
   if (preferredOhhaeng.includes(dayGanOhhaeng)) {
-    modifier += 10;
+    modifier += 15;
   }
   
   // 일지 오행이 선호 오행과 일치하면 가산점
   if (preferredOhhaeng.includes(dayJiOhhaeng)) {
-    modifier += 5;
+    modifier += 10;
   }
   
   // 상생 관계 체크
@@ -161,8 +161,45 @@ export function getDailyFortuneModifier(date: Date, sajuData: SajuData, category
   
   // 일간이 본인 일간을 생하면 가산점
   if (SANGSEANG[dayGanOhhaeng] === birthDayOhhaeng) {
-    modifier += 8;
+    modifier += 12;
   }
+  
+  // 천간 충/합 관계 체크
+  if (checkCheonganHarmony(dailyPillar.gan, sajuData.day.gan)) {
+    modifier += 20; // 천간합은 큰 행운
+  }
+  if (checkCheonganClash(dailyPillar.gan, sajuData.day.gan)) {
+    modifier -= 15; // 천간충은 불리
+  }
+  
+  // 지지 충/합 관계 체크
+  if (checkJijiHarmony(dailyPillar.ji, sajuData.day.ji)) {
+    modifier += 15; // 지지육합은 행운
+  }
+  if (checkJijiClash(dailyPillar.ji, sajuData.day.ji)) {
+    modifier -= 20; // 지지충은 큰 불리
+  }
+  
+  // 12운성 체크
+  const lifeStage = calculate12LifeStage(sajuData.day.gan, dailyPillar.ji);
+  const stageScores: Record<string, number> = {
+    '장생': 15, '목욕': -5, '관대': 10, '건록': 20,
+    '제왕': 25, '쇠': -10, '병': -15, '사': -20,
+    '묘': -5, '절': -25, '태': 5, '양': 0
+  };
+  modifier += stageScores[lifeStage] || 0;
+  
+  // 특수일 체크
+  if (isVoidDay(date, sajuData)) {
+    modifier -= 30; // 공망일은 큰 감점
+  }
+  if (isNobleHelperDay(date, sajuData)) {
+    modifier += 25; // 천을귀인일은 큰 가산점
+  }
+  
+  // 월운 영향 추가
+  const monthlyInfluence = calculateMonthlyFortune(date, sajuData);
+  modifier += Math.floor(monthlyInfluence / 5); // 월운의 20% 반영
   
   return modifier;
 }

@@ -83,7 +83,7 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
   // 오늘의 일진 정보
   const dailyPillar = getDailyPillar(targetDate);
   
-  // 카테고리별 점수 계산 (날짜 보정 포함)
+  // 카테고리별 점수 계산 (날짜 보정 포함, 확대된 범위)
   const calculateCategoryScores = (saju: SajuData, date: Date) => {
     const categories = [
       { 
@@ -113,14 +113,17 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
     ];
     
     return categories.map(cat => {
-      const baseScore = calculateTimeBasedScore(cat.baseName, saju, 'today', date);
+      // 기본 점수를 40-60 범위로 조정 (중간값 50)
+      const baseScore = 30 + (calculateTimeBasedScore(cat.baseName, saju, 'today', date) / 3);
+      // 보정값은 -30 ~ +50 범위로 확대
       const modifier = getDailyFortuneModifier(date, saju, cat.baseName);
-      const finalScore = Math.min(100, Math.max(0, baseScore + modifier));
+      // 최종 점수는 10-100 범위로 설정 (더 넓은 변동폭)
+      const finalScore = Math.min(100, Math.max(10, baseScore + modifier));
       
       return {
         icon: cat.icon,
         label: cat.label,
-        score: finalScore,
+        score: Math.round(finalScore),
         color: cat.color
       };
     });
@@ -150,12 +153,16 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
     const message = generateDailyFortuneMessage(targetDate, activeSajuData);
     const luckyItems = getLuckyItemsByDate(targetDate, activeSajuData);
     
-    // 조언 생성
-    const advice = totalScore >= 70 
+    // 조언 생성 (확대된 점수 범위에 맞춰 조정)
+    const advice = totalScore >= 80 
+      ? "오늘은 매우 좋은 기운이 가득한 날입니다! 중요한 결정이나 도전을 시작하기에 최적의 시기입니다."
+      : totalScore >= 65
       ? "오늘은 적극적으로 활동하기 좋은 날입니다. 기회를 놓치지 마세요."
       : totalScore >= 50
-      ? "차분히 일상을 유지하며 내일을 준비하는 시간을 가져보세요."
-      : "오늘은 무리하지 말고 휴식을 취하는 것이 좋겠습니다.";
+      ? "평온한 하루가 예상됩니다. 일상적인 업무에 충실하며 안정을 유지하세요."
+      : totalScore >= 35
+      ? "오늘은 신중함이 필요한 날입니다. 중요한 결정은 미루고 충분히 고민해보세요."
+      : "오늘은 휴식과 재충전이 필요한 날입니다. 무리하지 말고 에너지를 아끼세요.";
     
     setFortune({
       totalScore,
