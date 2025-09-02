@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
 import AddItemModal from '@/components/AddItemModal'
+import { ITEM_COLORS } from '@/types/todo'
 import { 
   startOfWeek, 
   endOfWeek,
@@ -196,9 +197,9 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
                                 key={event.id}
                                 className="text-xs p-1 mb-1 rounded truncate cursor-pointer hover:opacity-80"
                                 style={{ 
-                                  backgroundColor: `${event.color || '#3b82f6'}20`,
-                                  color: event.color || '#3b82f6',
-                                  borderLeft: `2px solid ${event.color || '#3b82f6'}`
+                                  backgroundColor: ITEM_COLORS.event.background,
+                                  color: ITEM_COLORS.event.text,
+                                  borderLeft: `2px solid ${ITEM_COLORS.event.border}`
                                 }}
                                 onClick={(e) => {
                                   e.stopPropagation()
@@ -215,15 +216,17 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
                         })}
                         
                         {/* 시간별 할일 표시 */}
-                        {hourTodos.map(todo => (
-                          <div
-                            key={todo.id}
-                            className="text-xs p-1 mb-1 rounded truncate cursor-pointer hover:opacity-80 flex items-center space-x-1"
-                            style={{
-                              backgroundColor: '#f59e0b20',
-                              color: '#f59e0b',
-                              borderLeft: '2px solid #f59e0b'
-                            }}
+                        {hourTodos.map(todo => {
+                          const todoColors = ITEM_COLORS.todo[todo.priority]
+                          return (
+                            <div
+                              key={todo.id}
+                              className="text-xs p-1 mb-1 rounded truncate cursor-pointer hover:opacity-80 flex items-center space-x-1"
+                              style={{
+                                backgroundColor: todoColors.background,
+                                color: todoColors.text,
+                                borderLeft: `2px solid ${todoColors.border}`
+                              }}
                             onClick={(e) => {
                               e.stopPropagation()
                               // 할일 편집 로직 추가 가능
@@ -248,8 +251,9 @@ export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekVie
                             <span className={`flex-1 ${todo.completed ? 'line-through opacity-60' : ''}`}>
                               {todo.startTime} {todo.text}
                             </span>
-                          </div>
-                        ))}
+                            </div>
+                          )
+                        })}
                       </div>
                     )
                   })}
