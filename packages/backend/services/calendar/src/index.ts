@@ -29,7 +29,7 @@ app.use(requestLogger)
 app.use('/health', healthRouter)
 app.use('/api/calendar/events', eventsRouter)
 app.use('/api/calendar/tags', tagsRouter)
-app.use('/api/customers', customersRouter)
+app.use('/api/calendar/customers', customersRouter)
 
 // Error handling
 app.use(errorHandler)
