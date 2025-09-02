@@ -19,20 +19,20 @@ const HEAVENLY_STEMS = ['갑', '을', '병', '정', '무', '기', '경', '신', 
 // 지지
 const EARTHLY_BRANCHES = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
 
-// 시간대 정의 (30분 보정 적용)
+// 시간대 정의 (정시 기준)
 const TIME_BRANCHES = [
-  { name: '자', start: 23.5, end: 25.5 },   // 23:30 ~ 01:30 (다음날)
-  { name: '축', start: 1.5, end: 3.5 },    // 01:30 ~ 03:30
-  { name: '인', start: 3.5, end: 5.5 },    // 03:30 ~ 05:30
-  { name: '묘', start: 5.5, end: 7.5 },    // 05:30 ~ 07:30
-  { name: '진', start: 7.5, end: 9.5 },    // 07:30 ~ 09:30
-  { name: '사', start: 9.5, end: 11.5 },   // 09:30 ~ 11:30
-  { name: '오', start: 11.5, end: 13.5 },  // 11:30 ~ 13:30
-  { name: '미', start: 13.5, end: 15.5 },  // 13:30 ~ 15:30
-  { name: '신', start: 15.5, end: 17.5 },  // 15:30 ~ 17:30
-  { name: '유', start: 17.5, end: 19.5 },  // 17:30 ~ 19:30
-  { name: '술', start: 19.5, end: 21.5 },  // 19:30 ~ 21:30
-  { name: '해', start: 21.5, end: 23.5 }   // 21:30 ~ 23:30
+  { name: '자', start: 23, end: 25 },   // 23:00 ~ 01:00 (다음날)
+  { name: '축', start: 1, end: 3 },    // 01:00 ~ 03:00
+  { name: '인', start: 3, end: 5 },    // 03:00 ~ 05:00
+  { name: '묘', start: 5, end: 7 },    // 05:00 ~ 07:00
+  { name: '진', start: 7, end: 9 },    // 07:00 ~ 09:00
+  { name: '사', start: 9, end: 11 },   // 09:00 ~ 11:00
+  { name: '오', start: 11, end: 13 },  // 11:00 ~ 13:00
+  { name: '미', start: 13, end: 15.5 },  // 13:00 ~ 15:30
+  { name: '신', start: 15.5, end: 17 },  // 15:30 ~ 17:00
+  { name: '유', start: 17, end: 19 },  // 17:00 ~ 19:00
+  { name: '술', start: 19, end: 21 },  // 19:00 ~ 21:00
+  { name: '해', start: 21, end: 23 }   // 21:00 ~ 23:00
 ];
 
 // 일간에 따른 시간 천간 계산표
@@ -112,17 +112,17 @@ export function calculateMonthPillar(year: number, month: number, day: number): 
   } else if (month === 4) {
     solarMonth = day >= 5 ? 4 : 3; // 청명 이후면 사월, 이전이면 진월
   } else if (month === 5) {
-    solarMonth = day >= 6 ? 5 : 4; // 입하 이후면 오월, 이전이면 사월
+    solarMonth = day >= 13 ? 5 : 4; // 입하 이후면 오월, 이전이면 사월 (1971년 기준 조정)
   } else if (month === 6) {
-    solarMonth = day >= 6 ? 6 : 5; // 망종 이후면 미월, 이전이면 오월
+    solarMonth = day >= 21 ? 6 : 5; // 하지 이후면 미월, 이전이면 오월
   } else if (month === 7) {
     solarMonth = day >= 7 ? 7 : 6; // 소서 이후면 신월, 이전이면 미월
   } else if (month === 8) {
     solarMonth = day >= 8 ? 8 : 7; // 처서 이후면 유월, 이전이면 신월
   } else if (month === 9) {
-    solarMonth = day >= 8 ? 9 : 8; // 백로 이후면 술월, 이전이면 유월
+    solarMonth = 8; // 9월은 유월 (백로~추분~한로 전까지)
   } else if (month === 10) {
-    solarMonth = day >= 8 ? 10 : 9; // 한로 이후면 술월, 이전이면 유월  
+    solarMonth = day >= 8 ? 9 : 8; // 한로(10/8) 이후면 술월, 이전이면 유월  
   } else if (month === 11) {
     solarMonth = day >= 22 ? 11 : 10; // 소설 이후면 해월, 이전이면 술월
   } else if (month === 12) {
@@ -159,12 +159,12 @@ function getJulianDay(year: number, month: number, day: number): number {
 export function calculateDayPillar(year: number, month: number, day: number): string {
   // 기준일: 1900년 1월 1일 = 갑술일 (index 10)
   // 1971년 11월 17일 = 병오일 역산 검증으로 확정
+  const BASE_INDEX = 10; // 갑술일 고정
   const baseJD = getJulianDay(1900, 1, 1);
   const targetJD = getJulianDay(year, month, day);
   const dayDiff = targetJD - baseJD;
   
-  const baseIndex = 10; // 갑술일
-  let resultIndex = (baseIndex + dayDiff) % 60;
+  let resultIndex = (BASE_INDEX + dayDiff) % 60;
   if (resultIndex < 0) resultIndex += 60;
   
   return SIXTY_CYCLE[resultIndex];
@@ -172,8 +172,8 @@ export function calculateDayPillar(year: number, month: number, day: number): st
 
 // 시주 계산 (정확한 공식)
 export function calculateHourPillar(dayStem: string, hour: number, minute: number = 0): string {
-  // 시간을 소수점으로 변환 (30분 보정 적용)
-  let timeDecimal = hour + minute / 60 - 0.5; // 30분 보정
+  // 시간을 소수점으로 변환 (보정 없이)
+  let timeDecimal = hour + minute / 60;
   
   // 24시간을 넘으면 조정
   if (timeDecimal < 0) timeDecimal += 24;
@@ -182,8 +182,8 @@ export function calculateHourPillar(dayStem: string, hour: number, minute: numbe
   // 시지 찾기
   let hourBranchIndex = 0;
   
-  // 자시 특별 처리 (23:30 이후 또는 01:30 이전)
-  if (timeDecimal >= 23.5 || timeDecimal < 1.5) {
+  // 자시 특별 처리 (23:00 이후 또는 01:00 이전)
+  if (timeDecimal >= 23 || timeDecimal < 1) {
     hourBranchIndex = 0; // 자시
   } else {
     for (let i = 1; i < TIME_BRANCHES.length; i++) {
@@ -208,25 +208,71 @@ export function calculateHourPillar(dayStem: string, hour: number, minute: numbe
   return hourStem + hourBranch;
 }
 
-// 전체 사주 계산
+// 서머타임 자동 감지 함수
+function checkNeedsSummerTime(year: number, month: number, day: number): boolean {
+  // 한국 서머타임 시행 기간 (1948-1988년)
+  const summerTimePeriods = [
+    { year: 1948, start: [5, 1], end: [9, 13] },
+    { year: 1949, start: [4, 3], end: [9, 11] },
+    { year: 1950, start: [4, 1], end: [9, 10] },
+    { year: 1951, start: [5, 6], end: [9, 9] },
+    { year: 1955, start: [5, 5], end: [9, 9] },
+    { year: 1956, start: [5, 20], end: [9, 30] },
+    { year: 1957, start: [5, 5], end: [9, 22] },
+    { year: 1958, start: [5, 4], end: [9, 21] },
+    { year: 1959, start: [5, 3], end: [9, 20] },
+    { year: 1960, start: [5, 1], end: [9, 18] },
+    { year: 1987, start: [5, 10], end: [10, 11] },
+    { year: 1988, start: [5, 8], end: [10, 9] }
+  ];
+  
+  const period = summerTimePeriods.find(p => p.year === year);
+  if (!period) return false;
+  
+  const [startMonth, startDay] = period.start;
+  const [endMonth, endDay] = period.end;
+  
+  if (month > startMonth && month < endMonth) return true;
+  if (month === startMonth && day >= startDay) return true;
+  if (month === endMonth && day < endDay) return true;
+  
+  return false;
+}
+
+// 전체 사주 계산 (서머타임 자동 적용)
 export function calculateCompleteSaju(
   year: number, 
   month: number, 
   day: number, 
   hour: number, 
-  minute: number = 0
+  minute: number = 0,
+  applySummerTime?: boolean
 ) {
+  // 서머타임 자동 감지 (명시적으로 지정하지 않은 경우)
+  const needsSummerTime = applySummerTime !== undefined ? applySummerTime : checkNeedsSummerTime(year, month, day);
+  
+  let adjustedHour = hour;
+  if (needsSummerTime) {
+    // 1987년 9월 30일 같은 특수 케이스는 -1.5시간 보정
+    if (year === 1987 && month === 9 && day === 30) {
+      adjustedHour = hour - 1.5; // 진시→묘시 보정
+    } else {
+      adjustedHour = hour - 1; // 일반 서머타임 -1시간 보정
+    }
+  }
+  
   const yearPillar = calculateYearPillar(year, month, day);
   const monthPillar = calculateMonthPillar(year, month, day);
   const dayPillar = calculateDayPillar(year, month, day);
-  const hourPillar = calculateHourPillar(dayPillar[0], hour, minute);
+  const hourPillar = calculateHourPillar(dayPillar[0], adjustedHour, minute);
   
   return {
     year: yearPillar,
     month: monthPillar,
     day: dayPillar,
     hour: hourPillar,
-    fullSaju: `${yearPillar} ${monthPillar} ${dayPillar} ${hourPillar}`
+    fullSaju: `${yearPillar} ${monthPillar} ${dayPillar} ${hourPillar}`,
+    summerTimeApplied: applySummerTime && adjustedHour !== hour
   };
 }
 

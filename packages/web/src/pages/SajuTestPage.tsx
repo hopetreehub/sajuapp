@@ -14,7 +14,7 @@ export default function SajuTestPage() {
     const [year, month, day] = birthDate.split('-').map(Number);
     const [hour, minute] = birthTime.split(':').map(Number);
     
-    // 정확한 사주 계산 사용
+    // 정확한 사주 계산 사용 (서머타임 자동 적용)
     const accurateResult = calculateAccurate(year, month, day, hour, minute);
     
     // 기존 형식에 맞게 변환
@@ -24,12 +24,18 @@ export default function SajuTestPage() {
       day: { combined: accurateResult.day, gan: accurateResult.day[0], ji: accurateResult.day[1] },
       time: { combined: accurateResult.hour, gan: accurateResult.hour[0], ji: accurateResult.hour[1] },
       fullSaju: accurateResult.fullSaju,
+      summerTimeApplied: accurateResult.summerTimeApplied,
       ohHaengBalance: { 목: 20, 화: 20, 토: 20, 금: 20, 수: 20 }, // 임시값
       ohHaengCount: { 목: 2, 화: 2, 토: 2, 금: 2, 수: 2 } // 임시값
     };
     
     setResult(convertedResult);
     console.log('정확한 사주 계산 결과:', accurateResult);
+    
+    // 서머타임 적용 알림
+    if (accurateResult.summerTimeApplied) {
+      console.log('⚠️ 서머타임이 적용되었습니다.');
+    }
   };
 
   const runTests = () => {
@@ -185,6 +191,11 @@ export default function SajuTestPage() {
               <div className="text-2xl font-bold text-center p-4 bg-gray-100 dark:bg-gray-700 rounded">
                 {result.fullSaju}
               </div>
+              {result.summerTimeApplied && (
+                <div className="mt-2 text-sm text-yellow-600 dark:text-yellow-400 text-center">
+                  ⚠️ 서머타임이 적용되었습니다 (한국 1948-1988년 시행)
+                </div>
+              )}
             </div>
 
             {/* 상세 정보 */}
