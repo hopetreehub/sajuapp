@@ -9,16 +9,27 @@ import TodaySummary from '@/components/Dashboard/TodaySummary'
 import WeeklyStats from '@/components/Dashboard/WeeklyStats'
 import MonthlyHeatmap from '@/components/Dashboard/MonthlyHeatmap'
 import QuickActions from '@/components/Dashboard/QuickActions'
+import EventModal from '@/components/EventModal'
+import DiaryModal from '@/components/DiaryModal'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 
 export default function DashboardPage() {
-  const { todos } = useCalendar()
+  const { todos, addTodo } = useCalendar()
   const [dashboardData, setDashboardData] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [refreshing, setRefreshing] = useState(false)
   
-  const quickActions = getQuickActions()
+  // 모달 상태 관리
+  const [showEventModal, setShowEventModal] = useState(false)
+  const [showDiaryModal, setShowDiaryModal] = useState(false)
+  const [showTodoModal, setShowTodoModal] = useState(false)
+  
+  const quickActions = getQuickActions({
+    onAddEvent: () => setShowEventModal(true),
+    onAddTodo: () => setShowTodoModal(true),
+    onWriteDiary: () => setShowDiaryModal(true)
+  })
   
   // 대시보드 데이터 로드
   const loadDashboardData = async (showRefreshing = false) => {
@@ -201,6 +212,45 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+      
+      {/* 모달들 */}
+      {showEventModal && (
+        <EventModal
+          onClose={() => setShowEventModal(false)}
+          onSave={(event) => {
+            console.log('새 이벤트 생성:', event)
+            setShowEventModal(false)
+            loadDashboardData(true) // 데이터 새로고침
+          }}
+        />
+      )}
+      
+      {showDiaryModal && (
+        <DiaryModal
+          date={new Date()}
+          onClose={() => setShowDiaryModal(false)}
+          onSave={() => {
+            setShowDiaryModal(false)
+            loadDashboardData(true) // 데이터 새로고침
+          }}
+        />
+      )}
+      
+      {/* Todo 모달은 간단한 prompt로 대체 */}
+      {showTodoModal && (() => {
+        const todoText = prompt('새로운 할일을 입력하세요:')
+        if (todoText) {
+          addTodo({
+            text: todoText,
+            completed: false,
+            priority: 'medium',
+            date: new Date().toISOString().split('T')[0]
+          })
+          loadDashboardData(true)
+        }
+        setShowTodoModal(false)
+        return null
+      })()}
     </div>
   )
 }

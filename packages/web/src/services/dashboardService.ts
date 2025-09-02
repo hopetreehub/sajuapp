@@ -265,15 +265,18 @@ export const getDashboardData = async (todos: any[] = []): Promise<DashboardStat
 /**
  * 빠른 액션 목록
  */
-export const getQuickActions = (): QuickAction[] => [
+export const getQuickActions = (callbacks?: {
+  onAddEvent?: () => void
+  onAddTodo?: () => void
+  onWriteDiary?: () => void
+}): QuickAction[] => [
   {
     id: 'add-event',
     label: '일정 추가',
     icon: '📅',
     color: 'bg-blue-500 hover:bg-blue-600',
     action: () => {
-      // TODO: 이벤트 추가 모달 열기
-      console.log('Open add event modal')
+      callbacks?.onAddEvent?.()
     }
   },
   {
@@ -282,8 +285,7 @@ export const getQuickActions = (): QuickAction[] => [
     icon: '✅',
     color: 'bg-green-500 hover:bg-green-600',
     action: () => {
-      // TODO: 할일 추가 모달 열기
-      console.log('Open add todo modal')
+      callbacks?.onAddTodo?.()
     }
   },
   {
@@ -292,8 +294,7 @@ export const getQuickActions = (): QuickAction[] => [
     icon: '📝',
     color: 'bg-purple-500 hover:bg-purple-600',
     action: () => {
-      // TODO: 일기 모달 열기
-      console.log('Open diary modal')
+      callbacks?.onWriteDiary?.()
     }
   },
   {
