@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
       strictPort: true, // 포트 4000번 강제
       proxy: {
         '/api': {
-          target: env.VITE_API_URL || 'http://localhost:4001',
+          target: env.VITE_API_URL || 'http://localhost:4012',
           changeOrigin: true,
           secure: false,
         }

@@ -1,7 +1,7 @@
 // 고객 관리 API 서비스
 
 // Vite 프록시를 통해 4000 포트로 통합 접근
-const API_BASE_URL = '/api';
+const API_BASE_URL = '/api/calendar';
 
 export interface Customer {
   id?: number;
