@@ -22,19 +22,16 @@ export const solarToLunar = (date: Date): LunarDate => {
       date.getDate()
     )
     
-    // getLunarDate() 메서드로 음력 정보 가져오기
-    const lunarYear = calendar.getLunarYear()
-    const lunarMonth = calendar.getLunarMonth()
-    const lunarDay = calendar.getLunarDay()
-    const isLeap = calendar.getLeapMonth()
+    // getLunarCalendar() 메서드로 음력 정보 가져오기
+    const lunarData = calendar.getLunarCalendar()
     
     return {
-      year: lunarYear,
-      month: lunarMonth,
-      day: lunarDay,
-      isLeapMonth: isLeap,
-      zodiac: '',
-      chineseYear: ''
+      year: lunarData.year || date.getFullYear(),
+      month: lunarData.month || date.getMonth() + 1,
+      day: lunarData.day || date.getDate(),
+      isLeapMonth: lunarData.leapMonth || false,
+      zodiac: lunarData.zodiac || '',
+      chineseYear: lunarData.GanJi?.year || ''
     }
   } catch (error) {
     console.error('Error converting solar to lunar:', error)
@@ -59,15 +56,13 @@ export const lunarToSolar = (year: number, month: number, day: number, isLeapMon
     
     calendar.setLunarDate(year, month, day, isLeapMonth)
     
-    // getSolarDate() 메서드로 양력 정보 가져오기
-    const solarYear = calendar.getSolarYear()
-    const solarMonth = calendar.getSolarMonth()
-    const solarDay = calendar.getSolarDay()
+    // getSolarCalendar() 메서드로 양력 정보 가져오기
+    const solarData = calendar.getSolarCalendar()
     
     return new Date(
-      solarYear,
-      solarMonth - 1, // Convert to 0-indexed
-      solarDay
+      solarData.year || year,
+      (solarData.month || month) - 1, // Convert to 0-indexed
+      solarData.day || day
     )
   } catch (error) {
     console.error('Error converting lunar to solar:', error)
