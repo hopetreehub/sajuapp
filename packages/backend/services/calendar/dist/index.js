@@ -30,7 +30,7 @@ app.use(requestLogger_1.requestLogger);
 app.use('/health', health_sqlite_1.default);
 app.use('/api/calendar/events', events_sqlite_1.default);
 app.use('/api/calendar/tags', tags_1.default);
-app.use('/api/customers', customers_1.default);
+app.use('/api/calendar/customers', customers_1.default);
 // Error handling
 app.use(errorHandler_1.errorHandler);
 // 404 handler

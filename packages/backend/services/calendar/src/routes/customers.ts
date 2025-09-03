@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import path from 'path';
 import Database from 'better-sqlite3';
+import { calculateCompleteSaju } from '../utils/accurateSajuCalculator';
 
 const router = Router();
 
@@ -79,13 +80,13 @@ router.get('/:id', (req: Request, res: Response) => {
       });
     }
 
-    res.json({
+    return res.json({
       success: true,
       data: customer
     });
   } catch (error) {
     console.error('Error fetching customer:', error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false, 
       error: 'Failed to fetch customer' 
     });
@@ -102,9 +103,16 @@ router.post('/', (req: Request, res: Response) => {
       phone,
       lunar_solar,
       gender,
-      memo,
-      saju_data
+      memo
     } = req.body;
+    
+    // 정확한 사주 계산
+    let saju_data = null;
+    if (birth_date && birth_time) {
+      const [year, month, day] = birth_date.split('-').map(Number);
+      const [hour, minute] = birth_time.split(':').map(Number);
+      saju_data = calculateCompleteSaju(year, month, day, hour, minute, lunar_solar === 'lunar');
+    }
 
     const stmt = db.prepare(`
       INSERT INTO customers (
@@ -150,9 +158,16 @@ router.put('/:id', (req: Request, res: Response) => {
       phone,
       lunar_solar,
       gender,
-      memo,
-      saju_data
+      memo
     } = req.body;
+    
+    // 정확한 사주 재계산
+    let saju_data = null;
+    if (birth_date && birth_time) {
+      const [year, month, day] = birth_date.split('-').map(Number);
+      const [hour, minute] = birth_time.split(':').map(Number);
+      saju_data = calculateCompleteSaju(year, month, day, hour, minute, lunar_solar === 'lunar');
+    }
 
     const stmt = db.prepare(`
       UPDATE customers SET
@@ -210,13 +225,13 @@ router.delete('/:id', (req: Request, res: Response) => {
       });
     }
 
-    res.json({
+    return res.json({
       success: true,
       message: 'Customer deleted successfully'
     });
   } catch (error) {
     console.error('Error deleting customer:', error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false, 
       error: 'Failed to delete customer' 
     });

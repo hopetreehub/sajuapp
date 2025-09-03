@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const path_1 = __importDefault(require("path"));
 const better_sqlite3_1 = __importDefault(require("better-sqlite3"));
+const accurateSajuCalculator_1 = require("../utils/accurateSajuCalculator");
 const router = (0, express_1.Router)();
 // Customer database path
 const dbPath = path_1.default.join(__dirname, '../../../customer/customers.db');
@@ -73,14 +74,14 @@ router.get('/:id', (req, res) => {
                 error: 'Customer not found'
             });
         }
-        res.json({
+        return res.json({
             success: true,
             data: customer
         });
     }
     catch (error) {
         console.error('Error fetching customer:', error);
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             error: 'Failed to fetch customer'
         });
@@ -89,7 +90,14 @@ router.get('/:id', (req, res) => {
 // Create customer
 router.post('/', (req, res) => {
     try {
-        const { name, birth_date, birth_time, phone, lunar_solar, gender, memo, saju_data } = req.body;
+        const { name, birth_date, birth_time, phone, lunar_solar, gender, memo } = req.body;
+        // 정확한 사주 계산
+        let saju_data = null;
+        if (birth_date && birth_time) {
+            const [year, month, day] = birth_date.split('-').map(Number);
+            const [hour, minute] = birth_time.split(':').map(Number);
+            saju_data = (0, accurateSajuCalculator_1.calculateCompleteSaju)(year, month, day, hour, minute, lunar_solar === 'lunar');
+        }
         const stmt = db.prepare(`
       INSERT INTO customers (
         name, birth_date, birth_time, phone, 
@@ -115,7 +123,14 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
     try {
         const { id } = req.params;
-        const { name, birth_date, birth_time, phone, lunar_solar, gender, memo, saju_data } = req.body;
+        const { name, birth_date, birth_time, phone, lunar_solar, gender, memo } = req.body;
+        // 정확한 사주 재계산
+        let saju_data = null;
+        if (birth_date && birth_time) {
+            const [year, month, day] = birth_date.split('-').map(Number);
+            const [hour, minute] = birth_time.split(':').map(Number);
+            saju_data = (0, accurateSajuCalculator_1.calculateCompleteSaju)(year, month, day, hour, minute, lunar_solar === 'lunar');
+        }
         const stmt = db.prepare(`
       UPDATE customers SET
         name = ?,
@@ -156,14 +171,14 @@ router.delete('/:id', (req, res) => {
                 error: 'Customer not found'
             });
         }
-        res.json({
+        return res.json({
             success: true,
             message: 'Customer deleted successfully'
         });
     }
     catch (error) {
         console.error('Error deleting customer:', error);
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             error: 'Failed to delete customer'
         });
