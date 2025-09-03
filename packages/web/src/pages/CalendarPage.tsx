@@ -5,6 +5,7 @@ import WeekView from '@/components/Calendar/WeekView'
 import DayView from '@/components/Calendar/DayView'
 import DayViewEnhanced from '@/components/Calendar/DayViewEnhanced'
 import YearView from '@/components/Calendar/YearView'
+import YearViewEnhanced from '@/components/Calendar/YearViewEnhanced'
 import EventModal from '@/components/EventModal'
 import { CalendarEvent, eventService } from '@/services/api'
 
@@ -82,7 +83,7 @@ export default function CalendarPage() {
 
     switch (viewMode) {
       case 'year':
-        return <YearView {...viewProps} />
+        return <YearViewEnhanced {...viewProps} />
       case 'month':
         return <MonthView {...viewProps} />
       case 'week':

@@ -17,6 +17,7 @@ import Header from '@/components/Layout/Header'
 import Footer from '@/components/Layout/Footer'
 import { CalendarProvider } from '@/contexts/CalendarContext'
 import { ThemeProvider } from '@/contexts/ThemeContext'
+import { YearlyMemoProvider } from '@/contexts/YearlyMemoContext'
 import { initializeNotifications } from '@/utils/notifications'
 
 function App() {
@@ -29,10 +30,11 @@ function App() {
     <ThemeProvider>
       <Router>
         <CalendarProvider>
-          <div className="min-h-screen flex flex-col">
-            <Header />
-            <main className="flex-1">
-              <Routes>
+          <YearlyMemoProvider>
+            <div className="min-h-screen flex flex-col">
+              <Header />
+              <main className="flex-1">
+                <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/calendar" element={<CalendarPage />} />
@@ -56,6 +58,7 @@ function App() {
             </main>
             <Footer />
           </div>
+          </YearlyMemoProvider>
         </CalendarProvider>
       </Router>
     </ThemeProvider>
