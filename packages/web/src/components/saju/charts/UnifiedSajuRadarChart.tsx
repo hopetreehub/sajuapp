@@ -231,12 +231,12 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
             ? '#ffffff'  // 최고점 테두리
             : '#ffffff'  // 기본 테두리
         ),
-        // 최고점은 더 큰 반지름으로 (기존과 동일)
+        // 최고점은 훨씬 더 큰 반지름으로, 나머지는 작게
         pointRadius: scoreValues.map((_, index) => 
-          maxScoreIndexes.includes(index) ? 8 : 5
+          maxScoreIndexes.includes(index) ? 12 : 3
         ),
         pointHoverRadius: scoreValues.map((_, index) => 
-          maxScoreIndexes.includes(index) ? 10 : 7
+          maxScoreIndexes.includes(index) ? 15 : 5
         ),
         pointHoverBackgroundColor: scoreValues.map((_, index) => 
           maxScoreIndexes.includes(index) 
@@ -250,20 +250,40 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
         ),
         borderWidth: 3
       },
-      // 선택된 시간대 데이터셋 추가 (기존과 동일)
-      ...(selectedTimeFrame !== 'base' && timeFrameData[selectedTimeFrame] ? [{
-        label: timeFrameLabels[selectedTimeFrame],
-        data: timeFrameData[selectedTimeFrame],
-        backgroundColor: timeFrameColors[selectedTimeFrame].background,
-        borderColor: timeFrameColors[selectedTimeFrame].border,
-        pointBackgroundColor: timeFrameColors[selectedTimeFrame].border,
-        pointBorderColor: '#ffffff',
-        pointHoverBackgroundColor: '#ffffff',
-        pointHoverBorderColor: timeFrameColors[selectedTimeFrame].border,
-        borderWidth: 3,
-        pointRadius: 4,
-        pointHoverRadius: 6
-      }] : [])
+      // 선택된 시간대 데이터셋 추가 - 최고값 강조 적용
+      ...(selectedTimeFrame !== 'base' && timeFrameData[selectedTimeFrame] ? (() => {
+        const timeFrameValues = timeFrameData[selectedTimeFrame];
+        const timeFrameMaxScore = Math.max(...timeFrameValues);
+        const timeFrameMaxIndexes = timeFrameValues.map((score, index) => score === timeFrameMaxScore ? index : -1).filter(index => index !== -1);
+        
+        return [{
+          label: timeFrameLabels[selectedTimeFrame],
+          data: timeFrameValues,
+          backgroundColor: timeFrameColors[selectedTimeFrame].background,
+          borderColor: timeFrameColors[selectedTimeFrame].border,
+          // 시간대별 최고점도 차등 적용
+          pointBackgroundColor: timeFrameValues.map((_, index) => 
+            timeFrameMaxIndexes.includes(index) 
+              ? '#f59e0b'  // 금색 (최고점)
+              : timeFrameColors[selectedTimeFrame].border
+          ),
+          pointBorderColor: '#ffffff',
+          pointHoverBackgroundColor: timeFrameValues.map((_, index) => 
+            timeFrameMaxIndexes.includes(index) 
+              ? '#f59e0b'  // 최고점 호버 색상
+              : '#ffffff'
+          ),
+          pointHoverBorderColor: timeFrameColors[selectedTimeFrame].border,
+          borderWidth: 3,
+          // 시간대별 데이터도 포인트 크기 차등 적용
+          pointRadius: timeFrameValues.map((_, index) => 
+            timeFrameMaxIndexes.includes(index) ? 12 : 3
+          ),
+          pointHoverRadius: timeFrameValues.map((_, index) => 
+            timeFrameMaxIndexes.includes(index) ? 15 : 5
+          )
+        }];
+      })() : [])
     ]
   };
 
@@ -404,59 +424,17 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
         ))}
       </div>
 
-      {/* 점수 카드들 - 통일된 디자인 (기존과 동일) */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
-        {data.items.map((item, index) => {
-          const color = CHART_DESIGN_SYSTEM.COLORS.primary[index % CHART_DESIGN_SYSTEM.COLORS.primary.length];
-          
-          return (
-            <div
-              key={item.id}
-              className={CHART_DESIGN_SYSTEM.SCORE_CARD_STYLES.container}
-            >
-              <div className="text-center">
-                <div className={CHART_DESIGN_SYSTEM.SCORE_CARD_STYLES.icon}>
-                  {index % 8 === 0 ? '🌱' : 
-                   index % 8 === 1 ? '🧠' : 
-                   index % 8 === 2 ? '❤️' : 
-                   index % 8 === 3 ? '⚡' : 
-                   index % 8 === 4 ? '🍀' : 
-                   index % 8 === 5 ? '🌍' : 
-                   index % 8 === 6 ? '🎯' : '💎'}
-                </div>
-                <h4 className={CHART_DESIGN_SYSTEM.SCORE_CARD_STYLES.label}>
-                  {item.name}
-                </h4>
-                <div
-                  className={CHART_DESIGN_SYSTEM.SCORE_CARD_STYLES.score}
-                  style={{ color }}
-                >
-                  {item.baseScore}
-                </div>
-                <div className={CHART_DESIGN_SYSTEM.SCORE_CARD_STYLES.progressBar.container}>
-                  <div
-                    className={CHART_DESIGN_SYSTEM.SCORE_CARD_STYLES.progressBar.fill}
-                    style={{ 
-                      backgroundColor: color,
-                      width: `${item.baseScore}%` 
-                    }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
 
-      {/* 종합 점수 - 기존과 동일 */}
+      {/* 종합 분석 - 점수 없이 간단하게 */}
       <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white rounded-xl p-6 text-center">
-        <h3 className="text-xl font-semibold mb-3">종합 {data.title} 지수</h3>
-        <div className="text-4xl font-bold mb-2">{totalScore}/{data.items.length * 100}</div>
+        <h3 className="text-xl font-semibold mb-3">🔮 {data.title} 종합 분석</h3>
         <div className="text-lg">
-          평균 {averageScore}점 - 
-          {Number(averageScore) >= 80 ? ' 매우 우수한 사주' :
-           Number(averageScore) >= 60 ? ' 양호한 사주' :
-           Number(averageScore) >= 40 ? ' 평범한 사주' : ' 노력이 필요한 사주'}
+          {Number(averageScore) >= 80 ? '✨ 매우 우수한 사주' :
+           Number(averageScore) >= 60 ? '🌟 양호한 사주' :
+           Number(averageScore) >= 40 ? '⭐ 평범한 사주' : '💪 노력이 필요한 사주'}
+        </div>
+        <div className="text-sm mt-2 opacity-90">
+          각 영역별 균형과 최고점을 차트에서 확인하세요
         </div>
       </div>
     </div>

@@ -21,10 +21,10 @@ interface StandardRadarChartData {
     backgroundColor: string;
     borderColor: string;
     borderWidth: number;
-    pointBackgroundColor: string;
+    pointBackgroundColor: string | string[];
     pointBorderColor: string;
-    pointRadius: number;
-    pointHoverRadius: number;
+    pointRadius: number | number[];
+    pointHoverRadius: number | number[];
   }>;
 }
 
@@ -111,34 +111,70 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
 
   // 차트 데이터 생성
   const chartData: StandardRadarChartData = useMemo(() => {
+    // 기본 데이터의 최고값 찾기
+    const baseMaxScore = Math.max(...timeFrameData.base);
+    const baseMaxIndexes = timeFrameData.base.map((score, index) => score === baseMaxScore ? index : -1).filter(index => index !== -1);
+
     const datasets = [
-      // 기본 데이터셋 (항상 표시)
+      // 기본 데이터셋 (항상 표시) - 최고값 강조 적용
       {
         label: '기본',
         data: timeFrameData.base,
         backgroundColor: timeFrameColors.base.background,
         borderColor: timeFrameColors.base.border,
         borderWidth: 3,
-        pointBackgroundColor: timeFrameColors.base.border,
+        pointBackgroundColor: timeFrameData.base.map((_, index) => 
+          baseMaxIndexes.includes(index) 
+            ? '#f59e0b'  // 금색 (최고점)
+            : timeFrameColors.base.border
+        ),
         pointBorderColor: '#ffffff',
-        pointRadius: 5,
-        pointHoverRadius: 7
+        pointRadius: timeFrameData.base.map((_, index) => 
+          baseMaxIndexes.includes(index) ? 12 : 3  // 최고점 크게, 나머지 작게
+        ),
+        pointHoverRadius: timeFrameData.base.map((_, index) => 
+          baseMaxIndexes.includes(index) ? 15 : 5
+        )
       }
     ];
 
     // 선택된 시간대 데이터셋 추가
     if (selectedTimeFrame !== 'base') {
       const selectedColors = timeFrameColors[selectedTimeFrame];
+      const selectedData = timeFrameData[selectedTimeFrame];
+      const selectedMaxScore = Math.max(...selectedData);
+      const selectedMaxIndexes = selectedData.map((score, index) => score === selectedMaxScore ? index : -1).filter(index => index !== -1);
+
       datasets.push({
         label: timeFrameLabels[selectedTimeFrame],
-        data: timeFrameData[selectedTimeFrame],
+        data: selectedData,
         backgroundColor: selectedColors.background,
         borderColor: selectedColors.border,
         borderWidth: 3,
-        pointBackgroundColor: selectedColors.border,
+        pointBackgroundColor: selectedData.map((_, index) => 
+          selectedMaxIndexes.includes(index) 
+            ? '#f59e0b'  // 금색 (최고점)
+            : selectedColors.border
+        ),
         pointBorderColor: '#ffffff',
-        pointRadius: 5,
-        pointHoverRadius: 7
+        pointRadius: selectedData.map((_, index) => {
+          if (selectedTimeFrame !== 'base') {
+            // 시간대별 차트: 최고점만 표시, 나머지 숨김
+            return selectedMaxIndexes.includes(index) ? 12 : 0;
+          } else {
+            // 기본 차트: 최고점 크게, 나머지 작게
+            return selectedMaxIndexes.includes(index) ? 12 : 3;
+          }
+        }),
+        pointHoverRadius: selectedData.map((_, index) => {
+          if (selectedTimeFrame !== 'base') {
+            // 시간대별 차트: 최고점만 호버 가능
+            return selectedMaxIndexes.includes(index) ? 15 : 0;
+          } else {
+            // 기본 차트: 모든 점 호버 가능
+            return selectedMaxIndexes.includes(index) ? 15 : 5;
+          }
+        })
       });
     }
 
@@ -188,6 +224,7 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
         beginAtZero: true,
         max: 100,
         ticks: {
+          display: false,  // 중앙 점수 숫자 제거
           stepSize: 20,
           color: isDarkMode ? '#cbd5e1' : '#64748b',
           font: {

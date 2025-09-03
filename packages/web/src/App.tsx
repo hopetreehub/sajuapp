@@ -12,6 +12,7 @@ import UnifiedSajuAnalysisPage from '@/pages/UnifiedSajuAnalysisPage'
 import CustomerManagementPage from '@/pages/CustomerManagementPage'
 import TestSajuPage from '@/pages/TestSajuPage'
 import SajuTestPage from '@/pages/SajuTestPage'
+import { CompatibilityPage } from '@/pages/CompatibilityPage'
 import Header from '@/components/Layout/Header'
 import Footer from '@/components/Layout/Footer'
 import { CalendarProvider } from '@/contexts/CalendarContext'
@@ -50,7 +51,7 @@ function App() {
                 <Route path="/diary/:date" element={<DiaryPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 {/* 추가 예정 페이지 */}
-                <Route path="/compatibility" element={<div className="p-8 text-center">궁합 페이지 개발 중...</div>} />
+                <Route path="/compatibility" element={<CompatibilityPage />} />
               </Routes>
             </main>
             <Footer />
