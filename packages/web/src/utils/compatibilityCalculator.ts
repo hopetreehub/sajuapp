@@ -3,7 +3,7 @@
  * 십신, 오행상생상극, 지지관계를 고려한 정밀 분석
  */
 
-interface SajuData {
+export interface SajuData {
   year: { gan: string; ji: string };
   month: { gan: string; ji: string };
   day: { gan: string; ji: string };

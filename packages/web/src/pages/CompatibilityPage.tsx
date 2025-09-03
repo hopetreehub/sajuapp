@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import CustomerSelector from '../components/saju/CustomerSelector';
 import { Customer } from '../services/customerApi';
 import { CompatibilityRadarChart } from '../components/CompatibilityRadarChart';
+import { DetailedAnalysisTabs } from '../components/compatibility/DetailedAnalysisTabs';
 import {
   calculateAccuratePersonalityScore,
   calculateAccurateLoveScore,
@@ -10,6 +11,10 @@ import {
   calculateAccurateFutureScore,
   generateDetailedAdvice
 } from '../utils/compatibilityCalculator';
+import { analyzeRelationship, RelationshipAnalysis } from '../utils/detailedCompatibilityCalculator';
+import { analyzePractical, PracticalAnalysis } from '../utils/practicalCompatibilityCalculator';
+import { analyzeDepth, analyzeSpecial, DepthAnalysis, SpecialAnalysis } from '../utils/depthSpecialCompatibilityCalculator';
+import { EnhancedCompatibilityChart } from '../components/compatibility/EnhancedCompatibilityChart';
 
 interface CompatibilityResult {
   totalScore: number;
@@ -19,6 +24,12 @@ interface CompatibilityResult {
     description: string;
   }[];
   advice: string;
+  detailedAnalysis?: {
+    relationship: RelationshipAnalysis;
+    practical: PracticalAnalysis;
+    depth: DepthAnalysis;
+    special: SpecialAnalysis;
+  };
 }
 
 export const CompatibilityPage: React.FC = () => {
@@ -138,12 +149,39 @@ export const CompatibilityPage: React.FC = () => {
       const totalScore = Math.round(categories.reduce((sum, cat) => sum + cat.score, 0) / categories.length);
       
       console.log('최종 궁합 점수:', totalScore);
+      
+      // 상세 관계성 분석
+      console.log('상세 관계성 분석 시작...');
+      const relationshipAnalysis = analyzeRelationship(saju1, saju2);
+      console.log('관계성 분석 완료:', relationshipAnalysis);
+      
+      // 현실적 분석
+      console.log('현실적 분석 시작...');
+      const practicalAnalysis = analyzePractical(saju1, saju2);
+      console.log('현실적 분석 완료:', practicalAnalysis);
+      
+      // 심층 분석
+      console.log('심층 분석 시작...');
+      const depthAnalysis = analyzeDepth(saju1, saju2);
+      console.log('심층 분석 완료:', depthAnalysis);
+      
+      // 특수 분석
+      console.log('특수 분석 시작...');
+      const specialAnalysis = analyzeSpecial(saju1, saju2);
+      console.log('특수 분석 완료:', specialAnalysis);
+      
       console.log('=== 궁합 계산 완료 ===');
 
       setResult({
         totalScore,
         categories,
-        advice: generateDetailedAdvice(totalScore, categories)
+        advice: generateDetailedAdvice(totalScore, categories),
+        detailedAnalysis: {
+          relationship: relationshipAnalysis,
+          practical: practicalAnalysis,
+          depth: depthAnalysis,
+          special: specialAnalysis
+        }
       });
 
       setIsCalculating(false);
@@ -266,6 +304,23 @@ export const CompatibilityPage: React.FC = () => {
               }}
             />
           </div>
+          
+          {/* 20개 항목 종합 차트 */}
+          {result.detailedAnalysis && (
+            <div className="mb-8 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-4">
+              <h3 className="text-lg font-semibold mb-4 text-center text-gray-900 dark:text-gray-100">
+                🌟 20개 항목 종합 궁합 차트
+              </h3>
+              <EnhancedCompatibilityChart 
+                data={{
+                  relationship: result.detailedAnalysis.relationship,
+                  practical: result.detailedAnalysis.practical,
+                  depth: result.detailedAnalysis.depth,
+                  special: result.detailedAnalysis.special
+                }}
+              />
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {result.categories.map((category, index) => (
@@ -326,6 +381,16 @@ export const CompatibilityPage: React.FC = () => {
               </ul>
             </div>
           </div>
+
+          {/* 상세 분석 탭 */}
+          {result.detailedAnalysis && (
+            <DetailedAnalysisTabs 
+              relationshipAnalysis={result.detailedAnalysis.relationship}
+              practicalAnalysis={result.detailedAnalysis.practical}
+              depthAnalysis={result.detailedAnalysis.depth}
+              specialAnalysis={result.detailedAnalysis.special}
+            />
+          )}
         </div>
       )}
     </div>
