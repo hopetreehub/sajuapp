@@ -33,7 +33,8 @@ const BRANCH_ELEMENTS = {
     '자': '수', '해': '수'
 };
 // 월지 설정 (매월 절입 기준)
-const MONTH_BRANCHES = ['인', '묘', '진', '사', '오', '미', '신', '유', '술', '해', '자', '축'];
+// 1월=축, 2월=인, 3월=묘, 4월=진, 5월=사, 6월=오, 7월=미, 8월=신, 9월=유, 10월=술, 11월=해, 12월=자
+const MONTH_BRANCHES = ['', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해', '자'];
 // 시간별 지지 매핑
 const HOUR_BRANCHES = [
     '자', '축', '인', '묘', '진', '사',
@@ -162,18 +163,28 @@ function calculateMonthPillar(year, month, day) {
                 adjustedMonth = 12;
         }
     }
-    // 월지 결정 (인월부터 시작)
-    const jiIndex = (adjustedMonth + 1) % 12;
-    const ji = MONTH_BRANCHES[jiIndex];
+    // 월지 결정 - 직접 월에서 가져오기
+    const ji = MONTH_BRANCHES[adjustedMonth];
     // 년간에 따른 월간 결정
     const yearGan = calculateYearPillar(year, month, day).gan;
     const yearGanIndex = HEAVENLY_STEMS.indexOf(yearGan);
-    // 년간별 월간 시작 (갑기년:병인, 을경년:무인, 병신년:경인, 정임년:임인, 무계년:갑인)
-    const monthGanStarts = [2, 4, 6, 8, 0]; // 병, 무, 경, 임, 갑의 인덱스
-    const startGanIndex = monthGanStarts[yearGanIndex % 5];
-    // 조정된 월에 따른 천간 계산
-    const ganIndex = (startGanIndex + jiIndex) % 10;
-    const gan = HEAVENLY_STEMS[ganIndex];
+    // 년간별 월간 계산
+    // 甲己년: 丙寅, 丁卯, 戊辰, 己巳, 庚午, 辛未, 壬申, 癸酉, 甲戌, 乙亥, 丙子, 丁丑
+    // 乙庚년: 戊寅, 己卯, 庚辰, 辛巳, 壬午, 癸未, 甲申, 乙酉, 丙戌, 丁亥, 戊子, 己丑
+    // 丙辛년: 庚寅, 辛卯, 壬辰, 癸巳, 甲午, 乙未, 丙申, 丁酉, 戊戌, 己亥, 庚子, 辛丑
+    // 丁壬년: 壬寅, 癸卯, 甲辰, 乙巳, 丙午, 丁未, 戊申, 己酉, 庚戌, 辛亥, 壬子, 癸丑
+    // 戊癸년: 甲寅, 乙卯, 丙辰, 丁巳, 戊午, 己未, 庚申, 辛酉, 壬戌, 癸亥, 甲子, 乙丑
+    const monthGanTable = {
+        0: ['병', '정', '무', '기', '경', '신', '임', '계', '갑', '을', '병', '정'], // 갑, 기
+        1: ['무', '기', '경', '신', '임', '계', '갑', '을', '병', '정', '무', '기'], // 을, 경
+        2: ['경', '신', '임', '계', '갑', '을', '병', '정', '무', '기', '경', '신'], // 병, 신
+        3: ['임', '계', '갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'], // 정, 임
+        4: ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계', '갑', '을'], // 무, 계
+    };
+    const tableIndex = yearGanIndex % 5;
+    const monthIndex = adjustedMonth - 2; // 인월(2월)이 시작이므로 -2
+    const adjustedMonthIndex = monthIndex < 0 ? monthIndex + 12 : monthIndex;
+    const gan = monthGanTable[tableIndex][adjustedMonthIndex];
     return { gan, ji };
 }
 // 일주 계산 
@@ -193,7 +204,9 @@ function calculateDayPillar(year, month, day) {
 function calculateHourPillar(year, month, day, hour, _minute) {
     // 서머타임 자동 적용
     let adjustedHour = hour;
-    if (checkNeedsSummerTime(year, month, day)) {
+    const needsSummerTime = checkNeedsSummerTime(year, month, day);
+    if (needsSummerTime) {
+        // 서머타임 기간: 입력시간에서 1시간을 빼서 표준시로 변환
         adjustedHour = hour - 1;
         if (adjustedHour < 0)
             adjustedHour = 23;
