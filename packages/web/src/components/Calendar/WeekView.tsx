@@ -332,7 +332,8 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                         </div>
                       </div>
                     </div>
-                  )
+                  )}
+                  
                   {/* 할일 목록 */}
                   <div className="space-y-1 mb-2">
                     {dayTodos.map(todo => (
