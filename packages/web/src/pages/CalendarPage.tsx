@@ -39,10 +39,26 @@ export default function CalendarPage() {
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filteredEvents, setFilteredEvents] = useState<CalendarEvent[]>([])
 
   useEffect(() => {
     loadEvents()
   }, [])
+
+  useEffect(() => {
+    // 검색어에 따라 이벤트 필터링
+    if (searchQuery) {
+      const filtered = events.filter(event => 
+        event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.location?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      setFilteredEvents(filtered)
+    } else {
+      setFilteredEvents(events)
+    }
+  }, [searchQuery, events])
 
   const loadEvents = async () => {
     try {
@@ -76,7 +92,7 @@ export default function CalendarPage() {
 
   const renderView = () => {
     const viewProps = {
-      events,
+      events: searchQuery ? filteredEvents : events,
       onCreateEvent: handleCreateEvent,
       onEditEvent: handleEditEvent,
     }
@@ -121,14 +137,16 @@ export default function CalendarPage() {
     <div className="h-screen flex flex-col">
       {/* 캘린더 전용 헤더 */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-        <div className="flex justify-between items-center">
-          {/* 날짜 표시 */}
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-            {getDateDisplay()}
-          </h1>
-          
-          {/* 컨트롤 */}
-          <div className="flex items-center space-x-4">
+        <div className="flex flex-col space-y-4">
+          {/* 상단 행: 날짜와 컨트롤 */}
+          <div className="flex justify-between items-center">
+            {/* 날짜 표시 */}
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+              {getDateDisplay()}
+            </h1>
+            
+            {/* 컨트롤 */}
+            <div className="flex items-center space-x-4">
             {/* 뷰 모드 선택 */}
             <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
               {(['year', 'month', 'week', 'day'] as const).map(mode => (
@@ -173,7 +191,44 @@ export default function CalendarPage() {
             </div>
           </div>
         </div>
+        
+        {/* 하단 행: 검색창 */}
+        <div className="flex items-center space-x-4">
+          <div className="flex-1 max-w-md relative">
+            <input
+              type="text"
+              placeholder="일정, 할일, 일기 검색..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full px-4 py-2 pl-10 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
+            />
+            <svg 
+              className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+          {searchQuery && (
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              {filteredEvents.length}개의 결과
+            </div>
+          )}
+        </div>
       </div>
+    </div>
 
       {/* 캘린더 뷰 */}
       <div className="flex-1 overflow-hidden">

@@ -15,6 +15,7 @@ import { Radar, Bar } from 'react-chartjs-2';
 import { SajuRadarData, SajuRadarItem, TimeFrame, TimeFrameWeights } from '@/types/sajuRadar';
 import { CHART_DESIGN_SYSTEM, getTimeFrameColors, getChartOptions } from '@/constants/chartDesignSystem';
 import { calculateTimeBasedScore, SajuData } from '@/utils/sajuScoreCalculator';
+import { ChartStyleUtils, TimeFrameData, DEFAULT_ENHANCED_OPTIONS } from '@/utils/chartStyleUtils';
 
 ChartJS.register(
   RadialLinearScale,
@@ -111,7 +112,7 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     return Math.max(20, Math.min(maxLimit, Math.round(finalScore)));
   };
 
-  // 시간대별 데이터 메모이제이션
+  // 시간대별 데이터 메모이제이션 (ChartStyleUtils 호환 형식으로 변경)
   const timeFrameData = useMemo(() => {
     console.log('[useMemo 실행] sajuData:', sajuData);
     const result: { [key in TimeFrame]?: number[] } = {};
@@ -193,6 +194,36 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     return result;
   }, [data.items, sajuData]);
 
+  // ChartStyleUtils용 TimeFrameData 배열 생성
+  const chartTimeFrameDatasets = useMemo((): TimeFrameData[] => {
+    const datasets: TimeFrameData[] = [];
+    
+    // 기본 데이터셋
+    const baseValues = timeFrameData.base || data.items.map(item => item.baseScore);
+    datasets.push({
+      label: '나의 기본 사주',
+      values: baseValues,
+      timeFrame: 'base'
+    });
+    
+    // 선택된 시간대 데이터셋 추가
+    if (selectedTimeFrame !== 'base' && timeFrameData[selectedTimeFrame]) {
+      const timeFrameLabels = {
+        today: '오늘의 운세',
+        month: '이번달 운세', 
+        year: '올해 운세'
+      };
+      
+      datasets.push({
+        label: timeFrameLabels[selectedTimeFrame] || selectedTimeFrame,
+        values: timeFrameData[selectedTimeFrame]!,
+        timeFrame: selectedTimeFrame
+      });
+    }
+    
+    return datasets;
+  }, [timeFrameData, selectedTimeFrame, data.items]);
+
   // 최고점 찾기 로직 - 동적 기본 점수 사용
   const scoreValues = timeFrameData.base || data.items.map(item => item.baseScore);
   const maxScore = Math.max(...scoreValues);
@@ -212,96 +243,59 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     year: '올해 운세'
   };
 
-  const chartData = {
-    labels: data.items.map(item => item.name),
-    datasets: [
-      {
-        label: '나의 기본 사주',
-        data: scoreValues,
-        backgroundColor: getTimeFrameColors('base').background,
-        borderColor: getTimeFrameColors('base').border,
-        // 최고점은 금색으로, 일반점은 기본 색상으로 (기존과 동일)
-        pointBackgroundColor: scoreValues.map((_, index) => 
-          maxScoreIndexes.includes(index) 
-            ? '#f59e0b'  // 금색 (최고점)
-            : getTimeFrameColors('base').border  // 기본 색상
-        ),
-        pointBorderColor: scoreValues.map((_, index) => 
-          maxScoreIndexes.includes(index) 
-            ? '#ffffff'  // 최고점 테두리
-            : '#ffffff'  // 기본 테두리
-        ),
-        // 최고점은 훨씬 더 큰 반지름으로, 나머지는 작게
-        pointRadius: scoreValues.map((_, index) => 
-          maxScoreIndexes.includes(index) ? 12 : 3
-        ),
-        pointHoverRadius: scoreValues.map((_, index) => 
-          maxScoreIndexes.includes(index) ? 15 : 5
-        ),
-        pointHoverBackgroundColor: scoreValues.map((_, index) => 
-          maxScoreIndexes.includes(index) 
-            ? '#f59e0b'  // 최고점 호버 색상
-            : '#ffffff'  // 일반점 호버 색상
-        ),
-        pointHoverBorderColor: scoreValues.map((_, index) => 
-          maxScoreIndexes.includes(index) 
-            ? '#ffffff'  // 최고점 호버 테두리
-            : getTimeFrameColors('base').border  // 일반점 호버 테두리
-        ),
-        borderWidth: 3
-      },
-      // 선택된 시간대 데이터셋 추가 - 최고값 강조 적용
-      ...(selectedTimeFrame !== 'base' && timeFrameData[selectedTimeFrame] ? (() => {
-        const timeFrameValues = timeFrameData[selectedTimeFrame];
-        const timeFrameMaxScore = Math.max(...timeFrameValues);
-        const timeFrameMaxIndexes = timeFrameValues.map((score, index) => score === timeFrameMaxScore ? index : -1).filter(index => index !== -1);
-        
-        return [{
-          label: timeFrameLabels[selectedTimeFrame],
-          data: timeFrameValues,
-          backgroundColor: timeFrameColors[selectedTimeFrame].background,
-          borderColor: timeFrameColors[selectedTimeFrame].border,
-          // 시간대별 최고점도 차등 적용
-          pointBackgroundColor: timeFrameValues.map((_, index) => 
-            timeFrameMaxIndexes.includes(index) 
-              ? '#f59e0b'  // 금색 (최고점)
-              : timeFrameColors[selectedTimeFrame].border
-          ),
-          pointBorderColor: '#ffffff',
-          pointHoverBackgroundColor: timeFrameValues.map((_, index) => 
-            timeFrameMaxIndexes.includes(index) 
-              ? '#f59e0b'  // 최고점 호버 색상
-              : '#ffffff'
-          ),
-          pointHoverBorderColor: timeFrameColors[selectedTimeFrame].border,
-          borderWidth: 3,
-          // 시간대별 데이터도 포인트 크기 차등 적용
-          pointRadius: timeFrameValues.map((_, index) => 
-            timeFrameMaxIndexes.includes(index) ? 12 : 3
-          ),
-          pointHoverRadius: timeFrameValues.map((_, index) => 
-            timeFrameMaxIndexes.includes(index) ? 15 : 5
-          )
-        }];
-      })() : [])
-    ]
-  };
+  // 통합 차트 설정 생성 (ChartStyleUtils 사용)
+  const enhancedChartConfig = useMemo(() => {
+    const labels = data.items.map(item => item.name);
+    return ChartStyleUtils.createStandardRadarConfig(
+      labels,
+      chartTimeFrameDatasets,
+      isDarkMode,
+      true // 최대값 강조 활성화
+    );
+  }, [data.items, chartTimeFrameDatasets, isDarkMode]);
+  
+  const chartData = enhancedChartConfig.data;
 
-  // 다크모드 개선된 차트 옵션 사용 (기존과 동일)
-  const options = getChartOptions(isDarkMode, {
-    plugins: {
-      legend: {
-        display: selectedTimeFrame !== 'base'
-      },
-      tooltip: {
-        callbacks: {
-          label: (context: any) => {
-            return `${context.dataset.label}: ${context.parsed.r}점`;
+  // 향상된 차트 옵션 (ChartStyleUtils + 기존 옵션 결합)
+  const options = useMemo(() => {
+    const baseOptions = enhancedChartConfig.options;
+    const customOptions = getChartOptions(isDarkMode, {
+      plugins: {
+        legend: {
+          display: selectedTimeFrame !== 'base'
+        },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              return `${context.dataset.label}: ${context.parsed.r}점`;
+            }
           }
         }
       }
-    }
-  });
+    });
+    
+    // 옵션 병합 (깊은 병합)
+    return {
+      ...baseOptions,
+      ...customOptions,
+      plugins: {
+        ...baseOptions?.plugins,
+        ...customOptions.plugins,
+        legend: {
+          ...baseOptions?.plugins?.legend,
+          ...customOptions.plugins?.legend
+        },
+        tooltip: {
+          ...baseOptions?.plugins?.tooltip,
+          ...customOptions.plugins?.tooltip
+        }
+      },
+      scales: {
+        ...baseOptions?.scales,
+        ...customOptions.scales
+      }
+    };
+  }, [enhancedChartConfig, isDarkMode, selectedTimeFrame]);
 
   const totalScore = scoreValues.reduce((sum, score) => sum + score, 0);
   const averageScore = (totalScore / data.items.length).toFixed(1);
@@ -315,12 +309,12 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
         data: scoreValues,
         backgroundColor: scoreValues.map((_, index) => 
           maxScoreIndexes.includes(index) 
-            ? '#f59e0b'  // 금색 (최고점)
+            ? ChartStyleUtils.COLOR_PALETTE.accent  // 골드 (최고점)
             : getTimeFrameColors('base').background
         ),
         borderColor: scoreValues.map((_, index) => 
           maxScoreIndexes.includes(index) 
-            ? '#f59e0b'  // 금색 (최고점)
+            ? ChartStyleUtils.COLOR_PALETTE.accent  // 골드 (최고점)
             : getTimeFrameColors('base').border
         ),
         borderWidth: 2,

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ThemeToggle from '../ThemeToggle';
-import SearchBar from '../SearchBar';
 
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -9,9 +8,7 @@ const Header: React.FC = () => {
 
   const navItems = [
     { path: '/', label: '홈', icon: '🏠' },
-    { path: '/dashboard', label: '대시보드', icon: '📊' },
     { path: '/calendar', label: '캘린더', icon: '📅' },
-    { path: '/customers', label: '고객관리', icon: '👥' },
     { path: '/saju', label: '사주분석', icon: '🔮' },
     { path: '/compatibility', label: '궁합', icon: '💑' },
     { path: '/settings', label: '설정', icon: '⚙️' },
@@ -33,15 +30,6 @@ const Header: React.FC = () => {
                 운명나침반
               </span>
             </Link>
-          </div>
-
-          {/* Search Bar - Center */}
-          <div className="hidden md:flex flex-1 max-w-lg mx-8">
-            <SearchBar 
-              placeholder="일정, 할일, 일기 검색..." 
-              className="w-full"
-              showCategories={false}
-            />
           </div>
 
           {/* Desktop Navigation */}
@@ -103,15 +91,6 @@ const Header: React.FC = () => {
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <nav className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
-            {/* Mobile Search Bar */}
-            <div className="px-4 pb-4">
-              <SearchBar 
-                placeholder="검색..." 
-                className="w-full"
-                showCategories={true}
-              />
-            </div>
-            
             <div className="flex flex-col space-y-1">
               {navItems.map((item) => (
                 <Link

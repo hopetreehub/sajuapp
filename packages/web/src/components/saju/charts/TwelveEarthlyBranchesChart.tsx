@@ -15,6 +15,7 @@ import { EARTHLY_BRANCHES_INFO, RELATIONSHIP_TYPES } from '@/types/twelveEarthly
 import { SajuData } from '@/types/saju'
 import InterpretationPanel from '@/components/charts/InterpretationPanel'
 import { interpretationService, InterpretationResponse } from '@/services/api'
+import { ChartStyleUtils, TimeFrameData, DEFAULT_ENHANCED_OPTIONS } from '@/utils/chartStyleUtils'
 
 // Chart.js 컴포넌트 등록
 ChartJS.register(
@@ -42,6 +43,24 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
   showSeasonalBalance = true
 }) => {
   const [viewMode, setViewMode] = useState<'branches' | 'seasonal'>('branches')
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  // 다크모드 실시간 감지
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'))
+    }
+
+    checkDarkMode()
+
+    const observer = new MutationObserver(checkDarkMode)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    })
+
+    return () => observer.disconnect()
+  }, [])
   
   // 해석 데이터 상태
   const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null)
@@ -75,143 +94,162 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
     loadInterpretation()
   }, [sajuData])
 
-  // 12간지 레이더 차트 데이터
-  const branchesChartData = useMemo(() => {
+  // ChartStyleUtils용 TimeFrameData 생성 (12간지)
+  const branchesTimeFrameData = useMemo((): TimeFrameData[] => {
+    const data = Object.values(analysis.data)
+    
+    return [{
+      label: '12간지 분포',
+      values: data,
+      timeFrame: 'base'
+    }]
+  }, [analysis.data])
+  
+  // 12간지 통합 차트 설정 생성
+  const branchesChartConfig = useMemo(() => {
     const labels = Object.keys(analysis.data).map(key => {
       const info = EARTHLY_BRANCHES_INFO[key as keyof typeof EARTHLY_BRANCHES_INFO]
       return `${info.koreanName} ${info.animalEmoji}`
     })
-
-    const data = Object.values(analysis.data)
     
-    return {
+    return ChartStyleUtils.createStandardRadarConfig(
       labels,
-      datasets: [{
-        label: '12간지 분포',
-        data,
-        backgroundColor: 'rgba(99, 102, 241, 0.2)',
-        borderColor: 'rgba(99, 102, 241, 1)',
-        borderWidth: 2,
-        pointBackgroundColor: 'rgba(99, 102, 241, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(99, 102, 241, 1)',
-      }]
-    }
-  }, [analysis.data])
+      branchesTimeFrameData,
+      isDarkMode,
+      true // 최대값 강조
+    )
+  }, [branchesTimeFrameData, isDarkMode])
+  
+  const branchesChartData = branchesChartConfig.data
 
-  // 계절별 균형 차트 데이터
-  const seasonalChartData = useMemo(() => {
+  // ChartStyleUtils용 TimeFrameData 생성 (계절별)
+  const seasonalTimeFrameData = useMemo((): TimeFrameData[] => {
     const { seasonalBalance } = analysis
     
-    return {
-      labels: ['봄 🌸', '여름 ☀️', '가을 🍂', '겨울 ❄️'],
-      datasets: [{
-        label: '계절별 균형',
-        data: [
-          seasonalBalance.spring,
-          seasonalBalance.summer,
-          seasonalBalance.autumn,
-          seasonalBalance.winter
-        ],
-        backgroundColor: [
-          'rgba(34, 197, 94, 0.2)',
-          'rgba(239, 68, 68, 0.2)',
-          'rgba(245, 158, 11, 0.2)',
-          'rgba(59, 130, 246, 0.2)'
-        ],
-        borderColor: [
-          'rgba(34, 197, 94, 1)',
-          'rgba(239, 68, 68, 1)',
-          'rgba(245, 158, 11, 1)',
-          'rgba(59, 130, 246, 1)'
-        ],
-        borderWidth: 2
-      }]
-    }
+    return [{
+      label: '계절별 균형',
+      values: [
+        seasonalBalance.spring,
+        seasonalBalance.summer,
+        seasonalBalance.autumn,
+        seasonalBalance.winter
+      ],
+      timeFrame: 'base'
+    }]
   }, [analysis.seasonalBalance])
+  
+  // 계절별 통합 차트 설정 생성
+  const seasonalChartConfig = useMemo(() => {
+    const labels = ['봄 🌸', '여름 ☀️', '가을 🍂', '겨울 ❄️']
+    
+    return ChartStyleUtils.createStandardRadarConfig(
+      labels,
+      seasonalTimeFrameData,
+      isDarkMode,
+      true // 최대값 강조
+    )
+  }, [seasonalTimeFrameData, isDarkMode])
+  
+  const seasonalChartData = seasonalChartConfig.data
 
-  // 차트 옵션
-  const chartOptions: ChartOptions<'radar'> = useMemo(() => ({
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false
-      },
-      tooltip: {
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: '#fff',
-        bodyColor: '#fff',
-        titleFont: {
-          family: 'Noto Sans KR, sans-serif',
-          size: 14,
-          weight: 'bold'
+  // 향상된 차트 옵션 (ChartStyleUtils + 기존 옵션 결합)
+  const chartOptions: ChartOptions<'radar'> = useMemo(() => {
+    const baseOptions = viewMode === 'branches' ? branchesChartConfig.options : seasonalChartConfig.options
+    
+    return {
+      ...baseOptions,
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        ...baseOptions?.plugins,
+        legend: {
+          ...baseOptions?.plugins?.legend,
+          display: false
         },
-        bodyFont: {
-          family: 'Noto Sans KR, sans-serif',
-          size: 12
-        },
-        callbacks: {
-          label: function(context) {
-            const value = context.parsed.r
-            const percentage = analysis.total > 0 ? 
-              ((value / analysis.total) * 100).toFixed(1) : '0.0'
-            
-            if (viewMode === 'branches') {
-              const branchKey = Object.keys(analysis.data)[context.dataIndex]
-              const info = EARTHLY_BRANCHES_INFO[branchKey as keyof typeof EARTHLY_BRANCHES_INFO]
+        tooltip: {
+          ...baseOptions?.plugins?.tooltip,
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          titleFont: {
+            family: 'Noto Sans KR, sans-serif',
+            size: 14,
+            weight: 'bold'
+          },
+          bodyFont: {
+            family: 'Noto Sans KR, sans-serif',
+            size: 12
+          },
+          callbacks: {
+            ...baseOptions?.plugins?.tooltip?.callbacks,
+            label: function(context) {
+              const value = context.parsed.r
+              const percentage = analysis.total > 0 ? 
+                ((value / analysis.total) * 100).toFixed(1) : '0.0'
               
-              return [
-                `${context.label}: ${value}점 (${percentage}%)`,
-                `원소: ${info.element}`,
-                `특성: ${info.characteristics.join(', ')}`
-              ]
-            } else {
-              return `${context.label}: ${value.toFixed(1)}점`
+              if (viewMode === 'branches') {
+                const branchKey = Object.keys(analysis.data)[context.dataIndex]
+                const info = EARTHLY_BRANCHES_INFO[branchKey as keyof typeof EARTHLY_BRANCHES_INFO]
+                
+                return [
+                  `${context.label}: ${value}점 (${percentage}%)`,
+                  `원소: ${info.element}`,
+                  `특성: ${info.characteristics.join(', ')}`
+                ]
+              } else {
+                return `${context.label}: ${value.toFixed(1)}점`
+              }
             }
           }
         }
-      }
-    },
-    scales: {
-      r: {
-        beginAtZero: true,
-        min: 0,
-        max: viewMode === 'branches' ? Math.max(...Object.values(analysis.data)) * 1.2 : 100,
-        ticks: {
-          stepSize: viewMode === 'branches' ? 10 : 20,
-          font: {
-            family: 'Noto Sans KR, sans-serif',
-            size: 10
+      },
+      scales: {
+        ...baseOptions?.scales,
+        r: {
+          ...baseOptions?.scales?.r,
+          beginAtZero: true,
+          min: 0,
+          max: viewMode === 'branches' ? Math.max(...Object.values(analysis.data)) * 1.2 : 100,
+          ticks: {
+            ...baseOptions?.scales?.r?.ticks,
+            stepSize: viewMode === 'branches' ? 10 : 20,
+            display: false, // 점수 표시 제거
+            font: {
+              family: 'Noto Sans KR, sans-serif',
+              size: 10
+            },
+            color: isDarkMode ? '#9CA3AF' : '#6B7280'
           },
-          color: document.documentElement.classList.contains('dark') ? '#9CA3AF' : '#6B7280'
-        },
-        grid: {
-          color: document.documentElement.classList.contains('dark') 
-            ? 'rgba(156, 163, 175, 0.2)' 
-            : 'rgba(156, 163, 175, 0.3)'
-        },
-        angleLines: {
-          color: document.documentElement.classList.contains('dark')
-            ? 'rgba(156, 163, 175, 0.2)'
-            : 'rgba(156, 163, 175, 0.3)'
-        },
-        pointLabels: {
-          font: {
-            family: 'Noto Sans KR, sans-serif',
-            size: 11,
-            weight: '500'
+          grid: {
+            ...baseOptions?.scales?.r?.grid,
+            color: isDarkMode 
+              ? 'rgba(156, 163, 175, 0.2)' 
+              : 'rgba(156, 163, 175, 0.3)'
           },
-          color: document.documentElement.classList.contains('dark') ? '#E5E7EB' : '#1F2937',
-          padding: 10
+          angleLines: {
+            ...baseOptions?.scales?.r?.angleLines,
+            color: isDarkMode
+              ? 'rgba(156, 163, 175, 0.2)'
+              : 'rgba(156, 163, 175, 0.3)'
+          },
+          pointLabels: {
+            ...baseOptions?.scales?.r?.pointLabels,
+            font: {
+              family: 'Noto Sans KR, sans-serif',
+              size: 11,
+              weight: '500'
+            },
+            color: isDarkMode ? '#E5E7EB' : '#1F2937',
+            padding: 10
+          }
         }
+      },
+      animation: {
+        ...baseOptions?.animation,
+        duration: 1000
       }
-    },
-    animation: {
-      duration: 1000
     }
-  }), [viewMode, analysis.data, analysis.total])
+  }, [viewMode, branchesChartConfig, seasonalChartConfig, analysis.data, analysis.total, isDarkMode])
 
   // 조화 상태 평가
   const getHarmonyStatus = () => {

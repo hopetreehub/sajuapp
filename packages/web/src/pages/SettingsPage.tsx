@@ -13,7 +13,7 @@ interface PersonalInfo {
 export default function SettingsPage() {
   const { settings } = useCalendar()
   const [localSettings, setLocalSettings] = useState(settings)
-  const [activeTab, setActiveTab] = useState<'general' | 'calendar' | 'diary' | 'notifications' | 'account'>('general')
+  const [activeTab, setActiveTab] = useState<'general' | 'calendar' | 'diary' | 'notifications' | 'account' | 'customers'>('general')
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     birthDate: '',
     birthTime: '',
@@ -41,7 +41,8 @@ export default function SettingsPage() {
     { id: 'calendar', label: '캘린더', icon: '📅' },
     { id: 'diary', label: '다이어리', icon: '📝' },
     { id: 'notifications', label: '알림', icon: '🔔' },
-    { id: 'account', label: '계정', icon: '👤' }
+    { id: 'account', label: '계정', icon: '👤' },
+    { id: 'customers', label: '고객관리', icon: '👥' }
   ]
 
   const validatePersonalInfo = () => {
@@ -441,6 +442,82 @@ export default function SettingsPage() {
                     <button className="px-4 py-2 text-red-600 hover:bg-red-500/10 rounded-lg transition-colors">
                       계정 삭제
                     </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Customer Management Settings */}
+              {activeTab === 'customers' && (
+                <div className="space-y-6">
+                  <h2 className="text-lg font-semibold text-foreground mb-4">고객관리 설정</h2>
+                  
+                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                    <div className="flex items-start space-x-3 mb-4">
+                      <span className="text-2xl">👥</span>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+                          고객 정보 관리
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                          고객의 사주 정보를 저장하고 관리할 수 있습니다.
+                        </p>
+                        
+                        <div className="space-y-3">
+                          <a 
+                            href="/customers" 
+                            className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                          >
+                            <span className="mr-2">📋</span>
+                            고객 목록 보기
+                          </a>
+                          
+                          <div className="pt-3 border-t border-blue-200 dark:border-blue-700">
+                            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">관리 기능</h4>
+                            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                              <li>• 고객 정보 등록 및 수정</li>
+                              <li>• 사주 분석 이력 관리</li>
+                              <li>• 궁합 분석 이력 관리</li>
+                              <li>• 메모 및 상담 기록</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-700">
+                    <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-3">
+                      <span className="mr-2">⚙️</span>
+                      고객 데이터 설정
+                    </h4>
+                    
+                    <div className="space-y-3">
+                      <label className="flex items-center space-x-3">
+                        <input
+                          type="checkbox"
+                          defaultChecked
+                          className="w-4 h-4 text-primary border-border rounded focus:ring-primary/50"
+                        />
+                        <span className="text-sm font-medium text-foreground">고객 정보 자동 백업</span>
+                      </label>
+                      
+                      <label className="flex items-center space-x-3">
+                        <input
+                          type="checkbox"
+                          defaultChecked
+                          className="w-4 h-4 text-primary border-border rounded focus:ring-primary/50"
+                        />
+                        <span className="text-sm font-medium text-foreground">상담 알림 활성화</span>
+                      </label>
+                      
+                      <label className="flex items-center space-x-3">
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 text-primary border-border rounded focus:ring-primary/50"
+                        />
+                        <span className="text-sm font-medium text-foreground">고객 생일 알림</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
               )}

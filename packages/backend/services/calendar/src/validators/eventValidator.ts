@@ -2,7 +2,7 @@ import Joi from 'joi'
 
 const eventSchema = Joi.object({
   title: Joi.string().min(1).max(255).required(),
-  description: Joi.string().max(1000).optional(),
+  description: Joi.string().max(1000).allow('').optional(),
   start_datetime: Joi.date().iso().required(),
   end_datetime: Joi.date().iso().min(Joi.ref('start_datetime')).required(),
   is_all_day: Joi.boolean().optional(),
@@ -11,7 +11,7 @@ const eventSchema = Joi.object({
     'personal', 'work', 'family', 'health', 
     'fortune', 'anniversary', 'holiday', 'other'
   ).optional(),
-  location: Joi.string().max(255).optional(),
+  location: Joi.string().max(255).allow('').optional(),
   recurrence_rule: Joi.object({
     frequency: Joi.string().valid('daily', 'weekly', 'monthly', 'yearly').required(),
     interval: Joi.number().integer().min(1).required(),
@@ -32,7 +32,7 @@ const eventSchema = Joi.object({
 
 const partialEventSchema = Joi.object({
   title: Joi.string().min(1).max(255).optional(),
-  description: Joi.string().max(1000).optional(),
+  description: Joi.string().max(1000).allow('').optional(),
   start_datetime: Joi.date().iso().optional(),
   end_datetime: Joi.date().iso().optional(),
   is_all_day: Joi.boolean().optional(),
@@ -41,7 +41,7 @@ const partialEventSchema = Joi.object({
     'personal', 'work', 'family', 'health', 
     'fortune', 'anniversary', 'holiday', 'other'
   ).optional(),
-  location: Joi.string().max(255).optional(),
+  location: Joi.string().max(255).allow('').optional(),
   recurrence_rule: Joi.object({
     frequency: Joi.string().valid('daily', 'weekly', 'monthly', 'yearly').required(),
     interval: Joi.number().integer().min(1).required(),

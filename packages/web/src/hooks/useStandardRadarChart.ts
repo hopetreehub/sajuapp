@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { TimeFrame } from '@/components/saju/charts/common/StandardTimeFrameSelector';
+import { ChartStyleUtils, TimeFrameData, DEFAULT_ENHANCED_OPTIONS } from '@/utils/chartStyleUtils';
 
 interface UseStandardRadarChartOptions {
   baseData: any;
@@ -109,148 +110,131 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
     year: '올해'
   };
 
-  // 차트 데이터 생성
-  const chartData: StandardRadarChartData = useMemo(() => {
-    // 기본 데이터의 최고값 찾기
-    const baseMaxScore = Math.max(...timeFrameData.base);
-    const baseMaxIndexes = timeFrameData.base.map((score, index) => score === baseMaxScore ? index : -1).filter(index => index !== -1);
-
-    const datasets = [
-      // 기본 데이터셋 (항상 표시) - 최고값 강조 적용
-      {
-        label: '기본',
-        data: timeFrameData.base,
-        backgroundColor: timeFrameColors.base.background,
-        borderColor: timeFrameColors.base.border,
-        borderWidth: 3,
-        pointBackgroundColor: timeFrameData.base.map((_, index) => 
-          baseMaxIndexes.includes(index) 
-            ? '#f59e0b'  // 금색 (최고점)
-            : timeFrameColors.base.border
-        ),
-        pointBorderColor: '#ffffff',
-        pointRadius: timeFrameData.base.map((_, index) => 
-          baseMaxIndexes.includes(index) ? 12 : 3  // 최고점 크게, 나머지 작게
-        ),
-        pointHoverRadius: timeFrameData.base.map((_, index) => 
-          baseMaxIndexes.includes(index) ? 15 : 5
-        )
-      }
-    ];
-
+  // ChartStyleUtils용 TimeFrameData 배열 생성
+  const chartTimeFrameDatasets = useMemo((): TimeFrameData[] => {
+    const datasets: TimeFrameData[] = [];
+    
+    // 기본 데이터셋
+    datasets.push({
+      label: timeFrameLabels.base,
+      values: timeFrameData.base,
+      timeFrame: 'base'
+    });
+    
     // 선택된 시간대 데이터셋 추가
     if (selectedTimeFrame !== 'base') {
-      const selectedColors = timeFrameColors[selectedTimeFrame];
-      const selectedData = timeFrameData[selectedTimeFrame];
-      const selectedMaxScore = Math.max(...selectedData);
-      const selectedMaxIndexes = selectedData.map((score, index) => score === selectedMaxScore ? index : -1).filter(index => index !== -1);
-
       datasets.push({
         label: timeFrameLabels[selectedTimeFrame],
-        data: selectedData,
-        backgroundColor: selectedColors.background,
-        borderColor: selectedColors.border,
-        borderWidth: 3,
-        pointBackgroundColor: selectedData.map((_, index) => 
-          selectedMaxIndexes.includes(index) 
-            ? '#f59e0b'  // 금색 (최고점)
-            : selectedColors.border
-        ),
-        pointBorderColor: '#ffffff',
-        pointRadius: selectedData.map((_, index) => {
-          if (selectedTimeFrame !== 'base') {
-            // 시간대별 차트: 최고점만 표시, 나머지 숨김
-            return selectedMaxIndexes.includes(index) ? 12 : 0;
-          } else {
-            // 기본 차트: 최고점 크게, 나머지 작게
-            return selectedMaxIndexes.includes(index) ? 12 : 3;
-          }
-        }),
-        pointHoverRadius: selectedData.map((_, index) => {
-          if (selectedTimeFrame !== 'base') {
-            // 시간대별 차트: 최고점만 호버 가능
-            return selectedMaxIndexes.includes(index) ? 15 : 0;
-          } else {
-            // 기본 차트: 모든 점 호버 가능
-            return selectedMaxIndexes.includes(index) ? 15 : 5;
-          }
-        })
+        values: timeFrameData[selectedTimeFrame],
+        timeFrame: selectedTimeFrame
       });
     }
-
+    
+    return datasets;
+  }, [timeFrameData, selectedTimeFrame]);
+  
+  // 통합 차트 설정 생성 (ChartStyleUtils 사용)
+  const enhancedChartConfig = useMemo(() => {
+    return ChartStyleUtils.createStandardRadarConfig(
+      options.labels,
+      chartTimeFrameDatasets,
+      isDarkMode,
+      true // 최대값 강조 활성화
+    );
+  }, [options.labels, chartTimeFrameDatasets, isDarkMode]);
+  
+  // 차트 데이터 생성
+  const chartData: StandardRadarChartData = useMemo(() => {
     return {
-      labels: options.labels,
-      datasets
+      labels: enhancedChartConfig.data.labels,
+      datasets: enhancedChartConfig.data.datasets
     };
-  }, [options.labels, selectedTimeFrame, timeFrameData]);
+  }, [enhancedChartConfig]);
 
-  // 차트 옵션 생성
-  const chartOptions = useMemo(() => ({
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: selectedTimeFrame !== 'base',
-        position: 'top' as const,
-        labels: {
-          color: isDarkMode ? '#f8fafc' : '#2c3e50',
-          font: {
-            size: 12,
-            weight: 600
-          },
-          padding: 16,
-          usePointStyle: true
+  // 향상된 차트 옵션 (ChartStyleUtils + 기존 옵션 결합)
+  const chartOptions = useMemo(() => {
+    const baseOptions = enhancedChartConfig.options;
+    
+    // 기존 스타일링과 결합
+    return {
+      ...baseOptions,
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        ...baseOptions?.plugins,
+        legend: {
+          ...baseOptions?.plugins?.legend,
+          display: selectedTimeFrame !== 'base',
+          position: 'top' as const,
+          labels: {
+            ...baseOptions?.plugins?.legend?.labels,
+            color: isDarkMode ? '#f8fafc' : '#2c3e50',
+            font: {
+              size: 12,
+              weight: 600
+            },
+            padding: 16,
+            usePointStyle: true
+          }
+        },
+        tooltip: {
+          ...baseOptions?.plugins?.tooltip,
+          backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.9)' : 'rgba(255, 255, 255, 0.95)',
+          titleColor: isDarkMode ? '#ffffff' : '#2c3e50',
+          bodyColor: isDarkMode ? '#ffffff' : '#2c3e50',
+          borderColor: colors.primary,
+          borderWidth: 2,
+          cornerRadius: 8,
+          padding: 12,
+          titleFont: { size: 13, weight: 600 },
+          bodyFont: { size: 12 },
+          callbacks: {
+            ...baseOptions?.plugins?.tooltip?.callbacks,
+            label: (context: any) => {
+              return `${context.dataset.label}: ${context.parsed.r}점`;
+            }
+          }
         }
       },
-      tooltip: {
-        backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.9)' : 'rgba(255, 255, 255, 0.95)',
-        titleColor: isDarkMode ? '#ffffff' : '#2c3e50',
-        bodyColor: isDarkMode ? '#ffffff' : '#2c3e50',
-        borderColor: colors.primary,
-        borderWidth: 2,
-        cornerRadius: 8,
-        padding: 12,
-        titleFont: { size: 13, weight: 600 },
-        bodyFont: { size: 12 },
-        callbacks: {
-          label: (context: any) => {
-            return `${context.dataset.label}: ${context.parsed.r}점`;
-          }
-        }
-      }
-    },
-    scales: {
-      r: {
-        beginAtZero: true,
-        max: 100,
-        ticks: {
-          display: false,  // 중앙 점수 숫자 제거
-          stepSize: 20,
-          color: isDarkMode ? '#cbd5e1' : '#64748b',
-          font: {
-            size: isDarkMode ? 11 : 10,
-            weight: 600
+      scales: {
+        ...baseOptions?.scales,
+        r: {
+          ...baseOptions?.scales?.r,
+          beginAtZero: true,
+          max: 100,
+          ticks: {
+            ...baseOptions?.scales?.r?.ticks,
+            display: false,  // 중앙 점수 숫자 제거
+            stepSize: 20,
+            color: isDarkMode ? '#cbd5e1' : '#64748b',
+            font: {
+              size: isDarkMode ? 11 : 10,
+              weight: 600
+            },
+            showLabelBackdrop: false
           },
-          showLabelBackdrop: false
-        },
-        grid: {
-          color: isDarkMode ? 'rgba(203, 213, 225, 0.4)' : 'rgba(0, 0, 0, 0.1)',
-          lineWidth: isDarkMode ? 2 : 1
-        },
-        angleLines: {
-          color: isDarkMode ? 'rgba(203, 213, 225, 0.3)' : 'rgba(0, 0, 0, 0.1)',
-          lineWidth: isDarkMode ? 2 : 1
-        },
-        pointLabels: {
-          color: isDarkMode ? '#f1f5f9' : '#2c3e50',
-          font: {
-            size: isDarkMode ? 13 : 11,
-            weight: 700
+          grid: {
+            ...baseOptions?.scales?.r?.grid,
+            color: isDarkMode ? 'rgba(203, 213, 225, 0.4)' : 'rgba(0, 0, 0, 0.1)',
+            lineWidth: isDarkMode ? 2 : 1
+          },
+          angleLines: {
+            ...baseOptions?.scales?.r?.angleLines,
+            color: isDarkMode ? 'rgba(203, 213, 225, 0.3)' : 'rgba(0, 0, 0, 0.1)',
+            lineWidth: isDarkMode ? 2 : 1
+          },
+          pointLabels: {
+            ...baseOptions?.scales?.r?.pointLabels,
+            color: isDarkMode ? '#f1f5f9' : '#2c3e50',
+            font: {
+              size: isDarkMode ? 13 : 11,
+              weight: 700
+            }
           }
         }
       }
-    }
-  }), [selectedTimeFrame, isDarkMode, colors.primary]);
+    };
+  }, [enhancedChartConfig, selectedTimeFrame, isDarkMode, colors.primary]);
 
   return {
     chartData,

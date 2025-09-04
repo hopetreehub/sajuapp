@@ -107,8 +107,8 @@ const EventModal: React.FC<EventModalProps> = ({
       const apiData = {
         title: formData.title,
         description: formData.description,
-        start_time: formData.start_time,
-        end_time: formData.end_time,
+        start_time: formData.start_time ? `${formData.start_time}:00` : formData.start_time,
+        end_time: formData.end_time ? `${formData.end_time}:00` : formData.end_time,
         all_day: formData.all_day,
         location: formData.location,
         type: formData.type,
