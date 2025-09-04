@@ -54,6 +54,12 @@ export default function CalendarPage() {
   // DiaryModal 관련 상태
   const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false)
   const [diaryModalDate, setDiaryModalDate] = useState<Date | null>(null)
+  
+  // 일기 클릭 핸들러 (모든 뷰에서 사용)
+  const handleDiaryClick = (date: Date) => {
+    setDiaryModalDate(date)
+    setIsDiaryModalOpen(true)
+  }
 
   useEffect(() => {
     loadEvents()
@@ -189,6 +195,7 @@ export default function CalendarPage() {
       onDateClick: handleDateClick, // 새로운 통합 날짜 클릭 핸들러
       onEditEvent: handleEditEvent,
       highlightedEventId,
+      onDiaryClick: handleDiaryClick, // 일기 클릭 핸들러 추가
     }
 
     switch (viewMode) {

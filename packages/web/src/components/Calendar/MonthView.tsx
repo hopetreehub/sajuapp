@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
 import { useDiaryData } from '@/hooks/useDiaryData'
+import DiaryIndicator from './DiaryIndicator'
 import { Todo } from '@/types/todo'
 import { 
   startOfMonth, 
@@ -26,9 +27,10 @@ interface MonthViewProps {
   onDateClick?: (date: Date, event: React.MouseEvent) => void
   onEditEvent: (event: CalendarEvent) => void
   highlightedEventId?: string | null
+  onDiaryClick?: (date: Date) => void
 }
 
-export default function MonthView({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId }: MonthViewProps) {
+export default function MonthView({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId, onDiaryClick }: MonthViewProps) {
   const { currentDate, setSelectedDate, setViewMode, getTodosForDate } = useCalendar()
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null)
   
@@ -181,11 +183,12 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                 {isCurrentMonth && (
                   <div className="flex items-center gap-1">
                     {/* 일기 아이콘 표시 */}
-                    {hasDiary(day) && (
-                      <span className="flex items-center justify-center w-5 h-5 text-xs bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400 rounded-full" title="일기">
-                        📝
-                      </span>
-                    )}
+                    <DiaryIndicator
+                      date={day}
+                      hasDiary={hasDiary(day)}
+                      onClick={() => onDiaryClick?.(day)}
+                      size="small"
+                    />
                     
                     {/* 우선순위별 할일 개수 표시 */}
                     {dayTodos.length > 0 && (

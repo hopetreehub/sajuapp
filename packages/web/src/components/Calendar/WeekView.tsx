@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
 import { useDiaryData } from '@/hooks/useDiaryData'
+import DiaryIndicator from './DiaryIndicator'
 import AddItemModal from '@/components/AddItemModal'
 import { ITEM_COLORS } from '@/types/todo'
 import { 
@@ -27,9 +28,10 @@ interface WeekViewProps {
   onDateClick?: (date: Date, event: React.MouseEvent) => void
   onEditEvent: (event: CalendarEvent) => void
   highlightedEventId?: string | null
+  onDiaryClick?: (date: Date) => void
 }
 
-export default function WeekView({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId }: WeekViewProps) {
+export default function WeekView({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId, onDiaryClick }: WeekViewProps) {
   const { currentDate, getTodosForDate, addTodo, updateTodo, deleteTodo, toggleTodo } = useCalendar()
   const [showAddModal, setShowAddModal] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
@@ -140,9 +142,12 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                   {format(day, 'd')}
                 </div>
                 {/* 일기 아이콘 표시 */}
-                {hasDiaryEntry && (
-                  <span className="text-xs" title="일기">📝</span>
-                )}
+                <DiaryIndicator
+                  date={day}
+                  hasDiary={hasDiaryEntry}
+                  onClick={() => onDiaryClick?.(day)}
+                  size="small"
+                />
               </div>
             </div>
           )
@@ -309,10 +314,15 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                   {diary && (
                     <div className="mb-2 p-2 bg-purple-50 dark:bg-purple-900/20 rounded border-l-2 border-purple-400">
                       <div className="flex items-start gap-1">
-                        <span className="text-xs">📝</span>
+                        <DiaryIndicator
+                          date={day}
+                          hasDiary={true}
+                          onClick={() => onDiaryClick?.(day)}
+                          size="small"
+                        />
                         <div className="flex-1">
                           <div className="text-xs font-medium text-purple-600 dark:text-purple-400 mb-1">
-                            일기 {diary.mood && <span>{diary.mood}</span>}
+                            {diary.mood && <span>{diary.mood}</span>}
                           </div>
                           <div className="text-xs text-gray-600 dark:text-gray-300">
                             {diary.content.length > 60 
@@ -322,7 +332,7 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                         </div>
                       </div>
                     </div>
-                  )}
+                  )
                   {/* 할일 목록 */}
                   <div className="space-y-1 mb-2">
                     {dayTodos.map(todo => (
