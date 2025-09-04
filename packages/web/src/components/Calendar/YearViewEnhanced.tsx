@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useCalendar } from '@/contexts/CalendarContext';
 import { useYearlyMemo } from '@/contexts/YearlyMemoContext';
+import { useDiaryData } from '@/hooks/useDiaryData';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { CalendarEvent } from '@/services/api';
@@ -36,6 +37,12 @@ export default function YearViewEnhanced({ events, onDateClick, highlightedEvent
     toggleComplete,
     getMonthStatistics 
   } = useYearlyMemo();
+  
+  // 일기 데이터 가져오기
+  const { diaries } = useDiaryData({ 
+    viewMode: 'year', 
+    currentDate 
+  });
 
   const currentYear = currentDate.getFullYear();
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
@@ -93,6 +100,18 @@ export default function YearViewEnhanced({ events, onDateClick, highlightedEvent
     setNewMemoType('memo');
     setNewMemoImportance('medium');
     setIsAddingMemo(null);
+  };
+
+  // 월별 일기 개수 계산
+  const getMonthlyDiaryCount = (month: number): number => {
+    if (!diaries || diaries.length === 0) return 0;
+    
+    const monthStr = String(month).padStart(2, '0');
+    const yearMonthStr = `${currentYear}-${monthStr}`;
+    
+    return diaries.filter(diary => 
+      diary.date && diary.date.startsWith(yearMonthStr)
+    ).length;
   };
 
   // Calculate year statistics
@@ -219,18 +238,26 @@ export default function YearViewEnhanced({ events, onDateClick, highlightedEvent
                   </div>
                   
                   {/* Month Stats */}
-                  {stats.total > 0 && (
-                    <div className="mt-2 flex gap-2 text-xs">
-                      <span className="text-gray-500 dark:text-gray-400">
-                        {stats.total}개 항목
-                      </span>
-                      {stats.completed > 0 && (
-                        <span className="text-green-600 dark:text-green-400">
-                          {stats.completed}개 완료
+                  <div className="mt-2 flex gap-2 text-xs">
+                    {stats.total > 0 && (
+                      <>
+                        <span className="text-gray-500 dark:text-gray-400">
+                          {stats.total}개 항목
                         </span>
-                      )}
-                    </div>
-                  )}
+                        {stats.completed > 0 && (
+                          <span className="text-green-600 dark:text-green-400">
+                            {stats.completed}개 완료
+                          </span>
+                        )}
+                      </>
+                    )}
+                    {/* 일기 개수 표시 - 숫자만 */}
+                    {getMonthlyDiaryCount(month) > 0 && (
+                      <span className="text-purple-600 dark:text-purple-400 font-medium">
+                        📔 {getMonthlyDiaryCount(month)}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
                 {/* Memo List */}

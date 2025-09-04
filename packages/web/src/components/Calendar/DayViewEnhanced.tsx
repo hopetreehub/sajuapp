@@ -126,12 +126,12 @@ export default function DayViewEnhanced({ events, onCreateEvent, onDateClick, on
   }
 
   return (
-    <div className="h-full p-6 bg-gray-50 dark:bg-gray-900">
+    <div className="h-full p-6 bg-gray-50 dark:bg-gray-900 overflow-hidden">
       <div className="max-w-7xl mx-auto h-full">
         {/* 메인 콘텐츠 그리드 */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 h-full">
           {/* 왼쪽 영역 (3/5) - 일정과 할일 */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-3 h-full overflow-y-auto space-y-6 pr-2">
             {/* 오늘의 일정 */}
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
@@ -143,7 +143,7 @@ export default function DayViewEnhanced({ events, onCreateEvent, onDateClick, on
               </h2>
 
               {/* 시간 그리드 스타일 일정 표시 */}
-              <div className="schedule-grid border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+              <div className="schedule-grid border border-gray-200 dark:border-gray-700 rounded-lg overflow-x-hidden max-h-[500px] overflow-y-auto">
                 {Array.from({ length: 10 }, (_, i) => i + 9).map(hour => {
                   // 해당 시간의 이벤트 찾기
                   const hourEvents = dayEvents.filter(event => {
@@ -315,21 +315,16 @@ export default function DayViewEnhanced({ events, onCreateEvent, onDateClick, on
                   </button>
                 </div>
 
-                {/* 일기 버튼 - 할일 바로 아래 */}
-                <button 
-                  onClick={() => setIsDiaryModalOpen(true)}
-                  className={`
-                    w-full mt-2 flex items-center justify-center space-x-2 px-3 py-2 rounded-lg transition-all text-sm
-                    ${hasDiaryEntry 
-                      ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30' 
-                      : 'text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20'
-                    }
-                  `}
-                >
-                  <span className="text-lg">📝</span>
-                  <span>오늘의 일기</span>
-                  {hasDiaryEntry && <div className="w-2 h-2 bg-green-500 rounded-full"></div>}
-                </button>
+                {/* 일기 아이콘 - 일기가 있을 때만 표시 */}
+                {hasDiaryEntry && (
+                  <button 
+                    onClick={() => setIsDiaryModalOpen(true)}
+                    className="mt-2 p-2 rounded-full bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-all hover:scale-110 active:scale-95"
+                    title="일기 보기"
+                  >
+                    <span className="text-xl">📔</span>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -350,7 +345,7 @@ export default function DayViewEnhanced({ events, onCreateEvent, onDateClick, on
           </div>
 
           {/* 오른쪽 영역 (2/5) - 오늘의 운세 */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 h-full overflow-y-auto">
             <TodayFortuneWidget 
               sajuData={personalSajuData || customerSajuData}
               customerName={personalSajuData ? '나' : selectedCustomer?.name}

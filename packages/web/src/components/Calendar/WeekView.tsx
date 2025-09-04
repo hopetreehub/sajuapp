@@ -310,27 +310,15 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                     ${isCurrentDay ? 'bg-primary/5' : ''}
                   `}
                 >
-                  {/* 일기 표시 */}
+                  {/* 일기 아이콘 표시 */}
                   {diary && (
-                    <div className="mb-2 p-2 bg-purple-50 dark:bg-purple-900/20 rounded border-l-2 border-purple-400">
-                      <div className="flex items-start gap-1">
-                        <DiaryIndicator
-                          date={day}
-                          hasDiary={true}
-                          onClick={() => onDiaryClick?.(day)}
-                          size="small"
-                        />
-                        <div className="flex-1">
-                          <div className="text-xs font-medium text-purple-600 dark:text-purple-400 mb-1">
-                            {diary.mood && <span>{diary.mood}</span>}
-                          </div>
-                          <div className="text-xs text-gray-600 dark:text-gray-300">
-                            {diary.content.length > 60 
-                              ? diary.content.substring(0, 60) + '...' 
-                              : diary.content}
-                          </div>
-                        </div>
-                      </div>
+                    <div className="mb-2 flex items-center">
+                      <DiaryIndicator
+                        date={day}
+                        hasDiary={true}
+                        onClick={() => onDiaryClick?.(day)}
+                        size="small"
+                      />
                     </div>
                   )}
                   

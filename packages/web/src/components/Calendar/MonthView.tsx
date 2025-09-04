@@ -26,12 +26,13 @@ interface MonthViewProps {
   onCreateEvent: (date: Date) => void
   onDateClick?: (date: Date, event: React.MouseEvent) => void
   onEditEvent: (event: CalendarEvent) => void
+  onDeleteEvent?: (eventId: string) => void
   highlightedEventId?: string | null
   onDiaryClick?: (date: Date) => void
 }
 
-export default function MonthView({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId, onDiaryClick }: MonthViewProps) {
-  const { currentDate, setSelectedDate, setViewMode, getTodosForDate } = useCalendar()
+export default function MonthView({ events, onCreateEvent, onDateClick, onEditEvent, onDeleteEvent, highlightedEventId, onDiaryClick }: MonthViewProps) {
+  const { currentDate, setSelectedDate, setViewMode, getTodosForDate, deleteTodo } = useCalendar()
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null)
   
   // 일기 데이터 가져오기
@@ -225,7 +226,7 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                 {dayEvents.map((event) => (
                   <div
                     key={event.id}
-                    className={`text-xs p-1 rounded truncate cursor-pointer hover:opacity-80 ${
+                    className={`text-xs p-1 rounded cursor-pointer hover:opacity-80 group flex items-center ${
                       highlightedEventId === event.id ? 'ring-2 ring-primary animate-pulse' : ''
                     }`}
                     style={{ 
@@ -235,8 +236,22 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                     }}
                     onClick={(e) => handleEventClick(event, e)}
                   >
-                    {event.all_day && <span className="font-semibold">종일 </span>}
-                    {!event.all_day && format(new Date(event.start_time), 'HH:mm')} {event.title}
+                    <span className="flex-1 truncate">
+                      {event.all_day && <span className="font-semibold">종일 </span>}
+                      {!event.all_day && format(new Date(event.start_time), 'HH:mm')} {event.title}
+                    </span>
+                    {onDeleteEvent && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onDeleteEvent(event.id)
+                        }}
+                        className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-1"
+                        title="일정 삭제"
+                      >
+                        ×
+                      </button>
+                    )}
                   </div>
                 ))}
                 
@@ -254,9 +269,6 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                   {/* 일기 미리보기 */}
                   {hasDiary(day) && (
                     <div className="mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
-                      <div className="text-sm font-semibold mb-1 text-purple-600 dark:text-purple-400 flex items-center gap-1">
-                        <span>📝</span> 일기
-                      </div>
                       <div className="text-xs text-gray-600 dark:text-gray-300">
                         {(() => {
                           const diary = getDiaryForDate(day);
@@ -265,9 +277,12 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                               ? diary.content.substring(0, 50) + '...' 
                               : diary.content;
                             return (
-                              <div>
-                                {diary.mood && <span className="mr-2">{diary.mood}</span>}
-                                <span>{preview}</span>
+                              <div className="flex items-start gap-2">
+                                <span className="text-base">📔</span>
+                                <div className="flex-1">
+                                  {diary.mood && <span className="mr-2">{diary.mood}</span>}
+                                  <span>{preview}</span>
+                                </div>
                               </div>
                             );
                           }
@@ -285,11 +300,21 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                       </div>
                       <div className="space-y-1 max-h-48 overflow-y-auto">
                         {dayTodos.slice(0, 5).map((todo) => (
-                          <div key={todo.id} className="flex items-start gap-2 text-xs">
+                          <div key={todo.id} className="flex items-start gap-2 text-xs group">
                             <span>{getPriorityIcon(todo.priority)}</span>
                             <span className={`flex-1 ${todo.completed ? 'line-through text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>
                               {todo.text}
                             </span>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                deleteTodo(todo.id)
+                              }}
+                              className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity"
+                              title="할일 삭제"
+                            >
+                              ×
+                            </button>
                           </div>
                         ))}
                         {dayTodos.length > 5 && (

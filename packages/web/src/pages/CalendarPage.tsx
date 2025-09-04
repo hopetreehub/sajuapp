@@ -104,6 +104,15 @@ export default function CalendarPage() {
     loadEvents()
   }
 
+  const handleDeleteEvent = async (eventId: string) => {
+    try {
+      await eventService.deleteEvent(eventId)
+      loadEvents()
+    } catch (error) {
+      console.error('Failed to delete event:', error)
+    }
+  }
+
   const handleCloseModal = () => {
     setIsModalOpen(false)
     setSelectedEvent(null)
@@ -194,6 +203,7 @@ export default function CalendarPage() {
       onCreateEvent: handleCreateEvent, // 기존 호환성 유지 (우클릭 등)
       onDateClick: handleDateClick, // 새로운 통합 날짜 클릭 핸들러
       onEditEvent: handleEditEvent,
+      onDeleteEvent: handleDeleteEvent, // 일정 삭제 핸들러 추가
       highlightedEventId,
       onDiaryClick: handleDiaryClick, // 일기 클릭 핸들러 추가
     }
