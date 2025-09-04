@@ -6,6 +6,53 @@ import { DiaryEntry } from '../models/diary.model';
 
 const router = Router();
 
+// GET /api/diaries/search - 일기 검색 (더 구체적인 경로를 먼저 정의)
+router.get('/search', async (req: Request, res: Response) => {
+  try {
+    const userId = req.headers['x-user-id'] || 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
+    const { q, mood, startDate, endDate } = req.query;
+    
+    const db = getDb();
+    let query = 'SELECT * FROM diary_entries WHERE user_id = ?';
+    const params: any[] = [userId];
+    
+    if (q) {
+      query += ' AND content LIKE ?';
+      params.push(`%${q}%`);
+    }
+    
+    if (mood) {
+      query += ' AND mood = ?';
+      params.push(mood);
+    }
+    
+    if (startDate) {
+      query += ' AND date >= ?';
+      params.push(startDate);
+    }
+    
+    if (endDate) {
+      query += ' AND date <= ?';
+      params.push(endDate);
+    }
+    
+    query += ' ORDER BY date DESC';
+    
+    const diaries = await db.all(query, params);
+    
+    // Parse tags JSON
+    const parsedDiaries = diaries.map((diary: any) => ({
+      ...diary,
+      tags: diary.tags ? JSON.parse(diary.tags) : []
+    }));
+    
+    res.json(parsedDiaries);
+  } catch (error) {
+    logger.error('Failed to search diaries:', error);
+    res.status(500).json({ error: 'Failed to search diaries' });
+  }
+});
+
 // GET /api/diaries - 일기 목록 조회 (페이지네이션)
 router.get('/', async (req: Request, res: Response) => {
   try {
@@ -157,53 +204,6 @@ router.delete('/:id', async (req: Request, res: Response) => {
   } catch (error) {
     logger.error('Failed to delete diary:', error);
     res.status(500).json({ error: 'Failed to delete diary' });
-  }
-});
-
-// GET /api/diaries/search - 일기 검색
-router.get('/search', async (req: Request, res: Response) => {
-  try {
-    const userId = req.headers['x-user-id'] || 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
-    const { q, mood, startDate, endDate } = req.query;
-    
-    const db = getDb();
-    let query = 'SELECT * FROM diary_entries WHERE user_id = ?';
-    const params: any[] = [userId];
-    
-    if (q) {
-      query += ' AND content LIKE ?';
-      params.push(`%${q}%`);
-    }
-    
-    if (mood) {
-      query += ' AND mood = ?';
-      params.push(mood);
-    }
-    
-    if (startDate) {
-      query += ' AND date >= ?';
-      params.push(startDate);
-    }
-    
-    if (endDate) {
-      query += ' AND date <= ?';
-      params.push(endDate);
-    }
-    
-    query += ' ORDER BY date DESC';
-    
-    const diaries = await db.all(query, params);
-    
-    // Parse tags JSON
-    const parsedDiaries = diaries.map((diary: any) => ({
-      ...diary,
-      tags: diary.tags ? JSON.parse(diary.tags) : []
-    }));
-    
-    res.json(parsedDiaries);
-  } catch (error) {
-    logger.error('Failed to search diaries:', error);
-    res.status(500).json({ error: 'Failed to search diaries' });
   }
 });
 
