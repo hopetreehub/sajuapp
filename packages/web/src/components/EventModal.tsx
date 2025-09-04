@@ -113,32 +113,24 @@ const EventModal: React.FC<EventModalProps> = ({
         location: formData.location,
         type: formData.type,
         color: formData.color,
-        reminder_minutes: formData.reminder_minutes || 0
+        reminder_minutes: formData.reminder_minutes === undefined ? null : formData.reminder_minutes
       };
       
       console.log('Sending API data:', apiData);
-      console.log('API URL:', import.meta.env.VITE_API_URL || 'http://localhost:5556');
       
       let savedEvent: CalendarEvent;
       
       if (event?.id) {
         console.log('Updating event with ID:', event.id);
         savedEvent = await eventService.updateEvent(event.id, apiData);
-        // Update tags for existing event
-        if (selectedTags.length > 0) {
-          await tagService.addTagsToEvent(event.id, selectedTags.map(t => t.id));
-        }
+        // Add tags to the saved event object
+        savedEvent.tags = selectedTags;
       } else {
         console.log('Creating new event...');
         savedEvent = await eventService.createEvent(apiData as any);
-        // Add tags to new event
-        if (savedEvent.id && selectedTags.length > 0) {
-          await tagService.addTagsToEvent(savedEvent.id, selectedTags.map(t => t.id));
-        }
+        // Add tags to the saved event object
+        savedEvent.tags = selectedTags;
       }
-      
-      // Add tags to the saved event object for display
-      savedEvent.tags = selectedTags;
       
       console.log('Event saved successfully:', savedEvent);
       onSave(savedEvent);

@@ -118,7 +118,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
       color: req.body.color,
       category: req.body.type || 'personal',
       location: req.body.location,
-      reminders: req.body.reminder_minutes ? [{ type: 'notification', minutesBefore: req.body.reminder_minutes }] : null
+      reminders: req.body.reminder_minutes > 0 ? [{ type: 'notification', minutesBefore: req.body.reminder_minutes }] : []
     }
     
     const validation = validateEvent(transformedBody)
@@ -224,7 +224,7 @@ router.put('/:id', async (req: Request, res: Response, next: NextFunction) => {
     if (req.body.type !== undefined) transformedBody.category = req.body.type
     if (req.body.location !== undefined) transformedBody.location = req.body.location
     if (req.body.reminder_minutes !== undefined) {
-      transformedBody.reminders = req.body.reminder_minutes ? [{ type: 'notification', minutesBefore: req.body.reminder_minutes }] : null
+      transformedBody.reminders = req.body.reminder_minutes > 0 ? [{ type: 'notification', minutesBefore: req.body.reminder_minutes }] : []
     }
     
     const validation = validateEvent(transformedBody, true) // true for partial validation
