@@ -13,6 +13,16 @@ export default defineConfig(({ mode }) => {
       host: true,
       strictPort: true, // 포트 4000번 강제
       proxy: {
+        '/api/diaries': {
+          target: 'http://localhost:4004',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/api/calendar': {
+          target: env.VITE_API_URL || 'http://localhost:4003',
+          changeOrigin: true,
+          secure: false,
+        },
         '/api': {
           target: env.VITE_API_URL || 'http://localhost:4003',
           changeOrigin: true,
