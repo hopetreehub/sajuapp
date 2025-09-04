@@ -24,9 +24,10 @@ interface WeekViewProps {
   events: CalendarEvent[]
   onCreateEvent: (date: Date) => void
   onEditEvent: (event: CalendarEvent) => void
+  highlightedEventId?: string | null
 }
 
-export default function WeekView({ events, onCreateEvent, onEditEvent }: WeekViewProps) {
+export default function WeekView({ events, onCreateEvent, onEditEvent, highlightedEventId }: WeekViewProps) {
   const { currentDate, getTodosForDate, addTodo, updateTodo, deleteTodo, toggleTodo } = useCalendar()
   const [showAddModal, setShowAddModal] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())

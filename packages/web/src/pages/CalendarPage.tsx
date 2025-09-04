@@ -27,7 +27,8 @@ import { ko } from 'date-fns/locale'
 
 export default function CalendarPage() {
   const { 
-    currentDate, 
+    currentDate,
+    setCurrentDate, 
     viewMode, 
     setViewMode, 
     navigatePrevious, 
@@ -41,6 +42,7 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredEvents, setFilteredEvents] = useState<CalendarEvent[]>([])
+  const [highlightedEventId, setHighlightedEventId] = useState<string | null>(null)
 
   useEffect(() => {
     loadEvents()
@@ -90,11 +92,49 @@ export default function CalendarPage() {
     setSelectedDate(null)
   }
 
+  // 검색 결과의 첫 번째 이벤트로 이동
+  const navigateToFirstResult = () => {
+    if (filteredEvents.length === 0 || !searchQuery) return
+    
+    const firstEvent = filteredEvents[0]
+    const eventDate = new Date(firstEvent.start_time)
+    
+    // 1. 해당 날짜로 캘린더 이동
+    setCurrentDate(eventDate)
+    
+    // 2. 적절한 뷰 모드로 전환 (연도 뷰인 경우 월 뷰로)
+    if (viewMode === 'year') {
+      setViewMode('month')
+    }
+    
+    // 3. 이벤트 하이라이트
+    setHighlightedEventId(firstEvent.id)
+    
+    // 4. 3초 후 하이라이트 제거
+    setTimeout(() => {
+      setHighlightedEventId(null)
+    }, 3000)
+    
+    // 5. 선택적: 이벤트 상세 모달 열기
+    // handleEditEvent(firstEvent)
+  }
+
+  // 검색창 키보드 이벤트 처리
+  const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      navigateToFirstResult()
+    } else if (e.key === 'Escape') {
+      setSearchQuery('')
+      setHighlightedEventId(null)
+    }
+  }
+
   const renderView = () => {
     const viewProps = {
       events: searchQuery ? filteredEvents : events,
       onCreateEvent: handleCreateEvent,
       onEditEvent: handleEditEvent,
+      highlightedEventId,
     }
 
     switch (viewMode) {
@@ -200,6 +240,7 @@ export default function CalendarPage() {
               placeholder="일정, 할일, 일기 검색..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchKeyPress}
               className="w-full px-4 py-2 pl-10 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
             />
             <svg 

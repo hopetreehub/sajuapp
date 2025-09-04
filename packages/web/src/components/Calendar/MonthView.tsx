@@ -23,9 +23,10 @@ interface MonthViewProps {
   events: CalendarEvent[]
   onCreateEvent: (date: Date) => void
   onEditEvent: (event: CalendarEvent) => void
+  highlightedEventId?: string | null
 }
 
-export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthViewProps) {
+export default function MonthView({ events, onCreateEvent, onEditEvent, highlightedEventId }: MonthViewProps) {
   const { currentDate, setSelectedDate, setViewMode, getTodosForDate } = useCalendar()
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null)
 
@@ -197,7 +198,9 @@ export default function MonthView({ events, onCreateEvent, onEditEvent }: MonthV
                 {dayEvents.map((event) => (
                   <div
                     key={event.id}
-                    className="text-xs p-1 rounded truncate cursor-pointer hover:opacity-80"
+                    className={`text-xs p-1 rounded truncate cursor-pointer hover:opacity-80 ${
+                      highlightedEventId === event.id ? 'ring-2 ring-primary animate-pulse' : ''
+                    }`}
                     style={{ 
                       backgroundColor: `${event.color || '#3b82f6'}20`,
                       color: event.color || '#3b82f6',

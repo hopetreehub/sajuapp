@@ -17,6 +17,7 @@ interface YearViewEnhancedProps {
   events: CalendarEvent[];
   onCreateEvent: (date: Date) => void;
   onEditEvent: (event: CalendarEvent) => void;
+  highlightedEventId?: string | null;
 }
 
 const MONTHS = [
@@ -24,7 +25,7 @@ const MONTHS = [
   '7월', '8월', '9월', '10월', '11월', '12월'
 ];
 
-export default function YearViewEnhanced({ events }: YearViewEnhancedProps) {
+export default function YearViewEnhanced({ events, highlightedEventId }: YearViewEnhancedProps) {
   const { currentDate, setCurrentDate, setViewMode } = useCalendar();
   const { 
     getMemosByMonth, 

@@ -13,9 +13,10 @@ interface DayViewEnhancedProps {
   events: CalendarEvent[]
   onCreateEvent: (date: Date) => void
   onEditEvent: (event: CalendarEvent) => void
+  highlightedEventId?: string | null
 }
 
-export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: DayViewEnhancedProps) {
+export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent, highlightedEventId }: DayViewEnhancedProps) {
   const { currentDate, getTodosForDate, addTodo, updateTodo, deleteTodo, toggleTodo } = useCalendar()
   const [newTodo, setNewTodo] = useState('')
   const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false)
