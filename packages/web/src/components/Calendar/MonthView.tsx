@@ -22,11 +22,12 @@ const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 interface MonthViewProps {
   events: CalendarEvent[]
   onCreateEvent: (date: Date) => void
+  onDateClick?: (date: Date, event: React.MouseEvent) => void
   onEditEvent: (event: CalendarEvent) => void
   highlightedEventId?: string | null
 }
 
-export default function MonthView({ events, onCreateEvent, onEditEvent, highlightedEventId }: MonthViewProps) {
+export default function MonthView({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId }: MonthViewProps) {
   const { currentDate, setSelectedDate, setViewMode, getTodosForDate } = useCalendar()
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null)
 
@@ -84,8 +85,13 @@ export default function MonthView({ events, onCreateEvent, onEditEvent, highligh
     }
   }
 
-  const handleDayClick = (date: Date) => {
-    onCreateEvent(date)
+  const handleDayClick = (date: Date, event: React.MouseEvent) => {
+    // 새로운 통합 날짜 클릭 핸들러가 있으면 그것을 사용, 없으면 기존 방식
+    if (onDateClick) {
+      onDateClick(date, event)
+    } else {
+      onCreateEvent(date)
+    }
   }
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
@@ -125,7 +131,7 @@ export default function MonthView({ events, onCreateEvent, onEditEvent, highligh
           return (
             <div
               key={day.toISOString()}
-              onClick={() => handleDayClick(day)}
+              onClick={(e) => handleDayClick(day, e)}
               onMouseEnter={() => setHoveredDate(day)}
               onMouseLeave={() => setHoveredDate(null)}
               className={`

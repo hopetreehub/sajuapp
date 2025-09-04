@@ -7,6 +7,8 @@ import DayViewEnhanced from '@/components/Calendar/DayViewEnhanced'
 import YearView from '@/components/Calendar/YearView'
 import YearViewEnhanced from '@/components/Calendar/YearViewEnhanced'
 import EventModal from '@/components/EventModal'
+import DiaryModal from '@/components/DiaryModal'
+import ActionMenu, { ActionType } from '@/components/ActionMenu'
 import { CalendarEvent, eventService } from '@/services/api'
 
 // 임시 아이콘 컴포넌트들
@@ -43,6 +45,15 @@ export default function CalendarPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredEvents, setFilteredEvents] = useState<CalendarEvent[]>([])
   const [highlightedEventId, setHighlightedEventId] = useState<string | null>(null)
+  
+  // ActionMenu 관련 상태
+  const [showActionMenu, setShowActionMenu] = useState(false)
+  const [actionMenuPosition, setActionMenuPosition] = useState({ x: 0, y: 0 })
+  const [actionMenuDate, setActionMenuDate] = useState<Date | null>(null)
+  
+  // DiaryModal 관련 상태
+  const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false)
+  const [diaryModalDate, setDiaryModalDate] = useState<Date | null>(null)
 
   useEffect(() => {
     loadEvents()
@@ -71,6 +82,7 @@ export default function CalendarPage() {
     }
   }
 
+  // 기존 이벤트 핸들러들 (날짜 우클릭이나 기존 이벤트 편집용)
   const handleCreateEvent = (date?: Date) => {
     setSelectedDate(date || null)
     setSelectedEvent(null)
@@ -90,6 +102,47 @@ export default function CalendarPage() {
     setIsModalOpen(false)
     setSelectedEvent(null)
     setSelectedDate(null)
+  }
+
+  // 새로운 통합 날짜 클릭 핸들러 (ActionMenu 사용)
+  const handleDateClick = (date: Date, event: React.MouseEvent) => {
+    setActionMenuDate(date)
+    setActionMenuPosition({ x: event.clientX, y: event.clientY })
+    setShowActionMenu(true)
+  }
+
+  // ActionMenu 선택 핸들러
+  const handleActionSelect = (action: ActionType) => {
+    if (!actionMenuDate) return
+
+    switch (action) {
+      case 'event':
+        setSelectedDate(actionMenuDate)
+        setSelectedEvent(null)
+        setIsModalOpen(true)
+        break
+      case 'todo':
+        // TODO: 할일 추가 기능 구현 필요
+        console.log('TODO: Add todo functionality', actionMenuDate)
+        break
+      case 'diary':
+        setDiaryModalDate(actionMenuDate)
+        setIsDiaryModalOpen(true)
+        break
+    }
+    setShowActionMenu(false)
+  }
+
+  // ActionMenu 닫기
+  const handleCloseActionMenu = () => {
+    setShowActionMenu(false)
+    setActionMenuDate(null)
+  }
+
+  // Diary Modal 핸들러들
+  const handleCloseDiaryModal = () => {
+    setIsDiaryModalOpen(false)
+    setDiaryModalDate(null)
   }
 
   // 검색 결과의 첫 번째 이벤트로 이동
@@ -132,7 +185,8 @@ export default function CalendarPage() {
   const renderView = () => {
     const viewProps = {
       events: searchQuery ? filteredEvents : events,
-      onCreateEvent: handleCreateEvent,
+      onCreateEvent: handleCreateEvent, // 기존 호환성 유지 (우클릭 등)
+      onDateClick: handleDateClick, // 새로운 통합 날짜 클릭 핸들러
       onEditEvent: handleEditEvent,
       highlightedEventId,
     }
@@ -276,12 +330,29 @@ export default function CalendarPage() {
         {renderView()}
       </div>
 
+      {/* 기존 EventModal */}
       <EventModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onSave={handleSaveEvent}
         event={selectedEvent}
         initialDate={selectedDate || undefined}
+      />
+
+      {/* 새로운 ActionMenu */}
+      <ActionMenu
+        isOpen={showActionMenu}
+        onClose={handleCloseActionMenu}
+        date={actionMenuDate || new Date()}
+        position={actionMenuPosition}
+        onSelectAction={handleActionSelect}
+      />
+
+      {/* DiaryModal */}
+      <DiaryModal
+        isOpen={isDiaryModalOpen}
+        onClose={handleCloseDiaryModal}
+        date={diaryModalDate || new Date()}
       />
     </div>
   )

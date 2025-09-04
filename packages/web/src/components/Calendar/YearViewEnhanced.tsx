@@ -16,6 +16,7 @@ import { Plus, X, Check, Edit2, Trash2, Filter, Search } from 'lucide-react';
 interface YearViewEnhancedProps {
   events: CalendarEvent[];
   onCreateEvent: (date: Date) => void;
+  onDateClick?: (date: Date, event: React.MouseEvent) => void;
   onEditEvent: (event: CalendarEvent) => void;
   highlightedEventId?: string | null;
 }
@@ -25,7 +26,7 @@ const MONTHS = [
   '7월', '8월', '9월', '10월', '11월', '12월'
 ];
 
-export default function YearViewEnhanced({ events, highlightedEventId }: YearViewEnhancedProps) {
+export default function YearViewEnhanced({ events, onDateClick, highlightedEventId }: YearViewEnhancedProps) {
   const { currentDate, setCurrentDate, setViewMode } = useCalendar();
   const { 
     getMemosByMonth, 

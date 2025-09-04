@@ -23,11 +23,12 @@ const HOURS = Array.from({ length: 11 }, (_, i) => i + 9) // 9시-19시
 interface WeekViewProps {
   events: CalendarEvent[]
   onCreateEvent: (date: Date) => void
+  onDateClick?: (date: Date, event: React.MouseEvent) => void
   onEditEvent: (event: CalendarEvent) => void
   highlightedEventId?: string | null
 }
 
-export default function WeekView({ events, onCreateEvent, onEditEvent, highlightedEventId }: WeekViewProps) {
+export default function WeekView({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId }: WeekViewProps) {
   const { currentDate, getTodosForDate, addTodo, updateTodo, deleteTodo, toggleTodo } = useCalendar()
   const [showAddModal, setShowAddModal] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
@@ -179,10 +180,16 @@ export default function WeekView({ events, onCreateEvent, onEditEvent, highlight
                           hover:bg-muted/50 transition-colors
                           ${isCurrentDay && currentHour === hour ? 'bg-primary/10' : ''}
                         `}
-                        onClick={() => {
-                          setSelectedDate(new Date(day))
-                          setSelectedHour(hour)
-                          setShowAddModal(true)
+                        onClick={(e) => {
+                          if (onDateClick) {
+                            // 새로운 통합 날짜 클릭 핸들러가 있으면 그것을 사용
+                            onDateClick(day, e)
+                          } else {
+                            // 기존 방식
+                            setSelectedDate(new Date(day))
+                            setSelectedHour(hour)
+                            setShowAddModal(true)
+                          }
                         }}
                       >
                         {/* 일정 표시 */}
