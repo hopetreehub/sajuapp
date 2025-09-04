@@ -262,9 +262,21 @@ export const diaryService = {
     page?: number;
     limit?: number;
     month?: string;
+    startDate?: string;
+    endDate?: string;
   }): Promise<DiaryEntry[]> => {
     const response = await axios.get('http://localhost:4004/api/diaries', { 
       params,
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+    });
+    return response.data;
+  },
+  
+  // Get diaries for date range (for calendar views)
+  getDiariesForDateRange: async (startDate: string, endDate: string): Promise<DiaryEntry[]> => {
+    // Use searchDiaries endpoint which supports date range
+    const response = await axios.get('http://localhost:4004/api/diaries/search', {
+      params: { startDate, endDate },
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
     });
     return response.data;

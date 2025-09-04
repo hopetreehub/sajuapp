@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
+import { useDiaryData } from '@/hooks/useDiaryData'
 import AddItemModal from '@/components/AddItemModal'
 import { ITEM_COLORS } from '@/types/todo'
 import { 
@@ -33,6 +34,12 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
   const [showAddModal, setShowAddModal] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [selectedHour, setSelectedHour] = useState<number | undefined>()
+  
+  // 일기 데이터 가져오기
+  const { hasDiary, getDiaryForDate } = useDiaryData({ 
+    viewMode: 'week', 
+    currentDate 
+  })
 
   const weekDays = useMemo(() => {
     const start = startOfWeek(currentDate, { weekStartsOn: 0 })
@@ -115,6 +122,7 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
         {weekDays.map((day) => {
           const dayOfWeek = day.getDay()
           const isCurrentDay = isToday(day)
+          const hasDiaryEntry = hasDiary(day)
           
           return (
             <div 
@@ -127,8 +135,14 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
               <div className={`text-xs font-medium ${dayOfWeek === 0 ? 'text-red-600' : dayOfWeek === 6 ? 'text-blue-600' : 'text-muted-foreground'}`}>
                 {format(day, 'EEE', { locale: ko })}
               </div>
-              <div className={`text-lg font-semibold ${isCurrentDay ? 'text-primary' : 'text-foreground'}`}>
-                {format(day, 'd')}
+              <div className="flex items-center justify-center gap-1">
+                <div className={`text-lg font-semibold ${isCurrentDay ? 'text-primary' : 'text-foreground'}`}>
+                  {format(day, 'd')}
+                </div>
+                {/* 일기 아이콘 표시 */}
+                {hasDiaryEntry && (
+                  <span className="text-xs" title="일기">📝</span>
+                )}
               </div>
             </div>
           )
@@ -277,10 +291,11 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
               할일
             </div>
             
-            {/* 각 요일의 시간이 지정되지 않은 할일 */}
+            {/* 각 요일의 시간이 지정되지 않은 할일 및 일기 */}
             {weekDays.map(day => {
               const dayTodos = getUntimedTodosForDate(day)
               const isCurrentDay = isToday(day)
+              const diary = getDiaryForDate(day)
               
               return (
                 <div 
@@ -290,6 +305,24 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                     ${isCurrentDay ? 'bg-primary/5' : ''}
                   `}
                 >
+                  {/* 일기 표시 */}
+                  {diary && (
+                    <div className="mb-2 p-2 bg-purple-50 dark:bg-purple-900/20 rounded border-l-2 border-purple-400">
+                      <div className="flex items-start gap-1">
+                        <span className="text-xs">📝</span>
+                        <div className="flex-1">
+                          <div className="text-xs font-medium text-purple-600 dark:text-purple-400 mb-1">
+                            일기 {diary.mood && <span>{diary.mood}</span>}
+                          </div>
+                          <div className="text-xs text-gray-600 dark:text-gray-300">
+                            {diary.content.length > 60 
+                              ? diary.content.substring(0, 60) + '...' 
+                              : diary.content}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                   {/* 할일 목록 */}
                   <div className="space-y-1 mb-2">
                     {dayTodos.map(todo => (

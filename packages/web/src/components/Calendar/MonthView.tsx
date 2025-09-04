@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
+import { useDiaryData } from '@/hooks/useDiaryData'
 import { Todo } from '@/types/todo'
 import { 
   startOfMonth, 
@@ -30,6 +31,12 @@ interface MonthViewProps {
 export default function MonthView({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId }: MonthViewProps) {
   const { currentDate, setSelectedDate, setViewMode, getTodosForDate } = useCalendar()
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null)
+  
+  // 일기 데이터 가져오기
+  const { hasDiary, getDiaryForDate } = useDiaryData({ 
+    viewMode: 'month', 
+    currentDate 
+  })
 
   const monthDays = useMemo(() => {
     const start = startOfMonth(currentDate)
@@ -170,30 +177,41 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                   )}
                 </div>
                 
-                {/* 할일 개수 표시 */}
-                {isCurrentMonth && dayTodos.length > 0 && (
+                {/* 할일 및 일기 표시 */}
+                {isCurrentMonth && (
                   <div className="flex items-center gap-1">
+                    {/* 일기 아이콘 표시 */}
+                    {hasDiary(day) && (
+                      <span className="flex items-center justify-center w-5 h-5 text-xs bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400 rounded-full" title="일기">
+                        📝
+                      </span>
+                    )}
+                    
                     {/* 우선순위별 할일 개수 표시 */}
-                    {incompleteTodos.filter(t => t.priority === 'high').length > 0 && (
-                      <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
-                        {incompleteTodos.filter(t => t.priority === 'high').length}
-                      </span>
-                    )}
-                    {incompleteTodos.filter(t => t.priority === 'medium').length > 0 && (
-                      <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-yellow-500 rounded-full">
-                        {incompleteTodos.filter(t => t.priority === 'medium').length}
-                      </span>
-                    )}
-                    {incompleteTodos.filter(t => t.priority === 'low').length > 0 && (
-                      <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-green-500 rounded-full">
-                        {incompleteTodos.filter(t => t.priority === 'low').length}
-                      </span>
-                    )}
-                    {/* 완료된 할일 */}
-                    {completedTodos.length > 0 && (
-                      <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-gray-500 bg-gray-200 rounded-full">
-                        ✓
-                      </span>
+                    {dayTodos.length > 0 && (
+                      <>
+                        {incompleteTodos.filter(t => t.priority === 'high').length > 0 && (
+                          <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
+                            {incompleteTodos.filter(t => t.priority === 'high').length}
+                          </span>
+                        )}
+                        {incompleteTodos.filter(t => t.priority === 'medium').length > 0 && (
+                          <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-yellow-500 rounded-full">
+                            {incompleteTodos.filter(t => t.priority === 'medium').length}
+                          </span>
+                        )}
+                        {incompleteTodos.filter(t => t.priority === 'low').length > 0 && (
+                          <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-green-500 rounded-full">
+                            {incompleteTodos.filter(t => t.priority === 'low').length}
+                          </span>
+                        )}
+                        {/* 완료된 할일 */}
+                        {completedTodos.length > 0 && (
+                          <span className="flex items-center justify-center w-5 h-5 text-xs font-bold text-gray-500 bg-gray-200 rounded-full">
+                            ✓
+                          </span>
+                        )}
+                      </>
                     )}
                   </div>
                 )}
@@ -227,27 +245,58 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                 )}
               </div>
 
-              {/* 할일 미리보기 툴팁 */}
-              {hoveredDate && isSameDay(hoveredDate, day) && dayTodos.length > 0 && (
+              {/* 할일 및 일기 미리보기 툴팁 */}
+              {hoveredDate && isSameDay(hoveredDate, day) && (dayTodos.length > 0 || hasDiary(day)) && (
                 <div className="absolute z-50 top-full left-0 mt-2 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
-                  <div className="text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200">
-                    할일 목록 ({dayTodos.length}개)
-                  </div>
-                  <div className="space-y-1 max-h-48 overflow-y-auto">
-                    {dayTodos.slice(0, 5).map((todo) => (
-                      <div key={todo.id} className="flex items-start gap-2 text-xs">
-                        <span>{getPriorityIcon(todo.priority)}</span>
-                        <span className={`flex-1 ${todo.completed ? 'line-through text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>
-                          {todo.text}
-                        </span>
+                  {/* 일기 미리보기 */}
+                  {hasDiary(day) && (
+                    <div className="mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+                      <div className="text-sm font-semibold mb-1 text-purple-600 dark:text-purple-400 flex items-center gap-1">
+                        <span>📝</span> 일기
                       </div>
-                    ))}
-                    {dayTodos.length > 5 && (
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                        +{dayTodos.length - 5}개 더보기
+                      <div className="text-xs text-gray-600 dark:text-gray-300">
+                        {(() => {
+                          const diary = getDiaryForDate(day);
+                          if (diary) {
+                            const preview = diary.content.length > 50 
+                              ? diary.content.substring(0, 50) + '...' 
+                              : diary.content;
+                            return (
+                              <div>
+                                {diary.mood && <span className="mr-2">{diary.mood}</span>}
+                                <span>{preview}</span>
+                              </div>
+                            );
+                          }
+                          return null;
+                        })()}
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
+                  
+                  {/* 할일 목록 */}
+                  {dayTodos.length > 0 && (
+                    <>
+                      <div className="text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200">
+                        할일 목록 ({dayTodos.length}개)
+                      </div>
+                      <div className="space-y-1 max-h-48 overflow-y-auto">
+                        {dayTodos.slice(0, 5).map((todo) => (
+                          <div key={todo.id} className="flex items-start gap-2 text-xs">
+                            <span>{getPriorityIcon(todo.priority)}</span>
+                            <span className={`flex-1 ${todo.completed ? 'line-through text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>
+                              {todo.text}
+                            </span>
+                          </div>
+                        ))}
+                        {dayTodos.length > 5 && (
+                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                            +{dayTodos.length - 5}개 더보기
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
