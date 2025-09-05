@@ -3,7 +3,7 @@ import { useCalendar } from '@/contexts/CalendarContext'
 import { format, isSameDay, getHours, getMinutes } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { CalendarEvent } from '@/services/api'
-import DiaryBookModal from '@/components/DiaryBookModal'
+import DiaryNotebookModal from '@/components/DiaryNotebookModal'
 import { useDiaryData } from '@/hooks/useDiaryData'
 
 const HOURS = Array.from({ length: 10 }, (_, i) => i + 9) // 9시-18시
@@ -216,8 +216,8 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
         </div>
       </div>
       
-      {/* Diary Modal */}
-      <DiaryBookModal 
+      {/* Diary Notebook Modal */}
+      <DiaryNotebookModal 
         isOpen={isDiaryOpen}
         onClose={() => setIsDiaryOpen(false)}
         date={currentDate}
