@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
 import { useDiaryData } from '@/hooks/useDiaryData'
-import DiaryIndicator from './DiaryIndicator'
-import { Todo } from '@/types/todo'
+import DiaryBookModal from '@/components/DiaryBookModal'
 import { 
   startOfMonth, 
   endOfMonth, 
@@ -15,7 +14,6 @@ import {
   isToday,
   getDay
 } from 'date-fns'
-import { ko } from 'date-fns/locale'
 import { CalendarEvent } from '@/services/api'
 import { formatLunarDate, getSpecialLunarDay } from '@/utils/lunarCalendar'
 
@@ -31,12 +29,14 @@ interface MonthViewProps {
   onDiaryClick?: (date: Date) => void
 }
 
-export default function MonthView({ events, onCreateEvent, onDateClick, onEditEvent, onDeleteEvent, highlightedEventId, onDiaryClick }: MonthViewProps) {
-  const { currentDate, setSelectedDate, setViewMode, getTodosForDate, deleteTodo } = useCalendar()
+export default function MonthView({ events, onCreateEvent, onDateClick, onEditEvent, onDeleteEvent, highlightedEventId }: MonthViewProps) {
+  const { currentDate, getTodosForDate, deleteTodo } = useCalendar()
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null)
+  const [isDiaryOpen, setIsDiaryOpen] = useState(false)
+  const [diaryDate, setDiaryDate] = useState<Date>(new Date())
   
   // 일기 데이터 가져오기
-  const { hasDiary, getDiaryForDate } = useDiaryData({ 
+  const { diaryDates } = useDiaryData({ 
     viewMode: 'month', 
     currentDate 
   })
@@ -67,20 +67,6 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
     return todosMap
   }, [monthDays, getTodosForDate])
 
-  // 우선순위별 색상 정의
-  const getPriorityColor = (priority: 'high' | 'medium' | 'low') => {
-    switch (priority) {
-      case 'high':
-        return 'bg-red-500'
-      case 'medium':
-        return 'bg-yellow-500'
-      case 'low':
-        return 'bg-green-500'
-      default:
-        return 'bg-gray-500'
-    }
-  }
-
   // 우선순위별 아이콘
   const getPriorityIcon = (priority: 'high' | 'medium' | 'low') => {
     switch (priority) {
@@ -107,6 +93,11 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
     e.stopPropagation()
     onEditEvent(event)
+  }
+
+  const handleDiaryClick = (date: Date) => {
+    setDiaryDate(date)
+    setIsDiaryOpen(true)
   }
 
   return (
@@ -184,12 +175,20 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                 {isCurrentMonth && (
                   <div className="flex items-center gap-1">
                     {/* 일기 아이콘 표시 */}
-                    <DiaryIndicator
-                      date={day}
-                      hasDiary={hasDiary(day)}
-                      onClick={() => onDiaryClick?.(day)}
-                      size="small"
-                    />
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleDiaryClick(day)
+                      }}
+                      className={`p-1 rounded text-xs transition-all hover:scale-110 ${ 
+                        diaryDates.has(format(day, 'yyyy-MM-dd'))
+                          ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                          : 'hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400'
+                      }`}
+                      title={diaryDates.has(format(day, 'yyyy-MM-dd')) ? '일기 보기/수정' : '일기 쓰기'}
+                    >
+                      📖
+                    </button>
                     
                     {/* 우선순위별 할일 개수 표시 */}
                     {dayTodos.length > 0 && (
@@ -256,9 +255,9 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                 ))}
                 
                 {/* More Events Indicator */}
-                {events.filter(e => isSameDay(new Date(e.start_time), day)).length > 3 && (
+                {events.filter(e => e.id && isSameDay(new Date(e.start_time), day)).length > 3 && (
                   <div className="text-xs text-muted-foreground font-medium">
-                    +{events.filter(e => isSameDay(new Date(e.start_time), day)).length - 3}개 더보기
+                    +{events.filter(e => e.id && isSameDay(new Date(e.start_time), day)).length - 3}개 더보기
                   </div>
                 )}
               </div>
@@ -301,6 +300,14 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
           )
         })}
       </div>
+      
+      {/* 일기 모달 */}
+      <DiaryBookModal 
+        isOpen={isDiaryOpen}
+        onClose={() => setIsDiaryOpen(false)}
+        date={diaryDate}
+        onSave={() => setIsDiaryOpen(false)}
+      />
     </div>
   )
 }

@@ -1,21 +1,17 @@
 import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
 import { useDiaryData } from '@/hooks/useDiaryData'
-import DiaryIndicator from './DiaryIndicator'
 import AddItemModal from '@/components/AddItemModal'
+import DiaryBookModal from '@/components/DiaryBookModal'
 import { ITEM_COLORS } from '@/types/todo'
 import { 
   startOfWeek, 
   endOfWeek,
   eachDayOfInterval,
-  eachHourOfInterval,
   format,
   isSameDay,
   isToday,
-  getHours,
-  getMinutes,
-  startOfDay,
-  endOfDay
+  getHours
 } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { CalendarEvent } from '@/services/api'
@@ -31,14 +27,16 @@ interface WeekViewProps {
   onDiaryClick?: (date: Date) => void
 }
 
-export default function WeekView({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId, onDiaryClick }: WeekViewProps) {
-  const { currentDate, getTodosForDate, addTodo, updateTodo, deleteTodo, toggleTodo } = useCalendar()
+export default function WeekView({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId }: WeekViewProps) {
+  const { currentDate, getTodosForDate, addTodo, deleteTodo, toggleTodo } = useCalendar()
   const [showAddModal, setShowAddModal] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [selectedHour, setSelectedHour] = useState<number | undefined>()
+  const [isDiaryOpen, setIsDiaryOpen] = useState(false)
+  const [diaryDate, setDiaryDate] = useState<Date>(new Date())
   
   // 일기 데이터 가져오기
-  const { hasDiary, getDiaryForDate } = useDiaryData({ 
+  const { diaryDates } = useDiaryData({ 
     viewMode: 'week', 
     currentDate 
   })
@@ -49,17 +47,6 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
     return eachDayOfInterval({ start, end })
   }, [currentDate])
 
-  const handleAddTodo = (date: Date, text: string) => {
-    if (text.trim()) {
-      addTodo({
-        text: text.trim(),
-        completed: false,
-        priority: 'medium',
-        date: format(date, 'yyyy-MM-dd')
-      })
-    }
-  }
-
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
       case 'high': return '🔴'
@@ -67,6 +54,11 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
       case 'low': return '🟢'
       default: return ''
     }
+  }
+
+  const handleDiaryClick = (date: Date) => {
+    setDiaryDate(date)
+    setIsDiaryOpen(true)
   }
 
   const getEventsForDayAndHour = (date: Date, hour: number) => {
@@ -124,7 +116,6 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
         {weekDays.map((day) => {
           const dayOfWeek = day.getDay()
           const isCurrentDay = isToday(day)
-          const hasDiaryEntry = hasDiary(day)
           
           return (
             <div 
@@ -142,12 +133,17 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                   {format(day, 'd')}
                 </div>
                 {/* 일기 아이콘 표시 */}
-                <DiaryIndicator
-                  date={day}
-                  hasDiary={hasDiaryEntry}
-                  onClick={() => onDiaryClick?.(day)}
-                  size="small"
-                />
+                <button
+                  onClick={() => handleDiaryClick(day)}
+                  className={`p-1 rounded-full text-xs transition-all hover:scale-110 ${ 
+                    diaryDates.has(format(day, 'yyyy-MM-dd'))
+                      ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                      : 'hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400'
+                  }`}
+                  title={diaryDates.has(format(day, 'yyyy-MM-dd')) ? '일기 보기/수정' : '일기 쓰기'}
+                >
+                  📖
+                </button>
               </div>
             </div>
           )
@@ -300,7 +296,6 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
             {weekDays.map(day => {
               const dayTodos = getUntimedTodosForDate(day)
               const isCurrentDay = isToday(day)
-              const diary = getDiaryForDate(day)
               
               return (
                 <div 
@@ -311,16 +306,19 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                   `}
                 >
                   {/* 일기 아이콘 표시 */}
-                  {diary && (
-                    <div className="mb-2 flex items-center">
-                      <DiaryIndicator
-                        date={day}
-                        hasDiary={true}
-                        onClick={() => onDiaryClick?.(day)}
-                        size="small"
-                      />
-                    </div>
-                  )}
+                  <div className="mb-2 flex items-center">
+                    <button
+                      onClick={() => handleDiaryClick(day)}
+                      className={`p-1 rounded text-xs transition-all hover:scale-105 ${ 
+                        diaryDates.has(format(day, 'yyyy-MM-dd'))
+                          ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                          : 'hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400 opacity-50 hover:opacity-100'
+                      }`}
+                      title={diaryDates.has(format(day, 'yyyy-MM-dd')) ? '일기 보기/수정' : '일기 쓰기'}
+                    >
+                      📖 {diaryDates.has(format(day, 'yyyy-MM-dd')) && <span className="ml-1 text-xs">일기</span>}
+                    </button>
+                  </div>
                   
                   {/* 할일 목록 */}
                   <div className="space-y-1 mb-2">
@@ -381,6 +379,14 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
           }}
         />
       )}
+      
+      {/* 일기 모달 */}
+      <DiaryBookModal 
+        isOpen={isDiaryOpen}
+        onClose={() => setIsDiaryOpen(false)}
+        date={diaryDate}
+        onSave={() => setIsDiaryOpen(false)}
+      />
     </div>
   )
 }
