@@ -66,34 +66,13 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
           </p>
         </div>
 
-        {/* 일기 아이콘 - 태그 자리에 배치 */}
-        <div className="mb-6">
-          <button
-            onClick={() => {
-              setIsDiaryOpen(true)
-            }}
-            className={`flex items-center gap-3 p-4 rounded-xl transition-all hover:scale-105 w-full text-left ${
-              hasCurrentDateDiary
-                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 shadow-sm'
-                : 'hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400 opacity-70 hover:opacity-100 border-2 border-dashed border-amber-300 dark:border-amber-600'
-            }`}
-            title={hasCurrentDateDiary ? '일기 보기/수정' : '일기 쓰기'}
-          >
-            <span className="text-2xl">📖</span>
-            <div>
-              <div className="font-semibold">
-                {hasCurrentDateDiary ? '일기 보기' : '일기 쓰기'}
-              </div>
-              <div className="text-sm opacity-75">
-                {hasCurrentDateDiary ? '작성된 일기가 있습니다' : '오늘의 이야기를 남겨보세요'}
-              </div>
-            </div>
-          </button>
-        </div>
-
         {/* 오늘의 운세 섹션 - 확장된 UI */}
         <div className="h-full flex flex-col">
-          <TodayFortuneSection currentDate={currentDate} />
+          <TodayFortuneSection 
+            currentDate={currentDate} 
+            onDiaryClick={() => setIsDiaryOpen(true)}
+            hasDiary={hasCurrentDateDiary}
+          />
         </div>
       </div>
 
