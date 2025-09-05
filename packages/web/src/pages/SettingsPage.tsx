@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
 import NotificationSettings from '@/components/NotificationSettings'
+import ReferralSection from '@/components/Auth/ReferralSection'
 
 interface PersonalInfo {
   birthDate: string
@@ -436,6 +437,11 @@ export default function SettingsPage() {
                         사진 변경
                       </button>
                     </div>
+                  </div>
+
+                  {/* 추천인 섹션 */}
+                  <div className="pt-4 border-t border-border">
+                    <ReferralSection />
                   </div>
 
                   <div className="pt-4 border-t border-border">
