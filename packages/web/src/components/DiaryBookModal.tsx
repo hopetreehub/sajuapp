@@ -38,6 +38,15 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
   const [imageViewerOpen, setImageViewerOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
+  // 디버깅: 모달 상태 변화 로그
+  console.log('📔 DiaryBookModal 렌더링:', {
+    isOpen,
+    date: format(date, 'yyyy-MM-dd'),
+    currentDate: format(currentDate, 'yyyy-MM-dd'),
+    content: content.slice(0, 50) + '...',
+    contentLength: content.length
+  })
+
   // 오늘과 어제의 운세 조언 생성
   const todayAdvice = generateDiaryAdvice(currentDate)
   const yesterdayAdvice = generateDiaryAdvice(subDays(currentDate, 1))

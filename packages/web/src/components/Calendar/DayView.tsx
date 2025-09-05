@@ -17,7 +17,17 @@ interface DayViewProps {
 export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewProps) {
   const { currentDate } = useCalendar()
   const [isDiaryOpen, setIsDiaryOpen] = useState(false)
-  const { diaryDates } = useDiaryData({ viewMode: 'day', currentDate })
+  const { diaryDates, loading, error } = useDiaryData({ viewMode: 'day', currentDate })
+  
+  // 디버깅: useDiaryData 상태 로그
+  console.log('📊 useDiaryData 상태:', {
+    diaryDatesSize: diaryDates.size,
+    diaryDatesArray: Array.from(diaryDates),
+    loading,
+    error,
+    currentDateStr: format(currentDate, 'yyyy-MM-dd'),
+    hasTodayDiary: diaryDates.has(format(currentDate, 'yyyy-MM-dd'))
+  })
 
   const dayEvents = useMemo(() => {
     return events.filter(event => {
@@ -125,7 +135,16 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
         {/* Diary section */}
         <div className="mb-6">
           <button 
-            onClick={() => setIsDiaryOpen(true)}
+            onClick={() => {
+              console.log('🔘 일기 버튼 클릭:', {
+                currentDate: format(currentDate, 'yyyy-MM-dd'),
+                hasDiary: diaryDates.has(format(currentDate, 'yyyy-MM-dd')),
+                diaryDatesSize: diaryDates.size,
+                isDiaryOpen: isDiaryOpen
+              })
+              setIsDiaryOpen(true)
+              console.log('🔘 setIsDiaryOpen(true) 호출 완료')
+            }}
             className={`w-full py-3 px-4 rounded-lg transition-all shadow-lg hover:shadow-xl ${
               diaryDates.has(format(currentDate, 'yyyy-MM-dd'))
                 ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white'
