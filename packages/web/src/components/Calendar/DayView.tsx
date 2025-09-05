@@ -4,6 +4,7 @@ import { format, isSameDay, getHours, getMinutes } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { CalendarEvent } from '@/services/api'
 import DiaryNotebookModal from '@/components/DiaryNotebookModal'
+import TaskSelectionModal from '@/components/TaskSelectionModal'
 import { useDiaryData } from '@/hooks/useDiaryData'
 
 const HOURS = Array.from({ length: 10 }, (_, i) => i + 9) // 9시-18시
@@ -17,6 +18,9 @@ interface DayViewProps {
 export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewProps) {
   const { currentDate } = useCalendar()
   const [isDiaryOpen, setIsDiaryOpen] = useState(false)
+  const [showTaskSelection, setShowTaskSelection] = useState(false)
+  const [taskSelectionPosition, setTaskSelectionPosition] = useState({ x: 0, y: 0 })
+  const [selectedDateTime, setSelectedDateTime] = useState<Date>(new Date())
   const { diaryDates, loading, error } = useDiaryData({ viewMode: 'day', currentDate })
   
   // 디버깅: useDiaryData 상태 로그
@@ -138,12 +142,20 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
         </div>
 
 
-        {/* Add event button */}
+        {/* Add task button */}
         <div className="mt-6">
           <button 
-            onClick={() => onCreateEvent(currentDate)}
+            onClick={(e) => {
+              setSelectedDateTime(currentDate)
+              const rect = e.currentTarget.getBoundingClientRect()
+              setTaskSelectionPosition({
+                x: rect.left + rect.width / 2,
+                y: rect.top
+              })
+              setShowTaskSelection(true)
+            }}
             className="w-full py-2 px-4 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors">
-            새 일정 추가
+            새 작업 추가
           </button>
         </div>
       </div>
@@ -174,10 +186,18 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
                 </div>
                 <div 
                   className="flex-1 relative cursor-pointer hover:bg-muted/30"
-                  onClick={() => {
+                  onClick={(e) => {
                     const selectedDateTime = new Date(currentDate)
                     selectedDateTime.setHours(hour, 0, 0, 0)
-                    onCreateEvent(selectedDateTime)
+                    setSelectedDateTime(selectedDateTime)
+                    
+                    // 클릭 위치 계산
+                    const rect = e.currentTarget.getBoundingClientRect()
+                    setTaskSelectionPosition({
+                      x: rect.left + rect.width / 2,
+                      y: rect.top + rect.height / 2
+                    })
+                    setShowTaskSelection(true)
                   }}
                 >
                   {/* Half-hour line */}
@@ -216,11 +236,28 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
         </div>
       </div>
       
+      {/* Task Selection Modal */}
+      <TaskSelectionModal
+        isOpen={showTaskSelection}
+        onClose={() => setShowTaskSelection(false)}
+        date={selectedDateTime}
+        position={taskSelectionPosition}
+        onSelectEvent={() => onCreateEvent(selectedDateTime)}
+        onSelectTodo={() => {
+          // TODO: 할일 추가 기능 구현
+          console.log('할일 추가:', selectedDateTime)
+        }}
+        onSelectDiary={() => {
+          setSelectedDateTime(selectedDateTime)
+          setIsDiaryOpen(true)
+        }}
+      />
+
       {/* Diary Notebook Modal */}
       <DiaryNotebookModal 
         isOpen={isDiaryOpen}
         onClose={() => setIsDiaryOpen(false)}
-        date={currentDate}
+        date={selectedDateTime}
         onSave={() => setIsDiaryOpen(false)}
       />
     </div>
