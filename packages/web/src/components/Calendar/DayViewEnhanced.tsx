@@ -4,7 +4,7 @@ import { format, isSameDay } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { CalendarEvent } from '@/services/api'
 import TodayFortuneWidget from '@/components/Fortune/TodayFortuneWidget'
-import DiaryModal from '@/components/DiaryModal'
+import DiaryBookModal from '@/components/DiaryBookModal'
 import { getCustomerById, Customer } from '@/services/customerApi'
 import { SajuData } from '@/utils/sajuScoreCalculator'
 import { getPersonalInfoFromStorage, convertPersonalInfoToSaju, isPersonalInfoValid } from '@/utils/personalInfoToSaju'
@@ -363,7 +363,7 @@ export default function DayViewEnhanced({ events, onCreateEvent, onDateClick, on
 
 
         {/* 일기 작성 모달 */}
-        <DiaryModal 
+        <DiaryBookModal 
           isOpen={isDiaryModalOpen}
           onClose={() => setIsDiaryModalOpen(false)}
           date={currentDate}

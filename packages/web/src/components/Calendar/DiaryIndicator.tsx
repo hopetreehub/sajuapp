@@ -43,8 +43,7 @@ const DiaryIndicator: React.FC<DiaryIndicatorProps> = ({
         border border-purple-200 dark:border-purple-700
         shadow-sm hover:shadow-md
       `}
-      title={showTooltip ? '일기 보기/수정' : undefined}
-      aria-label={`${date.toLocaleDateString()} 일기 보기 또는 수정`}
+      aria-label={`${date.toLocaleDateString()} 일기 열기`}
     >
       <span className="leading-none">📔</span>
     </button>

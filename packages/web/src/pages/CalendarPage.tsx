@@ -7,7 +7,7 @@ import DayViewEnhanced from '@/components/Calendar/DayViewEnhanced'
 import YearView from '@/components/Calendar/YearView'
 import YearViewEnhanced from '@/components/Calendar/YearViewEnhanced'
 import EventModal from '@/components/EventModal'
-import DiaryModal from '@/components/DiaryModal'
+import DiaryBookModal from '@/components/DiaryBookModal'
 import ActionMenu, { ActionType } from '@/components/ActionMenu'
 import { CalendarEvent, eventService } from '@/services/api'
 
@@ -365,8 +365,8 @@ export default function CalendarPage() {
         onSelectAction={handleActionSelect}
       />
 
-      {/* DiaryModal */}
-      <DiaryModal
+      {/* DiaryBookModal */}
+      <DiaryBookModal
         isOpen={isDiaryModalOpen}
         onClose={handleCloseDiaryModal}
         date={diaryModalDate || new Date()}

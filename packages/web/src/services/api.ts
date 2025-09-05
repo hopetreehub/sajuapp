@@ -251,6 +251,7 @@ export interface DiaryEntry {
   mood?: string;
   weather?: string;
   tags?: string[];
+  images?: string[]; // Base64 encoded images
   created_at?: string;
   updated_at?: string;
 }

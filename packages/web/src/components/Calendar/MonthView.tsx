@@ -244,7 +244,7 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
-                          onDeleteEvent(event.id)
+                          onDeleteEvent?.(event.id)
                         }}
                         className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-1"
                         title="일정 삭제"
@@ -263,68 +263,38 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                 )}
               </div>
 
-              {/* 할일 및 일기 미리보기 툴팁 */}
-              {hoveredDate && isSameDay(hoveredDate, day) && (dayTodos.length > 0 || hasDiary(day)) && (
+              {/* 할일 미리보기 툴팁 */}
+              {hoveredDate && isSameDay(hoveredDate, day) && dayTodos.length > 0 && (
                 <div className="absolute z-50 top-full left-0 mt-2 w-64 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3">
-                  {/* 일기 미리보기 */}
-                  {hasDiary(day) && (
-                    <div className="mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
-                      <div className="text-xs text-gray-600 dark:text-gray-300">
-                        {(() => {
-                          const diary = getDiaryForDate(day);
-                          if (diary) {
-                            const preview = diary.content.length > 50 
-                              ? diary.content.substring(0, 50) + '...' 
-                              : diary.content;
-                            return (
-                              <div className="flex items-start gap-2">
-                                <span className="text-base">📔</span>
-                                <div className="flex-1">
-                                  {diary.mood && <span className="mr-2">{diary.mood}</span>}
-                                  <span>{preview}</span>
-                                </div>
-                              </div>
-                            );
-                          }
-                          return null;
-                        })()}
-                      </div>
-                    </div>
-                  )}
-                  
                   {/* 할일 목록 */}
-                  {dayTodos.length > 0 && (
-                    <>
-                      <div className="text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200">
-                        할일 목록 ({dayTodos.length}개)
+                  <div className="text-sm font-semibold mb-2 text-gray-800 dark:text-gray-200">
+                    할일 목록 ({dayTodos.length}개)
+                  </div>
+                  <div className="space-y-1 max-h-48 overflow-y-auto">
+                    {dayTodos.slice(0, 5).map((todo) => (
+                      <div key={todo.id} className="flex items-start gap-2 text-xs group">
+                        <span>{getPriorityIcon(todo.priority)}</span>
+                        <span className={`flex-1 ${todo.completed ? 'line-through text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>
+                          {todo.text}
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            deleteTodo(todo.id)
+                          }}
+                          className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity"
+                          title="할일 삭제"
+                        >
+                          ×
+                        </button>
                       </div>
-                      <div className="space-y-1 max-h-48 overflow-y-auto">
-                        {dayTodos.slice(0, 5).map((todo) => (
-                          <div key={todo.id} className="flex items-start gap-2 text-xs group">
-                            <span>{getPriorityIcon(todo.priority)}</span>
-                            <span className={`flex-1 ${todo.completed ? 'line-through text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>
-                              {todo.text}
-                            </span>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                deleteTodo(todo.id)
-                              }}
-                              className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity"
-                              title="할일 삭제"
-                            >
-                              ×
-                            </button>
-                          </div>
-                        ))}
-                        {dayTodos.length > 5 && (
-                          <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                            +{dayTodos.length - 5}개 더보기
-                          </div>
-                        )}
+                    ))}
+                    {dayTodos.length > 5 && (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                        +{dayTodos.length - 5}개 더보기
                       </div>
-                    </>
-                  )}
+                    )}
+                  </div>
                 </div>
               )}
             </div>

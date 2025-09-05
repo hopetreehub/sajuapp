@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { format } from 'date-fns'
+import { format, addDays, subDays } from 'date-fns'
 import { ko } from 'date-fns/locale'
-import Modal from './Modal'
 import { diaryService, DiaryEntry } from '@/services/api'
+import { generateDiaryAdvice, getCategoryIcon, getCategoryColor } from '@/utils/diaryAdvice'
 
 interface DiaryModalProps {
   isOpen: boolean
@@ -23,11 +23,14 @@ const MOODS = [
 ]
 
 export default function DiaryModal({ isOpen, onClose, date, onSave }: DiaryModalProps) {
+  const [currentDate, setCurrentDate] = useState(date)
   const [content, setContent] = useState('')
   const [selectedMood, setSelectedMood] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [existingEntry, setExistingEntry] = useState<DiaryEntry | null>(null)
+  const [yesterdayEntry, setYesterdayEntry] = useState<DiaryEntry | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [isAutoSaving, setIsAutoSaving] = useState(false)
 
   // 날짜가 변경되거나 모달이 열릴 때 기존 일기 조회
   useEffect(() => {
