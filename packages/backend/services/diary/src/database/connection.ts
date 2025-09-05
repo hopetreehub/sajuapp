@@ -43,6 +43,17 @@ const createTables = async (): Promise<void> => {
     // Create indexes
     await db.exec(createDiaryIndexes);
     
+    // Add images column if it doesn't exist (migration)
+    try {
+      await db.exec(`ALTER TABLE diary_entries ADD COLUMN images TEXT`);
+      logger.info('Added images column to diary_entries table');
+    } catch (error: any) {
+      // Column might already exist, which is fine
+      if (!error.message.includes('duplicate column name')) {
+        logger.debug('Images column already exists or other error:', error.message);
+      }
+    }
+    
     // Create default user for testing
     const defaultUser = `
       INSERT OR IGNORE INTO diary_entries (id, user_id, date, content, mood)

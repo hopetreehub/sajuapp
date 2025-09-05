@@ -6,6 +6,7 @@ export interface DiaryEntry {
   mood: string; // emoji or mood descriptor
   weather?: string;
   tags?: string[]; // Array of tag strings
+  images?: string[]; // Array of base64 encoded images
   created_at: string;
   updated_at: string;
 }
