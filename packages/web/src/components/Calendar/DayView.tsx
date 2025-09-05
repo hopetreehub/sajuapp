@@ -4,6 +4,7 @@ import { format, isSameDay, getHours, getMinutes } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { CalendarEvent } from '@/services/api'
 import DiaryBookModal from '@/components/DiaryBookModal'
+import { useDiaryData } from '@/hooks/useDiaryData'
 
 const HOURS = Array.from({ length: 10 }, (_, i) => i + 9) // 9시-18시
 
@@ -16,6 +17,7 @@ interface DayViewProps {
 export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewProps) {
   const { currentDate } = useCalendar()
   const [isDiaryOpen, setIsDiaryOpen] = useState(false)
+  const { diaryDates } = useDiaryData({ viewMode: 'day', currentDate })
 
   const dayEvents = useMemo(() => {
     return events.filter(event => {
@@ -52,12 +54,23 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
       {/* Left sidebar - Day info & All-day events */}
       <div className="w-80 border-r border-border p-4 overflow-auto">
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-foreground">
-            {format(currentDate, 'yyyy년 M월 d일', { locale: ko })}
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            {format(currentDate, 'EEEE', { locale: ko })}
-          </p>
+          <div className="flex items-center gap-3">
+            <div>
+              <h2 className="text-2xl font-bold text-foreground">
+                {format(currentDate, 'yyyy년 M월 d일', { locale: ko })}
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                {format(currentDate, 'EEEE', { locale: ko })}
+              </p>
+            </div>
+            {/* 일기 아이콘 */}
+            {diaryDates.has(format(currentDate, 'yyyy-MM-dd')) && (
+              <div className="flex items-center gap-2 px-3 py-1 bg-amber-100 dark:bg-amber-900/30 rounded-full">
+                <span className="text-lg">📖</span>
+                <span className="text-sm font-medium text-amber-700 dark:text-amber-300">일기 작성됨</span>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* All-day events */}
@@ -113,10 +126,16 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
         <div className="mb-6">
           <button 
             onClick={() => setIsDiaryOpen(true)}
-            className="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg hover:from-amber-600 hover:to-amber-700 transition-all shadow-lg hover:shadow-xl">
+            className={`w-full py-3 px-4 rounded-lg transition-all shadow-lg hover:shadow-xl ${
+              diaryDates.has(format(currentDate, 'yyyy-MM-dd'))
+                ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white'
+                : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
+            }`}>
             <div className="flex items-center justify-center gap-2">
               <span className="text-xl">📖</span>
-              <span className="font-medium">오늘의 일기 쓰기</span>
+              <span className="font-medium">
+                {diaryDates.has(format(currentDate, 'yyyy-MM-dd')) ? '일기 보기/수정' : '오늘의 일기 쓰기'}
+              </span>
             </div>
           </button>
         </div>

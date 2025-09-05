@@ -596,7 +596,15 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
                 <div className="diary-content">
                   <textarea
                     value={content}
-                    onChange={(e) => setContent(e.target.value)}
+                    onChange={(e) => {
+                      const newContent = e.target.value
+                      console.log('📝 Content 변경:', { 
+                        길이: newContent.length, 
+                        trim길이: newContent.trim().length,
+                        내용: newContent
+                      })
+                      setContent(newContent)
+                    }}
                     placeholder="오늘 하루는 어땠나요? 마음속 이야기를 자유롭게 적어보세요..."
                     className="w-full h-64 p-0 border-none bg-transparent resize-none focus:outline-none text-gray-700 dark:text-gray-300 placeholder-amber-400 dark:placeholder-gray-500 leading-relaxed"
                     style={{ 
@@ -709,14 +717,13 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
               <span className="text-sm font-medium">어제</span>
             </button>
 
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex flex-col items-center gap-1">
               {!isToday(currentDate) && (
                 <button
                   onClick={() => setCurrentDate(new Date())}
-                  className="flex items-center gap-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm font-medium shadow-sm"
+                  className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium transition-colors"
                 >
-                  <Calendar className="w-4 h-4" />
-                  <span>오늘로 돌아가기</span>
+                  오늘
                 </button>
               )}
               <div className="text-xs text-amber-600 dark:text-gray-500">
@@ -737,7 +744,15 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
           <div className="flex justify-end items-center mt-4">
             <div className="flex gap-2">
               <button
-                onClick={handleSave}
+                onClick={() => {
+                  console.log('💾 저장 버튼 클릭:', { 
+                    content길이: content.length,
+                    trim길이: content.trim().length,
+                    isLoading,
+                    조건: content.trim() && !isLoading
+                  })
+                  handleSave()
+                }}
                 disabled={!content.trim() || isLoading}
                 className={`
                   px-6 py-2 rounded-lg font-medium transition-colors
@@ -747,7 +762,7 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
                   }
                 `}
               >
-                {isLoading ? '저장 중...' : '저장하기'}
+                {isLoading ? '저장 중...' : `저장하기 ${content.length > 0 ? `(${content.length}자)` : ''}`}
               </button>
             </div>
           </div>
