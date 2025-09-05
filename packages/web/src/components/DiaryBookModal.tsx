@@ -78,6 +78,35 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
     setWordCount(content.length)
   }, [content])
 
+  // todayEntry 변경 시 이미지 상태 동기화 (디버그 로그 포함)
+  useEffect(() => {
+    if (todayEntry) {
+      console.log('✅ todayEntry 변경 감지:', {
+        date: todayEntry.date,
+        hasImages: !!todayEntry.images,
+        imageCount: todayEntry.images?.length || 0,
+        images: todayEntry.images
+      })
+      
+      // 기존 상태와 비교해서 다를 경우에만 업데이트
+      const existingImageStr = JSON.stringify(images)
+      const newImageStr = JSON.stringify(todayEntry.images || [])
+      
+      if (existingImageStr !== newImageStr) {
+        console.log('🔄 이미지 상태 업데이트:', {
+          기존: images.length,
+          새로운: todayEntry.images?.length || 0
+        })
+        setImages(todayEntry.images || [])
+      }
+    } else {
+      console.log('📝 새 일기 작성 모드 - 이미지 초기화')
+      if (images.length > 0) {
+        setImages([])
+      }
+    }
+  }, [todayEntry])
+
   const loadDiaries = async (targetDate: Date) => {
     setIsLoading(true)
     try {
@@ -87,12 +116,21 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
       // 오늘 일기 조회
       try {
         const todayDiary = await diaryService.getDiaryByDate(todayStr)
+        console.log('📖 일기 로드 성공:', {
+          date: todayStr,
+          hasContent: !!todayDiary.content,
+          hasImages: !!todayDiary.images,
+          imageCount: todayDiary.images?.length || 0,
+          imagesFirstChar: todayDiary.images?.[0]?.substring(0, 30) || 'none'
+        })
+        
         setTodayEntry(todayDiary)
         setContent(todayDiary.content || '')
         setSelectedMood(todayDiary.mood || '😊')
         setImages(todayDiary.images || [])
       } catch (error: any) {
         if (error.response?.status === 404) {
+          console.log('📄 일기 없음 - 새 일기 모드')
           setTodayEntry(null)
           setContent('')
           setSelectedMood('😊')

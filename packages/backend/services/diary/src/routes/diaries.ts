@@ -40,10 +40,11 @@ router.get('/search', async (req: Request, res: Response) => {
     
     const diaries = await db.all(query, params);
     
-    // Parse tags JSON
+    // Parse tags and images JSON
     const parsedDiaries = diaries.map((diary: any) => ({
       ...diary,
-      tags: diary.tags ? JSON.parse(diary.tags) : []
+      tags: diary.tags ? JSON.parse(diary.tags) : [],
+      images: diary.images ? JSON.parse(diary.images) : []
     }));
     
     res.json(parsedDiaries);
@@ -75,10 +76,11 @@ router.get('/', async (req: Request, res: Response) => {
     
     const diaries = await db.all(query, params);
     
-    // Parse tags JSON
+    // Parse tags and images JSON
     const parsedDiaries = diaries.map((diary: any) => ({
       ...diary,
-      tags: diary.tags ? JSON.parse(diary.tags) : []
+      tags: diary.tags ? JSON.parse(diary.tags) : [],
+      images: diary.images ? JSON.parse(diary.images) : []
     }));
     
     res.json(parsedDiaries);
@@ -104,8 +106,9 @@ router.get('/:date', async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Diary entry not found' });
     }
     
-    // Parse tags JSON
+    // Parse tags and images JSON
     diary.tags = diary.tags ? JSON.parse(diary.tags) : [];
+    diary.images = diary.images ? JSON.parse(diary.images) : [];
     
     res.json(diary);
   } catch (error) {
@@ -118,7 +121,7 @@ router.get('/:date', async (req: Request, res: Response) => {
 router.post('/', async (req: Request, res: Response) => {
   try {
     const userId = req.headers['x-user-id'] || 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
-    const { date, content, mood, weather, tags } = req.body;
+    const { date, content, mood, weather, tags, images } = req.body;
     
     if (!date || !content) {
       return res.status(400).json({ error: 'Date and content are required' });
@@ -129,14 +132,15 @@ router.post('/', async (req: Request, res: Response) => {
     const now = new Date().toISOString();
     
     await db.run(
-      `INSERT INTO diary_entries (id, user_id, date, content, mood, weather, tags, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO diary_entries (id, user_id, date, content, mood, weather, tags, images, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [id, userId, date, content, mood || null, weather || null, 
-       tags ? JSON.stringify(tags) : null, now, now]
+       tags ? JSON.stringify(tags) : null, images ? JSON.stringify(images) : null, now, now]
     );
     
     const newDiary = await db.get('SELECT * FROM diary_entries WHERE id = ?', [id]);
     newDiary.tags = newDiary.tags ? JSON.parse(newDiary.tags) : [];
+    newDiary.images = newDiary.images ? JSON.parse(newDiary.images) : [];
     
     res.status(201).json(newDiary);
   } catch (error: any) {
@@ -153,7 +157,7 @@ router.put('/:id', async (req: Request, res: Response) => {
   try {
     const userId = req.headers['x-user-id'] || 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
     const { id } = req.params;
-    const { content, mood, weather, tags } = req.body;
+    const { content, mood, weather, tags, images } = req.body;
     
     const db = getDb();
     const now = new Date().toISOString();
@@ -164,9 +168,11 @@ router.put('/:id', async (req: Request, res: Response) => {
            mood = COALESCE(?, mood),
            weather = COALESCE(?, weather),
            tags = COALESCE(?, tags),
+           images = COALESCE(?, images),
            updated_at = ?
        WHERE id = ? AND user_id = ?`,
-      [content, mood, weather, tags ? JSON.stringify(tags) : null, now, id, userId]
+      [content, mood, weather, tags ? JSON.stringify(tags) : null, 
+       images ? JSON.stringify(images) : null, now, id, userId]
     );
     
     if (result.changes === 0) {
@@ -175,6 +181,7 @@ router.put('/:id', async (req: Request, res: Response) => {
     
     const updatedDiary = await db.get('SELECT * FROM diary_entries WHERE id = ?', [id]);
     updatedDiary.tags = updatedDiary.tags ? JSON.parse(updatedDiary.tags) : [];
+    updatedDiary.images = updatedDiary.images ? JSON.parse(updatedDiary.images) : [];
     
     res.json(updatedDiary);
   } catch (error) {
