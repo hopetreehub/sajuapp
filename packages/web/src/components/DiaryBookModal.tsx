@@ -4,6 +4,7 @@ import { ko } from 'date-fns/locale'
 import { diaryService, DiaryEntry } from '@/services/api'
 import { generateDiaryAdvice, getCategoryIcon, getCategoryColor } from '@/utils/diaryAdvice'
 import { Camera, X } from 'lucide-react'
+import ImageViewer from './ImageViewer'
 
 interface DiaryBookModalProps {
   isOpen: boolean
@@ -34,6 +35,8 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
   const [wordCount, setWordCount] = useState(0)
   const [images, setImages] = useState<string[]>([])
   const [isUploading, setIsUploading] = useState(false)
+  const [imageViewerOpen, setImageViewerOpen] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   // 오늘과 어제의 운세 조언 생성
   const todayAdvice = generateDiaryAdvice(currentDate)
@@ -147,31 +150,81 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
     setIsLoading(true)
     try {
       const dateStr = format(currentDate, 'yyyy-MM-dd')
+      
+      // 이미지 크기 검증 및 디버그 정보
+      let processedImages: string[] | undefined = undefined
+      if (images.length > 0) {
+        processedImages = []
+        for (const img of images) {
+          // Base64 크기 확인
+          const sizeMB = (img.length * 3) / 4 / (1024 * 1024)
+          console.log(`이미지 크기: ${sizeMB.toFixed(2)}MB`)
+          
+          // 크기가 너무 크면 재압축
+          if (sizeMB > 1) {
+            console.warn(`이미지가 1MB를 초과합니다. 현재: ${sizeMB.toFixed(2)}MB`)
+          }
+          processedImages.push(img)
+        }
+      }
+      
       const diaryData = {
         date: dateStr,
         content: content.trim(),
         mood: selectedMood,
         weather: undefined as string | undefined,
-        images: images.length > 0 ? images : undefined,
+        images: processedImages,
         tags: [] as string[]
       }
+
+      console.log('저장할 일기 데이터:', {
+        date: dateStr,
+        contentLength: content.length,
+        mood: selectedMood,
+        imageCount: processedImages?.length || 0,
+        totalDataSize: JSON.stringify(diaryData).length / 1024 + 'KB'
+      })
 
       let savedEntry: DiaryEntry
       
       if (todayEntry?.id) {
+        console.log('기존 일기 업데이트:', todayEntry.id)
         savedEntry = await diaryService.updateDiary(todayEntry.id, diaryData)
       } else {
+        console.log('새 일기 생성')
         savedEntry = await diaryService.createDiary(diaryData)
       }
 
+      console.log('저장 성공:', savedEntry)
       setTodayEntry(savedEntry)
       
       if (onSave) {
         onSave(savedEntry)
       }
-    } catch (error) {
-      console.error('Failed to save diary:', error)
-      alert('일기 저장에 실패했습니다. 다시 시도해주세요.')
+      
+      // 성공 알림
+      alert('일기가 저장되었습니다!')
+    } catch (error: any) {
+      console.error('일기 저장 실패 상세 정보:')
+      console.error('Error object:', error)
+      console.error('Error message:', error?.message)
+      console.error('Error response:', error?.response)
+      console.error('Error status:', error?.response?.status)
+      console.error('Error data:', error?.response?.data)
+      
+      // 더 구체적인 에러 메시지
+      let errorMessage = '일기 저장에 실패했습니다.'
+      if (error?.response?.status === 413) {
+        errorMessage = '이미지 크기가 너무 큽니다. 더 작은 이미지를 선택해주세요.'
+      } else if (error?.response?.status === 500) {
+        errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+      } else if (error?.response?.status === 404) {
+        errorMessage = '다이어리 서비스에 연결할 수 없습니다.'
+      } else if (error?.message) {
+        errorMessage = `저장 실패: ${error.message}`
+      }
+      
+      alert(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -554,6 +607,10 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
                               src={img} 
                               className="w-full h-20 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
                               alt={`업로드된 이미지 ${idx + 1}`}
+                              onClick={() => {
+                                setCurrentImageIndex(idx)
+                                setImageViewerOpen(true)
+                              }}
                             />
                             <button 
                               onClick={() => removeImage(idx)}
@@ -644,6 +701,14 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
           </div>
         </div>
       </div>
+      
+      {/* 이미지 뷰어 */}
+      <ImageViewer
+        images={images}
+        currentIndex={currentImageIndex}
+        isOpen={imageViewerOpen}
+        onClose={() => setImageViewerOpen(false)}
+      />
     </div>
   )
 }
