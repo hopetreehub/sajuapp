@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { format, addDays, subDays } from 'date-fns'
+import { format, addDays, subDays, isToday } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { diaryService, DiaryEntry } from '@/services/api'
 import { generateDiaryAdvice, getCategoryIcon, getCategoryColor } from '@/utils/diaryAdvice'
-import { Camera, X } from 'lucide-react'
+import { Camera, X, Calendar } from 'lucide-react'
 import ImageViewer from './ImageViewer'
 
 interface DiaryBookModalProps {
@@ -47,12 +47,7 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
   useEffect(() => {
     if (isOpen) {
       setCurrentDate(date)
-      // 모달이 처음 열릴 때만 초기화
-      if (!content) {
-        setContent('')
-        setSelectedMood('😊')
-        setImages([])
-      }
+      // 초기 상태 설정은 loadDiaries에서 처리
       loadDiaries(date)
     }
   }, [isOpen, date])
@@ -131,22 +126,15 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
         })
         
         setTodayEntry(todayDiary)
-        setContent(todayDiary.content || '')
+        setContent(todayDiary.content || '')  // 기존 일기가 있으면 내용 로드
         setSelectedMood(todayDiary.mood || '😊')
         setImages(todayDiary.images || [])
       } catch (error: any) {
         if (error.response?.status === 404) {
           console.log('📄 일기 없음 - 새 일기 모드')
           setTodayEntry(null)
-          // 새 일기 모드에서는 content를 초기화하지 않고 유지
-          // 이미 입력한 내용이 있다면 보존
-          if (!content) {
-            setContent('')  // content가 없을 때만 빈 문자열로 설정
-          }
-          setSelectedMood('😊')
-          if (images.length === 0) {
-            setImages([])  // 이미지가 없을 때만 빈 배열로 설정
-          }
+          // 새 일기 모드: 아무것도 초기화하지 않음
+          // 사용자가 입력 중이던 내용 모두 유지
         }
       }
 
@@ -286,6 +274,11 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
 
   const handleNextDay = () => {
     setCurrentDate(addDays(currentDate, 1))
+  }
+
+  const handleGoToToday = () => {
+    const today = new Date()
+    setCurrentDate(today)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -716,7 +709,16 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
               <span className="text-sm font-medium">어제</span>
             </button>
 
-            <div className="text-center">
+            <div className="flex flex-col items-center gap-2">
+              {!isToday(currentDate) && (
+                <button
+                  onClick={() => setCurrentDate(new Date())}
+                  className="flex items-center gap-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm font-medium shadow-sm"
+                >
+                  <Calendar className="w-4 h-4" />
+                  <span>오늘로 돌아가기</span>
+                </button>
+              )}
               <div className="text-xs text-amber-600 dark:text-gray-500">
                 Ctrl + ← → 로 페이지 이동
               </div>
