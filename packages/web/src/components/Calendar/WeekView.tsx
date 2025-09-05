@@ -132,18 +132,16 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                 <div className={`text-lg font-semibold ${isCurrentDay ? 'text-primary' : 'text-foreground'}`}>
                   {format(day, 'd')}
                 </div>
-                {/* 일기 아이콘 표시 */}
-                <button
-                  onClick={() => handleDiaryClick(day)}
-                  className={`p-1 rounded-full text-xs transition-all hover:scale-110 ${ 
-                    diaryDates.has(format(day, 'yyyy-MM-dd'))
-                      ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
-                      : 'hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400'
-                  }`}
-                  title={diaryDates.has(format(day, 'yyyy-MM-dd')) ? '일기 보기/수정' : '일기 쓰기'}
-                >
-                  📖
-                </button>
+                {/* 일기 아이콘 표시 - 일기가 있을 때만 표시 */}
+                {diaryDates.has(format(day, 'yyyy-MM-dd')) && (
+                  <button
+                    onClick={() => handleDiaryClick(day)}
+                    className="p-1 rounded-full text-xs transition-all hover:scale-110 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                    title="일기 보기/수정"
+                  >
+                    📖
+                  </button>
+                )}
               </div>
             </div>
           )
@@ -305,20 +303,18 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                     ${isCurrentDay ? 'bg-primary/5' : ''}
                   `}
                 >
-                  {/* 일기 아이콘 표시 */}
-                  <div className="mb-2 flex items-center">
-                    <button
-                      onClick={() => handleDiaryClick(day)}
-                      className={`p-1 rounded text-xs transition-all hover:scale-105 ${ 
-                        diaryDates.has(format(day, 'yyyy-MM-dd'))
-                          ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
-                          : 'hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400 opacity-50 hover:opacity-100'
-                      }`}
-                      title={diaryDates.has(format(day, 'yyyy-MM-dd')) ? '일기 보기/수정' : '일기 쓰기'}
-                    >
-                      📖 {diaryDates.has(format(day, 'yyyy-MM-dd')) && <span className="ml-1 text-xs">일기</span>}
-                    </button>
-                  </div>
+                  {/* 일기 아이콘 표시 - 일기가 있을 때만 표시 */}
+                  {diaryDates.has(format(day, 'yyyy-MM-dd')) && (
+                    <div className="mb-2 flex items-center">
+                      <button
+                        onClick={() => handleDiaryClick(day)}
+                        className="p-1 rounded text-xs transition-all hover:scale-105 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                        title="일기 보기/수정"
+                      >
+                        📖 <span className="ml-1 text-xs">일기</span>
+                      </button>
+                    </div>
+                  )}
                   
                   {/* 할일 목록 */}
                   <div className="space-y-1 mb-2">

@@ -174,21 +174,19 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                 {/* 할일 및 일기 표시 */}
                 {isCurrentMonth && (
                   <div className="flex items-center gap-1">
-                    {/* 일기 아이콘 표시 */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleDiaryClick(day)
-                      }}
-                      className={`p-1 rounded text-xs transition-all hover:scale-110 ${ 
-                        diaryDates.has(format(day, 'yyyy-MM-dd'))
-                          ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
-                          : 'hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400'
-                      }`}
-                      title={diaryDates.has(format(day, 'yyyy-MM-dd')) ? '일기 보기/수정' : '일기 쓰기'}
-                    >
-                      📖
-                    </button>
+                    {/* 일기 아이콘 표시 - 일기가 있을 때만 표시 */}
+                    {diaryDates.has(format(day, 'yyyy-MM-dd')) && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleDiaryClick(day)
+                        }}
+                        className="p-1 rounded text-xs transition-all hover:scale-110 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
+                        title="일기 보기/수정"
+                      >
+                        📖
+                      </button>
+                    )}
                     
                     {/* 우선순위별 할일 개수 표시 */}
                     {dayTodos.length > 0 && (
