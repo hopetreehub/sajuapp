@@ -74,12 +74,17 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
               </p>
             </div>
             {/* 일기 아이콘 */}
-            {diaryDates.has(format(currentDate, 'yyyy-MM-dd')) && (
-              <div className="flex items-center gap-2 px-3 py-1 bg-amber-100 dark:bg-amber-900/30 rounded-full">
-                <span className="text-lg">📖</span>
-                <span className="text-sm font-medium text-amber-700 dark:text-amber-300">일기 작성됨</span>
-              </div>
-            )}
+            <button
+              onClick={() => setIsDiaryOpen(true)}
+              className={`p-1 rounded-full text-xs transition-all hover:scale-110 ${ 
+                diaryDates.has(format(currentDate, 'yyyy-MM-dd'))
+                  ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                  : 'hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400'
+              }`}
+              title={diaryDates.has(format(currentDate, 'yyyy-MM-dd')) ? '일기 보기/수정' : '일기 쓰기'}
+            >
+              📖
+            </button>
           </div>
         </div>
 
@@ -132,32 +137,6 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
           </div>
         </div>
 
-        {/* Diary section */}
-        <div className="mb-6">
-          <button 
-            onClick={() => {
-              console.log('🔘 일기 버튼 클릭:', {
-                currentDate: format(currentDate, 'yyyy-MM-dd'),
-                hasDiary: diaryDates.has(format(currentDate, 'yyyy-MM-dd')),
-                diaryDatesSize: diaryDates.size,
-                isDiaryOpen: isDiaryOpen
-              })
-              setIsDiaryOpen(true)
-              console.log('🔘 setIsDiaryOpen(true) 호출 완료')
-            }}
-            className={`w-full py-3 px-4 rounded-lg transition-all shadow-lg hover:shadow-xl ${
-              diaryDates.has(format(currentDate, 'yyyy-MM-dd'))
-                ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white'
-                : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white'
-            }`}>
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-xl">📖</span>
-              <span className="font-medium">
-                {diaryDates.has(format(currentDate, 'yyyy-MM-dd')) ? '일기 보기/수정' : '오늘의 일기 쓰기'}
-              </span>
-            </div>
-          </button>
-        </div>
 
         {/* Add event button */}
         <div className="mt-6">
