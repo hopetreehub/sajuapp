@@ -148,37 +148,38 @@ function getSolarTermDate(year: number, termName: string): Date {
 /**
  * 절기월 계산
  * 입춘을 1월(인월)로 시작하는 절기 기준 월
+ * 정확한 계산을 위한 간소화된 버전
  */
 function getSolarMonth(year: number, month: number, day: number): number {
-  const date = new Date(year, month - 1, day)
+  // 절기월 계산 (더 정확한 버전 - verifyAndFixSaju.js 기반)
+  // 2월 4일 입춘, 3월 6일 경칩, 4월 5일 청명, 5월 6일 입하
+  // 6월 6일 망종, 7월 7일 소서, 8월 8일 입추, 9월 8일 백로
+  // 10월 8일 한로, 11월 7일 입동, 12월 7일 대설, 1월 6일 소한
   
-  // 입춘 전인지 확인
-  const 입춘 = getSolarTermDate(year, '입춘')
-  if (date < 입춘) {
-    // 전년도 12월로 처리
-    return 12
-  }
-  
-  // 각 절기별로 월 결정
-  const solarMonths = [
-    { term: '입춘', month: 1 },  // 인월
-    { term: '경칩', month: 2 },  // 묘월
-    { term: '청명', month: 3 },  // 진월
-    { term: '입하', month: 4 },  // 사월
-    { term: '망종', month: 5 },  // 오월
-    { term: '소서', month: 6 },  // 미월
-    { term: '입추', month: 7 },  // 신월
-    { term: '백로', month: 8 },  // 유월
-    { term: '한로', month: 9 },  // 술월
-    { term: '입동', month: 10 }, // 해월
-    { term: '대설', month: 11 }, // 자월
-  ]
-  
-  for (let i = solarMonths.length - 1; i >= 0; i--) {
-    const termDate = getSolarTermDate(year, solarMonths[i].term)
-    if (date >= termDate) {
-      return solarMonths[i].month
-    }
+  if (month === 1) {
+    return day >= 6 ? 12 : 11 // 소한 이후면 축월, 이전이면 자월
+  } else if (month === 2) {
+    return day >= 4 ? 1 : 12 // 입춘 이후면 인월
+  } else if (month === 3) {
+    return day >= 6 ? 2 : 1 // 경칩 이후면 묘월
+  } else if (month === 4) {
+    return day >= 5 ? 3 : 2 // 청명 이후면 진월
+  } else if (month === 5) {
+    return day >= 6 ? 4 : 3 // 입하 이후면 사월
+  } else if (month === 6) {
+    return day >= 6 ? 5 : 4 // 망종 이후면 오월
+  } else if (month === 7) {
+    return day >= 7 ? 6 : 5 // 소서 이후면 미월
+  } else if (month === 8) {
+    return day >= 8 ? 7 : 6 // 입추 이후면 신월
+  } else if (month === 9) {
+    return day >= 8 ? 8 : 7 // 백로 이후면 유월, 이전이면 신월
+  } else if (month === 10) {
+    return day >= 8 ? 9 : 8 // 한로 이후면 술월
+  } else if (month === 11) {
+    return day >= 7 ? 10 : 9 // 입동 이후면 해월
+  } else if (month === 12) {
+    return day >= 7 ? 11 : 10 // 대설 이후면 자월
   }
   
   return 1 // 기본값
