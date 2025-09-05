@@ -93,3 +93,24 @@ export interface SajuData extends SajuAnalysisResult {
   personalityTraits?: PersonalityTraits;
   seventeenFortunes?: SeventeenFortuneScores;
 }
+
+// 오늘의 운세를 위한 타입 정의
+export interface DailyFortune {
+  date: string; // YYYY-MM-DD 형식
+  totalLuck: number; // 총운 (0-100)
+  loveLuck: number; // 연애운 (0-100)
+  wealthLuck: number; // 재물운 (0-100)
+  healthLuck: number; // 건강운 (0-100)
+  careerLuck: number; // 직업운 (0-100)
+  message: string; // 오늘의 메시지
+  luckyColor?: string; // 행운의 색상
+  luckyNumber?: number; // 행운의 숫자
+  advice?: string; // 조언
+}
+
+export interface FortuneLevel {
+  level: 'excellent' | 'good' | 'normal' | 'caution' | 'bad';
+  label: string;
+  color: string;
+  icon: string;
+}

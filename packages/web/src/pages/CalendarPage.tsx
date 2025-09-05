@@ -216,7 +216,7 @@ export default function CalendarPage() {
       case 'week':
         return <WeekView {...viewProps} />
       case 'day':
-        return <DayViewEnhanced {...viewProps} />
+        return <DayView {...viewProps} />
       default:
         return <MonthView {...viewProps} />
     }

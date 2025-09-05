@@ -487,7 +487,7 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
           </div>
 
           {/* 일기장 내용 */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 min-h-[500px]">
+          <div className="grid grid-cols-2 gap-8 min-h-[500px]">
             
             {/* 왼쪽 페이지 - 어제 일기 */}
             <div className="diary-page relative">

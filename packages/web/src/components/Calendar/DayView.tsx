@@ -4,8 +4,8 @@ import { format, isSameDay, getHours, getMinutes } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { CalendarEvent } from '@/services/api'
 import DiaryBookModal from '@/components/DiaryBookModal'
-import TaskSelectionModal from '@/components/TaskSelectionModal'
 import { useDiaryData } from '@/hooks/useDiaryData'
+import TodayFortuneSection from '@/components/TodayFortuneSection'
 
 const HOURS = Array.from({ length: 10 }, (_, i) => i + 9) // 9시-18시
 
@@ -18,20 +18,10 @@ interface DayViewProps {
 export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewProps) {
   const { currentDate } = useCalendar()
   const [isDiaryOpen, setIsDiaryOpen] = useState(false)
-  const [showTaskSelection, setShowTaskSelection] = useState(false)
-  const [taskSelectionPosition, setTaskSelectionPosition] = useState({ x: 0, y: 0 })
-  const [selectedDateTime, setSelectedDateTime] = useState<Date>(new Date())
-  const { diaryDates, loading, error } = useDiaryData({ viewMode: 'day', currentDate })
+  const { diaryDates } = useDiaryData({ viewMode: 'day', currentDate })
   
-  // 디버깅: useDiaryData 상태 로그
-  console.log('📊 useDiaryData 상태:', {
-    diaryDatesSize: diaryDates.size,
-    diaryDatesArray: Array.from(diaryDates),
-    loading,
-    error,
-    currentDateStr: format(currentDate, 'yyyy-MM-dd'),
-    hasTodayDiary: diaryDates.has(format(currentDate, 'yyyy-MM-dd'))
-  })
+  // 현재 날짜에 일기가 있는지 확인
+  const hasCurrentDateDiary = diaryDates.has(format(currentDate, 'yyyy-MM-dd'))
 
   const dayEvents = useMemo(() => {
     return events.filter(event => {
@@ -45,7 +35,6 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
 
   const currentHour = new Date().getHours()
   const currentMinute = new Date().getMinutes()
-  // 9시-18시 범위 내에서만 현재 시간 표시
   const isWithinRange = currentHour >= 9 && currentHour <= 18
   const currentTimePosition = isWithinRange ? ((currentHour - 9) * 60 + currentMinute) / (10 * 60) * 100 : -1
 
@@ -65,56 +54,71 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
 
   return (
     <div className="h-full flex bg-background">
-      {/* Left sidebar - Day info & All-day events */}
-      <div className="w-80 border-r border-border p-4 overflow-auto">
+      {/* Left sidebar - Day info & Daily summary */}
+      <div className="w-80 border-r border-border p-6 overflow-auto">
+        {/* 날짜 정보 */}
         <div className="mb-6">
-          <div className="flex items-center gap-3">
-            <div>
-              <h2 className="text-2xl font-bold text-foreground">
-                {format(currentDate, 'yyyy년 M월 d일', { locale: ko })}
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                {format(currentDate, 'EEEE', { locale: ko })}
-              </p>
-            </div>
-            {/* 일기 아이콘 */}
-            <button
-              onClick={() => setIsDiaryOpen(true)}
-              className={`p-1 rounded-full text-xs transition-all hover:scale-110 ${ 
-                diaryDates.has(format(currentDate, 'yyyy-MM-dd'))
-                  ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
-                  : 'hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400'
-              }`}
-              title={diaryDates.has(format(currentDate, 'yyyy-MM-dd')) ? '일기 보기/수정' : '일기 쓰기'}
-            >
-              📖
-            </button>
-          </div>
+          <h2 className="text-3xl font-bold text-foreground mb-1">
+            {format(currentDate, 'yyyy년 M월 d일', { locale: ko })}
+          </h2>
+          <p className="text-xl text-muted-foreground">
+            {format(currentDate, 'EEEE', { locale: ko })}
+          </p>
         </div>
 
-        {/* All-day events */}
+        {/* 일기 아이콘 - 태그 자리에 배치 */}
+        <div className="mb-6">
+          <button
+            onClick={() => {
+              setIsDiaryOpen(true)
+            }}
+            className={`flex items-center gap-3 p-4 rounded-xl transition-all hover:scale-105 w-full text-left ${
+              hasCurrentDateDiary
+                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 shadow-sm'
+                : 'hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400 opacity-70 hover:opacity-100 border-2 border-dashed border-amber-300 dark:border-amber-600'
+            }`}
+            title={hasCurrentDateDiary ? '일기 보기/수정' : '일기 쓰기'}
+          >
+            <span className="text-2xl">📖</span>
+            <div>
+              <div className="font-semibold">
+                {hasCurrentDateDiary ? '일기 보기' : '일기 쓰기'}
+              </div>
+              <div className="text-sm opacity-75">
+                {hasCurrentDateDiary ? '작성된 일기가 있습니다' : '오늘의 이야기를 남겨보세요'}
+              </div>
+            </div>
+          </button>
+        </div>
+
+        {/* 오늘의 운세 섹션 */}
+        <TodayFortuneSection currentDate={currentDate} />
+
+        {/* 종일 일정 */}
         {allDayEvents.length > 0 && (
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-foreground mb-2">종일 일정</h3>
-            <div className="space-y-2">
+            <h3 className="text-lg font-semibold text-foreground mb-3">종일 일정</h3>
+            <div className="space-y-3">
               {allDayEvents.map(event => (
                 <div
                   key={event.id}
-                  className="p-3 rounded-lg border cursor-pointer hover:shadow-md transition-shadow"
+                  className="p-4 rounded-xl border cursor-pointer hover:shadow-md transition-all"
                   style={{ 
                     backgroundColor: `${event.color || '#3b82f6'}10`,
                     borderColor: event.color || '#3b82f6'
                   }}
                   onClick={() => onEditEvent(event)}
                 >
-                  <h4 className="font-medium" style={{ color: event.color || '#3b82f6' }}>
+                  <h4 className="font-semibold" style={{ color: event.color || '#3b82f6' }}>
                     {event.title}
                   </h4>
                   {event.description && (
-                    <p className="text-sm text-muted-foreground mt-1">{event.description}</p>
+                    <p className="text-sm text-muted-foreground mt-2">{event.description}</p>
                   )}
                   {event.location && (
-                    <p className="text-sm text-muted-foreground mt-1">📍 {event.location}</p>
+                    <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
+                      <span>📍</span> {event.location}
+                    </p>
                   )}
                 </div>
               ))}
@@ -122,41 +126,29 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
           </div>
         )}
 
-        {/* Quick stats */}
-        <div className="bg-muted rounded-lg p-4 mb-6">
-          <h3 className="text-sm font-semibold text-foreground mb-3">오늘의 요약</h3>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">총 일정</span>
-              <span className="font-medium">{dayEvents.length}개</span>
+        {/* 오늘의 요약 */}
+        <div className="bg-muted/50 rounded-xl p-4">
+          <h3 className="text-lg font-semibold text-foreground mb-4">오늘의 요약</h3>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground flex items-center gap-2">
+                <span>📅</span> 총 일정
+              </span>
+              <span className="font-semibold text-lg">{dayEvents.length}개</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">종일 일정</span>
-              <span className="font-medium">{allDayEvents.length}개</span>
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground flex items-center gap-2">
+                <span>⏰</span> 종일 일정
+              </span>
+              <span className="font-semibold text-lg">{allDayEvents.length}개</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">시간별 일정</span>
-              <span className="font-medium">{timedEvents.length}개</span>
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground flex items-center gap-2">
+                <span>🕐</span> 시간별 일정
+              </span>
+              <span className="font-semibold text-lg">{timedEvents.length}개</span>
             </div>
           </div>
-        </div>
-
-
-        {/* Add task button */}
-        <div className="mt-6">
-          <button 
-            onClick={(e) => {
-              setSelectedDateTime(currentDate)
-              const rect = e.currentTarget.getBoundingClientRect()
-              setTaskSelectionPosition({
-                x: rect.left + rect.width / 2,
-                y: rect.top
-              })
-              setShowTaskSelection(true)
-            }}
-            className="w-full py-2 px-4 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors">
-            새 작업 추가
-          </button>
         </div>
       </div>
 
@@ -172,7 +164,7 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
               <div className="flex items-center">
                 <div className="w-20"></div>
                 <div className="flex-1 h-0.5 bg-red-500"></div>
-                <div className="w-2 h-2 bg-red-500 rounded-full -ml-1"></div>
+                <div className="w-3 h-3 bg-red-500 rounded-full -ml-1.5"></div>
               </div>
             </div>
           )}
@@ -180,28 +172,22 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
           {/* Hours grid */}
           <div className="relative">
             {HOURS.map(hour => (
-              <div key={hour} className="flex border-b border-border/30" style={{ height: '80px' }}>
-                <div className="w-20 px-3 py-2 text-xs text-muted-foreground text-right">
-                  {format(new Date().setHours(hour, 0, 0, 0), 'HH:mm')}
+              <div key={hour} className="flex border-b border-border/30" style={{ height: '100px' }}>
+                <div className="w-20 px-4 py-3 text-muted-foreground text-right">
+                  <div className="text-xl font-semibold">
+                    {format(new Date().setHours(hour, 0, 0, 0), 'HH:mm')}
+                  </div>
                 </div>
                 <div 
-                  className="flex-1 relative cursor-pointer hover:bg-muted/30"
-                  onClick={(e) => {
-                    const selectedDateTime = new Date(currentDate)
-                    selectedDateTime.setHours(hour, 0, 0, 0)
-                    setSelectedDateTime(selectedDateTime)
-                    
-                    // 클릭 위치 계산
-                    const rect = e.currentTarget.getBoundingClientRect()
-                    setTaskSelectionPosition({
-                      x: rect.left + rect.width / 2,
-                      y: rect.top + rect.height / 2
-                    })
-                    setShowTaskSelection(true)
+                  className="flex-1 relative cursor-pointer hover:bg-muted/20 transition-colors"
+                  onClick={() => {
+                    const eventDate = new Date(currentDate)
+                    eventDate.setHours(hour, 0, 0, 0)
+                    onCreateEvent(eventDate)
                   }}
                 >
                   {/* Half-hour line */}
-                  <div className="absolute top-1/2 left-0 right-0 border-t border-border/20"></div>
+                  <div className="absolute top-1/2 left-0 right-0 border-t border-border/15"></div>
                 </div>
               </div>
             ))}
@@ -213,20 +199,26 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
                 return (
                   <div
                     key={event.id}
-                    className="absolute left-2 right-2 p-2 rounded-lg cursor-pointer hover:shadow-lg transition-shadow"
+                    className="absolute left-4 right-4 p-4 rounded-xl cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02]"
                     style={{ 
                       ...position,
-                      backgroundColor: `${event.color || '#3b82f6'}20`,
-                      borderLeft: `3px solid ${event.color || '#3b82f6'}`
+                      backgroundColor: `${event.color || '#3b82f6'}15`,
+                      borderLeft: `4px solid ${event.color || '#3b82f6'}`,
+                      border: `1px solid ${event.color || '#3b82f6'}30`
                     }}
                     onClick={() => onEditEvent(event)}
                   >
-                    <div className="text-sm font-medium" style={{ color: event.color || '#3b82f6' }}>
+                    <div className="text-sm font-semibold mb-1" style={{ color: event.color || '#3b82f6' }}>
                       {format(new Date(event.start_time), 'HH:mm')} - {format(new Date(event.end_time), 'HH:mm')}
                     </div>
-                    <div className="font-medium text-foreground">{event.title}</div>
+                    <div className="font-semibold text-foreground text-lg mb-1">{event.title}</div>
+                    {event.description && (
+                      <div className="text-sm text-muted-foreground">{event.description}</div>
+                    )}
                     {event.location && (
-                      <div className="text-sm text-muted-foreground mt-1">📍 {event.location}</div>
+                      <div className="text-sm text-muted-foreground mt-2 flex items-center gap-1">
+                        <span>📍</span> {event.location}
+                      </div>
                     )}
                   </div>
                 )
@@ -236,29 +228,14 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
         </div>
       </div>
       
-      {/* Task Selection Modal */}
-      <TaskSelectionModal
-        isOpen={showTaskSelection}
-        onClose={() => setShowTaskSelection(false)}
-        date={selectedDateTime}
-        position={taskSelectionPosition}
-        onSelectEvent={() => onCreateEvent(selectedDateTime)}
-        onSelectTodo={() => {
-          // TODO: 할일 추가 기능 구현
-          console.log('할일 추가:', selectedDateTime)
-        }}
-        onSelectDiary={() => {
-          setSelectedDateTime(selectedDateTime)
-          setIsDiaryOpen(true)
-        }}
-      />
-
       {/* Diary Book Modal */}
       <DiaryBookModal 
         isOpen={isDiaryOpen}
         onClose={() => setIsDiaryOpen(false)}
-        date={selectedDateTime}
-        onSave={() => setIsDiaryOpen(false)}
+        date={currentDate}
+        onSave={() => {
+          setIsDiaryOpen(false)
+        }}
       />
     </div>
   )

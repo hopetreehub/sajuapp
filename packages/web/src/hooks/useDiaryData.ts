@@ -63,10 +63,10 @@ export const useDiaryData = ({ viewMode, currentDate }: UseDiaryDataOptions) => 
       const { startDate, endDate } = getDateRange();
       const diaries = await diaryService.getDiariesForDateRange(startDate, endDate);
       
-      // Create a set of dates that have diary entries
+      // Create a set of dates that have diary entries (only if content or images exist)
       const diaryDates = new Set<string>();
       diaries.forEach(diary => {
-        if (diary.date) {
+        if (diary.date && ((diary.content && diary.content.trim()) || (diary.images && diary.images.length > 0))) {
           diaryDates.add(diary.date);
         }
       });
