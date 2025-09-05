@@ -47,6 +47,12 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
   useEffect(() => {
     if (isOpen) {
       setCurrentDate(date)
+      // 모달이 처음 열릴 때만 초기화
+      if (!content) {
+        setContent('')
+        setSelectedMood('😊')
+        setImages([])
+      }
       loadDiaries(date)
     }
   }, [isOpen, date])
@@ -132,9 +138,15 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
         if (error.response?.status === 404) {
           console.log('📄 일기 없음 - 새 일기 모드')
           setTodayEntry(null)
-          setContent('')
+          // 새 일기 모드에서는 content를 초기화하지 않고 유지
+          // 이미 입력한 내용이 있다면 보존
+          if (!content) {
+            setContent('')  // content가 없을 때만 빈 문자열로 설정
+          }
           setSelectedMood('😊')
-          setImages([])
+          if (images.length === 0) {
+            setImages([])  // 이미지가 없을 때만 빈 배열로 설정
+          }
         }
       }
 
