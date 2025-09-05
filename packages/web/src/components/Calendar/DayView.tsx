@@ -53,9 +53,9 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
   }
 
   return (
-    <div className="h-full flex bg-background">
-      {/* Left sidebar - Day info & Daily summary */}
-      <div className="w-80 border-r border-border p-6 overflow-auto">
+    <div className="h-full flex flex-col lg:flex-row bg-background">
+      {/* Left side - Today's Fortune (50% on desktop, full width on mobile) */}
+      <div className="lg:w-1/2 w-full lg:border-r border-b lg:border-b-0 border-border p-6 overflow-auto bg-gradient-to-br from-background to-muted/20 h-1/2 lg:h-full">
         {/* 날짜 정보 */}
         <div className="mb-6">
           <h2 className="text-3xl font-bold text-foreground mb-1">
@@ -91,69 +91,37 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
           </button>
         </div>
 
-        {/* 오늘의 운세 섹션 */}
-        <TodayFortuneSection currentDate={currentDate} />
+        {/* 오늘의 운세 섹션 - 확장된 UI */}
+        <div className="h-full flex flex-col">
+          <TodayFortuneSection currentDate={currentDate} />
+        </div>
+      </div>
 
-        {/* 종일 일정 */}
+      {/* Right side - Calendar Timeline (50% on desktop, full width on mobile) */}
+      <div className="lg:w-1/2 w-full overflow-auto h-1/2 lg:h-full">
+        {/* 종일 일정 상단 표시 */}
         {allDayEvents.length > 0 && (
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold text-foreground mb-3">종일 일정</h3>
-            <div className="space-y-3">
+          <div className="p-4 border-b border-border bg-muted/30">
+            <h3 className="text-sm font-semibold text-muted-foreground mb-2">종일 일정</h3>
+            <div className="flex flex-wrap gap-2">
               {allDayEvents.map(event => (
                 <div
                   key={event.id}
-                  className="p-4 rounded-xl border cursor-pointer hover:shadow-md transition-all"
+                  className="px-3 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity"
                   style={{ 
-                    backgroundColor: `${event.color || '#3b82f6'}10`,
-                    borderColor: event.color || '#3b82f6'
+                    backgroundColor: event.color || '#3b82f6',
+                    color: 'white'
                   }}
                   onClick={() => onEditEvent(event)}
+                  title={event.description || event.title}
                 >
-                  <h4 className="font-semibold" style={{ color: event.color || '#3b82f6' }}>
-                    {event.title}
-                  </h4>
-                  {event.description && (
-                    <p className="text-sm text-muted-foreground mt-2">{event.description}</p>
-                  )}
-                  {event.location && (
-                    <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
-                      <span>📍</span> {event.location}
-                    </p>
-                  )}
+                  {event.title}
                 </div>
               ))}
             </div>
           </div>
         )}
-
-        {/* 오늘의 요약 */}
-        <div className="bg-muted/50 rounded-xl p-4">
-          <h3 className="text-lg font-semibold text-foreground mb-4">오늘의 요약</h3>
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground flex items-center gap-2">
-                <span>📅</span> 총 일정
-              </span>
-              <span className="font-semibold text-lg">{dayEvents.length}개</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground flex items-center gap-2">
-                <span>⏰</span> 종일 일정
-              </span>
-              <span className="font-semibold text-lg">{allDayEvents.length}개</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground flex items-center gap-2">
-                <span>🕐</span> 시간별 일정
-              </span>
-              <span className="font-semibold text-lg">{timedEvents.length}개</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Right side - Timeline */}
-      <div className="flex-1 overflow-auto">
+        
         <div className="relative min-h-full">
           {/* Current time indicator */}
           {isSameDay(currentDate, new Date()) && currentTimePosition >= 0 && (

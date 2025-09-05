@@ -7,62 +7,70 @@ interface TodayFortuneSectionProps {
   currentDate: Date
 }
 
-interface FortuneItemProps {
+interface FortuneCardProps {
   label: string
   score: number
   icon: string
+  description?: string
 }
 
-const FortuneItem: React.FC<FortuneItemProps> = ({ label, score, icon }) => {
+const FortuneCard: React.FC<FortuneCardProps> = ({ label, score, icon, description }) => {
   const fortuneInfo = getFortuneInfo(score)
   const percentage = Math.round(score)
   
   return (
-    <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-      <div className="flex items-center gap-2">
-        <span className="text-lg">{icon}</span>
-        <span className="font-medium text-foreground">{label}</span>
-      </div>
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1">
-          <span className="text-sm font-medium" style={{ color: fortuneInfo.color }}>
+    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover:scale-105 border border-border/50">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">{icon}</span>
+          <h3 className="text-xl font-bold text-foreground">{label}</h3>
+        </div>
+        <div className="text-right">
+          <div className="text-2xl font-bold" style={{ color: fortuneInfo.color }}>
+            {percentage}%
+          </div>
+          <div className="text-sm font-medium" style={{ color: fortuneInfo.color }}>
             {fortuneInfo.label}
-          </span>
-          <span className="text-xs text-muted-foreground">({percentage}%)</span>
-        </div>
-        <div className="w-12 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-          <div 
-            className="h-full rounded-full transition-all duration-500"
-            style={{ 
-              width: `${percentage}%`, 
-              backgroundColor: fortuneInfo.color 
-            }}
-          />
+          </div>
         </div>
       </div>
+      
+      {/* Progress Bar */}
+      <div className="w-full h-4 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div 
+          className="h-full rounded-full transition-all duration-1000 ease-out"
+          style={{ 
+            width: `${percentage}%`, 
+            backgroundColor: fortuneInfo.color,
+            boxShadow: `0 0 10px ${fortuneInfo.color}40`
+          }}
+        />
+      </div>
+      
+      {description && (
+        <p className="text-sm text-muted-foreground mt-3 italic">{description}</p>
+      )}
     </div>
   )
 }
 
 const LoadingFortuneSection: React.FC = () => (
-  <div className="mb-6">
-    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+  <div className="h-full flex flex-col">
+    <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3">
       <span className="animate-pulse">✨</span>
       오늘의 운세
-    </h3>
-    <div className="space-y-3">
-      {[1, 2, 3, 4].map((i) => (
-        <div key={i} className="p-3 rounded-lg bg-muted/30 animate-pulse">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-5 h-5 bg-muted rounded"></div>
-              <div className="w-16 h-4 bg-muted rounded"></div>
+    </h2>
+    <div className="grid grid-cols-1 gap-6 flex-1">
+      {[1, 2, 3, 4, 5].map((i) => (
+        <div key={i} className="bg-white dark:bg-gray-800 rounded-2xl p-6 animate-pulse">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-muted rounded"></div>
+              <div className="w-24 h-6 bg-muted rounded"></div>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-12 h-4 bg-muted rounded"></div>
-              <div className="w-12 h-2 bg-muted rounded-full"></div>
-            </div>
+            <div className="w-16 h-8 bg-muted rounded"></div>
           </div>
+          <div className="w-full h-4 bg-muted rounded-full"></div>
         </div>
       ))}
     </div>
@@ -70,29 +78,35 @@ const LoadingFortuneSection: React.FC = () => (
 )
 
 const NoSettingsSection: React.FC = () => (
-  <div className="mb-6">
-    <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-      <span>✨</span>
-      오늘의 운세
-    </h3>
-    <div className="p-6 text-center bg-muted/20 rounded-xl border-2 border-dashed border-muted">
-      <div className="text-4xl mb-3">🔮</div>
-      <div className="text-foreground font-medium mb-2">운세를 확인하려면 설정이 필요합니다</div>
-      <div className="text-sm text-muted-foreground mb-4">
+  <div className="h-full flex flex-col items-center justify-center">
+    <div className="max-w-md text-center">
+      <div className="text-6xl mb-6">🔮</div>
+      <h2 className="text-3xl font-bold text-foreground mb-4">
+        운세를 확인하려면 설정이 필요합니다
+      </h2>
+      <p className="text-lg text-muted-foreground mb-8">
         생년월일시 정보를 입력하여 맞춤 운세를 받아보세요
-      </div>
+      </p>
       <button 
         onClick={() => {
           // 설정 페이지로 이동하는 로직 (향후 구현)
           console.log('Navigate to settings')
         }}
-        className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+        className="px-8 py-4 bg-primary-500 text-white text-lg font-semibold rounded-xl hover:bg-primary-600 transition-colors shadow-lg"
       >
         설정하러 가기
       </button>
     </div>
   </div>
 )
+
+const fortuneDescriptions: { [key: string]: string } = {
+  '총운': '하루 전반적인 운의 흐름을 나타냅니다',
+  '연애운': '사랑과 인간관계의 조화를 보여줍니다',
+  '재물운': '금전적 이득과 재산 증식의 기회를 알려줍니다',
+  '건강운': '신체와 정신의 건강 상태를 나타냅니다',
+  '직업운': '업무 성과와 경력 발전 가능성을 보여줍니다'
+}
 
 const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate }) => {
   const { birthInfo } = useSajuSettingsStore()
@@ -127,53 +141,89 @@ const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate }
   ]
 
   return (
-    <div className="mb-6">
-      <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-        <span>✨</span>
-        오늘의 운세
-      </h3>
+    <div className="h-full flex flex-col p-2">
+      {/* 헤더 */}
+      <div className="mb-6">
+        <h2 className="text-4xl font-bold text-foreground mb-2 flex items-center gap-3">
+          <span className="text-yellow-500">✨</span>
+          오늘의 운세
+        </h2>
+        <p className="text-lg text-muted-foreground">
+          당신의 사주명리로 풀어보는 오늘 하루
+        </p>
+      </div>
       
-      {/* 운세 항목들 */}
-      <div className="space-y-3 mb-4">
-        {fortuneItems.map((item) => (
-          <FortuneItem
+      {/* 운세 카드 그리드 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 flex-1">
+        {/* 총운은 전체 너비로 */}
+        <div className="lg:col-span-2">
+          <FortuneCard
+            label={fortuneItems[0].label}
+            score={fortuneItems[0].score}
+            icon={fortuneItems[0].icon}
+            description={fortuneDescriptions[fortuneItems[0].label]}
+          />
+        </div>
+        
+        {/* 나머지 운세들 */}
+        {fortuneItems.slice(1).map((item) => (
+          <FortuneCard
             key={item.label}
             label={item.label}
             score={item.score}
             icon={item.icon}
+            description={fortuneDescriptions[item.label]}
           />
         ))}
       </div>
 
-      {/* 행운 정보 */}
-      <div className="flex items-center gap-4 p-3 bg-muted/20 rounded-lg mb-4">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">행운의 색상</span>
-          <div 
-            className="w-6 h-6 rounded-full border-2 border-white shadow-sm" 
-            style={{ backgroundColor: dailyFortune.luckyColor }}
-            title="행운의 색상"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">행운의 숫자</span>
-          <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
-            {dailyFortune.luckyNumber}
+      {/* 행운 정보 & 메시지 */}
+      <div className="space-y-4">
+        {/* 행운 아이템 */}
+        <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-2xl p-6 shadow-lg">
+          <h3 className="text-xl font-bold text-foreground mb-4">오늘의 행운 아이템</h3>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-full shadow-lg flex items-center justify-center bg-white dark:bg-gray-800">
+                <div 
+                  className="w-12 h-12 rounded-full" 
+                  style={{ backgroundColor: dailyFortune.luckyColor }}
+                  title="행운의 색상"
+                />
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground">행운의 색상</div>
+                <div className="font-bold text-lg">{dailyFortune.luckyColor}</div>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 text-white rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
+                {dailyFortune.luckyNumber}
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground">행운의 숫자</div>
+                <div className="font-bold text-lg">숫자 {dailyFortune.luckyNumber}</div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* 오늘의 메시지 */}
-      <div className="p-4 bg-gradient-to-r from-primary-50 to-purple-50 dark:from-primary-900/20 dark:to-purple-900/20 rounded-xl">
-        <div className="text-sm text-muted-foreground mb-1">오늘의 메시지</div>
-        <div className="text-sm text-foreground leading-relaxed">
-          {dailyFortune.message}
+        {/* 오늘의 메시지 */}
+        <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-2xl p-6 shadow-lg">
+          <h3 className="text-xl font-bold text-foreground mb-3 flex items-center gap-2">
+            <span>💌</span>
+            오늘의 메시지
+          </h3>
+          <p className="text-lg text-foreground leading-relaxed mb-3">
+            {dailyFortune.message}
+          </p>
+          {dailyFortune.advice && (
+            <p className="text-sm text-muted-foreground italic border-t border-border/30 pt-3">
+              💡 {dailyFortune.advice}
+            </p>
+          )}
         </div>
-        {dailyFortune.advice && (
-          <div className="text-xs text-muted-foreground mt-2 opacity-75">
-            {dailyFortune.advice}
-          </div>
-        )}
       </div>
     </div>
   )
