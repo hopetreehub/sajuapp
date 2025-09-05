@@ -3,7 +3,7 @@ import { useCalendar } from '@/contexts/CalendarContext'
 import { format, isSameDay, getHours, getMinutes } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { CalendarEvent } from '@/services/api'
-import DiaryNotebookModal from '@/components/DiaryNotebookModal'
+import DiaryBookModal from '@/components/DiaryBookModal'
 import TaskSelectionModal from '@/components/TaskSelectionModal'
 import { useDiaryData } from '@/hooks/useDiaryData'
 
@@ -253,8 +253,8 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
         }}
       />
 
-      {/* Diary Notebook Modal */}
-      <DiaryNotebookModal 
+      {/* Diary Book Modal */}
+      <DiaryBookModal 
         isOpen={isDiaryOpen}
         onClose={() => setIsDiaryOpen(false)}
         date={selectedDateTime}
