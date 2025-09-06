@@ -23,6 +23,17 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
         },
+        '/api/referral': {
+          target: 'http://localhost:4013',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/api/academy': {
+          target: 'http://localhost:4014',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/api\/academy/, '/api'),
+        },
         '/api': {
           target: env.VITE_API_URL || 'http://localhost:4003',
           changeOrigin: true,

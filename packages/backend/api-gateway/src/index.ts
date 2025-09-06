@@ -91,6 +91,34 @@ const services = {
         message: 'Please try again later'
       })
     }
+  },
+  '/api/referral': {
+    target: process.env.REFERRAL_SERVICE_URL || 'http://localhost:4013',
+    changeOrigin: true,
+    pathRewrite: {
+      '^/api/referral': '/api'
+    },
+    onError: (err: any, req: any, res: any) => {
+      console.error('Referral service error:', err)
+      res.status(503).json({
+        error: 'Referral service unavailable',
+        message: 'Please try again later'
+      })
+    }
+  },
+  '/api/academy': {
+    target: process.env.ACADEMY_SERVICE_URL || 'http://localhost:4014',
+    changeOrigin: true,
+    pathRewrite: {
+      '^/api/academy': '/api'
+    },
+    onError: (err: any, req: any, res: any) => {
+      console.error('Academy service error:', err)
+      res.status(503).json({
+        error: 'Academy service unavailable',
+        message: 'Please try again later'
+      })
+    }
   }
 }
 
