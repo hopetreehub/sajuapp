@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import HomePage from '@/pages/HomePage'
 import AuthPage from '@/pages/AuthPage'
 import DashboardPage from '@/pages/DashboardPage'
+import AdminDashboardPage from '@/pages/AdminDashboardPage'
 import CalendarPage from '@/pages/CalendarPage'
 import DiaryPage from '@/pages/DiaryPage'
 import SettingsPage from '@/pages/SettingsPage'
@@ -14,6 +15,7 @@ import CustomerManagementPage from '@/pages/CustomerManagementPage'
 import TestSajuPage from '@/pages/TestSajuPage'
 import SajuTestPage from '@/pages/SajuTestPage'
 import { CompatibilityPage } from '@/pages/CompatibilityPage'
+import LearningPage from '@/pages/LearningPage'
 import Header from '@/components/Layout/Header'
 import Footer from '@/components/Layout/Footer'
 import { CalendarProvider } from '@/contexts/CalendarContext'
@@ -39,6 +41,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/admin" element={<AdminDashboardPage />} />
                 <Route path="/calendar" element={<CalendarPage />} />
                 <Route path="/fortune" element={<FortunePage />} />
                 <Route path="/saju" element={<UnifiedSajuAnalysisPage />} />
@@ -56,6 +59,7 @@ function App() {
                 <Route path="/settings" element={<SettingsPage />} />
                 {/* 추가 예정 페이지 */}
                 <Route path="/compatibility" element={<CompatibilityPage />} />
+                <Route path="/learning/:courseId" element={<LearningPage />} />
               </Routes>
             </main>
             <Footer />

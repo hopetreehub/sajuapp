@@ -11,6 +11,8 @@ import MonthlyHeatmap from '@/components/Dashboard/MonthlyHeatmap'
 import QuickActions from '@/components/Dashboard/QuickActions'
 import EventModal from '@/components/EventModal'
 import DiaryModal from '@/components/DiaryModal'
+import ProgressTracker from '@/components/Learning/ProgressTracker'
+import CourseCard from '@/components/Learning/CourseCard'
 import { ArrowPathIcon } from '@heroicons/react/24/outline'
 
 export default function DashboardPage() {
@@ -19,6 +21,8 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [refreshing, setRefreshing] = useState(false)
+  const [activeTab, setActiveTab] = useState<'overview' | 'learning'>('overview')
+  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([])
   
   // 모달 상태 관리
   const [showEventModal, setShowEventModal] = useState(false)
@@ -55,7 +59,52 @@ export default function DashboardPage() {
   // 초기 로드
   useEffect(() => {
     loadDashboardData()
+    loadEnrolledCourses()
   }, [todos])
+  
+  // 수강 중인 강좌 로드
+  const loadEnrolledCourses = async () => {
+    try {
+      // 임시 데이터 (실제로는 API에서 가져와야 함)
+      const mockCourses = [
+        {
+          id: '1',
+          title: '사주 기초 입문 과정',
+          description: '사주의 기본 개념부터 실전 해석까지',
+          level: 'beginner',
+          category: 'basic',
+          status: 'published',
+          instructor_id: '1',
+          instructor_name: '김사주 선생님',
+          price: 0,
+          rating: 4.8,
+          enrollment_count: 1234,
+          duration: 240,
+          lessons_count: 12,
+          created_at: '2024-01-01'
+        },
+        {
+          id: '2',
+          title: '고급 사주 해석법',
+          description: '전문가 수준의 사주 분석 기법',
+          level: 'advanced',
+          category: 'professional',
+          status: 'published',
+          instructor_id: '2',
+          instructor_name: '이운세 선생님',
+          price: 99000,
+          rating: 4.9,
+          enrollment_count: 567,
+          duration: 480,
+          lessons_count: 24,
+          created_at: '2024-02-01'
+        }
+      ]
+      setEnrolledCourses(mockCourses)
+    } catch (error) {
+      console.error('수강 강좌 로딩 실패:', error)
+    }
+  }
   
   // 새로고침 핸들러
   const handleRefresh = () => {
@@ -122,64 +171,141 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              📊 대시보드
+              {activeTab === 'overview' ? '📊 대시보드' : '🎓 학습 현황'}
             </h1>
             <p className="text-gray-500 dark:text-gray-400 mt-1">
-              한눈에 보는 나의 활동 현황
+              {activeTab === 'overview' ? '한눈에 보는 나의 활동 현황' : '학습 진도와 성취를 확인하세요'}
             </p>
           </div>
           
-          {/* 새로고침 버튼 */}
-          <button
-            onClick={handleRefresh}
-            disabled={refreshing}
-            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
-          >
-            <ArrowPathIcon className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {refreshing ? '새로고침 중...' : '새로고침'}
-            </span>
-          </button>
+          <div className="flex items-center space-x-4">
+            {/* 탭 전환 */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-1 border border-gray-200 dark:border-gray-700">
+              <button
+                onClick={() => setActiveTab('overview')}
+                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  activeTab === 'overview'
+                    ? 'bg-purple-600 text-white'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
+              >
+                개요
+              </button>
+              <button
+                onClick={() => setActiveTab('learning')}
+                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  activeTab === 'learning'
+                    ? 'bg-purple-600 text-white'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
+              >
+                학습
+              </button>
+            </div>
+          
+            {/* 새로고침 버튼 */}
+            <button
+              onClick={handleRefresh}
+              disabled={refreshing}
+              className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+            >
+              <ArrowPathIcon className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                {refreshing ? '새로고침 중...' : '새로고침'}
+              </span>
+            </button>
+          </div>
         </div>
         
-        {/* 메인 콘텐츠 그리드 */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* 왼쪽 컬럼 (2/3) */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* 오늘의 요약 */}
-            {dashboardData && (
-              <TodaySummary 
-                todayData={dashboardData.today} 
-                loading={loading}
-              />
-            )}
+        {/* 메인 콘텐츠 */}
+        {activeTab === 'overview' ? (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* 왼쪽 컬럼 (2/3) */}
+            <div className="lg:col-span-2 space-y-8">
+              {/* 오늘의 요약 */}
+              {dashboardData && (
+                <TodaySummary 
+                  todayData={dashboardData.today} 
+                  loading={loading}
+                />
+              )}
+              
+              {/* 주간 통계 */}
+              {dashboardData && (
+                <WeeklyStats 
+                  weeklyData={dashboardData.week} 
+                  loading={loading}
+                />
+              )}
+            </div>
             
-            {/* 주간 통계 */}
-            {dashboardData && (
-              <WeeklyStats 
-                weeklyData={dashboardData.week} 
+            {/* 오른쪽 컬럼 (1/3) */}
+            <div className="space-y-8">
+              {/* 빠른 액션 */}
+              <QuickActions 
+                actions={quickActions}
                 loading={loading}
               />
-            )}
+              
+              {/* 월간 히트맵 */}
+              {dashboardData && (
+                <MonthlyHeatmap 
+                  monthlyData={dashboardData.month} 
+                  loading={loading}
+                />
+              )}
+            </div>
           </div>
-          
-          {/* 오른쪽 컬럼 (1/3) */}
+        ) : (
           <div className="space-y-8">
-            {/* 빠른 액션 */}
-            <QuickActions 
-              actions={quickActions}
-              loading={loading}
-            />
+            {/* 학습 진도 추적 */}
+            <ProgressTracker userId="user-1" />
             
-            {/* 월간 히트맵 */}
-            {dashboardData && (
-              <MonthlyHeatmap 
-                monthlyData={dashboardData.month} 
-                loading={loading}
-              />
-            )}
+            {/* 수강 중인 강좌 */}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+                수강 중인 강좌
+              </h3>
+              
+              {enrolledCourses.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="text-6xl mb-4">📚</div>
+                  <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                    수강 중인 강좌가 없습니다
+                  </h4>
+                  <p className="text-gray-500 dark:text-gray-400 mb-6">
+                    새로운 강좌를 수강해보세요
+                  </p>
+                  <button 
+                    onClick={() => window.location.href = '/saju'}
+                    className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                  >
+                    강좌 둘러보기
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {enrolledCourses.map(course => (
+                    <CourseCard
+                      key={course.id}
+                      course={course}
+                      progress={{
+                        courseId: course.id,
+                        enrollmentId: `enrollment-${course.id}`,
+                        progress: course.id === '1' ? 25 : 60,
+                        completedLessons: course.id === '1' ? 3 : 14,
+                        totalLessons: course.lessons_count,
+                        isEnrolled: true,
+                        status: course.id === '1' ? 'enrolled' : 'enrolled'
+                      }}
+                      showEnrollButton={false}
+                    />  
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
         
         {/* 하단 인사이트 (선택사항) */}
         {dashboardData && (
