@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format, isValid } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { 
   CalendarIcon, 
@@ -12,6 +12,41 @@ import { DashboardStats } from '@/services/dashboardService'
 interface TodaySummaryProps {
   todayData: DashboardStats['today']
   loading?: boolean
+}
+
+// 안전한 날짜 포맷팅 유틸리티 함수
+const safeFormatDate = (dateValue: string | Date, formatString: string, fallback: string = '시간 오류') => {
+  try {
+    if (!dateValue) return fallback
+    
+    const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue
+    
+    if (!isValid(date)) {
+      console.warn('Invalid date value:', dateValue)
+      return fallback
+    }
+    
+    return format(date, formatString, { locale: ko })
+  } catch (error) {
+    console.error('Date formatting error:', error, 'Input:', dateValue)
+    return fallback
+  }
+}
+
+// 안전한 날짜 비교 함수
+const safeIsBeforeNow = (dateValue: string | Date) => {
+  try {
+    if (!dateValue) return false
+    
+    const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue
+    
+    if (!isValid(date)) return false
+    
+    return date < new Date()
+  } catch (error) {
+    console.error('Date comparison error:', error, 'Input:', dateValue)
+    return false
+  }
 }
 
 export default function TodaySummary({ todayData, loading }: TodaySummaryProps) {
@@ -44,7 +79,7 @@ export default function TodaySummary({ todayData, loading }: TodaySummaryProps) 
             오늘의 요약
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {format(today, 'yyyy년 M월 d일 EEEE', { locale: ko })}
+            {safeFormatDate(today, 'yyyy년 M월 d일 EEEE', '날짜 오류')}
           </p>
         </div>
         <div className="text-2xl">📊</div>
@@ -144,11 +179,11 @@ export default function TodaySummary({ todayData, loading }: TodaySummaryProps) 
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     {event.all_day 
                       ? '종일' 
-                      : format(new Date(event.start_time), 'HH:mm', { locale: ko })
+                      : safeFormatDate(event.start_time, 'HH:mm', '--:--')
                     }
                   </p>
                 </div>
-                {!event.all_day && new Date(event.start_time) < new Date() && (
+                {!event.all_day && safeIsBeforeNow(event.start_time) && (
                   <ExclamationCircleIcon className="h-4 w-4 text-orange-500" />
                 )}
               </div>

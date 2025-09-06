@@ -1,5 +1,10 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { 
+  COMPANY_WELCOME_CODE, 
+  REFERRAL_SOURCE_TYPES, 
+  type ReferralSourceType 
+} from '@/constants/referral'
 
 // 타입 정의
 export interface User {
@@ -9,6 +14,8 @@ export interface User {
   createdAt: string
   referralCode?: string
   referredBy?: string
+  referralSource?: ReferralSourceType
+  isWelcomeUser?: boolean
 }
 
 export interface SignUpData {
@@ -382,12 +389,26 @@ export const useAuthStore = create<AuthState>()(
             throw new Error('이름을 입력해주세요.')
           }
           
-          // 추천인 코드가 있는 경우 검증
+          // 추천인 코드 처리 로직 (전문가 분석 결과 반영)
+          let finalReferralCode = data.referralCode
+          let referralSource: ReferralSourceType = REFERRAL_SOURCE_TYPES.USER_REFERRAL
+          let isWelcomeUser = false
+
           if (data.referralCode) {
+            // 사용자가 입력한 추천인 코드 검증
             const isValid = await get().validateReferralCode(data.referralCode)
             if (!isValid) {
               throw new Error('추천인 코드를 다시 확인해주세요.')
             }
+            referralSource = REFERRAL_SOURCE_TYPES.USER_REFERRAL
+          } else {
+            // 추천인 코드가 없는 경우 웰컴 코드 자동 적용
+            finalReferralCode = COMPANY_WELCOME_CODE
+            referralSource = REFERRAL_SOURCE_TYPES.COMPANY_WELCOME
+            isWelcomeUser = true
+            
+            // 웰컴 코드 적용 로그
+            console.log('🎉 웰컴 코드 자동 적용:', COMPANY_WELCOME_CODE)
           }
           
           // TODO: 실제 회원가입 API 호출
@@ -398,29 +419,37 @@ export const useAuthStore = create<AuthState>()(
             name: sanitizeInput(data.name),
             createdAt: new Date().toISOString(),
             referralCode: undefined, // 사용자의 추천 코드는 나중에 생성
-            referredBy: data.referralCode || undefined
+            referredBy: finalReferralCode,
+            referralSource: referralSource,
+            isWelcomeUser: isWelcomeUser
           }
           
-          // 추천인 코드 적용 API 호출 (백엔드에 있는 경우)
-          if (data.referralCode) {
-            try {
-              const referralResponse = await fetch(`http://localhost:4013/api/referral/apply`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  userId: newUser.id,
-                  referralCode: data.referralCode
-                })
+          // 추천인 코드 적용 API 호출 (모든 사용자에게 적용)
+          try {
+            const referralResponse = await fetch(`http://localhost:4013/api/referral/apply`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                userId: newUser.id,
+                referralCode: finalReferralCode,
+                sourceType: referralSource,
+                isWelcomeCode: isWelcomeUser
               })
-              
-              if (referralResponse.ok) {
-                console.log('추천인 적용 성공')
-              }
-            } catch (error) {
-              console.error('추천인 적용 중 오류 (회원가입은 완료됨):', error)
+            })
+            
+            if (referralResponse.ok) {
+              const logMessage = isWelcomeUser 
+                ? `🎉 웰컴 혜택 적용 성공: ${COMPANY_WELCOME_CODE}`
+                : '👥 추천인 코드 적용 성공'
+              console.log(logMessage)
             }
+          } catch (error) {
+            const errorMessage = isWelcomeUser 
+              ? '웰컴 혜택 적용 중 오류 (회원가입은 완료됨):'
+              : '추천인 적용 중 오류 (회원가입은 완료됨):'
+            console.error(errorMessage, error)
           }
           
           set({ 

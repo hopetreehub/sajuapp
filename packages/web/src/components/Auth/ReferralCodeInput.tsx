@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { useAuthStore } from '@/stores/authStore'
+import { WELCOME_CODE_MESSAGES, COMPANY_WELCOME_CODE } from '@/constants/referral'
 
 interface ReferralCodeInputProps {
   className?: string
@@ -9,6 +10,7 @@ interface ReferralCodeInputProps {
 
 /**
  * 추천인 코드 입력 컴포넌트
+ * 웰컴 코드 자동 적용 + 친구 추천 코드 옵션
  * 한국 사용자 특화 UX/UI 디자인 적용
  */
 const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
@@ -29,14 +31,19 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
   const [isExpanded, setIsExpanded] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null)
+  const [hasUserReferralCode, setHasUserReferralCode] = useState(false)
 
-  // 컴포넌트 마운트 시 기존 코드 복원
+  // 컴포넌트 마운트 시 웰컴 코드 자동 적용
   useEffect(() => {
     if (referralCode) {
       setInputValue(referralCode)
       setIsExpanded(true)
+      setHasUserReferralCode(true)
+    } else {
+      // 웰컴 코드 자동 적용 알림 (사용자 코드가 없을 때)
+      onValidationChange?.(true, COMPANY_WELCOME_CODE)
     }
-  }, [referralCode])
+  }, [referralCode, onValidationChange])
 
   // 디바운스된 검증 함수
   const debouncedValidation = useCallback((code: string) => {
@@ -47,10 +54,13 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
     const timer = setTimeout(async () => {
       if (code.length === 6) {
         const isValid = await validateReferralCode(code)
-        onValidationChange?.(isValid, code)
+        onValidationChange?.(isValid, isValid ? code : COMPANY_WELCOME_CODE)
+        setHasUserReferralCode(isValid)
       } else if (code.length === 0) {
         clearReferralValidation()
-        onValidationChange?.(false, '')
+        // 친구 코드가 없으면 웰컴 코드로 복귀
+        onValidationChange?.(true, COMPANY_WELCOME_CODE)
+        setHasUserReferralCode(false)
       }
     }, 500) // 500ms 디바운스
 
@@ -83,7 +93,9 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
     setInputValue('')
     setReferralCode('')
     clearReferralValidation()
-    onValidationChange?.(false, '')
+    // 웰컴 코드로 복귀
+    onValidationChange?.(true, COMPANY_WELCOME_CODE)
+    setHasUserReferralCode(false)
   }
 
   // 검증 상태에 따른 스타일링
@@ -141,8 +153,63 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
   }
 
   return (
-    <div className={`space-y-3 ${className}`}>
-      {/* 토글 버튼 */}
+    <div className={`space-y-4 ${className}`}>
+      
+      {/* 웰컴 혜택 섹션 (항상 표시) */}
+      {!hasUserReferralCode && (
+        <div className="bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 p-6 rounded-xl border border-yellow-200 dark:border-yellow-700">
+          <div className="text-center">
+            <span className="text-3xl mb-3 block">🎉</span>
+            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">
+              {WELCOME_CODE_MESSAGES.TITLE}
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+              {WELCOME_CODE_MESSAGES.SUBTITLE}
+            </p>
+            <div className="inline-flex items-center space-x-2 bg-green-100 dark:bg-green-900/20 px-3 py-2 rounded-lg border border-green-200 dark:border-green-700 mb-4">
+              <span className="text-green-600">✅</span>
+              <span className="text-green-700 dark:text-green-400 text-sm font-medium">
+                {WELCOME_CODE_MESSAGES.AUTO_APPLIED}
+              </span>
+            </div>
+            <div className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
+              <p className="font-medium mb-2">{WELCOME_CODE_MESSAGES.DESCRIPTION}</p>
+              {WELCOME_CODE_MESSAGES.BENEFITS.map((benefit, index) => (
+                <div key={index} className="flex items-center justify-center space-x-2">
+                  <span className="text-yellow-500">✨</span>
+                  <span className="text-xs">{benefit}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
+              {WELCOME_CODE_MESSAGES.CTA_MESSAGE}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* 사용자 추천 코드 확인 결과 */}
+      {hasUserReferralCode && referralValidation?.isValid && (
+        <div className="bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 p-6 rounded-xl border border-green-200 dark:border-green-700">
+          <div className="text-center">
+            <span className="text-3xl mb-3 block">🎊</span>
+            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">
+              친구 추천 혜택 적용 완료!
+            </h3>
+            <div className="inline-flex items-center space-x-2 bg-green-200 dark:bg-green-800/30 px-4 py-2 rounded-lg border border-green-300 dark:border-green-600 mb-3">
+              <span className="text-green-600">✅</span>
+              <span className="text-green-800 dark:text-green-300 text-sm font-medium">
+                추천인 코드: {inputValue}
+              </span>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              {referralValidation?.referrerName}님의 추천으로 특별 혜택을 받으실 수 있습니다!
+            </p>
+          </div>
+        </div>
+      )}
+      
+      {/* 친구 추천 코드 입력 토글 버튼 */}
       <button
         type="button"
         onClick={toggleExpanded}
@@ -161,23 +228,25 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
         `}
       >
         <div className="flex items-center space-x-3">
-          <span className="text-2xl">🎁</span>
+          <span className="text-2xl">👫</span>
           <div>
             <h3 className="font-medium text-gray-800 dark:text-white">
-              추천인 코드가 있으신가요?
+              친구 추천 코드가 있으신가요?
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              {isExpanded 
-                ? '친구가 알려준 6자리 코드를 입력하고 특별 혜택을 받아보세요' 
-                : '클릭하여 코드를 입력하고 특별 혜택을 받아보세요'
+              {hasUserReferralCode 
+                ? '친구 추천으로 더 많은 혜택을 받고 계시네요!' 
+                : isExpanded 
+                  ? '친구가 알려준 6자리 코드를 입력하고 추가 혜택을 받아보세요' 
+                  : '클릭하여 친구 코드를 입력하고 추가 혜택을 받아보세요'
               }
             </p>
           </div>
         </div>
         
         <div className="flex items-center space-x-2">
-          {referralValidation?.isValid && (
-            <span className="text-green-600 text-sm font-medium">확인됨</span>
+          {hasUserReferralCode && referralValidation?.isValid && (
+            <span className="text-green-600 text-sm font-medium">적용됨</span>
           )}
           <svg 
             className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
@@ -192,14 +261,14 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
         </div>
       </button>
 
-      {/* 확장된 입력 영역 */}
+      {/* 확장된 친구 코드 입력 영역 */}
       {isExpanded && (
         <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-l border-r border-b border-purple-200 dark:border-purple-700 rounded-b-lg px-4 py-4 space-y-4">
           
           {/* 입력 필드 */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              추천인 코드 <span className="text-gray-400">(6자리 영문/숫자)</span>
+              친구 추천 코드 <span className="text-gray-400">(6자리 영문/숫자)</span>
             </label>
             
             <div className="relative">
@@ -257,7 +326,7 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
           </div>
 
           {/* 검증 메시지 */}
-          {referralValidation && (
+          {referralValidation && inputValue.length > 0 && (
             <div className={`p-3 rounded-lg border ${
               referralValidation.isValid
                 ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700'
@@ -288,20 +357,21 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
               </div>
-              <span className="text-sm">추천인 코드 확인 중...</span>
+              <span className="text-sm">친구 추천 코드 확인 중...</span>
             </div>
           )}
 
-          {/* 혜택 안내 */}
+          {/* 친구 추천 혜택 안내 */}
           <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg border border-blue-200 dark:border-blue-700">
             <div className="flex items-start space-x-2">
-              <span className="text-blue-600 mt-0.5">ℹ️</span>
+              <span className="text-blue-600 mt-0.5">💝</span>
               <div className="text-sm text-blue-700 dark:text-blue-400">
-                <p className="font-medium mb-1">추천인 혜택</p>
+                <p className="font-medium mb-1">친구 추천 추가 혜택</p>
                 <ul className="space-y-1 text-xs">
-                  <li>• 회원가입 시 특별 운세 분석 무료 제공</li>
-                  <li>• 프리미엄 기능 1개월 무료 체험</li>
-                  <li>• 친구와 함께하는 궁합 분석 무료</li>
+                  <li>• 웰컴 혜택 + 친구 추천 혜택 모두 적용</li>
+                  <li>• 프리미엄 기능 추가 1개월 연장</li>
+                  <li>• 특별 사주 분석 리포트 제공</li>
+                  <li>• 친구와 함께 쓰는 궁합 다이어리</li>
                 </ul>
               </div>
             </div>
@@ -309,7 +379,8 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
 
           {/* 주의사항 */}
           <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
-            <p>• 추천인 코드는 회원가입 시에만 입력할 수 있습니다</p>
+            <p>• 친구 추천 코드는 회원가입 시에만 입력할 수 있습니다</p>
+            <p>• 친구 코드가 없어도 웰컴 혜택은 자동으로 적용됩니다</p>
             <p>• 잘못된 코드를 여러 번 입력하면 일시적으로 제한될 수 있습니다</p>
           </div>
         </div>
