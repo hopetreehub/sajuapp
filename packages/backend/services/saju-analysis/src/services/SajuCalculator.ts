@@ -50,6 +50,27 @@ export interface TemporalSajuAnalysis {
   }
 }
 
+export interface CategoryWeight {
+  category_name: string
+  weight: number
+  confidence: number
+  temporal_modifier: number  // 현재 시점에 따른 가중치 조정
+}
+
+export interface EnhancedTemporalAnalysis extends TemporalSajuAnalysis {
+  positive_categories: {
+    [middle_category: string]: CategoryWeight[]
+  }
+  negative_categories: {
+    [middle_category: string]: CategoryWeight[]
+  }
+  temporal_recommendations: {
+    favorable_activities: string[]
+    caution_areas: string[]
+    optimal_timing: string
+  }
+}
+
 export class SajuCalculator {
   private readonly heavenlyStems = [
     '갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'
@@ -488,5 +509,219 @@ export class SajuCalculator {
     if (interaction.includes('관살관계')) return -30   // 어려움
     if (interaction.includes('극제관계')) return -50   // 매우 어려움
     return 0 // 기본값
+  }
+
+  /**
+   * 🌟 강화된 시점별 주능/주흉 분석
+   * 개인 사주 + 현재 시점 + 카테고리 데이터베이스 종합 분석
+   */
+  async analyzeEnhancedTemporalSaju(
+    birthDate: string, 
+    birthTime: string, 
+    isLunar: boolean = false, 
+    targetDate?: Date,
+    db?: any
+  ): Promise<EnhancedTemporalAnalysis> {
+    console.log('🚀 강화된 시점별 사주 분석 시작')
+    
+    // 1. 기본 시점별 분석 실행
+    const basicAnalysis = await this.analyzeTemporalSaju(birthDate, birthTime, isLunar, targetDate)
+    
+    if (!db) {
+      console.warn('⚠️ 데이터베이스 연결 없음 - 기본 분석만 제공')
+      return {
+        ...basicAnalysis,
+        positive_categories: {},
+        negative_categories: {},
+        temporal_recommendations: {
+          favorable_activities: ['기본 권장사항 없음'],
+          caution_areas: ['기본 주의사항 없음'], 
+          optimal_timing: '표준 시간대'
+        }
+      }
+    }
+
+    // 2. 주능/주흉 카테고리 데이터 로드
+    const positiveCategories = await this.loadTemporalCategories(db, 'positive', basicAnalysis)
+    const negativeCategories = await this.loadTemporalCategories(db, 'negative', basicAnalysis)
+    
+    // 3. 시점별 권장사항 생성
+    const recommendations = this.generateTemporalRecommendations(
+      basicAnalysis, 
+      positiveCategories, 
+      negativeCategories
+    )
+
+    const enhancedResult: EnhancedTemporalAnalysis = {
+      ...basicAnalysis,
+      positive_categories: positiveCategories,
+      negative_categories: negativeCategories,
+      temporal_recommendations: recommendations
+    }
+
+    console.log('✨ 강화된 시점별 사주 분석 완료')
+    console.log(`   주능 카테고리: ${Object.keys(positiveCategories).length}개`)
+    console.log(`   주흉 카테고리: ${Object.keys(negativeCategories).length}개`)
+    
+    return enhancedResult
+  }
+
+  /**
+   * 시점별 카테고리 가중치 계산 및 로드
+   */
+  private async loadTemporalCategories(
+    db: any, 
+    type: 'positive' | 'negative', 
+    analysis: TemporalSajuAnalysis
+  ): Promise<{[middle_category: string]: CategoryWeight[]}> {
+    
+    const categories: {[middle_category: string]: CategoryWeight[]} = {}
+    
+    try {
+      // 데이터베이스에서 카테고리 데이터 조회
+      const query = `
+        SELECT 
+          mid.name as middle_category,
+          min.name as item_name,
+          min.saju_weight as base_weight
+        FROM major_categories mc
+        JOIN middle_categories mid ON mc.id = mid.major_id
+        JOIN minor_categories min ON mid.id = min.middle_id
+        WHERE mc.type = ?
+        ORDER BY mid.name, min.name
+      `
+      
+      const rows = await new Promise<any[]>((resolve, reject) => {
+        db.all(query, [type], (err: any, rows: any[]) => {
+          if (err) reject(err)
+          else resolve(rows || [])
+        })
+      })
+
+      // 중항목별로 그룹화하고 시점별 가중치 적용
+      for (const row of rows) {
+        const middleCategory = row.middle_category
+        
+        if (!categories[middleCategory]) {
+          categories[middleCategory] = []
+        }
+        
+        // 시점별 가중치 계산
+        const temporalModifier = this.calculateTemporalModifier(analysis, row.item_name, type)
+        const adjustedWeight = row.base_weight * temporalModifier
+        
+        categories[middleCategory].push({
+          category_name: row.item_name,
+          weight: adjustedWeight,
+          confidence: Math.min(Math.abs(adjustedWeight) / 2.0, 1.0), // 0~1 범위
+          temporal_modifier: temporalModifier
+        })
+      }
+      
+      console.log(`📊 ${type} 카테고리 로드 완료: ${Object.keys(categories).length}개 중항목`)
+      
+    } catch (error) {
+      console.error(`❌ ${type} 카테고리 로드 실패:`, error)
+    }
+    
+    return categories
+  }
+
+  /**
+   * 시점별 가중치 조정 계산
+   */
+  private calculateTemporalModifier(
+    analysis: TemporalSajuAnalysis, 
+    itemName: string, 
+    type: 'positive' | 'negative'
+  ): number {
+    // 기본 가중치
+    let modifier = 1.0
+    
+    // 운세 점수에 따른 조정
+    const avgFortune = (
+      analysis.fortune_trends.current_year_fortune +
+      analysis.fortune_trends.current_month_fortune + 
+      analysis.fortune_trends.current_day_fortune
+    ) / 3
+    
+    if (type === 'positive') {
+      // 주능의 경우 운세가 좋을 때 강화
+      modifier += avgFortune / 200  // -0.5 ~ +0.5 범위
+    } else {
+      // 주흉의 경우 운세가 나쁠 때 강화  
+      modifier -= avgFortune / 200  // 반대 방향
+    }
+    
+    // 계절/시점별 특별 조정 (예시)
+    const currentDate = new Date()
+    const month = currentDate.getMonth() + 1
+    
+    // 교통사고는 겨울철 더 위험
+    if (itemName.includes('교통') && (month === 12 || month === 1 || month === 2)) {
+      modifier *= 1.3
+    }
+    
+    // 체육활동은 봄가을에 유리
+    if (itemName.includes('체육') && (month >= 3 && month <= 5 || month >= 9 && month <= 11)) {
+      modifier *= 1.2
+    }
+    
+    return Math.max(0.1, Math.min(2.0, modifier)) // 0.1~2.0 범위로 제한
+  }
+
+  /**
+   * 시점별 권장사항 생성
+   */
+  private generateTemporalRecommendations(
+    analysis: TemporalSajuAnalysis,
+    positiveCategories: {[key: string]: CategoryWeight[]},
+    negativeCategories: {[key: string]: CategoryWeight[]}
+  ) {
+    const favorable: string[] = []
+    const cautions: string[] = []
+    
+    // 주능에서 가중치 높은 항목 추출
+    Object.entries(positiveCategories).forEach(([category, items]) => {
+      const topItems = items
+        .filter(item => item.weight > 1.2)
+        .sort((a, b) => b.weight - a.weight)
+        .slice(0, 2)
+      
+      topItems.forEach(item => {
+        favorable.push(`${category}: ${item.category_name} (${(item.confidence * 100).toFixed(0)}%)`)
+      })
+    })
+    
+    // 주흉에서 위험도 높은 항목 추출  
+    Object.entries(negativeCategories).forEach(([category, items]) => {
+      const riskItems = items
+        .filter(item => item.weight > 1.5)
+        .sort((a, b) => b.weight - a.weight)
+        .slice(0, 2)
+        
+      riskItems.forEach(item => {
+        cautions.push(`${category}: ${item.category_name} 주의 (위험도 ${(item.confidence * 100).toFixed(0)}%)`)
+      })
+    })
+    
+    // 최적 타이밍 결정
+    const avgFortune = (
+      analysis.fortune_trends.current_year_fortune +
+      analysis.fortune_trends.current_month_fortune +
+      analysis.fortune_trends.current_day_fortune
+    ) / 3
+    
+    let timing = '보통'
+    if (avgFortune > 30) timing = '매우 좋은 시기'
+    else if (avgFortune > 0) timing = '좋은 시기'  
+    else if (avgFortune > -30) timing = '주의 필요한 시기'
+    else timing = '신중해야 할 시기'
+    
+    return {
+      favorable_activities: favorable.length > 0 ? favorable : ['일반적인 활동 권장'],
+      caution_areas: cautions.length > 0 ? cautions : ['특별한 주의사항 없음'],
+      optimal_timing: timing
+    }
   }
 }

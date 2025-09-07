@@ -537,6 +537,49 @@ app.post('/api/saju/temporal/fortune', async (req, res) => {
   }
 })
 
+// 🌟 강화된 시점별 주능/주흉 분석 (신규 API)
+app.post('/api/saju/temporal/enhanced', async (req, res) => {
+  const { birth_date, birth_time, is_lunar = false, target_date } = req.body
+  
+  if (!birth_date || !birth_time) {
+    return res.status(400).json({
+      success: false,
+      error: '생년월일과 출생시간이 필요합니다.'
+    })
+  }
+  
+  try {
+    console.log(`🌟 강화된 시점별 분석: ${birth_date} ${birth_time}`)
+    
+    const calculator = new SajuCalculator()
+    const targetDateObj = target_date ? new Date(target_date) : undefined
+    
+    const enhancedAnalysis = await calculator.analyzeEnhancedTemporalSaju(
+      birth_date,
+      birth_time,
+      is_lunar,
+      targetDateObj,
+      db  // 데이터베이스 연결 전달
+    )
+    
+    res.json({
+      success: true,
+      data: enhancedAnalysis,
+      timestamp: new Date().toISOString(),
+      version: '2.0.0' // 강화된 분석 버전
+    })
+    
+    console.log(`✅ 강화된 분석 완료 - 주능: ${Object.keys(enhancedAnalysis.positive_categories).length}개, 주흉: ${Object.keys(enhancedAnalysis.negative_categories).length}개`)
+    
+  } catch (error) {
+    console.error('강화된 시점별 분석 오류:', error)
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    })
+  }
+})
+
 // 서비스 상태 확인
 app.get('/health', (req, res) => {
   res.json({ 
