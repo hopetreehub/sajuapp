@@ -5,7 +5,7 @@ import {
   UserGroupIcon,
   CurrencyDollarIcon,
   StarIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   BookOpenIcon,
   CheckCircleIcon,
   ClockIcon,
@@ -208,7 +208,7 @@ export default function AdminDashboardPage() {
             { key: 'overview', label: '개요', icon: ChartBarIcon },
             { key: 'courses', label: '강좌 관리', icon: BookOpenIcon },
             { key: 'enrollments', label: '수강 현황', icon: UserGroupIcon },
-            { key: 'analytics', label: '분석', icon: TrendingUpIcon }
+            { key: 'analytics', label: '분석', icon: ArrowTrendingUpIcon }
           ].map(({ key, label, icon: Icon }) => (
             <button
               key={key}

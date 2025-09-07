@@ -469,13 +469,22 @@ export default function SettingsPage() {
                         </p>
                         
                         <div className="space-y-3">
-                          <a 
-                            href="/customers" 
-                            className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                          >
-                            <span className="mr-2">📋</span>
-                            고객 목록 보기
-                          </a>
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <a 
+                              href="/customers" 
+                              className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                            >
+                              <span className="mr-2">📋</span>
+                              고객 목록 보기
+                            </a>
+                            <a 
+                              href="/customers/new" 
+                              className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                            >
+                              <span className="mr-2">➕</span>
+                              새 고객 등록
+                            </a>
+                          </div>
                           
                           <div className="pt-3 border-t border-blue-200 dark:border-blue-700">
                             <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">관리 기능</h4>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuthStore } from '@/stores/authStore'
+import QRCodeGenerator from './QRCodeGenerator'
 
 interface ReferralSectionProps {
   className?: string
@@ -208,6 +209,9 @@ const ReferralSection: React.FC<ReferralSectionProps> = ({
                 <li>• 궁합 분석 서비스 무제한 이용</li>
               </ul>
             </div>
+
+            {/* QR코드 섹션 */}
+            <QRCodeGenerator referralCode={myReferralCode} className="mt-4" />
           </div>
         ) : (
           <div className="text-center py-4">
