@@ -1,9 +1,13 @@
 // 9개 대항목 구조로 완전 재편성된 데이터
 import { SajuRadarCategory } from '@/types/sajuRadar'
 import { calculateSajuScore, generateSampleSajuData, SajuData } from '@/utils/sajuScoreCalculator'
+import { getSajuCategories } from '@/services/sajuAnalysisApi'
 
 // 전역 사주 데이터 관리
 let globalSajuData: SajuData | null = null;
+
+// 동적 카테고리 데이터 관리
+let dynamicCategories: SajuRadarCategory[] = [];
 
 // 사주 데이터 설정 함수 (외부에서 호출)
 export function setGlobalSajuData(sajuData: SajuData | null) {
@@ -1029,21 +1033,60 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
     ]
   },
 
-  // 8. 주능 (새로 추가 - 중항목은 나중에 추가 예정)
+  // 8. 주능 (동적으로 백엔드에서 로드)
   {
     id: 'juneung',
     name: '주능',
     icon: '⚡',
     description: '능력과 잠재력 분석',
-    subcategories: []
+    subcategories: [] // 동적으로 로드됨
   },
 
-  // 9. 주흉 (새로 추가 - 중항목은 나중에 추가 예정)
+  // 9. 주흉 (동적으로 백엔드에서 로드)
   {
     id: 'juhyung',
     name: '주흉',
     icon: '⚠️',
     description: '위험과 주의사항 분석',
-    subcategories: []
+    subcategories: [] // 동적으로 로드됨
   }
 ]
+
+/**
+ * 백엔드에서 동적 카테고리 데이터 로드하여 업데이트
+ */
+export async function loadDynamicSajuCategories(): Promise<void> {
+  try {
+    console.log('🔄 동적 사주 카테고리 데이터 로드 시작...');
+    
+    // 백엔드에서 데이터 가져오기
+    const backendCategories = await getSajuCategories();
+    
+    // 기존 SAJU_RADAR_CATEGORIES에서 주능과 주흉 인덱스 찾기
+    const juneungIndex = SAJU_RADAR_CATEGORIES.findIndex(cat => cat.id === 'juneung');
+    const juhyungIndex = SAJU_RADAR_CATEGORIES.findIndex(cat => cat.id === 'juhyung');
+    
+    // 백엔드에서 가져온 데이터로 업데이트
+    backendCategories.forEach(backendCat => {
+      if (backendCat.id === 'juneung' && juneungIndex !== -1) {
+        SAJU_RADAR_CATEGORIES[juneungIndex].subcategories = backendCat.subcategories;
+        console.log(`✅ 주능 카테고리 업데이트: ${backendCat.subcategories.length}개 중항목`);
+      } else if (backendCat.id === 'juhyung' && juhyungIndex !== -1) {
+        SAJU_RADAR_CATEGORIES[juhyungIndex].subcategories = backendCat.subcategories;
+        console.log(`✅ 주흉 카테고리 업데이트: ${backendCat.subcategories.length}개 중항목`);
+      }
+    });
+    
+    console.log('🎉 동적 사주 카테고리 데이터 로드 완료!');
+  } catch (error) {
+    console.error('❌ 동적 사주 카테고리 데이터 로드 실패:', error);
+    // 로드 실패 시에도 기존 정적 데이터는 유지됨
+  }
+}
+
+/**
+ * 향상된 SAJU_RADAR_CATEGORIES getter (동적 데이터 포함)
+ */
+export function getSajuRadarCategories(): SajuRadarCategory[] {
+  return SAJU_RADAR_CATEGORIES;
+}

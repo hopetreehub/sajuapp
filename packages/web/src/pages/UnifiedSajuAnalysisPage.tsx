@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { SAJU_RADAR_CATEGORIES, setGlobalSajuData } from '@/data/sajuRadarData';
+import { SAJU_RADAR_CATEGORIES, setGlobalSajuData, loadDynamicSajuCategories } from '@/data/sajuRadarData';
 import { SajuRadarData } from '@/types/sajuRadar';
 import SajuCategoryNavigation from '@/components/saju/SajuCategoryNavigation';
 import SajuSubcategoryTabs from '@/components/saju/SajuSubcategoryTabs';
@@ -12,6 +12,8 @@ export default function UnifiedSajuAnalysisPage() {
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [customerSajuData, setCustomerSajuData] = useState<any>(null);
+  const [categoriesLoaded, setCategoriesLoaded] = useState(false);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false);
 
   const currentCategory = SAJU_RADAR_CATEGORIES.find(cat => cat.id === selectedCategory);
 
@@ -31,6 +33,25 @@ export default function UnifiedSajuAnalysisPage() {
       setGlobalSajuData(null); // 전역 사주 데이터도 초기화
     }
   }, [selectedCustomer]);
+
+  // 컴포넌트 마운트 시 동적 카테고리 데이터 로드
+  useEffect(() => {
+    const loadCategories = async () => {
+      if (!categoriesLoaded && !isLoadingCategories) {
+        setIsLoadingCategories(true);
+        try {
+          await loadDynamicSajuCategories();
+          setCategoriesLoaded(true);
+        } catch (error) {
+          console.error('카테고리 로드 실패:', error);
+        } finally {
+          setIsLoadingCategories(false);
+        }
+      }
+    };
+
+    loadCategories();
+  }, [categoriesLoaded, isLoadingCategories]);
 
   const loadCustomerSajuData = async (customerId: number) => {
     try {
@@ -125,6 +146,18 @@ export default function UnifiedSajuAnalysisPage() {
             </div>
           )}
         </div>
+
+        {/* 카테고리 로딩 상태 */}
+        {isLoadingCategories && (
+          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+            <div className="flex items-center space-x-3">
+              <div className="animate-spin w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full" />
+              <span className="text-blue-700 dark:text-blue-300 font-medium">
+                🔮 주능/주흉 카테고리 데이터를 백엔드에서 가져오는 중...
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* 대항목 네비게이션 */}
         <SajuCategoryNavigation
