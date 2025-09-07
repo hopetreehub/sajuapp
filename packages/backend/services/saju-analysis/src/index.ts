@@ -22,9 +22,9 @@ console.log('🚀 운명나침반 사주 분석 서비스 초기화 중...')
 function initializeDatabase() {
   console.log('📊 사주 분석 데이터베이스 초기화 시작...')
   
-  // 테이블 생성을 순차적으로 실행
+  // 모든 작업을 순차적으로 실행
   db.serialize(() => {
-    // 대분류 테이블 (주능/주흉)
+    // 1. 대분류 테이블 (주능/주흉)
     db.run(`
       CREATE TABLE IF NOT EXISTS major_categories (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,7 +35,7 @@ function initializeDatabase() {
       )
     `)
     
-    // 중분류 테이블 (게임, 연예, 교통사고 등)
+    // 2. 중분류 테이블 (게임, 연예, 교통사고 등)
     db.run(`
       CREATE TABLE IF NOT EXISTS middle_categories (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,7 +48,7 @@ function initializeDatabase() {
       )
     `)
     
-    // 소분류 테이블 (개별 직업, 종목, 사고 등)
+    // 3. 소분류 테이블 (개별 직업, 종목, 사고 등)
     db.run(`
       CREATE TABLE IF NOT EXISTS minor_categories (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -62,7 +62,7 @@ function initializeDatabase() {
       )
     `)
     
-    // 사용자 사주 분석 결과 저장
+    // 4. 사용자 사주 분석 결과 저장
     db.run(`
       CREATE TABLE IF NOT EXISTS user_saju_analysis (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -83,21 +83,23 @@ function initializeDatabase() {
     
     console.log('✅ 사주 분석 데이터베이스 테이블 생성 완료')
     
-    // 데이터 삽입 (테이블 생성 후)
-    insertCategoryData()
+    // 5. 대분류 데이터 삽입
+    db.run(`INSERT OR IGNORE INTO major_categories (name, description, type) VALUES (?, ?, ?)`,
+      ['주능', '긍정적 적성 및 재능 분야', 'positive'])
+    
+    db.run(`INSERT OR IGNORE INTO major_categories (name, description, type) VALUES (?, ?, ?)`,
+      ['주흉', '주의가 필요한 분야 및 위험 요소', 'negative'])
+    
+    console.log('✅ 대분류 데이터 삽입 완료')
+    
+    // 6. 중분류 데이터 삽입 (순차 처리)
+    insertMiddleCategories()
   })
 }
 
-// 150+ 카테고리 데이터 삽입
-function insertCategoryData() {
-  console.log('📋 카테고리 데이터 삽입 시작...')
-  
-  // 대분류 삽입
-  db.run(`INSERT OR IGNORE INTO major_categories (name, description, type) VALUES (?, ?, ?)`,
-    ['주능', '긍정적 적성 및 재능 분야', 'positive'])
-  
-  db.run(`INSERT OR IGNORE INTO major_categories (name, description, type) VALUES (?, ?, ?)`,
-    ['주흉', '주의가 필요한 분야 및 위험 요소', 'negative'])
+// 중분류 데이터 삽입
+function insertMiddleCategories() {
+  console.log('📋 중분류 데이터 삽입 시작...')
   
   // 주능 중분류 삽입
   const positiveCategories = [
@@ -134,7 +136,10 @@ function insertCategoryData() {
     `, [category.name, category.desc, category.icon])
   })
   
-  setTimeout(() => insertDetailedCategories(), 1000)
+  console.log('✅ 중분류 데이터 삽입 완료')
+  
+  // 소분류 데이터 삽입 시작
+  insertDetailedCategories()
 }
 
 // 상세 카테고리 데이터 삽입
