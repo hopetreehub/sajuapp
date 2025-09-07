@@ -41,27 +41,21 @@ const LoginForm: React.FC<LoginFormProps> = ({
   useEffect(() => {
     // 이메일 검증
     const emailValid = authUtils.isValidEmail(formData.email)
-    setValidation(prev => ({
-      ...prev,
-      email: {
-        isValid: emailValid,
-        message: formData.email && !emailValid ? '올바른 이메일 주소를 입력해주세요.' : ''
-      }
-    }))
+    const emailMessage = formData.email && !emailValid ? '올바른 이메일 주소를 입력해주세요.' : ''
 
     // 비밀번호 검증
     const passwordValid = formData.password.length >= 8
-    setValidation(prev => ({
-      ...prev,
-      password: {
-        isValid: passwordValid,
-        message: formData.password && !passwordValid ? '비밀번호는 8자리 이상입니다.' : ''
-      }
-    }))
+    const passwordMessage = formData.password && !passwordValid ? '비밀번호는 8자리 이상입니다.' : ''
+
+    // 상태 업데이트를 한번에 처리하여 리렌더링 최소화
+    setValidation({
+      email: { isValid: emailValid, message: emailMessage },
+      password: { isValid: passwordValid, message: passwordMessage }
+    })
 
     // 전체 폼 유효성 체크
     setCanSubmit(emailValid && passwordValid)
-  }, [formData])
+  }, [formData.email, formData.password])
 
   // 입력값 변경 핸들러
   const handleInputChange = (field: string, value: string | boolean) => {
