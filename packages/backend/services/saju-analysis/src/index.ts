@@ -410,13 +410,140 @@ app.get('/api/saju/analysis/:userId', (req, res) => {
   })
 })
 
+// ===== 시점별 사주분석 API =====
+
+// 현재 시점 천간지지 조회
+app.get('/api/saju/temporal/current-pillars', (req, res) => {
+  const { date } = req.query
+  
+  try {
+    console.log(`🗓️ 현재 시점 천간지지 조회 요청: ${date || 'today'}`)
+    
+    const calculator = new SajuCalculator()
+    const targetDate = date ? new Date(date as string) : undefined
+    const currentPillars = calculator.calculateCurrentTimePillars(targetDate)
+    
+    console.log(`✅ 천간지지 계산 완료:`, currentPillars)
+    
+    res.json({
+      success: true,
+      data: currentPillars
+    })
+  } catch (error) {
+    console.error('현재 시점 천간지지 계산 오류:', error)
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    })
+  }
+})
+
+// 종합 시점별 사주분석
+app.post('/api/saju/temporal/analyze', async (req, res) => {
+  const { birth_date, birth_time, is_lunar = false, target_date } = req.body
+  
+  if (!birth_date || !birth_time) {
+    return res.status(400).json({
+      success: false,
+      error: '생년월일과 출생시간이 필요합니다. (birth_date, birth_time)'
+    })
+  }
+  
+  try {
+    console.log(`🔮 시점별 사주분석 시작: ${birth_date} ${birth_time} (${is_lunar ? '음력' : '양력'})`)
+    console.log(`   분석 대상 날짜: ${target_date || '오늘'}`)
+    
+    const calculator = new SajuCalculator()
+    const targetDateObj = target_date ? new Date(target_date) : undefined
+    
+    // 종합 시점별 분석 실행
+    const temporalAnalysis = await calculator.analyzeTemporalSaju(
+      birth_date,
+      birth_time,
+      is_lunar,
+      targetDateObj
+    )
+    
+    console.log(`✅ 시점별 사주분석 완료`)
+    console.log(`   연운: ${temporalAnalysis.fortune_trends.current_year_fortune}`)
+    console.log(`   월운: ${temporalAnalysis.fortune_trends.current_month_fortune}`)
+    console.log(`   일운: ${temporalAnalysis.fortune_trends.current_day_fortune}`)
+    console.log(`   전체 트렌드: ${temporalAnalysis.fortune_trends.overall_trend}`)
+    
+    res.json({
+      success: true,
+      data: temporalAnalysis
+    })
+    
+  } catch (error) {
+    console.error('시점별 사주분석 오류:', error)
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    })
+  }
+})
+
+// 간단한 현재 운세 조회
+app.post('/api/saju/temporal/fortune', async (req, res) => {
+  const { birth_date, birth_time, is_lunar = false, target_date } = req.body
+  
+  if (!birth_date || !birth_time) {
+    return res.status(400).json({
+      success: false,
+      error: '생년월일과 출생시간이 필요합니다.'
+    })
+  }
+  
+  try {
+    console.log(`💫 현재 운세 조회: ${birth_date} ${birth_time}`)
+    
+    const calculator = new SajuCalculator()
+    const targetDateObj = target_date ? new Date(target_date) : undefined
+    
+    const temporalAnalysis = await calculator.analyzeTemporalSaju(
+      birth_date,
+      birth_time,
+      is_lunar,
+      targetDateObj
+    )
+    
+    // 운세 정보만 추출
+    const fortuneData = {
+      current_date: temporalAnalysis.current_pillars.current_date,
+      analysis_timestamp: temporalAnalysis.current_pillars.analysis_timestamp,
+      fortune_trends: temporalAnalysis.fortune_trends,
+      temporal_interactions: temporalAnalysis.temporal_interactions,
+      current_pillars: {
+        year: `${temporalAnalysis.current_pillars.current_year.heavenly}${temporalAnalysis.current_pillars.current_year.earthly}`,
+        month: `${temporalAnalysis.current_pillars.current_month.heavenly}${temporalAnalysis.current_pillars.current_month.earthly}`,
+        day: `${temporalAnalysis.current_pillars.current_day.heavenly}${temporalAnalysis.current_pillars.current_day.earthly}`
+      }
+    }
+    
+    console.log(`✅ 운세 조회 완료: 전체 트렌드 ${temporalAnalysis.fortune_trends.overall_trend}`)
+    
+    res.json({
+      success: true,
+      data: fortuneData
+    })
+    
+  } catch (error) {
+    console.error('현재 운세 조회 오류:', error)
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    })
+  }
+})
+
 // 서비스 상태 확인
 app.get('/health', (req, res) => {
   res.json({ 
     service: 'saju-analysis-service', 
     status: 'healthy', 
     timestamp: new Date().toISOString(),
-    version: '1.0.0'
+    version: '1.1.0' // 시점별 분석 기능 추가로 버전 업
   })
 })
 
