@@ -26,6 +26,30 @@ export interface SajuData {
   }
 }
 
+export interface CurrentTimePillars {
+  current_year: { heavenly: string; earthly: string }
+  current_month: { heavenly: string; earthly: string }
+  current_day: { heavenly: string; earthly: string }
+  current_date: string
+  analysis_timestamp: string
+}
+
+export interface TemporalSajuAnalysis {
+  personal_saju: SajuData
+  current_pillars: CurrentTimePillars
+  temporal_interactions: {
+    year_interaction: string    // 본명 vs 세운
+    month_interaction: string   // 본명 vs 월운
+    day_interaction: string     // 본명 vs 일운
+  }
+  fortune_trends: {
+    current_year_fortune: number    // -100 to 100
+    current_month_fortune: number   // -100 to 100
+    current_day_fortune: number     // -100 to 100
+    overall_trend: 'rising' | 'stable' | 'declining'
+  }
+}
+
 export class SajuCalculator {
   private readonly heavenlyStems = [
     '갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'
@@ -316,5 +340,153 @@ export class SajuCalculator {
       month: date.getMonth() + 1,
       day: date.getDate()
     }
+  }
+
+  /**
+   * 현재 시점의 천간지지 계산 (세운, 월운, 일운)
+   * 🎯 핵심 기능: 매년/매월/매일 변화하는 천간지지 계산
+   */
+  calculateCurrentTimePillars(targetDate?: Date): CurrentTimePillars {
+    const currentDate = targetDate || new Date()
+    const year = currentDate.getFullYear()
+    const month = currentDate.getMonth() + 1
+    const day = currentDate.getDate()
+    
+    console.log(`🗓️ 현재 시점 천간지지 계산: ${year}년 ${month}월 ${day}일`)
+
+    // 현재 년도의 천간지지 (세운)
+    const currentYearPillar = this.calculateYearPillar(year)
+    
+    // 현재 월의 천간지지 (월운) 
+    const currentMonthPillar = this.calculateMonthPillar(year, month)
+    
+    // 현재 일의 천간지지 (일운)
+    const currentDayPillar = this.calculateDayPillar(year, month, day)
+
+    const result: CurrentTimePillars = {
+      current_year: currentYearPillar,
+      current_month: currentMonthPillar, 
+      current_day: currentDayPillar,
+      current_date: `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`,
+      analysis_timestamp: new Date().toISOString()
+    }
+
+    console.log(`✅ 현재 천간지지: 년[${currentYearPillar.heavenly}${currentYearPillar.earthly}] 월[${currentMonthPillar.heavenly}${currentMonthPillar.earthly}] 일[${currentDayPillar.heavenly}${currentDayPillar.earthly}]`)
+    
+    return result
+  }
+
+  /**
+   * 개인 사주와 현재 시점 천간지지 종합 분석
+   * 🔮 핵심: 본명사주 + 세운/월운/일운 = 현재 시점 맞춤 운세
+   */
+  async analyzeTemporalSaju(birthDate: string, birthTime: string, isLunar: boolean = false, targetDate?: Date): Promise<TemporalSajuAnalysis> {
+    console.log(`🎯 시점별 사주 종합 분석 시작`)
+    console.log(`   개인정보: ${birthDate} ${birthTime} ${isLunar ? '음력' : '양력'}`)
+    
+    // 1. 개인 사주팔자 계산 (본명사주)
+    const personalSaju = await this.calculateSaju(birthDate, birthTime, isLunar)
+    
+    // 2. 현재 시점 천간지지 계산 (세운/월운/일운)
+    const currentPillars = this.calculateCurrentTimePillars(targetDate)
+    
+    // 3. 개인 사주와 현재 시점의 상호작용 분석
+    const temporalInteractions = this.analyzeTemporalInteractions(personalSaju, currentPillars)
+    
+    // 4. 현재 시점 운세 점수 계산
+    const fortuneTrends = this.calculateFortuneTrends(personalSaju, currentPillars, temporalInteractions)
+
+    const result: TemporalSajuAnalysis = {
+      personal_saju: personalSaju,
+      current_pillars: currentPillars,
+      temporal_interactions: temporalInteractions,
+      fortune_trends: fortuneTrends
+    }
+
+    console.log(`🎉 시점별 사주 분석 완료`)
+    console.log(`   연운: ${fortuneTrends.current_year_fortune}, 월운: ${fortuneTrends.current_month_fortune}, 일운: ${fortuneTrends.current_day_fortune}`)
+    console.log(`   전체 트렌드: ${fortuneTrends.overall_trend}`)
+    
+    return result
+  }
+
+  /**
+   * 개인 사주와 현재 시점 천간지지의 상호작용 분석
+   */
+  private analyzeTemporalInteractions(personalSaju: SajuData, currentPillars: CurrentTimePillars) {
+    const dayMaster = personalSaju.day_pillar.heavenly
+
+    // 개인 일주와 현재 시점 각 기둥의 관계 분석
+    const yearInteraction = this.analyzePillarInteraction(dayMaster, currentPillars.current_year.heavenly, '세운')
+    const monthInteraction = this.analyzePillarInteraction(dayMaster, currentPillars.current_month.heavenly, '월운')  
+    const dayInteraction = this.analyzePillarInteraction(dayMaster, currentPillars.current_day.heavenly, '일운')
+
+    return {
+      year_interaction: yearInteraction,
+      month_interaction: monthInteraction,
+      day_interaction: dayInteraction
+    }
+  }
+
+  /**
+   * 기둥 간 상호작용 분석 (사주학적 해석)
+   */
+  private analyzePillarInteraction(personalStem: string, currentStem: string, period: string): string {
+    const personalElement = this.elementMap[personalStem]
+    const currentElement = this.elementMap[currentStem]
+    
+    if (!personalElement || !currentElement) return `${period}: 분석 불가`
+
+    const relationship = this.getElementRelationship(personalElement, currentElement)
+    
+    const interactions = {
+      'same': `${period}: 동기상조 - 안정적 발전 시기`,
+      'generate': `${period}: 생조관계 - 성장과 발전 가능성 높음`, 
+      'destroy': `${period}: 극제관계 - 도전이 많지만 성취 가능`,
+      'support': `${period}: 인수관계 - 지지와 도움을 받는 시기`,
+      'restrain': `${period}: 관살관계 - 압박감 있지만 절제와 성숙의 시기`,
+      'neutral': `${period}: 중성관계 - 평범한 운세`
+    }
+
+    return interactions[relationship] || `${period}: 미상의 관계`
+  }
+
+  /**
+   * 현재 시점 운세 점수 계산 (-100 ~ 100점)
+   */
+  private calculateFortuneTrends(personalSaju: SajuData, currentPillars: CurrentTimePillars, interactions: any) {
+    // 각 상호작용을 점수로 변환
+    const yearScore = this.interactionToScore(interactions.year_interaction)
+    const monthScore = this.interactionToScore(interactions.month_interaction)  
+    const dayScore = this.interactionToScore(interactions.day_interaction)
+
+    // 가중 평균 (년 50%, 월 30%, 일 20%)
+    const overallScore = (yearScore * 0.5) + (monthScore * 0.3) + (dayScore * 0.2)
+    
+    // 전체 트렌드 판정
+    let overallTrend: 'rising' | 'stable' | 'declining'
+    if (overallScore > 20) overallTrend = 'rising'
+    else if (overallScore < -20) overallTrend = 'declining'
+    else overallTrend = 'stable'
+
+    return {
+      current_year_fortune: Math.round(yearScore),
+      current_month_fortune: Math.round(monthScore),
+      current_day_fortune: Math.round(dayScore), 
+      overall_trend: overallTrend
+    }
+  }
+
+  /**
+   * 상호작용 텍스트를 점수로 변환
+   */
+  private interactionToScore(interaction: string): number {
+    if (interaction.includes('생조관계')) return 70    // 매우 좋음
+    if (interaction.includes('동기상조')) return 50    // 좋음
+    if (interaction.includes('인수관계')) return 40    // 괜찮음  
+    if (interaction.includes('중성관계')) return 0     // 보통
+    if (interaction.includes('관살관계')) return -30   // 어려움
+    if (interaction.includes('극제관계')) return -50   // 매우 어려움
+    return 0 // 기본값
   }
 }
