@@ -4,6 +4,7 @@ import sqlite3 from 'sqlite3'
 import path from 'path'
 import { SajuCalculator } from './services/SajuCalculator'
 import { AptitudeAnalyzer } from './services/AptitudeAnalyzer'
+import { SajuScoreEngine } from './services/SajuScoreEngine'
 
 const app = express()
 const PORT = process.env.PORT || 4015
@@ -536,6 +537,276 @@ app.post('/api/saju/temporal/fortune', async (req, res) => {
     })
   }
 })
+
+// 🎯 통합 점수 조회 API (신규)
+app.post('/api/saju/scores/comprehensive', async (req, res) => {
+  const { user_id, birth_date, birth_time, is_lunar = false, time_scope = 'all' } = req.body
+  
+  if (!user_id || !birth_date || !birth_time) {
+    return res.status(400).json({
+      success: false,
+      error: '필수 정보가 누락되었습니다. (user_id, birth_date, birth_time)'
+    })
+  }
+  
+  try {
+    console.log(`🎯 통합 점수 계산: ${user_id} - ${birth_date} ${birth_time}`)
+    
+    const calculator = new SajuCalculator()
+    const scoreEngine = new SajuScoreEngine()
+    
+    // 사주 계산
+    const userSaju = await calculator.calculateSaju(birth_date, birth_time, is_lunar)
+    
+    // 현재 시점 기둥 계산
+    const currentPillars = await calculator.getCurrentTimePillars()
+    
+    // 종합 점수 계산
+    const comprehensiveScores = await scoreEngine.calculateComprehensiveScores(
+      userSaju,
+      currentPillars,
+      null, // categories는 DB에서 직접 로드
+      db
+    )
+    
+    // 점수 저장
+    await saveScoresToDatabase(user_id, comprehensiveScores, db)
+    
+    // 응답 형식 변환
+    const response = {
+      success: true,
+      data: {
+        positive_scores: Object.fromEntries(comprehensiveScores.positive_scores),
+        negative_scores: Object.fromEntries(comprehensiveScores.negative_scores),
+        summary: comprehensiveScores.summary
+      },
+      timestamp: comprehensiveScores.timestamp,
+      time_scope
+    }
+    
+    res.json(response)
+    console.log(`✅ 통합 점수 계산 완료 - 주능: ${comprehensiveScores.positive_scores.size}개, 주흉: ${comprehensiveScores.negative_scores.size}개`)
+    
+  } catch (error) {
+    console.error('통합 점수 계산 오류:', error)
+    res.status(500).json({
+      success: false,
+      error: error.message
+    })
+  }
+})
+
+// 🔄 실시간 점수 업데이트 API
+app.get('/api/saju/scores/realtime/:user_id', async (req, res) => {
+  const { user_id } = req.params
+  
+  try {
+    console.log(`🔄 실시간 점수 조회: ${user_id}`)
+    
+    // 캐시에서 먼저 확인
+    const cachedScore = await getCachedScore(user_id, db)
+    
+    if (cachedScore) {
+      return res.json({
+        success: true,
+        data: cachedScore,
+        from_cache: true
+      })
+    }
+    
+    // 캐시가 없으면 DB에서 조회
+    const query = `
+      SELECT * FROM saju_scores 
+      WHERE user_id = ? 
+      ORDER BY calculated_at DESC 
+      LIMIT 20
+    `
+    
+    db.all(query, [user_id], (err, rows) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: err.message
+        })
+      }
+      
+      const currentScores = {
+        timestamp: new Date().toISOString(),
+        daily_change: calculateChange(rows, 'daily'),
+        monthly_change: calculateChange(rows, 'monthly'),
+        yearly_change: calculateChange(rows, 'yearly'),
+        scores: rows
+      }
+      
+      // 캐시에 저장
+      setCachedScore(user_id, currentScores, db)
+      
+      res.json({
+        success: true,
+        data: currentScores,
+        from_cache: false
+      })
+    })
+    
+  } catch (error) {
+    console.error('실시간 점수 조회 오류:', error)
+    res.status(500).json({
+      success: false,
+      error: error.message
+    })
+  }
+})
+
+// 📊 카테고리별 상세 점수 API
+app.get('/api/saju/scores/category/:user_id/:category_name', async (req, res) => {
+  const { user_id, category_name } = req.params
+  
+  try {
+    console.log(`📊 카테고리별 점수 조회: ${user_id} - ${category_name}`)
+    
+    const query = `
+      SELECT * FROM saju_scores 
+      WHERE user_id = ? AND category_name = ?
+      ORDER BY calculated_at DESC 
+      LIMIT 1
+    `
+    
+    db.get(query, [user_id, category_name], async (err, row: any) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: err.message
+        })
+      }
+      
+      if (!row) {
+        return res.status(404).json({
+          success: false,
+          error: '점수 데이터를 찾을 수 없습니다.'
+        })
+      }
+      
+      // 상세 분석 정보 추가
+      const breakdown = {
+        saju_influence: calculateInfluence(row, 'saju'),
+        temporal_influence: calculateInfluence(row, 'temporal'),
+        category_fitness: calculateInfluence(row, 'category'),
+        total: row.base_score
+      }
+      
+      res.json({
+        success: true,
+        data: {
+          category: row.category_name,
+          type: row.category_type,
+          scores: {
+            base: row.base_score,
+            daily: row.daily_score,
+            monthly: row.monthly_score,
+            yearly: row.yearly_score
+          },
+          breakdown,
+          calculated_at: row.calculated_at
+        }
+      })
+    })
+    
+  } catch (error) {
+    console.error('카테고리별 점수 조회 오류:', error)
+    res.status(500).json({
+      success: false,
+      error: error.message
+    })
+  }
+})
+
+// 헬퍼 함수들
+async function saveScoresToDatabase(user_id: string, scores: any, db: any) {
+  const insertQuery = `
+    INSERT OR REPLACE INTO saju_scores 
+    (user_id, category_type, category_name, base_score, daily_score, monthly_score, yearly_score, saju_data)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `
+  
+  // 주능 점수 저장
+  for (const [categoryName, score] of scores.positive_scores) {
+    db.run(insertQuery, [
+      user_id,
+      'positive',
+      categoryName,
+      score.base_score,
+      score.daily_score,
+      score.monthly_score,
+      score.yearly_score,
+      JSON.stringify(score.items)
+    ])
+  }
+  
+  // 주흉 점수 저장
+  for (const [categoryName, score] of scores.negative_scores) {
+    db.run(insertQuery, [
+      user_id,
+      'negative',
+      categoryName,
+      score.base_score,
+      score.daily_score,
+      score.monthly_score,
+      score.yearly_score,
+      JSON.stringify(score.items)
+    ])
+  }
+}
+
+async function getCachedScore(user_id: string, db: any): Promise<any> {
+  return new Promise((resolve) => {
+    const query = `
+      SELECT cache_value FROM score_cache 
+      WHERE user_id = ? AND cache_key = 'realtime' 
+      AND expires_at > datetime('now')
+    `
+    
+    db.get(query, [user_id], (err: any, row: any) => {
+      if (err || !row) {
+        resolve(null)
+      } else {
+        resolve(JSON.parse(row.cache_value))
+      }
+    })
+  })
+}
+
+async function setCachedScore(user_id: string, data: any, db: any) {
+  const query = `
+    INSERT OR REPLACE INTO score_cache 
+    (user_id, cache_key, cache_value, expires_at)
+    VALUES (?, 'realtime', ?, datetime('now', '+15 minutes'))
+  `
+  
+  db.run(query, [user_id, JSON.stringify(data)])
+}
+
+function calculateChange(rows: any[], period: string): number {
+  if (rows.length < 2) return 0
+  
+  const latest = rows[0][`${period}_score`] || 0
+  const previous = rows[1][`${period}_score`] || 0
+  
+  return latest - previous
+}
+
+function calculateInfluence(row: any, type: string): number {
+  // 간단한 영향도 계산 로직
+  switch(type) {
+    case 'saju':
+      return Math.round(row.base_score * 0.5)
+    case 'temporal':
+      return Math.round(((row.daily_score + row.monthly_score + row.yearly_score) / 3) * 0.3)
+    case 'category':
+      return Math.round(row.base_score * 0.2)
+    default:
+      return 0
+  }
+}
 
 // 🌟 강화된 시점별 주능/주흉 분석 (신규 API)
 app.post('/api/saju/temporal/enhanced', async (req, res) => {

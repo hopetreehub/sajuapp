@@ -512,6 +512,36 @@ export class SajuCalculator {
   }
 
   /**
+   * 현재 시점의 기둥 계산
+   */
+  async getCurrentTimePillars(targetDate?: Date): Promise<CurrentTimePillars> {
+    const now = targetDate || new Date()
+    
+    // 현재 연월일 천간지지 계산
+    const year = now.getFullYear()
+    const month = now.getMonth() + 1
+    const day = now.getDate()
+    
+    // 간단한 변환 (실제로는 만세력 기준으로 정확히 계산해야 함)
+    const yearStem = this.heavenlyStems[(year - 4) % 10]
+    const yearBranch = this.earthlyBranches[(year - 4) % 12]
+    
+    const monthStem = this.heavenlyStems[(year * 12 + month + 2) % 10]
+    const monthBranch = this.earthlyBranches[(month + 1) % 12]
+    
+    const dayStem = this.heavenlyStems[day % 10]
+    const dayBranch = this.earthlyBranches[day % 12]
+    
+    return {
+      current_year: { heavenly: yearStem, earthly: yearBranch },
+      current_month: { heavenly: monthStem, earthly: monthBranch },
+      current_day: { heavenly: dayStem, earthly: dayBranch },
+      current_date: now.toISOString().split('T')[0],
+      analysis_timestamp: now.toISOString()
+    }
+  }
+
+  /**
    * 🌟 강화된 시점별 주능/주흉 분석
    * 개인 사주 + 현재 시점 + 카테고리 데이터베이스 종합 분석
    */
