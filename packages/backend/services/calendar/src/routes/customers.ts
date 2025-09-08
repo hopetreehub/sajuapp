@@ -6,7 +6,7 @@ import { calculateCompleteSaju } from '../utils/accurateSajuCalculator';
 const router = Router();
 
 // Customer database path
-const dbPath = path.join(__dirname, '../../../customer/customers.db');
+const dbPath = path.join(process.cwd(), 'customers.db');
 const db = new Database(dbPath);
 
 // Initialize database tables

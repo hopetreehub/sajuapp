@@ -107,7 +107,7 @@ router.post('/', async (req, res, next) => {
             color: req.body.color,
             category: req.body.type || 'personal',
             location: req.body.location,
-            reminders: req.body.reminder_minutes ? [{ type: 'notification', minutesBefore: req.body.reminder_minutes }] : null
+            reminders: req.body.reminder_minutes > 0 ? [{ type: 'notification', minutesBefore: req.body.reminder_minutes }] : []
         };
         const validation = (0, eventValidator_1.validateEvent)(transformedBody);
         if (validation.error) {
@@ -195,7 +195,7 @@ router.put('/:id', async (req, res, next) => {
         if (req.body.location !== undefined)
             transformedBody.location = req.body.location;
         if (req.body.reminder_minutes !== undefined) {
-            transformedBody.reminders = req.body.reminder_minutes ? [{ type: 'notification', minutesBefore: req.body.reminder_minutes }] : null;
+            transformedBody.reminders = req.body.reminder_minutes > 0 ? [{ type: 'notification', minutesBefore: req.body.reminder_minutes }] : [];
         }
         const validation = (0, eventValidator_1.validateEvent)(transformedBody, true); // true for partial validation
         if (validation.error) {

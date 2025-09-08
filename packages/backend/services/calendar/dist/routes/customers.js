@@ -9,7 +9,7 @@ const better_sqlite3_1 = __importDefault(require("better-sqlite3"));
 const accurateSajuCalculator_1 = require("../utils/accurateSajuCalculator");
 const router = (0, express_1.Router)();
 // Customer database path
-const dbPath = path_1.default.join(__dirname, '../../../customer/customers.db');
+const dbPath = path_1.default.join(process.cwd(), 'customers.db');
 const db = new better_sqlite3_1.default(dbPath);
 // Initialize database tables
 db.exec(`

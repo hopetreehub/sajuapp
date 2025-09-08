@@ -156,15 +156,20 @@ export class SajuScoreEngine {
       0.5 // 50% 가중치
     )
 
-    // 항목별 점수 계산
+    // 항목별 점수 계산 및 중복 제거
     const scoredItems = items.map(item => ({
       name: item.name,
       score: this.calculateItemScore(userSaju, item, type),
       confidence: this.calculateConfidence(userSaju, item)
     }))
     
+    // 중복 제거: 같은 name을 가진 항목은 첫 번째 것만 유지
+    const uniqueItems = Array.from(
+      new Map(scoredItems.map(item => [item.name, item])).values()
+    )
+    
     // 상위 항목만 선택
-    const topItems = scoredItems
+    const topItems = uniqueItems
       .sort((a, b) => b.score - a.score)
       .slice(0, 5)
 

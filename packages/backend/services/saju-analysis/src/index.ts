@@ -5,6 +5,7 @@ import path from 'path'
 import { SajuCalculator } from './services/SajuCalculator'
 import { AptitudeAnalyzer } from './services/AptitudeAnalyzer'
 import { SajuScoreEngine } from './services/SajuScoreEngine'
+import { EnhancedSajuScoreEngine } from './services/EnhancedSajuScoreEngine'
 
 const app = express()
 const PORT = process.env.PORT || 4015
@@ -23,6 +24,28 @@ console.log('🚀 운명나침반 사주 분석 서비스 초기화 중...')
 function initializeDatabase() {
   console.log('📊 사주 분석 데이터베이스 초기화 시작...')
   
+  // 먼저 테이블이 존재하는지 확인
+  db.get("SELECT COUNT(*) as count FROM sqlite_master WHERE type='table' AND name='minor_categories'", (err, row: any) => {
+    if (err || !row || row.count === 0) {
+      // 테이블이 없으면 전체 초기화
+      console.log('   🔨 테이블 생성 및 초기 데이터 설정...')
+      createTablesAndInitData()
+    } else {
+      // 테이블이 있으면 데이터 확인
+      db.get("SELECT COUNT(*) as count FROM minor_categories", (err, row: any) => {
+        if (err || !row || row.count === 0) {
+          console.log('   📝 빈 테이블에 데이터 추가...')
+          insertInitialData()
+        } else {
+          console.log(`   ✅ 데이터베이스 이미 초기화됨 (${row.count}개 항목)`)
+        }
+      })
+    }
+  })
+}
+
+// 테이블 생성 및 초기 데이터 설정
+function createTablesAndInitData() {
   // 모든 작업을 순차적으로 실행
   db.serialize(() => {
     // 1. 대분류 테이블 (주능/주흉)
@@ -94,6 +117,20 @@ function initializeDatabase() {
     console.log('✅ 대분류 데이터 삽입 완료')
     
     // 6. 중분류 데이터 삽입 (순차 처리)
+    insertMiddleCategories()
+  })
+}
+
+// 초기 데이터만 삽입 (테이블은 이미 존재)
+function insertInitialData() {
+  db.serialize(() => {
+    // 대분류 데이터 삽입
+    db.run(`INSERT OR IGNORE INTO major_categories (name, description, type) VALUES (?, ?, ?)`,
+      ['주능', '긍정적 적성 및 재능 분야', 'positive'])
+    
+    db.run(`INSERT OR IGNORE INTO major_categories (name, description, type) VALUES (?, ?, ?)`,
+      ['주흉', '주의가 필요한 분야 및 위험 요소', 'negative'])
+    
     insertMiddleCategories()
   })
 }
@@ -596,6 +633,120 @@ app.post('/api/saju/scores/comprehensive', async (req, res) => {
   }
 })
 
+// 🌟 향상된 사주 기반 점수 계산 API (신규)
+app.post('/api/saju/scores/enhanced', async (req, res) => {
+  const { user_id, birth_date, birth_time, is_lunar = false, categories = 'all' } = req.body
+  
+  if (!user_id || !birth_date || !birth_time) {
+    return res.status(400).json({
+      success: false,
+      error: '필수 정보가 누락되었습니다. (user_id, birth_date, birth_time)'
+    })
+  }
+  
+  try {
+    console.log(`🌟 향상된 사주 점수 계산: ${user_id} - ${birth_date} ${birth_time}`)
+    
+    const calculator = new SajuCalculator()
+    const enhancedEngine = new EnhancedSajuScoreEngine()
+    
+    // 사주 계산
+    const userSaju = await calculator.calculateSaju(birth_date, birth_time, is_lunar)
+    console.log(`📊 사주 계산 완료: 일주 ${userSaju.day_pillar.heavenly}${userSaju.day_pillar.earthly}`)
+    
+    // 현재 시점 기둥 계산
+    const currentPillars = await calculator.getCurrentTimePillars()
+    
+    // 카테고리 데이터 로드
+    const positiveCategories = await loadCategoriesFromDB(db, 'positive')
+    const negativeCategories = await loadCategoriesFromDB(db, 'negative')
+    
+    const enhancedScores = {
+      user_id,
+      timestamp: new Date().toISOString(),
+      positive_scores: new Map(),
+      negative_scores: new Map(),
+      saju_analysis: {
+        day_master: `${userSaju.day_pillar.heavenly}${userSaju.day_pillar.earthly}`,
+        dominant_element: getDominantElement(userSaju.five_elements),
+        strength_level: userSaju.strength.day_master_strength > 6 ? 'strong' : 'weak',
+        ten_gods: userSaju.ten_gods,
+        season: userSaju.birth_info.season
+      }
+    }
+    
+    // 주능 점수 계산
+    for (const [categoryName, items] of Object.entries(positiveCategories)) {
+      const detailedScore = enhancedEngine.calculateEnhancedCategoryScore(
+        userSaju,
+        currentPillars,
+        categoryName,
+        items as any[],
+        'positive'
+      )
+      enhancedScores.positive_scores.set(categoryName, detailedScore)
+    }
+    
+    // 주흉 점수 계산
+    for (const [categoryName, items] of Object.entries(negativeCategories)) {
+      const detailedScore = enhancedEngine.calculateEnhancedCategoryScore(
+        userSaju,
+        currentPillars,
+        categoryName,
+        items as any[],
+        'negative'
+      )
+      enhancedScores.negative_scores.set(categoryName, detailedScore)
+    }
+    
+    // 상위 추천 생성
+    const topPositive = Array.from(enhancedScores.positive_scores.entries())
+      .sort((a, b) => b[1].base_score - a[1].base_score)
+      .slice(0, 3)
+      
+    const topNegative = Array.from(enhancedScores.negative_scores.entries())
+      .filter(([_, score]) => score.base_score > 60)
+      .sort((a, b) => b[1].base_score - a[1].base_score)
+      .slice(0, 3)
+    
+    const response = {
+      success: true,
+      data: {
+        positive_scores: Object.fromEntries(enhancedScores.positive_scores),
+        negative_scores: Object.fromEntries(enhancedScores.negative_scores),
+        saju_analysis: enhancedScores.saju_analysis,
+        recommendations: {
+          top_aptitudes: topPositive.map(([name, score]) => ({
+            category: name,
+            score: score.base_score,
+            confidence: score.confidence_level,
+            reason: score.items[0]?.affinity_reason || '기본 적성'
+          })),
+          caution_areas: topNegative.map(([name, score]) => ({
+            category: name,
+            risk_level: score.base_score,
+            confidence: score.confidence_level
+          }))
+        }
+      },
+      timestamp: enhancedScores.timestamp,
+      version: 'enhanced_v1.0'
+    }
+    
+    res.json(response)
+    console.log(`✅ 향상된 점수 계산 완료`)
+    console.log(`   주능 최고: ${topPositive[0] ? `${topPositive[0][0]}(${topPositive[0][1].base_score}점)` : '없음'}`)
+    console.log(`   주흉 위험: ${topNegative[0] ? `${topNegative[0][0]}(${topNegative[0][1].base_score}점)` : '없음'}`)
+    
+  } catch (error) {
+    console.error('향상된 점수 계산 오류:', error)
+    res.status(500).json({
+      success: false,
+      error: error.message
+    })
+  }
+})
+
 // 🔄 실시간 점수 업데이트 API
 app.get('/api/saju/scores/realtime/:user_id', async (req, res) => {
   const { user_id } = req.params
@@ -721,6 +872,61 @@ app.get('/api/saju/scores/category/:user_id/:category_name', async (req, res) =>
 })
 
 // 헬퍼 함수들
+async function loadCategoriesFromDB(db: any, type: 'positive' | 'negative'): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT 
+        mid.name as category_name,
+        min.name as item_name,
+        min.saju_weight
+      FROM major_categories mc
+      JOIN middle_categories mid ON mc.id = mid.major_id
+      JOIN minor_categories min ON mid.id = min.middle_id
+      WHERE mc.type = ?
+      ORDER BY mid.name, min.name
+    `
+    
+    db.all(query, [type], (err: any, rows: any[]) => {
+      if (err) {
+        reject(err)
+        return
+      }
+      
+      const categories: { [key: string]: any[] } = {}
+      
+      for (const row of rows) {
+        if (!categories[row.category_name]) {
+          categories[row.category_name] = []
+        }
+        categories[row.category_name].push({
+          name: row.item_name,
+          saju_weight: row.saju_weight || 1.0
+        })
+      }
+      
+      resolve(categories)
+    })
+  })
+}
+
+function getDominantElement(elements: any): string {
+  let maxElement = 'earth'
+  let maxValue = 0
+  
+  for (const [element, value] of Object.entries(elements)) {
+    if ((value as number) > maxValue) {
+      maxValue = value as number
+      maxElement = element
+    }
+  }
+  
+  const elementMap: { [key: string]: string } = {
+    'wood': '목', 'fire': '화', 'earth': '토', 'metal': '금', 'water': '수'
+  }
+  
+  return elementMap[maxElement] || maxElement
+}
+
 async function saveScoresToDatabase(user_id: string, scores: any, db: any) {
   const insertQuery = `
     INSERT OR REPLACE INTO saju_scores 

@@ -13,9 +13,21 @@ interface DayViewProps {
   events: CalendarEvent[]
   onCreateEvent: (date: Date) => void
   onEditEvent: (event: CalendarEvent) => void
+  onDateClick?: (date: Date, event: React.MouseEvent) => void
+  onDeleteEvent?: (eventId: string) => void
+  highlightedEventId?: string | null
+  onDiaryClick?: (date: Date) => void
 }
 
-export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewProps) {
+export default function DayView({ 
+  events, 
+  onCreateEvent, 
+  onEditEvent,
+  onDateClick,
+  onDeleteEvent,
+  highlightedEventId,
+  onDiaryClick
+}: DayViewProps) {
   const { currentDate } = useCalendar()
   const [isDiaryOpen, setIsDiaryOpen] = useState(false)
   const { diaryDates } = useDiaryData({ viewMode: 'day', currentDate })

@@ -7,13 +7,13 @@ exports.validateEvent = void 0;
 const joi_1 = __importDefault(require("joi"));
 const eventSchema = joi_1.default.object({
     title: joi_1.default.string().min(1).max(255).required(),
-    description: joi_1.default.string().max(1000).optional(),
+    description: joi_1.default.string().max(1000).allow('').optional(),
     start_datetime: joi_1.default.date().iso().required(),
     end_datetime: joi_1.default.date().iso().min(joi_1.default.ref('start_datetime')).required(),
     is_all_day: joi_1.default.boolean().optional(),
     color: joi_1.default.string().pattern(/^#[0-9A-Fa-f]{6}$/).optional(),
     category: joi_1.default.string().valid('personal', 'work', 'family', 'health', 'fortune', 'anniversary', 'holiday', 'other').optional(),
-    location: joi_1.default.string().max(255).optional(),
+    location: joi_1.default.string().max(255).allow('').optional(),
     recurrence_rule: joi_1.default.object({
         frequency: joi_1.default.string().valid('daily', 'weekly', 'monthly', 'yearly').required(),
         interval: joi_1.default.number().integer().min(1).required(),
@@ -31,13 +31,13 @@ const eventSchema = joi_1.default.object({
 });
 const partialEventSchema = joi_1.default.object({
     title: joi_1.default.string().min(1).max(255).optional(),
-    description: joi_1.default.string().max(1000).optional(),
+    description: joi_1.default.string().max(1000).allow('').optional(),
     start_datetime: joi_1.default.date().iso().optional(),
     end_datetime: joi_1.default.date().iso().optional(),
     is_all_day: joi_1.default.boolean().optional(),
     color: joi_1.default.string().pattern(/^#[0-9A-Fa-f]{6}$/).optional(),
     category: joi_1.default.string().valid('personal', 'work', 'family', 'health', 'fortune', 'anniversary', 'holiday', 'other').optional(),
-    location: joi_1.default.string().max(255).optional(),
+    location: joi_1.default.string().max(255).allow('').optional(),
     recurrence_rule: joi_1.default.object({
         frequency: joi_1.default.string().valid('daily', 'weekly', 'monthly', 'yearly').required(),
         interval: joi_1.default.number().integer().min(1).required(),
