@@ -104,6 +104,39 @@ export default function DayView({
           </p>
         </div>
 
+        {/* 빠른 작성 버튼 그룹 */}
+        <div className="mb-4 p-4 rounded-lg bg-gradient-to-r from-primary-500/10 to-primary-600/10 border border-primary-500/20">
+          <h3 className="text-sm font-semibold text-muted-foreground mb-3">빠른 작성</h3>
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              onClick={() => {
+                const eventDate = new Date(currentDate)
+                eventDate.setHours(new Date().getHours(), 0, 0, 0)
+                onCreateEvent(eventDate)
+              }}
+              className="px-3 py-2 text-sm bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 rounded-md transition-colors flex items-center justify-center gap-1"
+            >
+              <span>📅</span> 일정
+            </button>
+            <button
+              onClick={() => {
+                const eventDate = new Date(currentDate)
+                eventDate.setHours(new Date().getHours(), 0, 0, 0)
+                onCreateEvent(eventDate)
+              }}
+              className="px-3 py-2 text-sm bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 rounded-md transition-colors flex items-center justify-center gap-1"
+            >
+              <span>✅</span> 할일
+            </button>
+            <button
+              onClick={() => setIsDiaryOpen(true)}
+              className="px-3 py-2 text-sm bg-purple-500/10 hover:bg-purple-500/20 text-purple-600 rounded-md transition-colors flex items-center justify-center gap-1"
+            >
+              <span>📖</span> 일기
+            </button>
+          </div>
+        </div>
+
         {/* 오늘의 운세 섹션 - 확장된 UI */}
         <div className="h-full flex flex-col">
           <TodayFortuneSection 
@@ -210,15 +243,22 @@ export default function DayView({
                   </div>
                 </div>
                 <div 
-                  className="flex-1 relative cursor-pointer hover:bg-muted/20 transition-colors"
+                  className="flex-1 relative cursor-pointer hover:bg-muted/20 transition-colors group"
                   onClick={() => {
                     const eventDate = new Date(currentDate)
                     eventDate.setHours(hour, 0, 0, 0)
                     onCreateEvent(eventDate)
                   }}
+                  title={`${hour}:00에 일정 추가`}
                 >
                   {/* Half-hour line */}
                   <div className="absolute top-1/2 left-0 right-0 border-t border-border/15"></div>
+                  {/* 호버 시 표시되는 + 아이콘 */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="w-8 h-8 rounded-full bg-primary-500/20 flex items-center justify-center">
+                      <span className="text-primary-600 text-lg">+</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
