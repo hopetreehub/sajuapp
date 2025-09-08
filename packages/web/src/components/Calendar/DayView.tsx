@@ -173,18 +173,6 @@ export default function DayView({
                   }
                   return null
                 })}
-                
-                {/* 빠른 할일 추가 버튼 */}
-                <button
-                  onClick={() => {
-                    const eventDate = new Date(currentDate)
-                    eventDate.setHours(new Date().getHours(), 0, 0, 0)
-                    onCreateEvent(eventDate)
-                  }}
-                  className="w-full mt-3 px-3 py-2 text-sm bg-primary-500/10 hover:bg-primary-500/20 text-primary-600 rounded-md transition-colors"
-                >
-                  + 할일 추가
-                </button>
               </div>
             </div>
           )}
