@@ -5,8 +5,6 @@ import { DailyFortune } from '@/types/saju'
 
 interface TodayFortuneSectionProps {
   currentDate: Date
-  onDiaryClick?: () => void
-  hasDiary?: boolean
 }
 
 interface FortuneCardProps {
@@ -227,28 +225,6 @@ const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate, 
           )}
         </div>
 
-        {/* 일기 쓰기 버튼 - 오늘의 메시지 아래로 이동 */}
-        {onDiaryClick && (
-          <button
-            onClick={onDiaryClick}
-            className={`flex items-center gap-3 p-4 rounded-xl transition-all hover:scale-105 w-full text-left ${
-              hasDiary
-                ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 shadow-sm'
-                : 'hover:bg-amber-100 dark:hover:bg-amber-900/30 text-amber-600 dark:text-amber-400 opacity-70 hover:opacity-100 border-2 border-dashed border-amber-300 dark:border-amber-600'
-            }`}
-            title={hasDiary ? '일기 보기/수정' : '일기 쓰기'}
-          >
-            <span className="text-2xl">📖</span>
-            <div>
-              <div className="font-semibold">
-                {hasDiary ? '일기 보기' : '일기 쓰기'}
-              </div>
-              <div className="text-sm opacity-75">
-                {hasDiary ? '작성된 일기가 있습니다' : '오늘의 이야기를 남겨보세요'}
-              </div>
-            </div>
-          </button>
-        )}
       </div>
     </div>
   )

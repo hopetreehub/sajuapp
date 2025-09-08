@@ -141,8 +141,6 @@ export default function DayView({
         <div className="h-full flex flex-col">
           <TodayFortuneSection 
             currentDate={currentDate} 
-            onDiaryClick={() => setIsDiaryOpen(true)}
-            hasDiary={hasCurrentDateDiary}
           />
           
           {/* 오늘의 할일 요약 섹션 */}
