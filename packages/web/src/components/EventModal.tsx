@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { CalendarEvent, eventService, Tag, tagService, diaryService } from '../services/api';
+import { CalendarEvent, eventService, Tag, tagService } from '../services/api';
 import { useCalendar } from '../contexts/CalendarContext';
 import TagSelector from './TagSelector';
 
@@ -20,7 +20,7 @@ const EventModal: React.FC<EventModalProps> = ({
   initialDate
 }) => {
   const { addTodo } = useCalendar();
-  const [activeTab, setActiveTab] = useState<'event' | 'todo' | 'diary'>('event');
+  const [activeTab, setActiveTab] = useState<'event' | 'todo'>('event');
   const [formData, setFormData] = useState<Partial<CalendarEvent>>({
     title: '',
     description: '',
@@ -42,11 +42,6 @@ const EventModal: React.FC<EventModalProps> = ({
     date: initialDate ? format(initialDate, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
   });
 
-  const [diaryData, setDiaryData] = useState({
-    content: '',
-    mood: '😊',
-    date: initialDate ? format(initialDate, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
-  });
 
   useEffect(() => {
     if (event) {
@@ -86,24 +81,6 @@ const EventModal: React.FC<EventModalProps> = ({
     }
   };
 
-  const handleDiarySubmit = async () => {
-    if (!diaryData.content.trim()) {
-      alert('일기 내용을 입력해주세요.');
-      return;
-    }
-
-    try {
-      await diaryService.saveDiary({
-        date: diaryData.date,
-        content: diaryData.content.trim(),
-        mood: diaryData.mood
-      });
-      onClose();
-    } catch (error) {
-      console.error('Failed to save diary:', error);
-      alert('일기 저장에 실패했습니다.');
-    }
-  };
 
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
@@ -122,10 +99,6 @@ const EventModal: React.FC<EventModalProps> = ({
       return;
     }
     
-    if (activeTab === 'diary') {
-      handleDiarySubmit();
-      return;
-    }
     
     if (!formData.title || !formData.start_time || !formData.end_time) {
       alert('제목과 시간을 입력해주세요.');
@@ -226,77 +199,11 @@ const EventModal: React.FC<EventModalProps> = ({
             >
               ✅ 할일
             </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('diary')}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                activeTab === 'diary'
-                  ? 'bg-background text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              📖 일기
-            </button>
           </div>
         )}
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          {activeTab === 'diary' ? (
-            <>
-              {/* 일기 폼 */}
-              <div>
-                <label className="block text-sm font-medium mb-1 text-foreground">날짜</label>
-                <input
-                  type="date"
-                  value={diaryData.date}
-                  onChange={(e) => setDiaryData({ ...diaryData, date: e.target.value })}
-                  className="w-full px-3 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary-500 bg-background text-foreground"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-1 text-foreground">기분</label>
-                <div className="flex gap-2">
-                  {[
-                    { emoji: '😊', label: '기분 좋음' },
-                    { emoji: '😐', label: '보통' },
-                    { emoji: '😢', label: '슬픔' },
-                    { emoji: '😠', label: '화남' },
-                    { emoji: '😴', label: '피곤함' },
-                    { emoji: '🤔', label: '고민' },
-                    { emoji: '😍', label: '설렘' },
-                    { emoji: '😱', label: '놀람' }
-                  ].map(mood => (
-                    <button
-                      key={mood.emoji}
-                      type="button"
-                      onClick={() => setDiaryData({ ...diaryData, mood: mood.emoji })}
-                      className={`text-xl p-2 rounded transition-all hover:scale-110 ${
-                        diaryData.mood === mood.emoji 
-                          ? 'bg-primary-500/20 shadow-sm' 
-                          : 'hover:bg-muted'
-                      }`}
-                      title={mood.label}
-                    >
-                      {mood.emoji}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1 text-foreground">일기 내용*</label>
-                <textarea
-                  value={diaryData.content}
-                  onChange={(e) => setDiaryData({ ...diaryData, content: e.target.value })}
-                  className="w-full px-3 py-2 border border-border rounded-md focus:ring-2 focus:ring-primary-500 bg-background text-foreground"
-                  rows={8}
-                  placeholder="오늘 하루는 어땠나요? 마음속 이야기를 자유롭게 적어보세요..."
-                  required
-                />
-              </div>
-            </>
-          ) : activeTab === 'todo' ? (
+          {activeTab === 'todo' ? (
             <>
               {/* 할일 폼 */}
               <div>
@@ -491,7 +398,7 @@ const EventModal: React.FC<EventModalProps> = ({
                 type="submit"
                 className="px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-600"
               >
-                {event ? '수정' : activeTab === 'diary' ? '일기 저장' : activeTab === 'todo' ? '할일 저장' : '일정 저장'}
+                {event ? '수정' : activeTab === 'todo' ? '할일 저장' : '일정 저장'}
               </button>
             </div>
           </div>
