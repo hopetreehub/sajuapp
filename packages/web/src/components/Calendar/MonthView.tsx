@@ -244,7 +244,9 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
-                          onDeleteEvent?.(event.id)
+                          if (confirm(`"${event.title}" 일정을 삭제하시겠습니까?`)) {
+                            onDeleteEvent?.(event.id)
+                          }
                         }}
                         className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-1"
                         title="일정 삭제"

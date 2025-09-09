@@ -136,10 +136,6 @@ export default function CalendarPage() {
         setSelectedEvent(null)
         setIsModalOpen(true)
         break
-      case 'todo':
-        // TODO: 할일 추가 기능 구현 필요
-        console.log('TODO: Add todo functionality', actionMenuDate)
-        break
       case 'diary':
         setDiaryModalDate(actionMenuDate)
         setIsDiaryModalOpen(true)

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-export type ActionType = 'event' | 'todo' | 'diary'
+export type ActionType = 'event' | 'diary'
 
 interface ActionMenuProps {
   isOpen: boolean
@@ -54,16 +54,9 @@ export default function ActionMenu({
     {
       type: 'event' as ActionType,
       icon: '📅',
-      label: '일정 추가',
-      description: '새로운 일정을 만듭니다',
+      label: '일정,할일 추가',
+      description: '새로운 일정과 할일을 만듭니다',
       color: 'text-blue-600 dark:text-blue-400'
-    },
-    {
-      type: 'todo' as ActionType,
-      icon: '✅',
-      label: '할일 추가',
-      description: '새로운 할일을 만듭니다',
-      color: 'text-green-600 dark:text-green-400'
     },
     {
       type: 'diary' as ActionType,
