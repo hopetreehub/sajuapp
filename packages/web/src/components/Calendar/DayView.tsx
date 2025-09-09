@@ -46,20 +46,6 @@ export default function DayView({
   const timedTodos = useMemo(() => dayTodos.filter(todo => todo.hasTime && todo.startTime), [dayTodos])
   const generalTodos = useMemo(() => dayTodos.filter(todo => !todo.hasTime || !todo.startTime), [dayTodos])
 
-  // 할일 통계
-  const todoStats = useMemo(() => {
-    const total = dayTodos.length
-    const completed = dayTodos.filter(t => t.completed).length
-    const byPriority = {
-      high: dayTodos.filter(t => t.priority === 'high').length,
-      highCompleted: dayTodos.filter(t => t.priority === 'high' && t.completed).length,
-      medium: dayTodos.filter(t => t.priority === 'medium').length,
-      mediumCompleted: dayTodos.filter(t => t.priority === 'medium' && t.completed).length,
-      low: dayTodos.filter(t => t.priority === 'low').length,
-      lowCompleted: dayTodos.filter(t => t.priority === 'low' && t.completed).length
-    }
-    return { total, completed, byPriority }
-  }, [dayTodos])
 
   const dayEvents = useMemo(() => {
     return events.filter(event => {
@@ -143,39 +129,6 @@ export default function DayView({
             currentDate={currentDate} 
           />
           
-          {/* 오늘의 할일 요약 섹션 */}
-          {dayTodos.length > 0 && (
-            <div className="mt-6 p-4 rounded-lg bg-muted/10 border border-border/50">
-              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                📝 오늘의 할일
-                <span className="text-sm text-muted-foreground">
-                  ({todoStats.completed}/{todoStats.total} 완료)
-                </span>
-              </h3>
-              <div className="space-y-2">
-                {/* 우선순위별 할일 요약 */}
-                {['high', 'medium', 'low'].map(priority => {
-                  const count = todoStats.byPriority[priority as keyof typeof todoStats.byPriority]
-                  const completedCount = todoStats.byPriority[`${priority}Completed` as keyof typeof todoStats.byPriority]
-                  
-                  if (typeof count === 'number' && count > 0) {
-                    return (
-                      <div key={priority} className="flex items-center gap-2 text-sm">
-                        <span>{getPriorityIcon(priority)}</span>
-                        <span className="flex-1">
-                          {priority === 'high' ? '높음' : priority === 'medium' ? '보통' : '낮음'}
-                        </span>
-                        <span className="text-muted-foreground">
-                          {completedCount}/{count}개
-                        </span>
-                      </div>
-                    )
-                  }
-                  return null
-                })}
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
