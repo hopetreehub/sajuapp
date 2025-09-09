@@ -3,6 +3,8 @@ import { useCalendar } from '@/contexts/CalendarContext'
 import { useDiaryData } from '@/hooks/useDiaryData'
 import AddItemModal from '@/components/AddItemModal'
 import DiaryBookModal from '@/components/DiaryBookModal'
+import EditTodoModal from '@/components/EditTodoModal'
+import { Todo } from '@/contexts/CalendarContext'
 import { ITEM_COLORS } from '@/types/todo'
 import { 
   startOfWeek, 
@@ -23,17 +25,19 @@ interface WeekViewProps {
   onCreateEvent: (date: Date) => void
   onDateClick?: (date: Date, event: React.MouseEvent) => void
   onEditEvent: (event: CalendarEvent) => void
+  onDeleteEvent?: (eventId: string) => void
   highlightedEventId?: string | null
   onDiaryClick?: (date: Date) => void
 }
 
-export default function WeekView({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId }: WeekViewProps) {
+export default function WeekView({ events, onCreateEvent, onDateClick, onEditEvent, onDeleteEvent, highlightedEventId }: WeekViewProps) {
   const { currentDate, getTodosForDate, addTodo, deleteTodo, toggleTodo } = useCalendar()
   const [showAddModal, setShowAddModal] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [selectedHour, setSelectedHour] = useState<number | undefined>()
   const [isDiaryOpen, setIsDiaryOpen] = useState(false)
   const [diaryDate, setDiaryDate] = useState<Date>(new Date())
+  const [editingTodo, setEditingTodo] = useState<Todo | null>(null)
   
   // 일기 데이터 가져오기
   const { diaryDates } = useDiaryData({ 
@@ -216,7 +220,7 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                             return (
                               <div
                                 key={event.id}
-                                className="text-xs p-1 mb-1 rounded truncate cursor-pointer hover:opacity-80"
+                                className="text-xs p-1 mb-1 rounded truncate cursor-pointer hover:opacity-80 group flex items-center justify-between"
                                 style={{ 
                                   backgroundColor: ITEM_COLORS.event.background,
                                   color: ITEM_COLORS.event.text,
@@ -227,7 +231,23 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                                   onEditEvent(event)
                                 }}
                               >
-                                {format(startTime, 'HH:mm')} {event.title}
+                                <span className="truncate">
+                                  {format(startTime, 'HH:mm')} {event.title}
+                                </span>
+                                {onDeleteEvent && (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      if (confirm(`"${event.title}" 일정을 삭제하시겠습니까?`)) {
+                                        onDeleteEvent(event.id)
+                                      }
+                                    }}
+                                    className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-1 flex-shrink-0"
+                                    title="일정 삭제"
+                                  >
+                                    ×
+                                  </button>
+                                )}
                               </div>
                             )
                           } catch (error) {
@@ -335,12 +355,20 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                         <span className="text-xs">{getPriorityIcon(todo.priority)}</span>
                         <span 
                           className={`
-                            flex-1 text-xs truncate
+                            flex-1 text-xs truncate cursor-pointer hover:underline
                             ${todo.completed ? 'line-through text-gray-500' : 'text-gray-800 dark:text-gray-200'}
                           `}
+                          onClick={() => setEditingTodo(todo)}
                         >
                           {todo.text}
                         </span>
+                        <button
+                          onClick={() => setEditingTodo(todo)}
+                          className="opacity-0 group-hover:opacity-100 text-blue-500 hover:text-blue-700 text-xs"
+                          title="수정"
+                        >
+                          ✏️
+                        </button>
                         <button
                           onClick={() => deleteTodo(todo.id)}
                           className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 text-xs"
@@ -382,6 +410,13 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
         onClose={() => setIsDiaryOpen(false)}
         date={diaryDate}
         onSave={() => setIsDiaryOpen(false)}
+      />
+      
+      {/* 할일 수정 모달 */}
+      <EditTodoModal
+        isOpen={!!editingTodo}
+        onClose={() => setEditingTodo(null)}
+        todo={editingTodo}
       />
     </div>
   )

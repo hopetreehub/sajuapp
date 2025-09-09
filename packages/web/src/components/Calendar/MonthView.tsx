@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import { useCalendar } from '@/contexts/CalendarContext'
 import { useDiaryData } from '@/hooks/useDiaryData'
 import DiaryBookModal from '@/components/DiaryBookModal'
+import EditTodoModal from '@/components/EditTodoModal'
+import { Todo } from '@/contexts/CalendarContext'
 import { 
   startOfMonth, 
   endOfMonth, 
@@ -34,6 +36,7 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
   const [hoveredDate, setHoveredDate] = useState<Date | null>(null)
   const [isDiaryOpen, setIsDiaryOpen] = useState(false)
   const [diaryDate, setDiaryDate] = useState<Date>(new Date())
+  const [editingTodo, setEditingTodo] = useState<Todo | null>(null)
   
   // 일기 데이터 가져오기
   const { diaryDates } = useDiaryData({ 
@@ -271,9 +274,25 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                     {dayTodos.slice(0, 5).map((todo) => (
                       <div key={todo.id} className="flex items-start gap-2 text-xs group">
                         <span>{getPriorityIcon(todo.priority)}</span>
-                        <span className={`flex-1 ${todo.completed ? 'line-through text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}>
+                        <span 
+                          className={`flex-1 cursor-pointer hover:underline ${todo.completed ? 'line-through text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setEditingTodo(todo)
+                          }}
+                        >
                           {todo.text}
                         </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setEditingTodo(todo)
+                          }}
+                          className="opacity-0 group-hover:opacity-100 text-blue-500 hover:text-blue-700 transition-opacity text-xs"
+                          title="할일 수정"
+                        >
+                          ✏️
+                        </button>
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
@@ -305,6 +324,13 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
         onClose={() => setIsDiaryOpen(false)}
         date={diaryDate}
         onSave={() => setIsDiaryOpen(false)}
+      />
+      
+      {/* 할일 수정 모달 */}
+      <EditTodoModal
+        isOpen={!!editingTodo}
+        onClose={() => setEditingTodo(null)}
+        todo={editingTodo}
       />
     </div>
   )

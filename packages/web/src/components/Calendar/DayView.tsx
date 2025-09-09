@@ -6,6 +6,8 @@ import { CalendarEvent } from '@/services/api'
 import DiaryBookModal from '@/components/DiaryBookModal'
 import { useDiaryData } from '@/hooks/useDiaryData'
 import TodayFortuneSection from '@/components/TodayFortuneSection'
+import EditTodoModal from '@/components/EditTodoModal'
+import { Todo } from '@/contexts/CalendarContext'
 
 const HOURS = Array.from({ length: 10 }, (_, i) => i + 9) // 9시-18시
 
@@ -13,16 +15,19 @@ interface DayViewProps {
   events: CalendarEvent[]
   onCreateEvent: (date: Date) => void
   onEditEvent: (event: CalendarEvent) => void
+  onDeleteEvent?: (eventId: string) => void
 }
 
 export default function DayView({ 
   events, 
   onCreateEvent, 
-  onEditEvent
+  onEditEvent,
+  onDeleteEvent
 }: DayViewProps) {
   const { currentDate, todos, getTodosForDate, deleteTodo, toggleTodo } = useCalendar()
   const [isDiaryOpen, setIsDiaryOpen] = useState(false)
   const { diaryDates } = useDiaryData({ viewMode: 'day', currentDate })
+  const [editingTodo, setEditingTodo] = useState<Todo | null>(null)
   
   // 현재 날짜에 일기가 있는지 확인
   const hasCurrentDateDiary = diaryDates.has(format(currentDate, 'yyyy-MM-dd'))
@@ -142,7 +147,7 @@ export default function DayView({
               {allDayEvents.map(event => (
                 <div
                   key={event.id}
-                  className="px-3 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity"
+                  className="group inline-flex items-center px-3 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity"
                   style={{ 
                     backgroundColor: event.color || '#3b82f6',
                     color: 'white'
@@ -150,7 +155,21 @@ export default function DayView({
                   onClick={() => onEditEvent(event)}
                   title={event.description || event.title}
                 >
-                  {event.title}
+                  <span>{event.title}</span>
+                  {onDeleteEvent && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        if (confirm(`"${event.title}" 일정을 삭제하시겠습니까?`)) {
+                          onDeleteEvent(event.id)
+                        }
+                      }}
+                      className="opacity-0 group-hover:opacity-100 ml-2 hover:text-red-200 transition-opacity"
+                      title="일정 삭제"
+                    >
+                      ×
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -210,7 +229,7 @@ export default function DayView({
                 return (
                   <div
                     key={event.id}
-                    className="absolute left-4 right-1/2 p-4 rounded-xl cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] mr-2"
+                    className="absolute left-4 right-1/2 p-4 rounded-xl cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] mr-2 group"
                     style={{ 
                       ...position,
                       backgroundColor: `${event.color || '#3b82f6'}15`,
@@ -219,18 +238,36 @@ export default function DayView({
                     }}
                     onClick={() => onEditEvent(event)}
                   >
-                    <div className="text-sm font-semibold mb-1" style={{ color: event.color || '#3b82f6' }}>
-                      {format(new Date(event.start_time), 'HH:mm')} - {format(new Date(event.end_time), 'HH:mm')}
-                    </div>
-                    <div className="font-semibold text-foreground text-lg mb-1">{event.title}</div>
-                    {event.description && (
-                      <div className="text-sm text-muted-foreground">{event.description}</div>
-                    )}
-                    {event.location && (
-                      <div className="text-sm text-muted-foreground mt-2 flex items-center gap-1">
-                        <span>📍</span> {event.location}
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="text-sm font-semibold mb-1" style={{ color: event.color || '#3b82f6' }}>
+                          {format(new Date(event.start_time), 'HH:mm')} - {format(new Date(event.end_time), 'HH:mm')}
+                        </div>
+                        <div className="font-semibold text-foreground text-lg mb-1">{event.title}</div>
+                        {event.description && (
+                          <div className="text-sm text-muted-foreground">{event.description}</div>
+                        )}
+                        {event.location && (
+                          <div className="text-sm text-muted-foreground mt-2 flex items-center gap-1">
+                            <span>📍</span> {event.location}
+                          </div>
+                        )}
                       </div>
-                    )}
+                      {onDeleteEvent && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            if (confirm(`"${event.title}" 일정을 삭제하시겠습니까?`)) {
+                              onDeleteEvent(event.id)
+                            }
+                          }}
+                          className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-2 text-lg"
+                          title="일정 삭제"
+                        >
+                          ×
+                        </button>
+                      )}
+                    </div>
                   </div>
                 )
               })}
@@ -309,16 +346,27 @@ export default function DayView({
                       className="w-4 h-4"
                     />
                     <span className="text-sm font-medium">{getPriorityIcon(todo.priority)}</span>
-                    <span className={`text-sm flex-1 ${todo.completed ? 'line-through text-muted-foreground' : ''}`}>
+                    <span 
+                      className={`text-sm flex-1 cursor-pointer hover:underline ${todo.completed ? 'line-through text-muted-foreground' : ''}`}
+                      onClick={() => setEditingTodo(todo)}
+                    >
                       {todo.text}
                     </span>
                   </div>
-                  <button
-                    onClick={() => deleteTodo(todo.id)}
-                    className="text-red-500 hover:text-red-700 text-sm px-2 py-1"
-                  >
-                    삭제
-                  </button>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => setEditingTodo(todo)}
+                      className="text-blue-500 hover:text-blue-700 text-sm px-2 py-1"
+                    >
+                      수정
+                    </button>
+                    <button
+                      onClick={() => deleteTodo(todo.id)}
+                      className="text-red-500 hover:text-red-700 text-sm px-2 py-1"
+                    >
+                      삭제
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -334,6 +382,13 @@ export default function DayView({
         onSave={() => {
           setIsDiaryOpen(false)
         }}
+      />
+      
+      {/* 할일 수정 모달 */}
+      <EditTodoModal
+        isOpen={!!editingTodo}
+        onClose={() => setEditingTodo(null)}
+        todo={editingTodo}
       />
     </div>
   )
