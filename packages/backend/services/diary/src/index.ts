@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(requestLogger);
 
 // Routes
-app.use('/health', (req, res) => {
+app.use('/health', (_req, res) => {
   res.json({ 
     status: 'healthy', 
     service: 'diary-service',
