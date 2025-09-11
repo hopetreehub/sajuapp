@@ -7,7 +7,7 @@ import UnifiedSajuRadarChart from '@/components/saju/charts/UnifiedSajuRadarChar
 import CustomerSelector from '@/components/saju/CustomerSelector';
 import { Customer, getCustomerById } from '@/services/customerApi';
 import LifeChartButton from '@/components/saju/LifeChartButton';
-import HundredYearChart from '@/components/Charts/HundredYearChart';
+import HundredYearChart from '@/components/Charts/HundredYearChartFixed';
 import { fetchLifetimeFortune, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
 import { convertCustomerToLifetimeRequest, getCacheKey } from '@/utils/customerDataConverter';
 
@@ -21,6 +21,21 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
   const [lifetimeFortune, setLifetimeFortune] = useState<LifetimeFortuneResponse | null>(null);
   const [lifeChartLoading, setLifeChartLoading] = useState(false);
   const [lifeChartError, setLifeChartError] = useState<string | null>(null);
+
+  // 정확한 나이 계산 함수
+  const calculateCurrentAge = (birthDate: string): number => {
+    const birth = new Date(birthDate);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    
+    // 생일이 아직 안 지났으면 1 빼기
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    
+    return age + 1; // 한국 나이 계산 (태어나면 1살)
+  };
 
   const currentCategory = SAJU_RADAR_CATEGORIES.find(cat => cat.id === selectedCategory);
 
@@ -189,11 +204,12 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
         )}
 
         {/* 🔥 100년 인생운세 차트 - 데이터 로드 시 표시 */}
-        {lifetimeFortune && (
+        {lifetimeFortune && selectedCustomer && (
           <div id="hundred-year-chart" className="mb-8">
             <HundredYearChart
               data={lifetimeFortune.data.lifetimeFortune}
-              currentAge={selectedCustomer ? new Date().getFullYear() - new Date(selectedCustomer.birth_date).getFullYear() + 1 : undefined}
+              currentAge={calculateCurrentAge(selectedCustomer.birth_date)}
+              birthYear={new Date(selectedCustomer.birth_date).getFullYear()}
             />
           </div>
         )}
