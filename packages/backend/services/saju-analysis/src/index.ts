@@ -6,6 +6,7 @@ import { SajuCalculator } from './services/SajuCalculator'
 import { AptitudeAnalyzer } from './services/AptitudeAnalyzer'
 import { SajuScoreEngine } from './services/SajuScoreEngine'
 import { EnhancedSajuScoreEngine } from './services/EnhancedSajuScoreEngine'
+import { LifetimeFortuneCalculator } from './services/LifetimeFortuneCalculator'
 
 const app = express()
 const PORT = process.env.PORT || 4015
@@ -1065,6 +1066,75 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString(),
     version: '1.1.0' // 시점별 분석 기능 추가로 버전 업
   })
+})
+
+// 🎯 100년 인생운세 API
+app.post('/api/saju/lifetime-fortune', async (req, res) => {
+  const { 
+    year, 
+    month, 
+    day, 
+    hour, 
+    isLunar = false,
+    gender = 'male' 
+  } = req.body
+  
+  try {
+    console.log('📊 100년 인생운세 계산 시작')
+    console.log(`   생년월일: ${year}년 ${month}월 ${day}일 ${hour}시`)
+    console.log(`   음력여부: ${isLunar}, 성별: ${gender}`)
+    
+    const calculator = new LifetimeFortuneCalculator()
+    const lifetimeFortune = calculator.calculateLifetimeFortune(
+      year, month, day, hour, isLunar, gender
+    )
+    
+    // 주요 전환점 분석
+    const keyYears = lifetimeFortune.filter(year => 
+      [20, 30, 40, 50, 60, 70].includes(year.age)
+    )
+    
+    // 최고/최저 운세 년도
+    const bestYear = lifetimeFortune.reduce((prev, curr) => 
+      prev.totalScore > curr.totalScore ? prev : curr
+    )
+    const worstYear = lifetimeFortune.reduce((prev, curr) => 
+      prev.totalScore < curr.totalScore ? prev : curr
+    )
+    
+    res.json({
+      success: true,
+      data: {
+        lifetimeFortune,
+        analysis: {
+          keyYears,
+          bestYear: {
+            year: bestYear.year,
+            age: bestYear.age,
+            score: bestYear.totalScore
+          },
+          worstYear: {
+            year: worstYear.year,
+            age: worstYear.age,
+            score: worstYear.totalScore
+          },
+          averageScore: lifetimeFortune.reduce((sum, y) => sum + y.totalScore, 0) / lifetimeFortune.length
+        }
+      },
+      timestamp: new Date().toISOString()
+    })
+    
+    console.log('✅ 100년 인생운세 계산 완료')
+    console.log(`   최고 운세: ${bestYear.age}세 (${bestYear.totalScore}점)`)
+    console.log(`   최저 운세: ${worstYear.age}세 (${worstYear.totalScore}점)`)
+    
+  } catch (error) {
+    console.error('100년 인생운세 계산 오류:', error)
+    res.status(500).json({
+      success: false,
+      error: error.message
+    })
+  }
 })
 
 // 서버 시작

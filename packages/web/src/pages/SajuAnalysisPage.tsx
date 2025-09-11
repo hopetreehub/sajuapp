@@ -4,6 +4,7 @@ import SajuInputForm from '@/components/saju/SajuInputForm';
 import { FiveElementsBalanceChart } from '@/components/saju/charts/FiveElementsBalanceChart';
 import { TenGodsDistributionChart } from '@/components/saju/charts/TenGodsDistributionChart';
 import SixAreaChart from '@/components/saju/charts/SixAreaChart';
+import HundredYearChart from '@/components/Charts/HundredYearChart';
 import ChartNavigation from '@/components/Common/ChartNavigation';
 import UserSelectionPanel from '@/components/User/UserSelectionPanel';
 import { SajuBirthInfo, SajuAnalysisResult, SajuData } from '@/types/saju';
@@ -12,6 +13,7 @@ import { getCurrentUser, addAnalysisHistory } from '@/utils/userStorage';
 import { SajuCalculator, formatFourPillars, formatFourPillarsDetailed, FourPillarsResult } from '@/utils/sajuCalculator';
 import { calculateSajuData } from '@/utils/sajuDataCalculator';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
+import { fetchLifetimeFortune, calculateCurrentAge, YearlyFortune, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
 
 const SajuAnalysisPage: React.FC = () => {
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ const SajuAnalysisPage: React.FC = () => {
   const [birthInfo, setBirthInfo] = useState<SajuBirthInfo | null>(null);
   const [analysisResult, setAnalysisResult] = useState<SajuAnalysisResult | null>(null);
   const [fourPillars, setFourPillars] = useState<FourPillarsResult | null>(null);
+  const [lifetimeFortune, setLifetimeFortune] = useState<LifetimeFortuneResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [showUserPanel, setShowUserPanel] = useState(true);
 
@@ -62,6 +65,21 @@ const SajuAnalysisPage: React.FC = () => {
     console.log('=== 사주 계산 결과 ===');
     console.log('입력:', info);
     console.log('사주:', formatFourPillarsDetailed(calculatedPillars));
+
+    // 100년 인생운세 계산 추가
+    fetchLifetimeFortune({
+      year: info.year,
+      month: info.month,
+      day: info.day,
+      hour: info.hour || 12,
+      isLunar: info.isLunar || false,
+      gender: info.gender || 'male'
+    }).then(fortuneData => {
+      setLifetimeFortune(fortuneData);
+      console.log('✅ 100년 인생운세 계산 완료:', fortuneData);
+    }).catch(error => {
+      console.error('❌ 100년 인생운세 계산 실패:', error);
+    });
 
     // 시뮬레이션: 1초 대기 후 결과 생성
     setTimeout(() => {
@@ -316,6 +334,16 @@ const SajuAnalysisPage: React.FC = () => {
               </div>
             ) : analysisResult ? (
               <div className="space-y-8">
+                {/* 100년 인생운세 차트 - 최상단 배치 */}
+                {lifetimeFortune && (
+                  <div className="mb-12">
+                    <HundredYearChart
+                      data={lifetimeFortune.data.lifetimeFortune}
+                      currentAge={birthInfo ? calculateCurrentAge(birthInfo.year) : undefined}
+                    />
+                  </div>
+                )}
+
                 {/* 오행균형도 */}
                 <FiveElementsBalanceChart
                   sajuData={convertToSajuData(analysisResult)}
