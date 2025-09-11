@@ -8,6 +8,26 @@ import { SajuScoreEngine } from './services/SajuScoreEngine'
 import { EnhancedSajuScoreEngine } from './services/EnhancedSajuScoreEngine'
 import { LifetimeFortuneCalculator } from './services/LifetimeFortuneCalculator'
 
+// SQLite 쿼리 결과 타입 정의
+interface DatabaseRow {
+  [key: string]: any
+}
+
+interface MinorCategoryRow extends DatabaseRow {
+  type: string
+  middle_category: string
+  minor_category: string
+  icon: string
+  saju_weight: number
+  confidence_factor: number
+}
+
+interface AnalysisRow extends DatabaseRow {
+  saju_data: string
+  positive_aptitudes: string
+  negative_warnings: string
+}
+
 const app = express()
 const PORT = process.env.PORT || 4015
 
@@ -323,7 +343,7 @@ app.get('/api/saju/categories', (req, res) => {
     ORDER BY mc.type, mid.name, min.name
   `
   
-  db.all(query, (err, rows) => {
+  db.all(query, (err: Error | null, rows: MinorCategoryRow[]) => {
     if (err) {
       console.error('카테고리 조회 오류:', err)
       return res.status(500).json({ success: false, error: err.message })
@@ -335,7 +355,7 @@ app.get('/api/saju/categories', (req, res) => {
       negative: {}
     }
     
-    rows.forEach(row => {
+    rows.forEach((row: MinorCategoryRow) => {
       const type = row.type === 'positive' ? 'positive' : 'negative'
       if (!result[type][row.middle_category]) {
         result[type][row.middle_category] = {
@@ -424,7 +444,7 @@ app.get('/api/saju/analysis/:userId', (req, res) => {
     WHERE user_id = ? 
     ORDER BY updated_at DESC 
     LIMIT 1
-  `, [userId], (err, row) => {
+  `, [userId], (err: Error | null, row: AnalysisRow | undefined) => {
     if (err) {
       console.error('분석 결과 조회 오류:', err)
       return res.status(500).json({ success: false, error: err.message })

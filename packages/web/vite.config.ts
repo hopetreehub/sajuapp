@@ -13,6 +13,11 @@ export default defineConfig(({ mode }) => {
       host: true,
       strictPort: true, // 포트 4000번 강제
       proxy: {
+        '/api/saju': {
+          target: 'http://localhost:4015',
+          changeOrigin: true,
+          secure: false,
+        },
         '/api/diaries': {
           target: 'http://localhost:4004',
           changeOrigin: true,

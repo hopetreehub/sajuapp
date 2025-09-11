@@ -10,7 +10,7 @@ import SettingsPage from '@/pages/SettingsPage'
 import FortunePage from '@/pages/FortunePage'
 import SajuChartPage from '@/pages/SajuChartPage'
 import InterpretationPage from '@/pages/InterpretationPage'
-import UnifiedSajuAnalysisPageWithLifeChart from '@/pages/UnifiedSajuAnalysisPageWithLifeChart'
+import UnifiedSajuAnalysisPage from '@/pages/UnifiedSajuAnalysisPage'
 import CustomerManagementPage from '@/pages/CustomerManagementPage'
 import TestSajuPage from '@/pages/TestSajuPage'
 import SajuTestPage from '@/pages/SajuTestPage'
@@ -45,7 +45,7 @@ function App() {
                 <Route path="/admin" element={<AdminDashboardPage />} />
                 <Route path="/calendar" element={<CalendarPage />} />
                 <Route path="/fortune" element={<FortunePage />} />
-                <Route path="/saju" element={<UnifiedSajuAnalysisPageWithLifeChart />} />
+                <Route path="/saju" element={<UnifiedSajuAnalysisPage />} />
                 <Route path="/customers" element={<CustomerManagementPage />} />
                 <Route path="/test-saju" element={<TestSajuPage />} />
                 <Route path="/saju-test" element={<SajuTestPage />} />
