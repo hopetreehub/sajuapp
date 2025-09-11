@@ -52,15 +52,8 @@ interface HundredYearChartProps {
 }
 
 export default function HundredYearChart({ data, currentAge = 0 }: HundredYearChartProps) {
-  // 현재 연도와 출생연도 계산
-  const currentYear = new Date().getFullYear()
-  const birthYear = currentAge > 0 ? currentYear - currentAge + 1 : currentYear - 35
-  
   const chartData = useMemo(() => {
-    const labels = data.map(d => {
-      const year = birthYear + d.age - 1
-      return `${year}년`
-    })
+    const labels = data.map(d => `${d.age}세`)
     
     // 막대 그래프용 데이터 (종합 운세)
     const barData = data.map(d => d.totalScore)
@@ -74,30 +67,31 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
     return {
       labels,
       datasets: [
-        // 막대 차트 - 종합 운세 (회색으로 변경)
+        // 막대 차트 - 종합 운세
         {
           type: 'bar' as const,
           label: '종합 운세',
           data: barData,
           backgroundColor: (context: any) => {
-            const index = context.dataIndex
-            const age = data[index]?.age
-            // 현재 나이 강조
-            if (age === currentAge) return 'rgba(55, 65, 81, 0.8)'  // gray-700
-            return 'rgba(156, 163, 175, 0.6)'  // gray-400
+            const score = context.parsed.y
+            // 점수에 따른 그라데이션 색상
+            if (score >= 80) return 'rgba(34, 197, 94, 0.6)'   // 초록
+            if (score >= 60) return 'rgba(59, 130, 246, 0.6)'  // 파랑
+            if (score >= 40) return 'rgba(251, 191, 36, 0.6)'  // 노랑
+            return 'rgba(239, 68, 68, 0.6)'                    // 빨강
           },
           borderColor: (context: any) => {
-            const index = context.dataIndex
-            const age = data[index]?.age
-            // 현재 나이 강조
-            if (age === currentAge) return 'rgba(55, 65, 81, 1)'  // gray-700
-            return 'rgba(107, 114, 128, 1)'  // gray-500
+            const score = context.parsed.y
+            if (score >= 80) return 'rgba(34, 197, 94, 1)'
+            if (score >= 60) return 'rgba(59, 130, 246, 1)'
+            if (score >= 40) return 'rgba(251, 191, 36, 1)'
+            return 'rgba(239, 68, 68, 1)'
           },
           borderWidth: 1,
           yAxisID: 'y',
           order: 2
         },
-        // 선 차트들 - 4가지 기운 (점 제거)
+        // 선 차트들 - 4가지 기운
         {
           type: 'line' as const,
           label: '행운 (재물·명예)',
@@ -105,8 +99,8 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           borderColor: '#10b981', // 녹색
           backgroundColor: 'rgba(16, 185, 129, 0.1)',
           borderWidth: 2,
-          pointRadius: 0,        // 점 제거
-          pointHoverRadius: 3,   // 호버 시에만 작은 점
+          pointRadius: 3,
+          pointHoverRadius: 5,
           tension: 0.4,
           yAxisID: 'y',
           order: 1
@@ -118,8 +112,8 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           borderColor: '#f97316', // 주황색
           backgroundColor: 'rgba(249, 115, 22, 0.1)',
           borderWidth: 2,
-          pointRadius: 0,        // 점 제거
-          pointHoverRadius: 3,   // 호버 시에만 작은 점
+          pointRadius: 3,
+          pointHoverRadius: 5,
           tension: 0.4,
           yAxisID: 'y',
           order: 1
@@ -131,8 +125,8 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           borderColor: '#3b82f6', // 파랑색
           backgroundColor: 'rgba(59, 130, 246, 0.1)',
           borderWidth: 2,
-          pointRadius: 0,        // 점 제거
-          pointHoverRadius: 3,   // 호버 시에만 작은 점
+          pointRadius: 3,
+          pointHoverRadius: 5,
           tension: 0.4,
           yAxisID: 'y',
           order: 1
@@ -144,15 +138,15 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           borderColor: '#8b5cf6', // 보라색
           backgroundColor: 'rgba(139, 92, 246, 0.1)',
           borderWidth: 2,
-          pointRadius: 0,        // 점 제거
-          pointHoverRadius: 3,   // 호버 시에만 작은 점
+          pointRadius: 3,
+          pointHoverRadius: 5,
           tension: 0.4,
           yAxisID: 'y',
           order: 1
         }
       ]
     }
-  }, [data, birthYear, currentAge])
+  }, [data])
 
   const options: ChartOptions<'bar' | 'line'> = useMemo(() => ({
     responsive: true,
@@ -191,8 +185,7 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           title: (context) => {
             const index = context[0].dataIndex
             const yearData = data[index]
-            const year = birthYear + yearData.age - 1
-            return `${year}년 (${yearData.age}세)`
+            return `${yearData.age}세 (${yearData.year}년)`
           },
           afterLabel: (context) => {
             const index = context.dataIndex
@@ -213,7 +206,7 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
         display: true,
         title: {
           display: true,
-          text: '연도',
+          text: '나이',
           font: {
             size: 14
           }
@@ -222,8 +215,7 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           callback: function(value: any, index: number) {
             // 10년 단위로만 표시
             if (index % 10 === 0) {
-              const year = birthYear + data[index]?.age - 1
-              return `${year}년`
+              return data[index]?.age + '세'
             }
             return ''
           },
@@ -256,7 +248,7 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
         }
       }
     }
-  }), [data, birthYear])
+  }), [data])
 
   // 현재 나이 표시용 플러그인
   const currentAgePlugin = useMemo(() => ({
@@ -289,11 +281,10 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
       ctx.fillStyle = '#ef4444'
       ctx.font = 'bold 12px sans-serif'
       ctx.textAlign = 'center'
-      const currentYearLabel = birthYear + currentAge - 1
-      ctx.fillText(`현재 ${currentYearLabel}년 (${currentAge}세)`, x, chartArea.top - 10)
+      ctx.fillText(`현재 ${currentAge}세`, x, chartArea.top - 10)
       ctx.restore()
     }
-  }), [currentAge, data, birthYear])
+  }), [currentAge, data])
 
   return (
     <div className="w-full">
