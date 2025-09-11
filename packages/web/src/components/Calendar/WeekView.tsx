@@ -242,7 +242,7 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                                         onDeleteEvent(event.id)
                                       }
                                     }}
-                                    className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-1 flex-shrink-0"
+                                    className="opacity-60 hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-1 flex-shrink-0 text-sm font-bold"
                                     title="일정 삭제"
                                   >
                                     ×

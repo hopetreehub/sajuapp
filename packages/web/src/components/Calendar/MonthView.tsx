@@ -248,7 +248,7 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                             onDeleteEvent?.(event.id)
                           }
                         }}
-                        className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-1"
+                        className="opacity-50 hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-1 text-lg font-bold"
                         title="일정 삭제"
                       >
                         ×
