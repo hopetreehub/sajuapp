@@ -1,5 +1,5 @@
-import React from 'react'
-import { motion } from 'framer-motion'
+import React from 'react';
+import { motion } from 'framer-motion';
 
 interface ChartWrapperProps {
   title: string
@@ -16,7 +16,7 @@ export const ChartWrapper: React.FC<ChartWrapperProps> = ({
   icon = '📊',
   children,
   className = '',
-  headerActions
+  headerActions,
 }) => {
   return (
     <motion.div
@@ -50,7 +50,7 @@ export const ChartWrapper: React.FC<ChartWrapperProps> = ({
         {children}
       </div>
     </motion.div>
-  )
-}
+  );
+};
 
-export default ChartWrapper
+export default ChartWrapper;

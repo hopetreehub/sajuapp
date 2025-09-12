@@ -18,7 +18,7 @@ export const loadUserStorage = (): UserStorage => {
   return {
     profiles: [],
     currentUserId: null,
-    lastUpdated: new Date().toISOString()
+    lastUpdated: new Date().toISOString(),
   };
 };
 
@@ -41,7 +41,7 @@ export const createUserProfile = (name: string, birthInfo: SajuBirthInfo): UserP
     createdAt: new Date().toISOString(),
     lastAccessed: new Date().toISOString(),
     analysisHistory: [],
-    memo: undefined
+    memo: undefined,
   };
 };
 
@@ -67,7 +67,7 @@ export const updateUserProfile = (userId: string, updates: Partial<UserProfile>)
   storage.profiles[profileIndex] = {
     ...storage.profiles[profileIndex],
     ...updates,
-    lastAccessed: new Date().toISOString()
+    lastAccessed: new Date().toISOString(),
   };
   
   saveUserStorage(storage);
@@ -120,7 +120,7 @@ export const getCurrentUser = (): UserProfile | null => {
 export const getAllUserProfiles = (): UserProfile[] => {
   const storage = loadUserStorage();
   return storage.profiles.sort((a, b) => 
-    new Date(b.lastAccessed).getTime() - new Date(a.lastAccessed).getTime()
+    new Date(b.lastAccessed).getTime() - new Date(a.lastAccessed).getTime(),
   );
 };
 
@@ -149,7 +149,7 @@ export const findUsersByName = (nameQuery: string): UserProfile[] => {
   if (!query) return storage.profiles;
   
   return storage.profiles.filter(profile => 
-    profile.name.toLowerCase().includes(query)
+    profile.name.toLowerCase().includes(query),
   );
 };
 
@@ -176,6 +176,6 @@ export const formatDate = (isoString: string): string => {
     month: 'long',
     day: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   });
 };

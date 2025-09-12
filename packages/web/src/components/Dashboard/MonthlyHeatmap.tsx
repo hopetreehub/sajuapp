@@ -1,6 +1,6 @@
-import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns'
-import { ko } from 'date-fns/locale'
-import { DashboardStats } from '@/services/dashboardService'
+import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { DashboardStats } from '@/services/dashboardService';
 
 interface MonthlyHeatmapProps {
   monthlyData: DashboardStats['month']
@@ -8,12 +8,12 @@ interface MonthlyHeatmapProps {
 }
 
 export default function MonthlyHeatmap({ monthlyData, loading }: MonthlyHeatmapProps) {
-  const today = new Date()
-  const monthStart = startOfMonth(today)
-  const monthEnd = endOfMonth(today)
-  const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 })
-  const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 0 })
-  const calendarDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd })
+  const today = new Date();
+  const monthStart = startOfMonth(today);
+  const monthEnd = endOfMonth(today);
+  const calendarStart = startOfWeek(monthStart, { weekStartsOn: 0 });
+  const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 0 });
+  const calendarDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
   
   if (loading) {
     return (
@@ -27,28 +27,28 @@ export default function MonthlyHeatmap({ monthlyData, loading }: MonthlyHeatmapP
           </div>
         </div>
       </div>
-    )
+    );
   }
   
   // 강도별 색상
   const getIntensityColor = (intensity: number) => {
     switch (intensity) {
-      case 0: return 'bg-gray-100 dark:bg-gray-700'
-      case 1: return 'bg-green-200 dark:bg-green-800/50'
-      case 2: return 'bg-green-300 dark:bg-green-700/70'
-      case 3: return 'bg-green-400 dark:bg-green-600/80'
-      case 4: return 'bg-green-500 dark:bg-green-500'
-      default: return 'bg-gray-100 dark:bg-gray-700'
+      case 0: return 'bg-gray-100 dark:bg-gray-700';
+      case 1: return 'bg-green-200 dark:bg-green-800/50';
+      case 2: return 'bg-green-300 dark:bg-green-700/70';
+      case 3: return 'bg-green-400 dark:bg-green-600/80';
+      case 4: return 'bg-green-500 dark:bg-green-500';
+      default: return 'bg-gray-100 dark:bg-gray-700';
     }
-  }
+  };
   
   const getIntensityFromDate = (date: Date): number => {
-    const dateStr = format(date, 'yyyy-MM-dd')
-    const heatmapEntry = monthlyData.activityHeatmap.find(entry => entry.date === dateStr)
-    return heatmapEntry?.intensity || 0
-  }
+    const dateStr = format(date, 'yyyy-MM-dd');
+    const heatmapEntry = monthlyData.activityHeatmap.find(entry => entry.date === dateStr);
+    return heatmapEntry?.intensity || 0;
+  };
   
-  const weekDays = ['일', '월', '화', '수', '목', '금', '토']
+  const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
   
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -77,9 +77,9 @@ export default function MonthlyHeatmap({ monthlyData, loading }: MonthlyHeatmapP
       {/* 달력 히트맵 */}
       <div className="grid grid-cols-7 gap-2 mb-6">
         {calendarDays.map(day => {
-          const intensity = getIntensityFromDate(day)
-          const isCurrentMonth = day >= monthStart && day <= monthEnd
-          const isToday = format(day, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd')
+          const intensity = getIntensityFromDate(day);
+          const isCurrentMonth = day >= monthStart && day <= monthEnd;
+          const isToday = format(day, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd');
           
           return (
             <div
@@ -95,7 +95,7 @@ export default function MonthlyHeatmap({ monthlyData, loading }: MonthlyHeatmapP
             >
               {format(day, 'd')}
             </div>
-          )
+          );
         })}
       </div>
       
@@ -159,5 +159,5 @@ export default function MonthlyHeatmap({ monthlyData, loading }: MonthlyHeatmapP
         </div>
       )}
     </div>
-  )
+  );
 }

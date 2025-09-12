@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+import React, { useState, useEffect } from 'react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ImageViewerProps {
   images: string[]
@@ -16,53 +16,53 @@ export default function ImageViewer({
   isOpen, 
   onClose,
   onNext,
-  onPrev
+  onPrev,
 }: ImageViewerProps) {
-  const [currentIndex, setCurrentIndex] = useState(initialIndex)
-  const [isLoading, setIsLoading] = useState(true)
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setCurrentIndex(initialIndex)
-  }, [initialIndex])
+    setCurrentIndex(initialIndex);
+  }, [initialIndex]);
 
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose()
+        onClose();
       } else if (e.key === 'ArrowLeft') {
-        handlePrevImage()
+        handlePrevImage();
       } else if (e.key === 'ArrowRight') {
-        handleNextImage()
+        handleNextImage();
       }
-    }
+    };
 
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, currentIndex, images.length])
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, currentIndex, images.length]);
 
   const handleNextImage = () => {
-    if (images.length <= 1) return
-    const nextIndex = (currentIndex + 1) % images.length
-    setCurrentIndex(nextIndex)
-    setIsLoading(true)
-    onNext?.()
-  }
+    if (images.length <= 1) return;
+    const nextIndex = (currentIndex + 1) % images.length;
+    setCurrentIndex(nextIndex);
+    setIsLoading(true);
+    onNext?.();
+  };
 
   const handlePrevImage = () => {
-    if (images.length <= 1) return
-    const prevIndex = (currentIndex - 1 + images.length) % images.length
-    setCurrentIndex(prevIndex)
-    setIsLoading(true)
-    onPrev?.()
-  }
+    if (images.length <= 1) return;
+    const prevIndex = (currentIndex - 1 + images.length) % images.length;
+    setCurrentIndex(prevIndex);
+    setIsLoading(true);
+    onPrev?.();
+  };
 
   const handleImageLoad = () => {
-    setIsLoading(false)
-  }
+    setIsLoading(false);
+  };
 
-  if (!isOpen || !images || images.length === 0) return null
+  if (!isOpen || !images || images.length === 0) return null;
 
   return (
     <div 
@@ -109,8 +109,8 @@ export default function ImageViewer({
           <>
             <button
               onClick={(e) => {
-                e.stopPropagation()
-                handlePrevImage()
+                e.stopPropagation();
+                handlePrevImage();
               }}
               className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all backdrop-blur-sm group"
               aria-label="이전 이미지"
@@ -119,8 +119,8 @@ export default function ImageViewer({
             </button>
             <button
               onClick={(e) => {
-                e.stopPropagation()
-                handleNextImage()
+                e.stopPropagation();
+                handleNextImage();
               }}
               className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all backdrop-blur-sm group"
               aria-label="다음 이미지"
@@ -139,9 +139,9 @@ export default function ImageViewer({
               <button
                 key={index}
                 onClick={(e) => {
-                  e.stopPropagation()
-                  setCurrentIndex(index)
-                  setIsLoading(true)
+                  e.stopPropagation();
+                  setCurrentIndex(index);
+                  setIsLoading(true);
                 }}
                 className={`
                   relative w-16 h-16 rounded-lg overflow-hidden border-2 transition-all flex-shrink-0
@@ -168,5 +168,5 @@ export default function ImageViewer({
         <div>← →: 이미지 이동</div>
       </div>
     </div>
-  )
+  );
 }

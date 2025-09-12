@@ -29,7 +29,7 @@ const DetailedFortunePage: React.FC = () => {
               hour: hour || 0,
               minute: minute || 0,
               isLunar: parsed.calendarType === 'lunar',
-              gender: parsed.gender as 'male' | 'female' | undefined
+              gender: parsed.gender as 'male' | 'female' | undefined,
             };
             
             setPersonalInfo(sajuBirthInfo);
@@ -105,7 +105,7 @@ const DetailedFortunePage: React.FC = () => {
       career: Math.min(100, Math.max(0, tenGods.jeonggwan * 0.4 + sixAreas.action * 0.4 + fiveElements.water * 0.2)),
       family: Math.min(100, Math.max(0, sixAreas.foundation * 0.4 + sixAreas.relationship * 0.4 + tenGods.jeongin * 0.2)),
       study: Math.min(100, Math.max(0, sixAreas.thinking * 0.5 + tenGods.jeongin * 0.3 + fiveElements.water * 0.2)),
-      fortune: Math.min(100, Math.max(0, sixAreas.luck * 0.6 + (fiveElements.wood + fiveElements.fire) * 0.2))
+      fortune: Math.min(100, Math.max(0, sixAreas.luck * 0.6 + (fiveElements.wood + fiveElements.fire) * 0.2)),
     };
   };
 
@@ -131,7 +131,7 @@ const DetailedFortunePage: React.FC = () => {
         career: 62,
         family: 67,
         study: 59,
-        fortune: 65
+        fortune: 65,
       };
       
       setFortuneScores(scores);
@@ -166,7 +166,7 @@ const DetailedFortunePage: React.FC = () => {
     career: '직장 생활, 승진, 업무 성과를 나타냅니다.',
     family: '가정 화목, 가족 관계, 집안 분위기를 나타냅니다.',
     study: '학업 성취, 시험 운, 지식 습득을 나타냅니다.',
-    fortune: '전반적인 행운과 좋은 기회를 나타냅니다.'
+    fortune: '전반적인 행운과 좋은 기회를 나타냅니다.',
   };
 
   return (

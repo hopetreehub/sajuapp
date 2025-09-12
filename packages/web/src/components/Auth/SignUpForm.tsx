@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuthStore } from '@/stores/authStore'
-import { authUtils } from '@/services/authService'
-import ReferralCodeInput from './ReferralCodeInput'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/stores/authStore';
+import { authUtils } from '@/services/authService';
+import ReferralCodeInput from './ReferralCodeInput';
 
 interface SignUpFormProps {
   className?: string
@@ -17,10 +17,10 @@ interface SignUpFormProps {
 const SignUpForm: React.FC<SignUpFormProps> = ({
   className = '',
   onSuccess,
-  onLoginClick
+  onLoginClick,
 }) => {
-  const navigate = useNavigate()
-  const { signUp, isLoading, error } = useAuthStore()
+  const navigate = useNavigate();
+  const { signUp, isLoading, error } = useAuthStore();
 
   // 폼 상태
   const [formData, setFormData] = useState({
@@ -30,124 +30,124 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
     name: '',
     agreedToTerms: false,
     agreedToPrivacy: false,
-    agreedToMarketing: false
-  })
+    agreedToMarketing: false,
+  });
 
   // 유효성 검사 상태
   const [validation, setValidation] = useState({
     email: { isValid: false, message: '' },
     password: { isValid: false, message: '' },
     confirmPassword: { isValid: false, message: '' },
-    name: { isValid: false, message: '' }
-  })
+    name: { isValid: false, message: '' },
+  });
 
   // 추천인 코드 상태
-  const [isReferralValid, setIsReferralValid] = useState(false)
-  const [referralCodeValue, setReferralCodeValue] = useState('')
+  const [isReferralValid, setIsReferralValid] = useState(false);
+  const [referralCodeValue, setReferralCodeValue] = useState('');
 
   // 폼 제출 가능 여부
-  const [canSubmit, setCanSubmit] = useState(false)
+  const [canSubmit, setCanSubmit] = useState(false);
 
   // 비밀번호 강도
-  const [passwordStrength, setPasswordStrength] = useState({ score: 0, feedback: '' })
+  const [passwordStrength, setPasswordStrength] = useState({ score: 0, feedback: '' });
 
   // 실시간 유효성 검사
   useEffect(() => {
     // 이메일 검증
-    const emailValid = authUtils.isValidEmail(formData.email)
+    const emailValid = authUtils.isValidEmail(formData.email);
     setValidation(prev => ({
       ...prev,
       email: {
         isValid: emailValid,
-        message: formData.email && !emailValid ? '올바른 이메일 주소를 입력해주세요.' : ''
-      }
-    }))
+        message: formData.email && !emailValid ? '올바른 이메일 주소를 입력해주세요.' : '',
+      },
+    }));
 
     // 이름 검증
-    const nameValid = formData.name.trim().length >= 2
+    const nameValid = formData.name.trim().length >= 2;
     setValidation(prev => ({
       ...prev,
       name: {
         isValid: nameValid,
-        message: formData.name && !nameValid ? '이름은 2자 이상 입력해주세요.' : ''
-      }
-    }))
+        message: formData.name && !nameValid ? '이름은 2자 이상 입력해주세요.' : '',
+      },
+    }));
 
     // 비밀번호 검증 및 강도 체크
-    const passwordValid = formData.password.length >= 8
-    const strength = authUtils.getPasswordStrength(formData.password)
-    setPasswordStrength(strength)
+    const passwordValid = formData.password.length >= 8;
+    const strength = authUtils.getPasswordStrength(formData.password);
+    setPasswordStrength(strength);
     
     setValidation(prev => ({
       ...prev,
       password: {
         isValid: passwordValid,
-        message: formData.password && !passwordValid ? '비밀번호는 8자리 이상 입력해주세요.' : ''
-      }
-    }))
+        message: formData.password && !passwordValid ? '비밀번호는 8자리 이상 입력해주세요.' : '',
+      },
+    }));
 
     // 비밀번호 확인 검증
-    const confirmPasswordValid = formData.password === formData.confirmPassword && formData.confirmPassword.length > 0
+    const confirmPasswordValid = formData.password === formData.confirmPassword && formData.confirmPassword.length > 0;
     setValidation(prev => ({
       ...prev,
       confirmPassword: {
         isValid: confirmPasswordValid,
-        message: formData.confirmPassword && !confirmPasswordValid ? '비밀번호가 일치하지 않습니다.' : ''
-      }
-    }))
+        message: formData.confirmPassword && !confirmPasswordValid ? '비밀번호가 일치하지 않습니다.' : '',
+      },
+    }));
 
     // 전체 폼 유효성 체크
-    const allFieldsValid = emailValid && passwordValid && confirmPasswordValid && nameValid
-    const termsAgreed = formData.agreedToTerms && formData.agreedToPrivacy
+    const allFieldsValid = emailValid && passwordValid && confirmPasswordValid && nameValid;
+    const termsAgreed = formData.agreedToTerms && formData.agreedToPrivacy;
     
-    setCanSubmit(allFieldsValid && termsAgreed)
-  }, [formData])
+    setCanSubmit(allFieldsValid && termsAgreed);
+  }, [formData]);
 
   // 입력값 변경 핸들러
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
-    }))
-  }
+      [field]: value,
+    }));
+  };
 
   // 추천인 코드 검증 결과 핸들러
   const handleReferralValidation = (isValid: boolean, code: string) => {
-    setIsReferralValid(isValid)
-    setReferralCodeValue(code)
-  }
+    setIsReferralValid(isValid);
+    setReferralCodeValue(code);
+  };
 
   // 폼 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     
-    if (!canSubmit || isLoading) return
+    if (!canSubmit || isLoading) return;
 
     try {
       await signUp({
         email: formData.email,
         password: formData.password,
         name: formData.name,
-        referralCode: isReferralValid ? referralCodeValue : undefined
-      })
+        referralCode: isReferralValid ? referralCodeValue : undefined,
+      });
 
       // 회원가입 성공
-      onSuccess?.()
-      navigate('/settings') // 사주 정보 입력 페이지로 이동
+      onSuccess?.();
+      navigate('/settings'); // 사주 정보 입력 페이지로 이동
       
     } catch (error) {
-      console.error('회원가입 실패:', error)
+      console.error('회원가입 실패:', error);
       // 에러는 store에서 자동으로 설정됨
     }
-  }
+  };
 
   // 비밀번호 강도 색상 클래스
   const getPasswordStrengthColor = () => {
-    if (passwordStrength.score <= 1) return 'text-red-500'
-    if (passwordStrength.score <= 2) return 'text-yellow-500'
-    if (passwordStrength.score <= 3) return 'text-blue-500'
-    return 'text-green-500'
-  }
+    if (passwordStrength.score <= 1) return 'text-red-500';
+    if (passwordStrength.score <= 2) return 'text-yellow-500';
+    if (passwordStrength.score <= 3) return 'text-blue-500';
+    return 'text-green-500';
+  };
 
   // 입력 필드 스타일
   const getInputStyle = (field: keyof typeof validation) => {
@@ -156,18 +156,18 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       focus:outline-none focus:ring-0 transition-all duration-200
       bg-white dark:bg-gray-800 
       text-gray-800 dark:text-gray-200
-    `
+    `;
     
     if (!formData[field] || formData[field] === '') {
-      return base + ' border-gray-300 dark:border-gray-600 focus:border-purple-500'
+      return `${base  } border-gray-300 dark:border-gray-600 focus:border-purple-500`;
     }
     
     if (validation[field].isValid) {
-      return base + ' border-green-500 focus:border-green-600'
+      return `${base  } border-green-500 focus:border-green-600`;
     } else {
-      return base + ' border-red-500 focus:border-red-600'
+      return `${base  } border-red-500 focus:border-red-600`;
     }
-  }
+  };
 
   return (
     <div className={`max-w-md mx-auto ${className}`}>
@@ -384,7 +384,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SignUpForm
+export default SignUpForm;

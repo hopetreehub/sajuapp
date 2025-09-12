@@ -1,64 +1,64 @@
-import { useState, useEffect } from 'react'
-import { BellIcon, BellSlashIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
+import { useState, useEffect } from 'react';
+import { BellIcon, BellSlashIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { 
   NotificationSettings as NotificationSettingsType,
   getNotificationSettings,
   saveNotificationSettings,
   requestNotificationPermission,
   hasNotificationPermission,
-  showTestNotification
-} from '@/utils/notifications'
+  showTestNotification,
+} from '@/utils/notifications';
 
 export default function NotificationSettings() {
-  const [settings, setSettings] = useState<NotificationSettingsType>(getNotificationSettings())
-  const [permissionStatus, setPermissionStatus] = useState<NotificationPermission>('default')
-  const [isRequestingPermission, setIsRequestingPermission] = useState(false)
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+  const [settings, setSettings] = useState<NotificationSettingsType>(getNotificationSettings());
+  const [permissionStatus, setPermissionStatus] = useState<NotificationPermission>('default');
+  const [isRequestingPermission, setIsRequestingPermission] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   
   // 권한 상태 체크
   useEffect(() => {
     if ('Notification' in window) {
-      setPermissionStatus(Notification.permission as NotificationPermission)
+      setPermissionStatus(Notification.permission as NotificationPermission);
     }
-  }, [])
+  }, []);
   
   // 설정 변경 처리
   const handleSettingChange = (key: keyof NotificationSettingsType, value: any) => {
-    const newSettings = { ...settings, [key]: value }
-    setSettings(newSettings)
-    saveNotificationSettings(newSettings)
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
+    saveNotificationSettings(newSettings);
     
     // 성공 메시지 표시
-    setShowSuccessMessage(true)
-    setTimeout(() => setShowSuccessMessage(false), 2000)
-  }
+    setShowSuccessMessage(true);
+    setTimeout(() => setShowSuccessMessage(false), 2000);
+  };
   
   // 권한 요청
   const handleRequestPermission = async () => {
-    setIsRequestingPermission(true)
+    setIsRequestingPermission(true);
     try {
-      const granted = await requestNotificationPermission()
-      setPermissionStatus(granted ? 'granted' : 'denied')
+      const granted = await requestNotificationPermission();
+      setPermissionStatus(granted ? 'granted' : 'denied');
       
       if (granted) {
         // 권한이 승인되면 알림 활성화
-        handleSettingChange('enabled', true)
+        handleSettingChange('enabled', true);
       }
     } catch (error) {
-      console.error('Permission request failed:', error)
+      console.error('Permission request failed:', error);
     } finally {
-      setIsRequestingPermission(false)
+      setIsRequestingPermission(false);
     }
-  }
+  };
   
   // 테스트 알림
   const handleTestNotification = () => {
     if (hasNotificationPermission()) {
-      showTestNotification()
+      showTestNotification();
     } else {
-      alert('알림 권한이 필요합니다.')
+      alert('알림 권한이 필요합니다.');
     }
-  }
+  };
   
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -249,5 +249,5 @@ export default function NotificationSettings() {
         </div>
       )}
     </div>
-  )
+  );
 }

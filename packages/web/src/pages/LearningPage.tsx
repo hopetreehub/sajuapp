@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { 
   BookOpenIcon, 
   PlayIcon, 
@@ -10,9 +10,9 @@ import {
   DocumentTextIcon,
   VideoCameraIcon,
   QuestionMarkCircleIcon,
-  StarIcon
-} from '@heroicons/react/24/outline'
-import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/24/solid'
+  StarIcon,
+} from '@heroicons/react/24/outline';
+import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/24/solid';
 
 interface LessonProgress {
   lessonId: string
@@ -60,23 +60,23 @@ interface Course {
 }
 
 export default function LearningPage() {
-  const { courseId } = useParams<{ courseId: string }>()
-  const navigate = useNavigate()
+  const { courseId } = useParams<{ courseId: string }>();
+  const navigate = useNavigate();
   
-  const [course, setCourse] = useState<Course | null>(null)
-  const [progress, setProgress] = useState<CourseProgress | null>(null)
-  const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [showQuiz, setShowQuiz] = useState(false)
-  const [quizAnswers, setQuizAnswers] = useState<number[]>([])
-  const [quizScore, setQuizScore] = useState<number | null>(null)
+  const [course, setCourse] = useState<Course | null>(null);
+  const [progress, setProgress] = useState<CourseProgress | null>(null);
+  const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizAnswers, setQuizAnswers] = useState<number[]>([]);
+  const [quizScore, setQuizScore] = useState<number | null>(null);
 
   useEffect(() => {
     if (courseId) {
-      loadCourse()
-      loadProgress()
+      loadCourse();
+      loadProgress();
     }
-  }, [courseId])
+  }, [courseId]);
 
   const loadCourse = async () => {
     try {
@@ -86,7 +86,7 @@ export default function LearningPage() {
         title: '사주 기초 입문 과정',
         description: '사주의 기본 개념부터 실전 해석까지',
         instructor: {
-          name: '김사주 선생님'
+          name: '김사주 선생님',
         },
         lessons: [
           {
@@ -94,14 +94,14 @@ export default function LearningPage() {
             title: '사주란 무엇인가?',
             type: 'video',
             duration: 1200,
-            videoUrl: '/videos/lesson1.mp4'
+            videoUrl: '/videos/lesson1.mp4',
           },
           {
             id: '2',
             title: '천간과 지지의 이해',
             type: 'text',
             duration: 900,
-            content: '천간과 지지는 사주의 기본 구성 요소입니다...'
+            content: '천간과 지지는 사주의 기본 구성 요소입니다...',
           },
           {
             id: '3',
@@ -113,34 +113,34 @@ export default function LearningPage() {
                 {
                   question: '천간은 몇 개입니까?',
                   options: ['8개', '10개', '12개', '14개'],
-                  correctAnswer: 1
+                  correctAnswer: 1,
                 },
                 {
                   question: '지지는 몇 개입니까?',
                   options: ['10개', '12개', '14개', '16개'],
-                  correctAnswer: 1
-                }
-              ]
-            }
+                  correctAnswer: 1,
+                },
+              ],
+            },
           },
           {
             id: '4',
             title: '오행의 상생상극',
             type: 'video',
             duration: 1500,
-            videoUrl: '/videos/lesson4.mp4'
-          }
-        ]
-      }
+            videoUrl: '/videos/lesson4.mp4',
+          },
+        ],
+      };
       
-      setCourse(mockCourse)
-      setCurrentLesson(mockCourse.lessons[0])
-      setIsLoading(false)
+      setCourse(mockCourse);
+      setCurrentLesson(mockCourse.lessons[0]);
+      setIsLoading(false);
     } catch (error) {
-      console.error('강좌 로딩 실패:', error)
-      setIsLoading(false)
+      console.error('강좌 로딩 실패:', error);
+      setIsLoading(false);
     }
-  }
+  };
 
   const loadProgress = async () => {
     try {
@@ -156,84 +156,84 @@ export default function LearningPage() {
           { lessonId: '1', completed: true, completedAt: '2024-01-01', timeSpent: 1200 },
           { lessonId: '2', completed: false, timeSpent: 300 },
           { lessonId: '3', completed: false, timeSpent: 0 },
-          { lessonId: '4', completed: false, timeSpent: 0 }
-        ]
-      }
+          { lessonId: '4', completed: false, timeSpent: 0 },
+        ],
+      };
       
-      setProgress(mockProgress)
+      setProgress(mockProgress);
     } catch (error) {
-      console.error('진도 로딩 실패:', error)
+      console.error('진도 로딩 실패:', error);
     }
-  }
+  };
 
   const completeLesson = async (lessonId: string, score?: number) => {
-    if (!progress) return
+    if (!progress) return;
     
-    const updatedProgress = { ...progress }
-    const lessonProgressIndex = updatedProgress.lessonProgress.findIndex(lp => lp.lessonId === lessonId)
+    const updatedProgress = { ...progress };
+    const lessonProgressIndex = updatedProgress.lessonProgress.findIndex(lp => lp.lessonId === lessonId);
     
     if (lessonProgressIndex >= 0) {
       updatedProgress.lessonProgress[lessonProgressIndex] = {
         ...updatedProgress.lessonProgress[lessonProgressIndex],
         completed: true,
         completedAt: new Date().toISOString(),
-        score
-      }
+        score,
+      };
       
-      updatedProgress.completedLessons = updatedProgress.lessonProgress.filter(lp => lp.completed).length
-      updatedProgress.progress = Math.round((updatedProgress.completedLessons / updatedProgress.totalLessons) * 100)
+      updatedProgress.completedLessons = updatedProgress.lessonProgress.filter(lp => lp.completed).length;
+      updatedProgress.progress = Math.round((updatedProgress.completedLessons / updatedProgress.totalLessons) * 100);
       
-      setProgress(updatedProgress)
+      setProgress(updatedProgress);
       
       // API 호출로 진도 업데이트 (실제 구현 시)
       // await updateProgress(updatedProgress)
     }
-  }
+  };
 
   const navigateToLesson = (lessonId: string) => {
-    const lesson = course?.lessons.find(l => l.id === lessonId)
+    const lesson = course?.lessons.find(l => l.id === lessonId);
     if (lesson) {
-      setCurrentLesson(lesson)
-      setShowQuiz(false)
-      setQuizAnswers([])
-      setQuizScore(null)
+      setCurrentLesson(lesson);
+      setShowQuiz(false);
+      setQuizAnswers([]);
+      setQuizScore(null);
     }
-  }
+  };
 
   const handleQuizSubmit = () => {
-    if (!currentLesson?.quiz) return
+    if (!currentLesson?.quiz) return;
     
-    let correctAnswers = 0
+    let correctAnswers = 0;
     currentLesson.quiz.questions.forEach((question, index) => {
       if (quizAnswers[index] === question.correctAnswer) {
-        correctAnswers++
+        correctAnswers++;
       }
-    })
+    });
     
-    const score = Math.round((correctAnswers / currentLesson.quiz.questions.length) * 100)
-    setQuizScore(score)
+    const score = Math.round((correctAnswers / currentLesson.quiz.questions.length) * 100);
+    setQuizScore(score);
     
     if (score >= 70) {
-      completeLesson(currentLesson.id, score)
+      completeLesson(currentLesson.id, score);
     }
-  }
+  };
 
   const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
-  }
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const getLessonIcon = (type: string, completed: boolean) => {
-    if (completed) return CheckCircleIconSolid
+    if (completed) return CheckCircleIconSolid;
     
     switch (type) {
-      case 'video': return VideoCameraIcon
-      case 'text': return DocumentTextIcon
-      case 'quiz': return QuestionMarkCircleIcon
-      default: return BookOpenIcon
+      case 'video': return VideoCameraIcon;
+      case 'text': return DocumentTextIcon;
+      case 'quiz': return QuestionMarkCircleIcon;
+      default: return BookOpenIcon;
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -243,7 +243,7 @@ export default function LearningPage() {
           <p className="mt-4 text-gray-600 dark:text-gray-400">강좌를 불러오는 중...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (!course) {
@@ -262,7 +262,7 @@ export default function LearningPage() {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -321,10 +321,10 @@ export default function LearningPage() {
               </h3>
               <div className="space-y-2">
                 {course.lessons.map((lesson, index) => {
-                  const lessonProgress = progress?.lessonProgress.find(lp => lp.lessonId === lesson.id)
-                  const completed = lessonProgress?.completed || false
-                  const Icon = getLessonIcon(lesson.type, completed)
-                  const isActive = currentLesson?.id === lesson.id
+                  const lessonProgress = progress?.lessonProgress.find(lp => lp.lessonId === lesson.id);
+                  const completed = lessonProgress?.completed || false;
+                  const Icon = getLessonIcon(lesson.type, completed);
+                  const isActive = currentLesson?.id === lesson.id;
                   
                   return (
                     <button
@@ -356,7 +356,7 @@ export default function LearningPage() {
                         </div>
                       </div>
                     </button>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -449,9 +449,9 @@ export default function LearningPage() {
                                       name={`question-${index}`}
                                       value={optionIndex}
                                       onChange={() => {
-                                        const newAnswers = [...quizAnswers]
-                                        newAnswers[index] = optionIndex
-                                        setQuizAnswers(newAnswers)
+                                        const newAnswers = [...quizAnswers];
+                                        newAnswers[index] = optionIndex;
+                                        setQuizAnswers(newAnswers);
                                       }}
                                       className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300"
                                     />
@@ -510,5 +510,5 @@ export default function LearningPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

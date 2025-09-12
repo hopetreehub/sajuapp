@@ -5,7 +5,7 @@ export const CHART_DESIGN_SYSTEM = {
     height: '400px',
     minHeight: '350px', 
     maxHeight: '450px',
-    aspectRatio: '1:1'
+    aspectRatio: '1:1',
   },
 
   // 30개 차트용 통일 색상 팔레트
@@ -27,7 +27,7 @@ export const CHART_DESIGN_SYSTEM = {
       '#84cc16',   // 라임
       '#f59e0b',   // 앰버
       '#ef4444',   // 로즈
-      '#64748b'    // 슬레이트
+      '#64748b',    // 슬레이트
     ],
     
     // 배경색 통일
@@ -35,7 +35,7 @@ export const CHART_DESIGN_SYSTEM = {
       base: 'rgba(139, 92, 246, 0.1)',
       today: 'rgba(239, 68, 68, 0.15)',
       month: 'rgba(6, 182, 212, 0.15)',
-      year: 'rgba(245, 158, 11, 0.15)'
+      year: 'rgba(245, 158, 11, 0.15)',
     },
 
     // 테두리색 통일
@@ -43,8 +43,8 @@ export const CHART_DESIGN_SYSTEM = {
       base: '#8b5cf6',
       today: '#ef4444',
       month: '#06b6d4', 
-      year: '#f59e0b'
-    }
+      year: '#f59e0b',
+    },
   },
 
   // 표준 차트 옵션 (다크모드 개선 적용)
@@ -59,8 +59,8 @@ export const CHART_DESIGN_SYSTEM = {
           padding: 16,
           boxWidth: 12,
           usePointStyle: true,
-          color: '#374151'  // 기본 다크 색상
-        }
+          color: '#374151',  // 기본 다크 색상
+        },
       },
       tooltip: {
         backgroundColor: 'rgba(0, 0, 0, 0.9)',
@@ -72,8 +72,8 @@ export const CHART_DESIGN_SYSTEM = {
         padding: 14,
         displayColors: true,
         titleFont: { size: 14, weight: 600 },
-        bodyFont: { size: 13 }
-      }
+        bodyFont: { size: 13 },
+      },
     },
     scales: {
       r: {
@@ -85,29 +85,29 @@ export const CHART_DESIGN_SYSTEM = {
           font: { size: 12, weight: 600 },
           color: '#6b7280',
           backdropColor: 'transparent',
-          showLabelBackdrop: false
+          showLabelBackdrop: false,
         },
         grid: {
           color: 'rgba(107, 114, 128, 0.4)',
-          lineWidth: 2
+          lineWidth: 2,
         },
         angleLines: {
           color: 'rgba(107, 114, 128, 0.3)',
-          lineWidth: 2
+          lineWidth: 2,
         },
         pointLabels: {
           font: { size: 13, weight: 700 },
-          color: '#374151'
-        }
-      }
+          color: '#374151',
+        },
+      },
     },
     interaction: {
-      intersect: false
+      intersect: false,
     },
     animation: {
       duration: 1000,
-      easing: 'easeInOutQuart' as const
-    }
+      easing: 'easeInOutQuart' as const,
+    },
   },
 
   // 다크모드 전용 차트 옵션
@@ -122,8 +122,8 @@ export const CHART_DESIGN_SYSTEM = {
           padding: 16,
           boxWidth: 12,
           usePointStyle: true,
-          color: '#f1f5f9'  // 다크모드용 밝은 색상
-        }
+          color: '#f1f5f9',  // 다크모드용 밝은 색상
+        },
       },
       tooltip: {
         backgroundColor: 'rgba(0, 0, 0, 0.9)',
@@ -135,8 +135,8 @@ export const CHART_DESIGN_SYSTEM = {
         padding: 14,
         displayColors: true,
         titleFont: { size: 14, weight: 600 },
-        bodyFont: { size: 13 }
-      }
+        bodyFont: { size: 13 },
+      },
     },
     scales: {
       r: {
@@ -148,29 +148,29 @@ export const CHART_DESIGN_SYSTEM = {
           font: { size: 12, weight: 600 },
           color: '#cbd5e1',  // 다크모드용 밝은 틱
           backdropColor: 'transparent',
-          showLabelBackdrop: false
+          showLabelBackdrop: false,
         },
         grid: {
           color: 'rgba(156, 163, 175, 0.5)',  // 더 밝은 격자선
-          lineWidth: 2
+          lineWidth: 2,
         },
         angleLines: {
           color: 'rgba(156, 163, 175, 0.4)',  // 더 밝은 각도선
-          lineWidth: 2
+          lineWidth: 2,
         },
         pointLabels: {
           font: { size: 13, weight: 700 },
-          color: '#f1f5f9'  // 다크모드용 밝은 라벨
-        }
-      }
+          color: '#f1f5f9',  // 다크모드용 밝은 라벨
+        },
+      },
     },
     interaction: {
-      intersect: false
+      intersect: false,
     },
     animation: {
       duration: 1000,
-      easing: 'easeInOutQuart' as const
-    }
+      easing: 'easeInOutQuart' as const,
+    },
   },
 
   // 버튼 스타일 통일 (그라데이션 제거, 단색 적용)
@@ -190,10 +190,10 @@ export const CHART_DESIGN_SYSTEM = {
         base: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
         today: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
         month: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
-        year: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
+        year: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
       },
-      inactive: 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-    }
+      inactive: 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600',
+    },
   },
 
   // 점수 카드 스타일 통일
@@ -204,8 +204,8 @@ export const CHART_DESIGN_SYSTEM = {
     score: 'text-xl font-bold text-center',
     progressBar: {
       container: 'w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 mt-2',
-      fill: 'h-2 rounded-full transition-all duration-300'
-    }
+      fill: 'h-2 rounded-full transition-all duration-300',
+    },
   },
 
   // 레이아웃 표준 (그라데이션 제거)
@@ -217,26 +217,26 @@ export const CHART_DESIGN_SYSTEM = {
     header: {
       container: 'text-center mb-8',
       title: 'text-3xl md:text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2',
-      subtitle: 'text-gray-600 dark:text-gray-300 text-lg'
+      subtitle: 'text-gray-600 dark:text-gray-300 text-lg',
     },
     
     // 네비게이션
     navigation: {
       container: 'flex flex-wrap justify-center gap-4 mb-6',
-      maxButtonsPerRow: 4
+      maxButtonsPerRow: 4,
     },
     
     // 시간대 선택
     timeFrameSelector: {
       container: 'flex flex-wrap justify-center gap-3 mb-6',
-      alignment: 'justify-center'
+      alignment: 'justify-center',
     },
     
     // 차트 영역
     chartContainer: {
       main: 'mb-8',
-      wrapper: 'bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6'
-    }
+      wrapper: 'bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6',
+    },
   },
 
   // 아이콘 통일
@@ -255,8 +255,8 @@ export const CHART_DESIGN_SYSTEM = {
       previous: '←',
       next: '→',
       up: '↑',
-      down: '↓'
-    }
+      down: '↓',
+    },
   },
 
   // 로딩 스피너 통일
@@ -264,8 +264,8 @@ export const CHART_DESIGN_SYSTEM = {
     spinner: 'animate-spin rounded-full h-16 w-16 border-b-4 border-purple-600',
     container: 'flex items-center justify-center h-96',
     wrapper: 'text-center',
-    text: 'text-gray-600 dark:text-gray-400 mt-4'
-  }
+    text: 'text-gray-600 dark:text-gray-400 mt-4',
+  },
 };
 
 // 시간대별 데이터셋 색상 헬퍼
@@ -276,22 +276,22 @@ export const getTimeFrameColors = (timeFrame: 'base' | 'today' | 'month' | 'year
     case 'today':
       return {
         background: colors.backgrounds.today,
-        border: colors.borders.today
+        border: colors.borders.today,
       };
     case 'month':
       return {
         background: colors.backgrounds.month,
-        border: colors.borders.month
+        border: colors.borders.month,
       };
     case 'year':
       return {
         background: colors.backgrounds.year,
-        border: colors.borders.year
+        border: colors.borders.year,
       };
     default:
       return {
         background: colors.backgrounds.base,
-        border: colors.borders.base
+        border: colors.borders.base,
       };
   }
 };
@@ -314,12 +314,12 @@ export const getChartOptions = (isDarkMode: boolean, customOptions?: any) => {
       ...customOptions,
       plugins: {
         ...baseOptions.plugins,
-        ...customOptions.plugins
+        ...customOptions.plugins,
       },
       scales: {
         ...baseOptions.scales,
-        ...customOptions.scales
-      }
+        ...customOptions.scales,
+      },
     };
   }
   

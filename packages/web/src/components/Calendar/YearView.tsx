@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { useCalendar } from '@/contexts/CalendarContext'
+import { useMemo } from 'react';
+import { useCalendar } from '@/contexts/CalendarContext';
 import { 
   startOfYear,
   endOfYear,
@@ -13,12 +13,12 @@ import {
   isSameMonth,
   isSameDay,
   isToday,
-  getDay
-} from 'date-fns'
-import { ko } from 'date-fns/locale'
-import { CalendarEvent } from '@/services/api'
+  getDay,
+} from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { CalendarEvent } from '@/services/api';
 
-const WEEKDAYS_SHORT = ['일', '월', '화', '수', '목', '금', '토']
+const WEEKDAYS_SHORT = ['일', '월', '화', '수', '목', '금', '토'];
 
 interface YearViewProps {
   events: CalendarEvent[]
@@ -27,34 +27,34 @@ interface YearViewProps {
 }
 
 export default function YearView({ events, onCreateEvent, onEditEvent }: YearViewProps) {
-  const { currentDate, setCurrentDate, setViewMode } = useCalendar()
+  const { currentDate, setCurrentDate, setViewMode } = useCalendar();
 
   const yearMonths = useMemo(() => {
-    const start = startOfYear(currentDate)
-    const end = endOfYear(currentDate)
-    return eachMonthOfInterval({ start, end })
-  }, [currentDate])
+    const start = startOfYear(currentDate);
+    const end = endOfYear(currentDate);
+    return eachMonthOfInterval({ start, end });
+  }, [currentDate]);
 
   const getMonthDays = (monthDate: Date) => {
-    const start = startOfMonth(monthDate)
-    const end = endOfMonth(monthDate)
-    const startWeek = startOfWeek(start, { weekStartsOn: 0 })
-    const endWeek = endOfWeek(end, { weekStartsOn: 0 })
+    const start = startOfMonth(monthDate);
+    const end = endOfMonth(monthDate);
+    const startWeek = startOfWeek(start, { weekStartsOn: 0 });
+    const endWeek = endOfWeek(end, { weekStartsOn: 0 });
     
-    return eachDayOfInterval({ start: startWeek, end: endWeek })
-  }
+    return eachDayOfInterval({ start: startWeek, end: endWeek });
+  };
 
   const getEventCountForDay = (date: Date): number => {
     return events.filter(event => {
-      const eventDate = new Date(event.start_time)
-      return isSameDay(eventDate, date)
-    }).length
-  }
+      const eventDate = new Date(event.start_time);
+      return isSameDay(eventDate, date);
+    }).length;
+  };
 
   const handleMonthClick = (monthDate: Date) => {
-    setCurrentDate(monthDate)
-    setViewMode('month')
-  }
+    setCurrentDate(monthDate);
+    setViewMode('month');
+  };
 
   return (
     <div className="h-full overflow-auto bg-background p-4">
@@ -69,13 +69,13 @@ export default function YearView({ events, onCreateEvent, onEditEvent }: YearVie
         {/* Months Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {yearMonths.map((monthDate) => {
-            const monthDays = getMonthDays(monthDate)
+            const monthDays = getMonthDays(monthDate);
             const monthEventCount = monthDays.reduce((acc, day) => {
               if (isSameMonth(day, monthDate)) {
-                return acc + getEventCountForDay(day)
+                return acc + getEventCountForDay(day);
               }
-              return acc
-            }, 0)
+              return acc;
+            }, 0);
 
             return (
               <div
@@ -116,10 +116,10 @@ export default function YearView({ events, onCreateEvent, onEditEvent }: YearVie
                   {/* Days grid */}
                   <div className="grid grid-cols-7 gap-px">
                     {monthDays.map((day) => {
-                      const dayOfWeek = getDay(day)
-                      const isCurrentMonth = isSameMonth(day, monthDate)
-                      const isCurrentDay = isToday(day)
-                      const eventCount = getEventCountForDay(day)
+                      const dayOfWeek = getDay(day);
+                      const isCurrentMonth = isSameMonth(day, monthDate);
+                      const isCurrentDay = isToday(day);
+                      const eventCount = getEventCountForDay(day);
 
                       return (
                         <div
@@ -146,12 +146,12 @@ export default function YearView({ events, onCreateEvent, onEditEvent }: YearVie
                             </div>
                           )}
                         </div>
-                      )
+                      );
                     })}
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
 
@@ -187,5 +187,5 @@ export default function YearView({ events, onCreateEvent, onEditEvent }: YearVie
         </div>
       </div>
     </div>
-  )
+  );
 }

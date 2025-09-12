@@ -19,7 +19,7 @@ export const useDiaryData = ({ viewMode, currentDate }: UseDiaryDataOptions) => 
     diaries: [],
     diaryDates: new Set(),
     loading: false,
-    error: null
+    error: null,
   });
 
   // Calculate date range based on view mode
@@ -51,7 +51,7 @@ export const useDiaryData = ({ viewMode, currentDate }: UseDiaryDataOptions) => 
 
     return {
       startDate: format(startDate, 'yyyy-MM-dd'),
-      endDate: format(endDate, 'yyyy-MM-dd')
+      endDate: format(endDate, 'yyyy-MM-dd'),
     };
   }, [viewMode, currentDate]);
 
@@ -75,14 +75,14 @@ export const useDiaryData = ({ viewMode, currentDate }: UseDiaryDataOptions) => 
         diaries,
         diaryDates,
         loading: false,
-        error: null
+        error: null,
       });
     } catch (error) {
       console.error('Failed to load diaries:', error);
       setState(prev => ({
         ...prev,
         loading: false,
-        error: 'Failed to load diary entries'
+        error: 'Failed to load diary entries',
       }));
     }
   }, [getDateRange]);
@@ -111,6 +111,6 @@ export const useDiaryData = ({ viewMode, currentDate }: UseDiaryDataOptions) => 
     error: state.error,
     hasDiary,
     getDiaryForDate,
-    reloadDiaries: loadDiaries
+    reloadDiaries: loadDiaries,
   };
 };

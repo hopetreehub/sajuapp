@@ -1,34 +1,34 @@
-import { useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import HomePage from '@/pages/HomePage'
-import AuthPage from '@/pages/AuthPage'
-import DashboardPage from '@/pages/DashboardPage'
-import AdminDashboardPage from '@/pages/AdminDashboardPage'
-import CalendarPage from '@/pages/CalendarPage'
-import DiaryPage from '@/pages/DiaryPage'
-import SettingsPage from '@/pages/SettingsPage'
-import FortunePage from '@/pages/FortunePage'
-import SajuChartPage from '@/pages/SajuChartPage'
-import InterpretationPage from '@/pages/InterpretationPage'
-import UnifiedSajuAnalysisPageWithLifeChart from '@/pages/UnifiedSajuAnalysisPageWithLifeChart'
-import CustomerManagementPage from '@/pages/CustomerManagementPage'
-import TestSajuPage from '@/pages/TestSajuPage'
-import SajuTestPage from '@/pages/SajuTestPage'
-import { CompatibilityPage } from '@/pages/CompatibilityPage'
-import LearningPage from '@/pages/LearningPage'
-import TestComprehensiveScoresPage from '@/pages/TestComprehensiveScoresPage'
-import Header from '@/components/Layout/Header'
-import Footer from '@/components/Layout/Footer'
-import { CalendarProvider } from '@/contexts/CalendarContext'
-import { ThemeProvider } from '@/contexts/ThemeContext'
-import { YearlyMemoProvider } from '@/contexts/YearlyMemoContext'
-import { initializeNotifications } from '@/utils/notifications'
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from '@/pages/HomePage';
+import AuthPage from '@/pages/AuthPage';
+import DashboardPage from '@/pages/DashboardPage';
+import AdminDashboardPage from '@/pages/AdminDashboardPage';
+import CalendarPage from '@/pages/CalendarPage';
+import DiaryPage from '@/pages/DiaryPage';
+import SettingsPage from '@/pages/SettingsPage';
+import FortunePage from '@/pages/FortunePage';
+import SajuChartPage from '@/pages/SajuChartPage';
+import InterpretationPage from '@/pages/InterpretationPage';
+import UnifiedSajuAnalysisPageWithLifeChart from '@/pages/UnifiedSajuAnalysisPageWithLifeChart';
+import CustomerManagementPage from '@/pages/CustomerManagementPage';
+import TestSajuPage from '@/pages/TestSajuPage';
+import SajuTestPage from '@/pages/SajuTestPage';
+import { CompatibilityPage } from '@/pages/CompatibilityPage';
+import LearningPage from '@/pages/LearningPage';
+import TestComprehensiveScoresPage from '@/pages/TestComprehensiveScoresPage';
+import Header from '@/components/Layout/Header';
+import Footer from '@/components/Layout/Footer';
+import { CalendarProvider } from '@/contexts/CalendarContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import { YearlyMemoProvider } from '@/contexts/YearlyMemoContext';
+import { initializeNotifications } from '@/utils/notifications';
 
 function App() {
   // 알림 시스템 초기화
   useEffect(() => {
-    initializeNotifications()
-  }, [])
+    initializeNotifications();
+  }, []);
 
   return (
     <ThemeProvider>
@@ -70,7 +70,7 @@ function App() {
         </CalendarProvider>
       </Router>
     </ThemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;

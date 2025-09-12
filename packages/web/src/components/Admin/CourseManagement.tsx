@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import { 
   BookOpenIcon,
   PencilIcon,
@@ -9,8 +9,8 @@ import {
   FunnelIcon,
   StarIcon,
   UserGroupIcon,
-  CalendarIcon
-} from '@heroicons/react/24/outline'
+  CalendarIcon,
+} from '@heroicons/react/24/outline';
 
 interface Course {
   id: string
@@ -31,65 +31,65 @@ interface CourseManagementProps {
 }
 
 export default function CourseManagement({ courses, onRefresh }: CourseManagementProps) {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [filterStatus, setFilterStatus] = useState('all')
-  const [filterCategory, setFilterCategory] = useState('all')
-  const [filterLevel, setFilterLevel] = useState('all')
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterCategory, setFilterCategory] = useState('all');
+  const [filterLevel, setFilterLevel] = useState('all');
 
   const levelLabels = {
     beginner: '초급',
     intermediate: '중급', 
     advanced: '고급',
-    expert: '전문가'
-  }
+    expert: '전문가',
+  };
 
   const categoryLabels = {
     basic: '기초',
     fortune: '운세',
     compatibility: '궁합',
     professional: '전문가',
-    special: '특강'
-  }
+    special: '특강',
+  };
 
   const statusLabels = {
     draft: '초안',
     published: '공개',
     archived: '보관됨',
-    coming_soon: '출시 예정'
-  }
+    coming_soon: '출시 예정',
+  };
 
   const statusColors = {
     draft: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300',
     published: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
     archived: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
-    coming_soon: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
-  }
+    coming_soon: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
+  };
 
   // 필터링된 강좌 목록
   const filteredCourses = courses.filter(course => {
-    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = filterStatus === 'all' || course.status === filterStatus
-    const matchesCategory = filterCategory === 'all' || course.category === filterCategory
-    const matchesLevel = filterLevel === 'all' || course.level === filterLevel
+    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = filterStatus === 'all' || course.status === filterStatus;
+    const matchesCategory = filterCategory === 'all' || course.category === filterCategory;
+    const matchesLevel = filterLevel === 'all' || course.level === filterLevel;
 
-    return matchesSearch && matchesStatus && matchesCategory && matchesLevel
-  })
+    return matchesSearch && matchesStatus && matchesCategory && matchesLevel;
+  });
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('ko-KR', {
       style: 'currency',
       currency: 'KRW',
       minimumFractionDigits: 0,
-    }).format(price)
-  }
+    }).format(price);
+  };
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
-    })
-  }
+      day: 'numeric',
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -275,5 +275,5 @@ export default function CourseManagement({ courses, onRefresh }: CourseManagemen
         )}
       </div>
     </div>
-  )
+  );
 }

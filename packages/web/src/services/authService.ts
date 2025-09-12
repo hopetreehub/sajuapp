@@ -3,23 +3,23 @@
  * 운명나침반(Fortune Compass) 사주 캘린더 앱
  */
 
-import { SignUpData, LoginData, User } from '@/stores/authStore'
+import { SignUpData, LoginData, User } from '@/stores/authStore';
 
 // API 기본 설정
-const API_BASE_URL = 'http://localhost:4013' // 추천인 서비스 포트
-const REFERRAL_API_BASE = `${API_BASE_URL}/api/referral`
+const API_BASE_URL = 'http://localhost:4013'; // 추천인 서비스 포트
+const REFERRAL_API_BASE = `${API_BASE_URL}/api/referral`;
 
 // HTTP 요청을 위한 공통 설정
 const defaultHeaders = {
   'Content-Type': 'application/json',
-  'Accept': 'application/json'
-}
+  'Accept': 'application/json',
+};
 
 // 네트워크 에러 처리
 class NetworkError extends Error {
   constructor(message: string, public status?: number) {
-    super(message)
-    this.name = 'NetworkError'
+    super(message);
+    this.name = 'NetworkError';
   }
 }
 
@@ -58,68 +58,68 @@ export const referralAPI = {
       return {
         success: false,
         data: { isValid: false },
-        message: '추천인 코드를 입력해주세요.'
-      }
+        message: '추천인 코드를 입력해주세요.',
+      };
     }
 
     // 코드 형식 검증
-    const cleanCode = code.trim().toUpperCase()
-    const codePattern = /^[A-Z0-9]{6}$/
+    const cleanCode = code.trim().toUpperCase();
+    const codePattern = /^[A-Z0-9]{6}$/;
     
     if (!codePattern.test(cleanCode)) {
       return {
         success: false,
         data: { isValid: false },
-        message: '추천인 코드는 영문 대문자와 숫자 6자리여야 합니다.'
-      }
+        message: '추천인 코드는 영문 대문자와 숫자 6자리여야 합니다.',
+      };
     }
 
     try {
       const response = await fetch(`${REFERRAL_API_BASE}/codes/validate/${cleanCode}`, {
         method: 'GET',
         headers: defaultHeaders,
-        signal: AbortSignal.timeout(10000) // 10초 타임아웃
-      })
+        signal: AbortSignal.timeout(10000), // 10초 타임아웃
+      });
 
       if (!response.ok) {
         throw new NetworkError(
           `서버 응답 오류: ${response.status}`,
-          response.status
-        )
+          response.status,
+        );
       }
 
-      const result: APIResponse<ReferralValidationResponse> = await response.json()
+      const result: APIResponse<ReferralValidationResponse> = await response.json();
       
       return {
         success: result.success,
         data: result.data,
         message: result.success 
           ? `${result.data.referrerName || '친구'}님의 추천 코드가 확인되었습니다! 🎉`
-          : '유효하지 않은 추천인 코드입니다.'
-      }
+          : '유효하지 않은 추천인 코드입니다.',
+      };
 
     } catch (error) {
-      console.error('추천인 코드 검증 API 오류:', error)
+      console.error('추천인 코드 검증 API 오류:', error);
       
-      let errorMessage = '추천인 코드 확인 중 오류가 발생했습니다.'
+      let errorMessage = '추천인 코드 확인 중 오류가 발생했습니다.';
       
       if (error instanceof NetworkError) {
         if (error.status === 404) {
-          errorMessage = '유효하지 않은 추천인 코드입니다.'
+          errorMessage = '유효하지 않은 추천인 코드입니다.';
         } else if (error.status === 429) {
-          errorMessage = '너무 많은 요청을 보냈습니다. 잠시 후 다시 시도해주세요.'
+          errorMessage = '너무 많은 요청을 보냈습니다. 잠시 후 다시 시도해주세요.';
         } else if (error.status && error.status >= 500) {
-          errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+          errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
         }
       } else if (error instanceof TypeError && error.message.includes('fetch')) {
-        errorMessage = '서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.'
+        errorMessage = '서버에 연결할 수 없습니다. 네트워크 연결을 확인해주세요.';
       }
 
       return {
         success: false,
         data: { isValid: false },
-        error: errorMessage
-      }
+        error: errorMessage,
+      };
     }
   },
 
@@ -133,42 +133,42 @@ export const referralAPI = {
         method: 'POST',
         headers: defaultHeaders,
         body: JSON.stringify(request),
-        signal: AbortSignal.timeout(10000)
-      })
+        signal: AbortSignal.timeout(10000),
+      });
 
       if (!response.ok) {
         throw new NetworkError(
           `추천인 적용 실패: ${response.status}`,
-          response.status
-        )
+          response.status,
+        );
       }
 
-      const result = await response.json()
+      const result = await response.json();
       
       return {
         success: true,
         data: result.data,
-        message: '추천인이 성공적으로 적용되었습니다!'
-      }
+        message: '추천인이 성공적으로 적용되었습니다!',
+      };
 
     } catch (error) {
-      console.error('추천인 적용 API 오류:', error)
+      console.error('추천인 적용 API 오류:', error);
       
-      let errorMessage = '추천인 적용 중 오류가 발생했습니다.'
+      let errorMessage = '추천인 적용 중 오류가 발생했습니다.';
       
       if (error instanceof NetworkError) {
         if (error.status === 400) {
-          errorMessage = '잘못된 추천인 정보입니다.'
+          errorMessage = '잘못된 추천인 정보입니다.';
         } else if (error.status === 409) {
-          errorMessage = '이미 추천인이 적용된 계정입니다.'
+          errorMessage = '이미 추천인이 적용된 계정입니다.';
         }
       }
 
       return {
         success: false,
         data: null,
-        error: errorMessage
-      }
+        error: errorMessage,
+      };
     }
   },
 
@@ -181,30 +181,30 @@ export const referralAPI = {
       const response = await fetch(`${REFERRAL_API_BASE}/stats/${userId}`, {
         method: 'GET',
         headers: defaultHeaders,
-        signal: AbortSignal.timeout(10000)
-      })
+        signal: AbortSignal.timeout(10000),
+      });
 
       if (!response.ok) {
         throw new NetworkError(
           `통계 조회 실패: ${response.status}`,
-          response.status
-        )
+          response.status,
+        );
       }
 
-      const result = await response.json()
-      return result
+      const result = await response.json();
+      return result;
 
     } catch (error) {
-      console.error('추천 통계 조회 API 오류:', error)
+      console.error('추천 통계 조회 API 오류:', error);
       
       return {
         success: false,
         data: null,
-        error: '추천 통계를 불러올 수 없습니다.'
-      }
+        error: '추천 통계를 불러올 수 없습니다.',
+      };
     }
-  }
-}
+  },
+};
 
 /**
  * 인증 관련 API (향후 확장)
@@ -221,18 +221,18 @@ export const authAPI = {
         return {
           success: false,
           data: {} as User,
-          error: '필수 정보를 모두 입력해주세요.'
-        }
+          error: '필수 정보를 모두 입력해주세요.',
+        };
       }
 
       // 이메일 형식 검증
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailPattern.test(data.email)) {
         return {
           success: false,
           data: {} as User,
-          error: '올바른 이메일 주소를 입력해주세요.'
-        }
+          error: '올바른 이메일 주소를 입력해주세요.',
+        };
       }
 
       // 비밀번호 검증
@@ -240,8 +240,8 @@ export const authAPI = {
         return {
           success: false,
           data: {} as User,
-          error: '비밀번호는 8자리 이상이어야 합니다.'
-        }
+          error: '비밀번호는 8자리 이상이어야 합니다.',
+        };
       }
 
       // TODO: 실제 회원가입 API 구현
@@ -251,35 +251,35 @@ export const authAPI = {
         email: data.email.toLowerCase().trim(),
         name: data.name.trim(),
         createdAt: new Date().toISOString(),
-        referredBy: data.referralCode || undefined
-      }
+        referredBy: data.referralCode || undefined,
+      };
 
       // 추천인 코드가 있는 경우 적용
       if (data.referralCode) {
         const referralResult = await referralAPI.applyReferral({
           userId: newUser.id,
-          referralCode: data.referralCode
-        })
+          referralCode: data.referralCode,
+        });
         
         if (!referralResult.success) {
-          console.warn('추천인 적용 실패 (회원가입은 계속 진행):', referralResult.error)
+          console.warn('추천인 적용 실패 (회원가입은 계속 진행):', referralResult.error);
         }
       }
 
       return {
         success: true,
         data: newUser,
-        message: '회원가입이 완료되었습니다!'
-      }
+        message: '회원가입이 완료되었습니다!',
+      };
 
     } catch (error) {
-      console.error('회원가입 API 오류:', error)
+      console.error('회원가입 API 오류:', error);
       
       return {
         success: false,
         data: {} as User,
-        error: '회원가입 중 오류가 발생했습니다. 다시 시도해주세요.'
-      }
+        error: '회원가입 중 오류가 발생했습니다. 다시 시도해주세요.',
+      };
     }
   },
 
@@ -296,8 +296,8 @@ export const authAPI = {
         return {
           success: false,
           data: {} as User,
-          error: '이메일과 비밀번호를 입력해주세요.'
-        }
+          error: '이메일과 비밀번호를 입력해주세요.',
+        };
       }
 
       // 임시 사용자 데이터
@@ -305,23 +305,23 @@ export const authAPI = {
         id: 'user_mock_123',
         email: data.email,
         name: '홍길동',
-        createdAt: '2024-01-01T00:00:00.000Z'
-      }
+        createdAt: '2024-01-01T00:00:00.000Z',
+      };
 
       return {
         success: true,
         data: mockUser,
-        message: '로그인되었습니다!'
-      }
+        message: '로그인되었습니다!',
+      };
 
     } catch (error) {
-      console.error('로그인 API 오류:', error)
+      console.error('로그인 API 오류:', error);
       
       return {
         success: false,
         data: {} as User,
-        error: '로그인 중 오류가 발생했습니다.'
-      }
+        error: '로그인 중 오류가 발생했습니다.',
+      };
     }
   },
 
@@ -336,17 +336,17 @@ export const authAPI = {
       return {
         success: true,
         data: null,
-        message: '로그아웃되었습니다.'
-      }
+        message: '로그아웃되었습니다.',
+      };
 
     } catch (error) {
-      console.error('로그아웃 API 오류:', error)
+      console.error('로그아웃 API 오류:', error);
       
       return {
         success: false,
         data: null,
-        error: '로그아웃 중 오류가 발생했습니다.'
-      }
+        error: '로그아웃 중 오류가 발생했습니다.',
+      };
     }
   },
 
@@ -362,20 +362,20 @@ export const authAPI = {
       return {
         success: true,
         data: userData as User,
-        message: '사용자 정보가 업데이트되었습니다.'
-      }
+        message: '사용자 정보가 업데이트되었습니다.',
+      };
 
     } catch (error) {
-      console.error('사용자 정보 업데이트 API 오류:', error)
+      console.error('사용자 정보 업데이트 API 오류:', error);
       
       return {
         success: false,
         data: {} as User,
-        error: '사용자 정보 업데이트 중 오류가 발생했습니다.'
-      }
+        error: '사용자 정보 업데이트 중 오류가 발생했습니다.',
+      };
     }
-  }
-}
+  },
+};
 
 /**
  * 유틸리티 함수들
@@ -385,17 +385,17 @@ export const authUtils = {
    * 추천인 코드 형식 검증
    */
   isValidReferralCode: (code: string): boolean => {
-    if (!code) return false
-    const cleanCode = code.trim().toUpperCase()
-    return /^[A-Z0-9]{6}$/.test(cleanCode)
+    if (!code) return false;
+    const cleanCode = code.trim().toUpperCase();
+    return /^[A-Z0-9]{6}$/.test(cleanCode);
   },
 
   /**
    * 이메일 형식 검증
    */
   isValidEmail: (email: string): boolean => {
-    if (!email) return false
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+    if (!email) return false;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   },
 
   /**
@@ -405,49 +405,49 @@ export const authUtils = {
     score: number // 0-4
     feedback: string
   } => {
-    if (!password) return { score: 0, feedback: '비밀번호를 입력해주세요.' }
+    if (!password) return { score: 0, feedback: '비밀번호를 입력해주세요.' };
     
-    let score = 0
-    const feedback: string[] = []
+    let score = 0;
+    const feedback: string[] = [];
 
-    if (password.length >= 8) score++
-    else feedback.push('8자 이상')
+    if (password.length >= 8) score++;
+    else feedback.push('8자 이상');
 
-    if (/[a-z]/.test(password)) score++
-    else feedback.push('소문자 포함')
+    if (/[a-z]/.test(password)) score++;
+    else feedback.push('소문자 포함');
 
-    if (/[A-Z]/.test(password)) score++
-    else feedback.push('대문자 포함')
+    if (/[A-Z]/.test(password)) score++;
+    else feedback.push('대문자 포함');
 
-    if (/[0-9]/.test(password)) score++
-    else feedback.push('숫자 포함')
+    if (/[0-9]/.test(password)) score++;
+    else feedback.push('숫자 포함');
 
-    if (/[^A-Za-z0-9]/.test(password)) score++
-    else feedback.push('특수문자 포함')
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+    else feedback.push('특수문자 포함');
 
-    const strengthLabels = ['매우 약함', '약함', '보통', '강함', '매우 강함']
-    const strengthLabel = strengthLabels[Math.min(score, 4)]
+    const strengthLabels = ['매우 약함', '약함', '보통', '강함', '매우 강함'];
+    const strengthLabel = strengthLabels[Math.min(score, 4)];
 
     return {
       score: Math.min(score, 4),
       feedback: feedback.length > 0 
         ? `${strengthLabel} (추가 권장: ${feedback.join(', ')})`
-        : `${strengthLabel}`
-    }
+        : `${strengthLabel}`,
+    };
   },
 
   /**
    * 입력값 sanitization
    */
   sanitizeInput: (input: string): string => {
-    if (!input) return ''
-    return input.replace(/[<>\"'&]/g, '').trim()
-  }
-}
+    if (!input) return '';
+    return input.replace(/[<>\"'&]/g, '').trim();
+  },
+};
 
 // 기본 내보내기
 export default {
   referral: referralAPI,
   auth: authAPI,
-  utils: authUtils
-}
+  utils: authUtils,
+};

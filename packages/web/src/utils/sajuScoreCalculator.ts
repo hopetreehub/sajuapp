@@ -37,7 +37,7 @@ export const CHEONGAN_OHHAENG: Record<CheonGan, OhHaeng> = {
   '병': '화', '정': '화',
   '무': '토', '기': '토',
   '경': '금', '신': '금',
-  '임': '수', '계': '수'
+  '임': '수', '계': '수',
 };
 
 // 지지의 오행 매핑
@@ -46,7 +46,7 @@ export const JIJI_OHHAENG: Record<JiJi, OhHaeng> = {
   '사': '화', '오': '화',
   '진': '토', '술': '토', '축': '토', '미': '토',
   '신': '금', '유': '금',
-  '자': '수', '해': '수'
+  '자': '수', '해': '수',
 };
 
 // 항목별 오행 속성 매핑 (주요 카테고리)
@@ -324,7 +324,7 @@ const ITEM_OHHAENG_MAPPING: Record<string, OhHaeng[]> = {
   
   // 오늘의 운세 카테고리
   '연애운': ['화', '목'],
-  '애정운': ['화', '수']
+  '애정운': ['화', '수'],
 };
 
 // 오행 상생상극 관계 점수
@@ -334,15 +334,15 @@ const OHHAENG_RELATIONS = {
     '화': '토',
     '토': '금',
     '금': '수',
-    '수': '목'
+    '수': '목',
   },
   상극: { // -15점
     '목': '토',
     '화': '금',
     '토': '수',
     '금': '목',
-    '수': '화'
-  }
+    '수': '화',
+  },
 };
 
 // 계절별 오행 강약
@@ -358,7 +358,7 @@ const SEASONAL_OHHAENG_STRENGTH = {
   9: { 금: 20, 수: 10, 목: -10 }, // 9월: 가을
   10: { 금: 15, 토: 20, 목: -5 }, // 10월: 환절기
   11: { 수: 20, 목: 10, 화: -10 }, // 11월: 겨울 시작
-  12: { 수: 20, 목: 10, 화: -10 }  // 12월: 겨울
+  12: { 수: 20, 목: 10, 화: -10 },  // 12월: 겨울
 };
 
 // 시간대별 오행 강약
@@ -370,7 +370,7 @@ const HOURLY_OHHAENG_STRENGTH = {
   13: { 토: 10 }, 14: { 토: 10 }, // 미시
   15: { 금: 15 }, 16: { 금: 15 }, 17: { 금: 15 }, 18: { 금: 15 }, // 신시, 유시
   19: { 토: 10 }, 20: { 토: 10 }, // 술시
-  21: { 수: 15 }, 22: { 수: 15 } // 해시
+  21: { 수: 15 }, 22: { 수: 15 }, // 해시
 };
 
 // 천간지지 일치 보너스 계산
@@ -378,7 +378,7 @@ function calculateExactMatchBonus(
   sajuData: SajuData,
   currentGan: CheonGan,
   currentJi: JiJi,
-  timeFrame: 'today' | 'month' | 'year'
+  timeFrame: 'today' | 'month' | 'year',
 ): number {
   let bonus = 0;
   
@@ -404,7 +404,7 @@ function calculateExactMatchBonus(
 function calculateOhhaengRelation(
   itemOhhaeng: OhHaeng[],
   currentOhhaeng: OhHaeng,
-  timeFrame: 'today' | 'month' | 'year'
+  timeFrame: 'today' | 'month' | 'year',
 ): number {
   let score = 0;
   
@@ -412,7 +412,7 @@ function calculateOhhaengRelation(
   const weights = {
     today: { 상생: 25, 비화: 15, 상극: -15 },
     month: { 상생: 20, 비화: 12, 상극: -12 },
-    year: { 상생: 15, 비화: 10, 상극: -10 }
+    year: { 상생: 15, 비화: 10, 상극: -10 },
   };
   
   const weight = weights[timeFrame];
@@ -461,7 +461,7 @@ export function calculateTimeBasedScore(
   itemName: string,
   sajuData: SajuData,
   timeFrame: 'base' | 'today' | 'month' | 'year',
-  targetDate?: Date
+  targetDate?: Date,
 ): number {
   const baseScore = calculateSajuScore(itemName, sajuData);
   
@@ -539,7 +539,7 @@ export function calculateTimeBasedScore(
 // 사주 기반 점수 계산 함수
 export function calculateSajuScore(
   itemName: string,
-  sajuData: SajuData
+  sajuData: SajuData,
 ): number {
   // 기본 점수 (50점에서 시작)
   let score = 50;
@@ -547,7 +547,7 @@ export function calculateSajuScore(
   // 사주 데이터 유효성 검증
   if (!sajuData || !sajuData.year?.gan || !sajuData.month?.gan || 
       !sajuData.day?.gan || !sajuData.time?.gan) {
-    console.log(`[경고] 유효하지 않은 사주 데이터 - 랜덤 점수 사용`);
+    console.log('[경고] 유효하지 않은 사주 데이터 - 랜덤 점수 사용');
     return Math.floor(Math.random() * 30) + 40; // 40-70점
   }
   
@@ -622,7 +622,7 @@ export function calculateSajuScore(
 // 오행 균형 보너스 계산
 function calculateBalanceBonus(
   balance: Record<OhHaeng, number>,
-  itemOhhaeng: OhHaeng[]
+  itemOhhaeng: OhHaeng[],
 ): number {
   let bonus = 0;
   
@@ -671,8 +671,8 @@ export function generateSampleSajuData(): SajuData {
       화: 25,
       토: 20,
       금: 15,
-      수: 10
+      수: 10,
     },
-    fullSaju: '갑자 병인 무진 경신'
+    fullSaju: '갑자 병인 무진 경신',
   };
 }

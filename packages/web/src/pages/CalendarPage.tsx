@@ -1,31 +1,31 @@
-import { useState, useEffect } from 'react'
-import { useCalendar } from '@/contexts/CalendarContext'
-import MonthView from '@/components/Calendar/MonthView'
-import WeekView from '@/components/Calendar/WeekView'
-import DayView from '@/components/Calendar/DayView'
-import DayViewEnhanced from '@/components/Calendar/DayViewEnhanced'
-import YearView from '@/components/Calendar/YearView'
-import YearViewEnhanced from '@/components/Calendar/YearViewEnhanced'
-import EventModal from '@/components/EventModal'
-import DiaryBookModal from '@/components/DiaryBookModal'
-import ActionMenu, { ActionType } from '@/components/ActionMenu'
-import { CalendarEvent, eventService } from '@/services/api'
+import { useState, useEffect } from 'react';
+import { useCalendar } from '@/contexts/CalendarContext';
+import MonthView from '@/components/Calendar/MonthView';
+import WeekView from '@/components/Calendar/WeekView';
+import DayView from '@/components/Calendar/DayView';
+import DayViewEnhanced from '@/components/Calendar/DayViewEnhanced';
+import YearView from '@/components/Calendar/YearView';
+import YearViewEnhanced from '@/components/Calendar/YearViewEnhanced';
+import EventModal from '@/components/EventModal';
+import DiaryBookModal from '@/components/DiaryBookModal';
+import ActionMenu, { ActionType } from '@/components/ActionMenu';
+import { CalendarEvent, eventService } from '@/services/api';
 
 // 임시 아이콘 컴포넌트들
 const ChevronLeftIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
   </svg>
-)
+);
 
 const ChevronRightIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
   </svg>
-)
+);
 
-import { format } from 'date-fns'
-import { ko } from 'date-fns/locale'
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 export default function CalendarPage() {
   const { 
@@ -35,35 +35,35 @@ export default function CalendarPage() {
     setViewMode, 
     navigatePrevious, 
     navigateNext, 
-    navigateToday 
-  } = useCalendar()
+    navigateToday, 
+  } = useCalendar();
   
-  const [events, setEvents] = useState<CalendarEvent[]>([])
-  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
-  const [filteredEvents, setFilteredEvents] = useState<CalendarEvent[]>([])
-  const [highlightedEventId, setHighlightedEventId] = useState<string | null>(null)
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredEvents, setFilteredEvents] = useState<CalendarEvent[]>([]);
+  const [highlightedEventId, setHighlightedEventId] = useState<string | null>(null);
   
   // ActionMenu 관련 상태
-  const [showActionMenu, setShowActionMenu] = useState(false)
-  const [actionMenuPosition, setActionMenuPosition] = useState({ x: 0, y: 0 })
-  const [actionMenuDate, setActionMenuDate] = useState<Date | null>(null)
+  const [showActionMenu, setShowActionMenu] = useState(false);
+  const [actionMenuPosition, setActionMenuPosition] = useState({ x: 0, y: 0 });
+  const [actionMenuDate, setActionMenuDate] = useState<Date | null>(null);
   
   // DiaryModal 관련 상태
-  const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false)
-  const [diaryModalDate, setDiaryModalDate] = useState<Date | null>(null)
+  const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false);
+  const [diaryModalDate, setDiaryModalDate] = useState<Date | null>(null);
   
   // 일기 클릭 핸들러 (모든 뷰에서 사용)
   const handleDiaryClick = (date: Date) => {
-    setDiaryModalDate(date)
-    setIsDiaryModalOpen(true)
-  }
+    setDiaryModalDate(date);
+    setIsDiaryModalOpen(true);
+  };
 
   useEffect(() => {
-    loadEvents()
-  }, [])
+    loadEvents();
+  }, []);
 
   useEffect(() => {
     // 검색어에 따라 이벤트 필터링
@@ -71,127 +71,127 @@ export default function CalendarPage() {
       const filtered = events.filter(event => 
         event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         event.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        event.location?.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-      setFilteredEvents(filtered)
+        event.location?.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
+      setFilteredEvents(filtered);
     } else {
-      setFilteredEvents(events)
+      setFilteredEvents(events);
     }
-  }, [searchQuery, events])
+  }, [searchQuery, events]);
 
   const loadEvents = async () => {
     try {
-      const data = await eventService.getEvents()
-      setEvents(data)
+      const data = await eventService.getEvents();
+      setEvents(data);
     } catch (error) {
-      console.error('Failed to load events:', error)
+      console.error('Failed to load events:', error);
     }
-  }
+  };
 
   // 기존 이벤트 핸들러들 (날짜 우클릭이나 기존 이벤트 편집용)
   const handleCreateEvent = (date?: Date) => {
-    setSelectedDate(date || null)
-    setSelectedEvent(null)
-    setIsModalOpen(true)
-  }
+    setSelectedDate(date || null);
+    setSelectedEvent(null);
+    setIsModalOpen(true);
+  };
 
   const handleEditEvent = (event: CalendarEvent) => {
-    setSelectedEvent(event)
-    setIsModalOpen(true)
-  }
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+  };
 
   const handleSaveEvent = (event: CalendarEvent) => {
-    loadEvents()
-  }
+    loadEvents();
+  };
 
   const handleDeleteEvent = async (eventId: string) => {
     try {
-      await eventService.deleteEvent(eventId)
-      loadEvents()
+      await eventService.deleteEvent(eventId);
+      loadEvents();
     } catch (error) {
-      console.error('Failed to delete event:', error)
+      console.error('Failed to delete event:', error);
     }
-  }
+  };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setSelectedEvent(null)
-    setSelectedDate(null)
-  }
+    setIsModalOpen(false);
+    setSelectedEvent(null);
+    setSelectedDate(null);
+  };
 
   // 새로운 통합 날짜 클릭 핸들러 (ActionMenu 사용)
   const handleDateClick = (date: Date, event: React.MouseEvent) => {
-    setActionMenuDate(date)
-    setActionMenuPosition({ x: event.clientX, y: event.clientY })
-    setShowActionMenu(true)
-  }
+    setActionMenuDate(date);
+    setActionMenuPosition({ x: event.clientX, y: event.clientY });
+    setShowActionMenu(true);
+  };
 
   // ActionMenu 선택 핸들러
   const handleActionSelect = (action: ActionType) => {
-    if (!actionMenuDate) return
+    if (!actionMenuDate) return;
 
     switch (action) {
       case 'event':
-        setSelectedDate(actionMenuDate)
-        setSelectedEvent(null)
-        setIsModalOpen(true)
-        break
+        setSelectedDate(actionMenuDate);
+        setSelectedEvent(null);
+        setIsModalOpen(true);
+        break;
       case 'diary':
-        setDiaryModalDate(actionMenuDate)
-        setIsDiaryModalOpen(true)
-        break
+        setDiaryModalDate(actionMenuDate);
+        setIsDiaryModalOpen(true);
+        break;
     }
-    setShowActionMenu(false)
-  }
+    setShowActionMenu(false);
+  };
 
   // ActionMenu 닫기
   const handleCloseActionMenu = () => {
-    setShowActionMenu(false)
-    setActionMenuDate(null)
-  }
+    setShowActionMenu(false);
+    setActionMenuDate(null);
+  };
 
   // Diary Modal 핸들러들
   const handleCloseDiaryModal = () => {
-    setIsDiaryModalOpen(false)
-    setDiaryModalDate(null)
-  }
+    setIsDiaryModalOpen(false);
+    setDiaryModalDate(null);
+  };
 
   // 검색 결과의 첫 번째 이벤트로 이동
   const navigateToFirstResult = () => {
-    if (filteredEvents.length === 0 || !searchQuery) return
+    if (filteredEvents.length === 0 || !searchQuery) return;
     
-    const firstEvent = filteredEvents[0]
-    const eventDate = new Date(firstEvent.start_time)
+    const firstEvent = filteredEvents[0];
+    const eventDate = new Date(firstEvent.start_time);
     
     // 1. 해당 날짜로 캘린더 이동
-    setCurrentDate(eventDate)
+    setCurrentDate(eventDate);
     
     // 2. 적절한 뷰 모드로 전환 (연도 뷰인 경우 월 뷰로)
     if (viewMode === 'year') {
-      setViewMode('month')
+      setViewMode('month');
     }
     
     // 3. 이벤트 하이라이트
-    setHighlightedEventId(firstEvent.id)
+    setHighlightedEventId(firstEvent.id);
     
     // 4. 3초 후 하이라이트 제거
     setTimeout(() => {
-      setHighlightedEventId(null)
-    }, 3000)
+      setHighlightedEventId(null);
+    }, 3000);
     
     // 5. 선택적: 이벤트 상세 모달 열기
     // handleEditEvent(firstEvent)
-  }
+  };
 
   // 검색창 키보드 이벤트 처리
   const handleSearchKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      navigateToFirstResult()
+      navigateToFirstResult();
     } else if (e.key === 'Escape') {
-      setSearchQuery('')
-      setHighlightedEventId(null)
+      setSearchQuery('');
+      setHighlightedEventId(null);
     }
-  }
+  };
 
   const renderView = () => {
     const viewProps = {
@@ -202,43 +202,43 @@ export default function CalendarPage() {
       onDeleteEvent: handleDeleteEvent, // 일정 삭제 핸들러 추가
       highlightedEventId,
       onDiaryClick: handleDiaryClick, // 일기 클릭 핸들러 추가
-    }
+    };
 
     switch (viewMode) {
       case 'year':
-        return <YearViewEnhanced {...viewProps} />
+        return <YearViewEnhanced {...viewProps} />;
       case 'month':
-        return <MonthView {...viewProps} />
+        return <MonthView {...viewProps} />;
       case 'week':
-        return <WeekView {...viewProps} />
+        return <WeekView {...viewProps} />;
       case 'day':
-        return <DayView {...viewProps} />
+        return <DayView {...viewProps} />;
       default:
-        return <MonthView {...viewProps} />
+        return <MonthView {...viewProps} />;
     }
-  }
+  };
 
   const viewModeLabels = {
     year: '년',
     month: '월',
     week: '주',
-    day: '일'
-  }
+    day: '일',
+  };
 
   const getDateDisplay = () => {
     switch (viewMode) {
       case 'year':
-        return format(currentDate, 'yyyy년', { locale: ko })
+        return format(currentDate, 'yyyy년', { locale: ko });
       case 'month':
-        return format(currentDate, 'yyyy년 M월', { locale: ko })
+        return format(currentDate, 'yyyy년 M월', { locale: ko });
       case 'week':
-        return format(currentDate, 'yyyy년 M월 w주차', { locale: ko })
+        return format(currentDate, 'yyyy년 M월 w주차', { locale: ko });
       case 'day':
-        return format(currentDate, 'yyyy년 M월 d일 EEEE', { locale: ko })
+        return format(currentDate, 'yyyy년 M월 d일 EEEE', { locale: ko });
       default:
-        return ''
+        return '';
     }
-  }
+  };
 
   return (
     <div className="h-screen flex flex-col">
@@ -368,5 +368,5 @@ export default function CalendarPage() {
         date={diaryModalDate || new Date()}
       />
     </div>
-  )
+  );
 }

@@ -1,13 +1,13 @@
-import { useMemo, useState, useEffect } from 'react'
-import { useCalendar } from '@/contexts/CalendarContext'
-import { format, isSameDay } from 'date-fns'
-import { ko } from 'date-fns/locale'
-import { CalendarEvent } from '@/services/api'
-import TodayFortuneWidget from '@/components/Fortune/TodayFortuneWidget'
-import DiaryBookModal from '@/components/DiaryBookModal'
-import { getCustomerById, Customer } from '@/services/customerApi'
-import { SajuData } from '@/utils/sajuScoreCalculator'
-import { getPersonalInfoFromStorage, convertPersonalInfoToSaju, isPersonalInfoValid } from '@/utils/personalInfoToSaju'
+import { useMemo, useState, useEffect } from 'react';
+import { useCalendar } from '@/contexts/CalendarContext';
+import { format, isSameDay } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { CalendarEvent } from '@/services/api';
+import TodayFortuneWidget from '@/components/Fortune/TodayFortuneWidget';
+import DiaryBookModal from '@/components/DiaryBookModal';
+import { getCustomerById, Customer } from '@/services/customerApi';
+import { SajuData } from '@/utils/sajuScoreCalculator';
+import { getPersonalInfoFromStorage, convertPersonalInfoToSaju, isPersonalInfoValid } from '@/utils/personalInfoToSaju';
 
 interface DayViewEnhancedProps {
   events: CalendarEvent[]
@@ -18,76 +18,76 @@ interface DayViewEnhancedProps {
 }
 
 export default function DayViewEnhanced({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId }: DayViewEnhancedProps) {
-  const { currentDate, getTodosForDate, addTodo, updateTodo, deleteTodo, toggleTodo } = useCalendar()
-  const [newTodo, setNewTodo] = useState('')
-  const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false)
-  const [diaryEntry, setDiaryEntry] = useState<any>(null)
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null)
-  const [customerSajuData, setCustomerSajuData] = useState<SajuData | null>(null)
-  const [personalSajuData, setPersonalSajuData] = useState<SajuData | null>(null)
-  const [dataSource, setDataSource] = useState<'personal' | 'customer' | 'sample'>('sample')
+  const { currentDate, getTodosForDate, addTodo, updateTodo, deleteTodo, toggleTodo } = useCalendar();
+  const [newTodo, setNewTodo] = useState('');
+  const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false);
+  const [diaryEntry, setDiaryEntry] = useState<any>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [customerSajuData, setCustomerSajuData] = useState<SajuData | null>(null);
+  const [personalSajuData, setPersonalSajuData] = useState<SajuData | null>(null);
+  const [dataSource, setDataSource] = useState<'personal' | 'customer' | 'sample'>('sample');
   
   // 설정 페이지의 개인 사주 정보 읽기
   useEffect(() => {
-    loadPersonalSajuData()
+    loadPersonalSajuData();
     
     // 설정 변경 이벤트 리스너
     const handlePersonalInfoUpdate = () => {
-      loadPersonalSajuData()
-    }
+      loadPersonalSajuData();
+    };
     
-    window.addEventListener('personalInfoUpdated', handlePersonalInfoUpdate)
+    window.addEventListener('personalInfoUpdated', handlePersonalInfoUpdate);
     
     // 고객 데이터는 개인 사주가 없을 때만 로드
-    const lastCustomerId = localStorage.getItem('lastSelectedCustomerId')
+    const lastCustomerId = localStorage.getItem('lastSelectedCustomerId');
     if (lastCustomerId && !personalSajuData) {
-      loadCustomerData(parseInt(lastCustomerId))
+      loadCustomerData(parseInt(lastCustomerId));
     }
     
     return () => {
-      window.removeEventListener('personalInfoUpdated', handlePersonalInfoUpdate)
-    }
-  }, [])
+      window.removeEventListener('personalInfoUpdated', handlePersonalInfoUpdate);
+    };
+  }, []);
   
   const loadPersonalSajuData = () => {
-    const personalInfo = getPersonalInfoFromStorage()
+    const personalInfo = getPersonalInfoFromStorage();
     if (isPersonalInfoValid(personalInfo)) {
-      const sajuData = convertPersonalInfoToSaju(personalInfo!)
+      const sajuData = convertPersonalInfoToSaju(personalInfo!);
       if (sajuData) {
-        setPersonalSajuData(sajuData)
-        setDataSource('personal')
-        console.log('설정 페이지 사주 데이터 로드:', sajuData)
+        setPersonalSajuData(sajuData);
+        setDataSource('personal');
+        console.log('설정 페이지 사주 데이터 로드:', sajuData);
       }
     }
-  }
+  };
   
   const loadCustomerData = async (customerId: number) => {
     try {
-      const response = await getCustomerById(customerId)
-      setSelectedCustomer(response.data)
-      setCustomerSajuData(response.data.saju_data)
-      localStorage.setItem('lastSelectedCustomerId', customerId.toString())
+      const response = await getCustomerById(customerId);
+      setSelectedCustomer(response.data);
+      setCustomerSajuData(response.data.saju_data);
+      localStorage.setItem('lastSelectedCustomerId', customerId.toString());
       // 개인 사주가 없을 때만 고객 데이터 사용
       if (!personalSajuData) {
-        setDataSource('customer')
+        setDataSource('customer');
       }
     } catch (error) {
-      console.error('Error loading customer data:', error)
+      console.error('Error loading customer data:', error);
     }
-  }
+  };
 
   const dayEvents = useMemo(() => {
     return events.filter(event => {
-      const eventDate = new Date(event.start_time)
-      return isSameDay(eventDate, currentDate)
-    }).sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
-  }, [events, currentDate])
+      const eventDate = new Date(event.start_time);
+      return isSameDay(eventDate, currentDate);
+    }).sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
+  }, [events, currentDate]);
 
-  const todos = getTodosForDate(currentDate)
-  const todayTags = ['#중요', '#긴급', '#업무', '#개인']
-  const completedTodos = todos.filter(todo => todo.completed).length
-  const totalTodos = todos.length
-  const progressPercentage = totalTodos > 0 ? (completedTodos / totalTodos) * 100 : 0
+  const todos = getTodosForDate(currentDate);
+  const todayTags = ['#중요', '#긴급', '#업무', '#개인'];
+  const completedTodos = todos.filter(todo => todo.completed).length;
+  const totalTodos = todos.length;
+  const progressPercentage = totalTodos > 0 ? (completedTodos / totalTodos) * 100 : 0;
 
   const handleAddTodo = () => {
     if (newTodo.trim()) {
@@ -95,35 +95,35 @@ export default function DayViewEnhanced({ events, onCreateEvent, onDateClick, on
         text: newTodo.trim(),
         completed: false,
         priority: 'medium',
-        date: format(currentDate, 'yyyy-MM-dd')
-      })
-      setNewTodo('')
+        date: format(currentDate, 'yyyy-MM-dd'),
+      });
+      setNewTodo('');
     }
-  }
+  };
 
   const handleDiarySave = (entry: any) => {
-    setDiaryEntry(entry)
+    setDiaryEntry(entry);
     // 실제로는 여기서 API 호출하여 저장
-    console.log('Saving diary entry:', entry)
-  }
+    console.log('Saving diary entry:', entry);
+  };
 
-  const hasDiaryEntry = !!diaryEntry
+  const hasDiaryEntry = !!diaryEntry;
 
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
-      case 'high': return '🔴'
-      case 'medium': return '🟡'
-      case 'low': return '🟢'
-      default: return ''
+      case 'high': return '🔴';
+      case 'medium': return '🟡';
+      case 'low': return '🟢';
+      default: return '';
     }
-  }
+  };
 
   const formatEventTime = (event: CalendarEvent) => {
-    if (event.all_day) return '종일'
-    const start = new Date(event.start_time)
-    const end = new Date(event.end_time)
-    return `${format(start, 'HH:mm')} - ${format(end, 'HH:mm')}`
-  }
+    if (event.all_day) return '종일';
+    const start = new Date(event.start_time);
+    const end = new Date(event.end_time);
+    return `${format(start, 'HH:mm')} - ${format(end, 'HH:mm')}`;
+  };
 
   return (
     <div className="h-full p-6 bg-gray-50 dark:bg-gray-900 overflow-hidden">
@@ -202,7 +202,7 @@ export default function DayViewEnhanced({ events, onCreateEvent, onDateClick, on
                                 className="absolute inset-x-2 top-2 bottom-2 rounded-md p-2 cursor-pointer hover:shadow-md transition-all"
                                 style={{ 
                                   backgroundColor: event.color || '#3b82f6',
-                                  minHeight: `${Math.max(duration * 44, 40)}px`
+                                  minHeight: `${Math.max(duration * 44, 40)}px`,
                                 }}
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -371,5 +371,5 @@ export default function DayViewEnhanced({ events, onCreateEvent, onDateClick, on
         />
       </div>
     </div>
-  )
+  );
 }

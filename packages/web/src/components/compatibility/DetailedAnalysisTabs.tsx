@@ -14,7 +14,7 @@ export const DetailedAnalysisTabs: React.FC<DetailedAnalysisTabsProps> = ({
   relationshipAnalysis,
   practicalAnalysis,
   depthAnalysis,
-  specialAnalysis
+  specialAnalysis,
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'relationship' | 'practical' | 'depth' | 'special'>('overview');
 
@@ -40,7 +40,7 @@ export const DetailedAnalysisTabs: React.FC<DetailedAnalysisTabsProps> = ({
       '좋음': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
       '보통': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
       '주의': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
-      '위험': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+      '위험': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
     };
     
     return (
@@ -57,7 +57,7 @@ export const DetailedAnalysisTabs: React.FC<DetailedAnalysisTabsProps> = ({
     { key: 'lifePattern', label: '생활패턴 궁합', icon: '🌅' },
     { key: 'conflictResolution', label: '갈등해결 궁합', icon: '🤝' },
     { key: 'emotional', label: '정서적 궁합', icon: '❤️' },
-    { key: 'trust', label: '신뢰도 궁합', icon: '🛡️' }
+    { key: 'trust', label: '신뢰도 궁합', icon: '🛡️' },
   ];
   
   const practicalItems = [
@@ -65,21 +65,21 @@ export const DetailedAnalysisTabs: React.FC<DetailedAnalysisTabsProps> = ({
     { key: 'career', label: '직업운 궁합', icon: '💼' },
     { key: 'residence', label: '주거환경 궁합', icon: '🏠' },
     { key: 'children', label: '자녀운 궁합', icon: '👶' },
-    { key: 'inLaw', label: '시댁/처가 궁합', icon: '👨‍👩‍👧‍👦' }
+    { key: 'inLaw', label: '시댁/처가 궁합', icon: '👨‍👩‍👧‍👦' },
   ];
   
   const depthItems = [
     { key: 'sexual', label: '성적 궁합', icon: '🔥' },
     { key: 'spiritual', label: '정신적 궁합', icon: '🧘' },
     { key: 'hobby', label: '취미 궁합', icon: '🎯' },
-    { key: 'retirement', label: '노후 궁합', icon: '🌅' }
+    { key: 'retirement', label: '노후 궁합', icon: '🌅' },
   ];
   
   const specialItems = [
     { key: 'noblePerson', label: '귀인운 궁합', icon: '⭐' },
     { key: 'peachBlossom', label: '도화운 궁합', icon: '🌸' },
     { key: 'emptiness', label: '공망 궁합', icon: '🌀' },
-    { key: 'sinsal', label: '신살 궁합', icon: '🔮' }
+    { key: 'sinsal', label: '신살 궁합', icon: '🔮' },
   ];
 
   return (

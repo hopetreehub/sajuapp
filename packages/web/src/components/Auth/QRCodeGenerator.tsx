@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import QRCodeUtil from '@/utils/qrcode'
+import React, { useEffect, useRef, useState } from 'react';
+import QRCodeUtil from '@/utils/qrcode';
 
 interface QRCodeGeneratorProps {
   referralCode: string
@@ -11,92 +11,92 @@ interface QRCodeGeneratorProps {
  */
 const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ 
   referralCode, 
-  className = '' 
+  className = '', 
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [downloadStatus, setDownloadStatus] = useState<'idle' | 'downloading' | 'success' | 'error'>('idle')
-  const [shareStatus, setShareStatus] = useState<'idle' | 'sharing' | 'success' | 'error'>('idle')
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [downloadStatus, setDownloadStatus] = useState<'idle' | 'downloading' | 'success' | 'error'>('idle');
+  const [shareStatus, setShareStatus] = useState<'idle' | 'sharing' | 'success' | 'error'>('idle');
 
   // QR코드 생성
   useEffect(() => {
-    if (!referralCode || !canvasRef.current) return
+    if (!referralCode || !canvasRef.current) return;
 
     const generateQRCode = async () => {
-      setIsGenerating(true)
-      setError(null)
+      setIsGenerating(true);
+      setError(null);
 
       try {
-        const shareUrl = QRCodeUtil.createReferralUrl(referralCode)
+        const shareUrl = QRCodeUtil.createReferralUrl(referralCode);
         await QRCodeUtil.generateToCanvas(canvasRef.current!, shareUrl, {
           width: 160,
           color: {
             dark: '#667eea',
-            light: '#ffffff'
-          }
-        })
+            light: '#ffffff',
+          },
+        });
       } catch (err) {
-        setError('QR코드를 생성할 수 없습니다.')
-        console.error('QR코드 생성 오류:', err)
+        setError('QR코드를 생성할 수 없습니다.');
+        console.error('QR코드 생성 오류:', err);
       } finally {
-        setIsGenerating(false)
+        setIsGenerating(false);
       }
-    }
+    };
 
-    generateQRCode()
-  }, [referralCode])
+    generateQRCode();
+  }, [referralCode]);
 
   // 다운로드 기능
   const handleDownload = async () => {
-    if (!referralCode) return
+    if (!referralCode) return;
 
-    setDownloadStatus('downloading')
+    setDownloadStatus('downloading');
     try {
       await QRCodeUtil.downloadReferralQRCode(referralCode, {
         width: 400,
         color: {
           dark: '#667eea',
-          light: '#ffffff'
-        }
-      })
-      setDownloadStatus('success')
-      setTimeout(() => setDownloadStatus('idle'), 2000)
+          light: '#ffffff',
+        },
+      });
+      setDownloadStatus('success');
+      setTimeout(() => setDownloadStatus('idle'), 2000);
     } catch (error) {
-      console.error('다운로드 실패:', error)
-      setDownloadStatus('error')
-      setTimeout(() => setDownloadStatus('idle'), 2000)
+      console.error('다운로드 실패:', error);
+      setDownloadStatus('error');
+      setTimeout(() => setDownloadStatus('idle'), 2000);
     }
-  }
+  };
 
   // 공유 기능
   const handleShare = async () => {
-    if (!referralCode) return
+    if (!referralCode) return;
 
-    setShareStatus('sharing')
+    setShareStatus('sharing');
     try {
       if (navigator.share) {
         await QRCodeUtil.shareReferralQRCode(referralCode, {
           width: 400,
           color: {
             dark: '#667eea',
-            light: '#ffffff'
-          }
-        })
-        setShareStatus('success')
+            light: '#ffffff',
+          },
+        });
+        setShareStatus('success');
       } else {
         // Web Share API를 지원하지 않는 경우 URL 복사
-        const shareUrl = QRCodeUtil.createReferralUrl(referralCode)
-        await navigator.clipboard.writeText(shareUrl)
-        setShareStatus('success')
+        const shareUrl = QRCodeUtil.createReferralUrl(referralCode);
+        await navigator.clipboard.writeText(shareUrl);
+        setShareStatus('success');
       }
-      setTimeout(() => setShareStatus('idle'), 2000)
+      setTimeout(() => setShareStatus('idle'), 2000);
     } catch (error) {
-      console.error('공유 실패:', error)
-      setShareStatus('error')
-      setTimeout(() => setShareStatus('idle'), 2000)
+      console.error('공유 실패:', error);
+      setShareStatus('error');
+      setTimeout(() => setShareStatus('idle'), 2000);
     }
-  }
+  };
 
   return (
     <div className={`bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-600 rounded-xl p-6 text-white ${className}`}>
@@ -213,7 +213,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default QRCodeGenerator
+export default QRCodeGenerator;

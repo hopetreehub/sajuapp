@@ -1,15 +1,15 @@
-import { useMemo, useState } from 'react'
-import { useCalendar } from '@/contexts/CalendarContext'
-import { format, isSameDay, getHours, getMinutes } from 'date-fns'
-import { ko } from 'date-fns/locale'
-import { CalendarEvent } from '@/services/api'
-import DiaryBookModal from '@/components/DiaryBookModal'
-import { useDiaryData } from '@/hooks/useDiaryData'
-import TodayFortuneSection from '@/components/TodayFortuneSection'
-import EditTodoModal from '@/components/EditTodoModal'
-import { Todo } from '@/contexts/CalendarContext'
+import { useMemo, useState } from 'react';
+import { useCalendar } from '@/contexts/CalendarContext';
+import { format, isSameDay, getHours, getMinutes } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { CalendarEvent } from '@/services/api';
+import DiaryBookModal from '@/components/DiaryBookModal';
+import { useDiaryData } from '@/hooks/useDiaryData';
+import TodayFortuneSection from '@/components/TodayFortuneSection';
+import EditTodoModal from '@/components/EditTodoModal';
+import { Todo } from '@/contexts/CalendarContext';
 
-const HOURS = Array.from({ length: 10 }, (_, i) => i + 9) // 9시-18시
+const HOURS = Array.from({ length: 10 }, (_, i) => i + 9); // 9시-18시
 
 interface DayViewProps {
   events: CalendarEvent[]
@@ -22,64 +22,64 @@ export default function DayView({
   events, 
   onCreateEvent, 
   onEditEvent,
-  onDeleteEvent
+  onDeleteEvent,
 }: DayViewProps) {
-  const { currentDate, todos, getTodosForDate, deleteTodo, toggleTodo } = useCalendar()
-  const [isDiaryOpen, setIsDiaryOpen] = useState(false)
-  const { diaryDates } = useDiaryData({ viewMode: 'day', currentDate })
-  const [editingTodo, setEditingTodo] = useState<Todo | null>(null)
+  const { currentDate, todos, getTodosForDate, deleteTodo, toggleTodo } = useCalendar();
+  const [isDiaryOpen, setIsDiaryOpen] = useState(false);
+  const { diaryDates } = useDiaryData({ viewMode: 'day', currentDate });
+  const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   
   // 현재 날짜에 일기가 있는지 확인
-  const hasCurrentDateDiary = diaryDates.has(format(currentDate, 'yyyy-MM-dd'))
+  const hasCurrentDateDiary = diaryDates.has(format(currentDate, 'yyyy-MM-dd'));
 
   // 현재 날짜의 할일 가져오기
   const dayTodos = useMemo(() => {
-    return getTodosForDate(currentDate)
-  }, [todos, currentDate, getTodosForDate])
+    return getTodosForDate(currentDate);
+  }, [todos, currentDate, getTodosForDate]);
 
   // 우선순위별 아이콘 가져오기
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
-      case 'high': return '🔴'
-      case 'medium': return '🟡'
-      case 'low': return '🟢'
-      default: return '🟡'
+      case 'high': return '🔴';
+      case 'medium': return '🟡';
+      case 'low': return '🟢';
+      default: return '🟡';
     }
-  }
+  };
 
   // 시간별 할일과 일반 할일 분리
-  const timedTodos = useMemo(() => dayTodos.filter(todo => todo.hasTime && todo.startTime), [dayTodos])
-  const generalTodos = useMemo(() => dayTodos.filter(todo => !todo.hasTime || !todo.startTime), [dayTodos])
+  const timedTodos = useMemo(() => dayTodos.filter(todo => todo.hasTime && todo.startTime), [dayTodos]);
+  const generalTodos = useMemo(() => dayTodos.filter(todo => !todo.hasTime || !todo.startTime), [dayTodos]);
 
 
   const dayEvents = useMemo(() => {
     return events.filter(event => {
-      const eventDate = new Date(event.start_time)
-      return isSameDay(eventDate, currentDate)
-    }).sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
-  }, [events, currentDate])
+      const eventDate = new Date(event.start_time);
+      return isSameDay(eventDate, currentDate);
+    }).sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
+  }, [events, currentDate]);
 
-  const allDayEvents = dayEvents.filter(event => event.all_day)
-  const timedEvents = dayEvents.filter(event => !event.all_day)
+  const allDayEvents = dayEvents.filter(event => event.all_day);
+  const timedEvents = dayEvents.filter(event => !event.all_day);
 
-  const currentHour = new Date().getHours()
-  const currentMinute = new Date().getMinutes()
-  const isWithinRange = currentHour >= 9 && currentHour <= 18
-  const currentTimePosition = isWithinRange ? ((currentHour - 9) * 60 + currentMinute) / (10 * 60) * 100 : -1
+  const currentHour = new Date().getHours();
+  const currentMinute = new Date().getMinutes();
+  const isWithinRange = currentHour >= 9 && currentHour <= 18;
+  const currentTimePosition = isWithinRange ? ((currentHour - 9) * 60 + currentMinute) / (10 * 60) * 100 : -1;
 
   const getEventPosition = (event: CalendarEvent) => {
-    const start = new Date(event.start_time)
-    const end = new Date(event.end_time)
-    const startHour = getHours(start)
-    const endHour = getHours(end)
-    const startMinutes = Math.max((startHour - 9) * 60 + getMinutes(start), 0)
-    const endMinutes = Math.min((endHour - 9) * 60 + getMinutes(end), 10 * 60)
+    const start = new Date(event.start_time);
+    const end = new Date(event.end_time);
+    const startHour = getHours(start);
+    const endHour = getHours(end);
+    const startMinutes = Math.max((startHour - 9) * 60 + getMinutes(start), 0);
+    const endMinutes = Math.min((endHour - 9) * 60 + getMinutes(end), 10 * 60);
     
-    const top = (startMinutes / (10 * 60)) * 100
-    const height = ((endMinutes - startMinutes) / (10 * 60)) * 100
+    const top = (startMinutes / (10 * 60)) * 100;
+    const height = ((endMinutes - startMinutes) / (10 * 60)) * 100;
     
-    return { top: `${top}%`, height: `${Math.max(height, 2)}%` }
-  }
+    return { top: `${top}%`, height: `${Math.max(height, 2)}%` };
+  };
 
   return (
     <div className="h-full flex flex-col lg:flex-row bg-background">
@@ -101,9 +101,9 @@ export default function DayView({
           <div className="grid grid-cols-3 gap-2">
             <button
               onClick={() => {
-                const eventDate = new Date(currentDate)
-                eventDate.setHours(new Date().getHours(), 0, 0, 0)
-                onCreateEvent(eventDate)
+                const eventDate = new Date(currentDate);
+                eventDate.setHours(new Date().getHours(), 0, 0, 0);
+                onCreateEvent(eventDate);
               }}
               className="px-3 py-2 text-sm bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 rounded-md transition-colors flex items-center justify-center gap-1"
             >
@@ -111,9 +111,9 @@ export default function DayView({
             </button>
             <button
               onClick={() => {
-                const eventDate = new Date(currentDate)
-                eventDate.setHours(new Date().getHours(), 0, 0, 0)
-                onCreateEvent(eventDate)
+                const eventDate = new Date(currentDate);
+                eventDate.setHours(new Date().getHours(), 0, 0, 0);
+                onCreateEvent(eventDate);
               }}
               className="px-3 py-2 text-sm bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 rounded-md transition-colors flex items-center justify-center gap-1"
             >
@@ -150,7 +150,7 @@ export default function DayView({
                   className="group inline-flex items-center px-3 py-1 rounded-full text-sm cursor-pointer hover:opacity-80 transition-opacity"
                   style={{ 
                     backgroundColor: event.color || '#3b82f6',
-                    color: 'white'
+                    color: 'white',
                   }}
                   onClick={() => onEditEvent(event)}
                   title={event.description || event.title}
@@ -159,9 +159,9 @@ export default function DayView({
                   {onDeleteEvent && (
                     <button
                       onClick={(e) => {
-                        e.stopPropagation()
+                        e.stopPropagation();
                         if (confirm(`"${event.title}" 일정을 삭제하시겠습니까?`)) {
-                          onDeleteEvent(event.id)
+                          onDeleteEvent(event.id);
                         }
                       }}
                       className="opacity-0 group-hover:opacity-100 ml-2 hover:text-red-200 transition-opacity"
@@ -203,9 +203,9 @@ export default function DayView({
                 <div 
                   className="flex-1 relative cursor-pointer hover:bg-muted/20 transition-colors group"
                   onClick={() => {
-                    const eventDate = new Date(currentDate)
-                    eventDate.setHours(hour, 0, 0, 0)
-                    onCreateEvent(eventDate)
+                    const eventDate = new Date(currentDate);
+                    eventDate.setHours(hour, 0, 0, 0);
+                    onCreateEvent(eventDate);
                   }}
                   title={`${hour}:00에 일정 추가`}
                 >
@@ -225,7 +225,7 @@ export default function DayView({
             <div className="absolute top-0 left-20 right-0 bottom-0">
               {/* Events */}
               {timedEvents.map(event => {
-                const position = getEventPosition(event)
+                const position = getEventPosition(event);
                 return (
                   <div
                     key={event.id}
@@ -234,7 +234,7 @@ export default function DayView({
                       ...position,
                       backgroundColor: `${event.color || '#3b82f6'}15`,
                       borderLeft: `4px solid ${event.color || '#3b82f6'}`,
-                      border: `1px solid ${event.color || '#3b82f6'}30`
+                      border: `1px solid ${event.color || '#3b82f6'}30`,
                     }}
                     onClick={() => onEditEvent(event)}
                   >
@@ -256,9 +256,9 @@ export default function DayView({
                       {onDeleteEvent && (
                         <button
                           onClick={(e) => {
-                            e.stopPropagation()
+                            e.stopPropagation();
                             if (confirm(`"${event.title}" 일정을 삭제하시겠습니까?`)) {
-                              onDeleteEvent(event.id)
+                              onDeleteEvent(event.id);
                             }
                           }}
                           className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-2 text-lg"
@@ -269,16 +269,16 @@ export default function DayView({
                       )}
                     </div>
                   </div>
-                )
+                );
               })}
               
               {/* Timed Todos */}
               {timedTodos.map(todo => {
-                const [hours, minutes] = (todo.startTime || '09:00').split(':').map(Number)
-                const todoDate = new Date(currentDate)
-                todoDate.setHours(hours, minutes, 0, 0)
+                const [hours, minutes] = (todo.startTime || '09:00').split(':').map(Number);
+                const todoDate = new Date(currentDate);
+                todoDate.setHours(hours, minutes, 0, 0);
                 
-                const topPosition = Math.max(((hours - 9) * 60 + minutes) / (10 * 60) * 100, 0)
+                const topPosition = Math.max(((hours - 9) * 60 + minutes) / (10 * 60) * 100, 0);
                 
                 return (
                   <div
@@ -289,7 +289,7 @@ export default function DayView({
                       height: '40px',
                       backgroundColor: todo.completed ? '#10b98115' : '#fbbf2415',
                       borderLeft: `3px solid ${todo.completed ? '#10b981' : '#fbbf24'}`,
-                      opacity: todo.completed ? 0.7 : 1
+                      opacity: todo.completed ? 0.7 : 1,
                     }}
                     onClick={() => toggleTodo(todo.id)}
                   >
@@ -310,8 +310,8 @@ export default function DayView({
                       </div>
                       <button
                         onClick={(e) => {
-                          e.stopPropagation()
-                          deleteTodo(todo.id)
+                          e.stopPropagation();
+                          deleteTodo(todo.id);
                         }}
                         className="text-red-500 hover:text-red-700 text-sm px-2"
                       >
@@ -319,7 +319,7 @@ export default function DayView({
                       </button>
                     </div>
                   </div>
-                )
+                );
               })}
             </div>
           </div>
@@ -335,7 +335,7 @@ export default function DayView({
                   key={todo.id}
                   className="flex items-center justify-between p-3 rounded-lg bg-background border border-border hover:shadow-sm transition-all"
                   style={{
-                    opacity: todo.completed ? 0.6 : 1
+                    opacity: todo.completed ? 0.6 : 1,
                   }}
                 >
                   <div className="flex items-center gap-3 flex-1">
@@ -380,7 +380,7 @@ export default function DayView({
         onClose={() => setIsDiaryOpen(false)}
         date={currentDate}
         onSave={() => {
-          setIsDiaryOpen(false)
+          setIsDiaryOpen(false);
         }}
       />
       
@@ -391,5 +391,5 @@ export default function DayView({
         todo={editingTodo}
       />
     </div>
-  )
+  );
 }

@@ -1,10 +1,10 @@
-import { defineConfig, loadEnv } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import { defineConfig, loadEnv } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
+  const env = loadEnv(mode, process.cwd(), '');
   
   return {
     plugins: [react()],
@@ -43,8 +43,8 @@ export default defineConfig(({ mode }) => {
           target: env.VITE_API_URL || 'http://localhost:4003',
           changeOrigin: true,
           secure: false,
-        }
-      }
+        },
+      },
     },
     preview: {
       port: parseInt(env.VITE_PORT) || 4000,
@@ -59,7 +59,7 @@ export default defineConfig(({ mode }) => {
         '@stores': path.resolve(__dirname, './src/stores'),
         '@utils': path.resolve(__dirname, './src/utils'),
         '@types': path.resolve(__dirname, './src/types'),
-      }
+      },
     },
     build: {
       outDir: 'dist',
@@ -70,9 +70,9 @@ export default defineConfig(({ mode }) => {
             'react-vendor': ['react', 'react-dom', 'react-router-dom'],
             'calendar-vendor': ['date-fns', 'date-fns-tz'],
             'ui-vendor': ['@dnd-kit/core', '@dnd-kit/sortable'],
-          }
-        }
-      }
-    }
-  }
-})
+          },
+        },
+      },
+    },
+  };
+});

@@ -79,7 +79,7 @@ const SajuAnalysisPageEnhanced: React.FC = () => {
   const scrollToChart = () => {
     document.getElementById('hundred-year-chart')?.scrollIntoView({
       behavior: 'smooth',
-      block: 'start'
+      block: 'start',
     });
   };
 
@@ -127,7 +127,7 @@ const SajuAnalysisPageEnhanced: React.FC = () => {
         fiveElements: sajuData.fiveElements,
         tenGods: sajuData.tenGods,
         totalScore: sajuData.totalScore,
-        averageScore: sajuData.averageScore
+        averageScore: sajuData.averageScore,
       };
       
       setAnalysisResult(result);
@@ -149,7 +149,7 @@ const SajuAnalysisPageEnhanced: React.FC = () => {
       fiveElements: result.fiveElements,
       tenGods: result.tenGods,
       totalScore: result.totalScore,
-      averageScore: result.averageScore
+      averageScore: result.averageScore,
     };
   };
 

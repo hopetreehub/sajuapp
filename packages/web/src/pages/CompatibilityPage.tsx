@@ -9,7 +9,7 @@ import {
   calculateAccurateWealthScore,
   calculateAccurateHealthScore,
   calculateAccurateFutureScore,
-  generateDetailedAdvice
+  generateDetailedAdvice,
 } from '../utils/compatibilityCalculator';
 import { analyzeRelationship, RelationshipAnalysis } from '../utils/detailedCompatibilityCalculator';
 import { analyzePractical, PracticalAnalysis } from '../utils/practicalCompatibilityCalculator';
@@ -67,7 +67,7 @@ export const CompatibilityPage: React.FC = () => {
         month: `${parsed.month.gan}${parsed.month.ji}`,
         day: `${parsed.day.gan}${parsed.day.ji}`,
         time: `${parsed.time.gan}${parsed.time.ji}`,
-        ohHaeng: parsed.ohHaengBalance
+        ohHaeng: parsed.ohHaengBalance,
       });
       
       return parsed;
@@ -122,28 +122,28 @@ export const CompatibilityPage: React.FC = () => {
         { 
           name: '성격 궁합', 
           score: personalityScore, 
-          description: '성격과 가치관의 조화 (십신/오행 분석)' 
+          description: '성격과 가치관의 조화 (십신/오행 분석)', 
         },
         { 
           name: '애정 궁합', 
           score: loveScore, 
-          description: '감정과 애정 표현의 조화 (지지관계/음양조화)' 
+          description: '감정과 애정 표현의 조화 (지지관계/음양조화)', 
         },
         { 
           name: '재물 궁합', 
           score: wealthScore, 
-          description: '경제관념과 재물운의 조화 (재성 분석)' 
+          description: '경제관념과 재물운의 조화 (재성 분석)', 
         },
         { 
           name: '건강 궁합', 
           score: healthScore, 
-          description: '체질과 건강 에너지의 조화 (오행 균형)' 
+          description: '체질과 건강 에너지의 조화 (오행 균형)', 
         },
         { 
           name: '미래 궁합', 
           score: futureScore, 
-          description: '인생 방향과 목표의 조화 (삼합/육합)' 
-        }
+          description: '인생 방향과 목표의 조화 (삼합/육합)', 
+        },
       ];
 
       const totalScore = Math.round(categories.reduce((sum, cat) => sum + cat.score, 0) / categories.length);
@@ -180,8 +180,8 @@ export const CompatibilityPage: React.FC = () => {
           relationship: relationshipAnalysis,
           practical: practicalAnalysis,
           depth: depthAnalysis,
-          special: specialAnalysis
-        }
+          special: specialAnalysis,
+        },
       });
 
       setIsCalculating(false);
@@ -300,7 +300,7 @@ export const CompatibilityPage: React.FC = () => {
               data={{
                 categories: result.categories,
                 person1Name: person1?.name || '',
-                person2Name: person2?.name || ''
+                person2Name: person2?.name || '',
               }}
             />
           </div>
@@ -316,7 +316,7 @@ export const CompatibilityPage: React.FC = () => {
                   relationship: result.detailedAnalysis.relationship,
                   practical: result.detailedAnalysis.practical,
                   depth: result.detailedAnalysis.depth,
-                  special: result.detailedAnalysis.special
+                  special: result.detailedAnalysis.special,
                 }}
               />
             </div>

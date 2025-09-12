@@ -1,4 +1,4 @@
-import QRCode from 'qrcode'
+import QRCode from 'qrcode';
 
 export interface QRCodeOptions {
   width?: number
@@ -19,10 +19,10 @@ export class QRCodeGenerator {
     margin: 2,
     color: {
       dark: '#4338CA', // Indigo-700
-      light: '#FFFFFF'
+      light: '#FFFFFF',
     },
-    errorCorrectionLevel: 'M'
-  }
+    errorCorrectionLevel: 'M',
+  };
 
   /**
    * Canvas에 QR코드를 생성합니다
@@ -33,15 +33,15 @@ export class QRCodeGenerator {
   static async generateToCanvas(
     canvas: HTMLCanvasElement, 
     text: string, 
-    options?: QRCodeOptions
+    options?: QRCodeOptions,
   ): Promise<void> {
-    const opts = { ...this.defaultOptions, ...options }
+    const opts = { ...this.defaultOptions, ...options };
     
     try {
-      await QRCode.toCanvas(canvas, text, opts)
+      await QRCode.toCanvas(canvas, text, opts);
     } catch (error) {
-      console.error('QR코드 생성 실패:', error)
-      throw new Error('QR코드를 생성할 수 없습니다.')
+      console.error('QR코드 생성 실패:', error);
+      throw new Error('QR코드를 생성할 수 없습니다.');
     }
   }
 
@@ -53,15 +53,15 @@ export class QRCodeGenerator {
    */
   static async generateToDataURL(
     text: string, 
-    options?: QRCodeOptions
+    options?: QRCodeOptions,
   ): Promise<string> {
-    const opts = { ...this.defaultOptions, ...options }
+    const opts = { ...this.defaultOptions, ...options };
     
     try {
-      return await QRCode.toDataURL(text, opts)
+      return await QRCode.toDataURL(text, opts);
     } catch (error) {
-      console.error('QR코드 생성 실패:', error)
-      throw new Error('QR코드를 생성할 수 없습니다.')
+      console.error('QR코드 생성 실패:', error);
+      throw new Error('QR코드를 생성할 수 없습니다.');
     }
   }
 
@@ -73,21 +73,21 @@ export class QRCodeGenerator {
    */
   static async generateToBlob(
     text: string, 
-    options?: QRCodeOptions
+    options?: QRCodeOptions,
   ): Promise<Blob> {
     const highResOptions: QRCodeOptions = {
       ...this.defaultOptions,
       width: 400, // 고해상도
-      ...options
-    }
+      ...options,
+    };
 
     try {
-      const dataURL = await this.generateToDataURL(text, highResOptions)
-      const response = await fetch(dataURL)
-      return await response.blob()
+      const dataURL = await this.generateToDataURL(text, highResOptions);
+      const response = await fetch(dataURL);
+      return await response.blob();
     } catch (error) {
-      console.error('QR코드 Blob 생성 실패:', error)
-      throw new Error('QR코드 파일을 생성할 수 없습니다.')
+      console.error('QR코드 Blob 생성 실패:', error);
+      throw new Error('QR코드 파일을 생성할 수 없습니다.');
     }
   }
 
@@ -98,8 +98,8 @@ export class QRCodeGenerator {
    * @returns 공유 URL
    */
   static createReferralUrl(referralCode: string, baseUrl?: string): string {
-    const base = baseUrl || window.location.origin
-    return `${base}/auth?mode=signup&ref=${referralCode}`
+    const base = baseUrl || window.location.origin;
+    return `${base}/auth?mode=signup&ref=${referralCode}`;
   }
 
   /**
@@ -108,14 +108,14 @@ export class QRCodeGenerator {
    * @param filename 파일명
    */
   static downloadFile(blob: Blob, filename: string): void {
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = filename
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
 
   /**
@@ -125,16 +125,16 @@ export class QRCodeGenerator {
    */
   static async downloadReferralQRCode(
     referralCode: string, 
-    options?: QRCodeOptions
+    options?: QRCodeOptions,
   ): Promise<void> {
     try {
-      const url = this.createReferralUrl(referralCode)
-      const blob = await this.generateToBlob(url, options)
-      const filename = `referral-qr-${referralCode}.png`
-      this.downloadFile(blob, filename)
+      const url = this.createReferralUrl(referralCode);
+      const blob = await this.generateToBlob(url, options);
+      const filename = `referral-qr-${referralCode}.png`;
+      this.downloadFile(blob, filename);
     } catch (error) {
-      console.error('QR코드 다운로드 실패:', error)
-      throw error
+      console.error('QR코드 다운로드 실패:', error);
+      throw error;
     }
   }
 
@@ -145,34 +145,34 @@ export class QRCodeGenerator {
    */
   static async shareReferralQRCode(
     referralCode: string, 
-    options?: QRCodeOptions
+    options?: QRCodeOptions,
   ): Promise<void> {
     if (!navigator.share) {
-      throw new Error('이 브라우저는 공유 기능을 지원하지 않습니다.')
+      throw new Error('이 브라우저는 공유 기능을 지원하지 않습니다.');
     }
 
     try {
-      const url = this.createReferralUrl(referralCode)
-      const blob = await this.generateToBlob(url, options)
+      const url = this.createReferralUrl(referralCode);
+      const blob = await this.generateToBlob(url, options);
       const file = new File([blob], `referral-qr-${referralCode}.png`, {
-        type: 'image/png'
-      })
+        type: 'image/png',
+      });
 
       await navigator.share({
         title: '🔮 운명나침반 추천 QR코드',
         text: `추천인 코드: ${referralCode}\n함께 가입하면 특별 혜택을 받을 수 있어요!`,
         url,
-        files: [file]
-      })
+        files: [file],
+      });
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
         // 사용자가 공유를 취소한 경우
-        return
+        return;
       }
-      console.error('QR코드 공유 실패:', error)
-      throw new Error('QR코드를 공유할 수 없습니다.')
+      console.error('QR코드 공유 실패:', error);
+      throw new Error('QR코드를 공유할 수 없습니다.');
     }
   }
 }
 
-export default QRCodeGenerator
+export default QRCodeGenerator;

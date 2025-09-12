@@ -12,7 +12,7 @@ import { SajuBirthInfo } from '@/types/saju';
  * Customer 객체를 LifetimeFortuneRequest로 변환
  */
 export function convertCustomerToLifetimeRequest(
-  customer: Customer
+  customer: Customer,
 ): LifetimeFortuneRequest {
   const birthDate = new Date(customer.birth_date);
   const [hour] = customer.birth_time.split(':').map(Number);
@@ -21,9 +21,9 @@ export function convertCustomerToLifetimeRequest(
     year: birthDate.getFullYear(),
     month: birthDate.getMonth() + 1, // JavaScript Date는 0부터 시작
     day: birthDate.getDate(),
-    hour: hour,
+    hour,
     isLunar: customer.lunar_solar === 'lunar',
-    gender: customer.gender
+    gender: customer.gender,
   };
 }
 
@@ -31,7 +31,7 @@ export function convertCustomerToLifetimeRequest(
  * UserProfile 객체를 LifetimeFortuneRequest로 변환
  */
 export function convertUserToLifetimeRequest(
-  user: UserProfile | { birthInfo: SajuBirthInfo; gender?: 'male' | 'female' }
+  user: UserProfile | { birthInfo: SajuBirthInfo; gender?: 'male' | 'female' },
 ): LifetimeFortuneRequest {
   const birthInfo = user.birthInfo;
   
@@ -41,7 +41,7 @@ export function convertUserToLifetimeRequest(
     day: birthInfo.day,
     hour: birthInfo.hour,
     isLunar: birthInfo.isLunar || false,
-    gender: ('gender' in user && user.gender) || birthInfo.gender || 'male'
+    gender: ('gender' in user && user.gender) || birthInfo.gender || 'male',
   };
 }
 
@@ -49,7 +49,7 @@ export function convertUserToLifetimeRequest(
  * Customer 또는 UserProfile을 LifetimeFortuneRequest로 변환
  */
 export function convertToLifetimeRequest(
-  data: Customer | UserProfile | { birthInfo: SajuBirthInfo }
+  data: Customer | UserProfile | { birthInfo: SajuBirthInfo },
 ): LifetimeFortuneRequest {
   if ('birth_date' in data) {
     // Customer 타입
@@ -66,7 +66,7 @@ export function convertToLifetimeRequest(
  * 캐시 키 생성 (고객 데이터 기반)
  */
 export function getCacheKey(
-  data: Customer | UserProfile | { birthInfo: SajuBirthInfo }
+  data: Customer | UserProfile | { birthInfo: SajuBirthInfo },
 ): string {
   if ('birth_date' in data) {
     // Customer 타입
@@ -84,7 +84,7 @@ export function getCacheKey(
  * 고객 정보로부터 이름 추출
  */
 export function getCustomerName(
-  data: Customer | UserProfile | null
+  data: Customer | UserProfile | null,
 ): string {
   if (!data) return '미선택';
   
@@ -99,7 +99,7 @@ export function getCustomerName(
  * 고객 정보로부터 생년월일 문자열 생성
  */
 export function getCustomerBirthDateString(
-  data: Customer | UserProfile | null
+  data: Customer | UserProfile | null,
 ): string {
   if (!data) return '';
   

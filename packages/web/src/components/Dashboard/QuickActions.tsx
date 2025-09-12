@@ -1,4 +1,4 @@
-import { QuickAction } from '@/services/dashboardService'
+import { QuickAction } from '@/services/dashboardService';
 
 interface QuickActionsProps {
   actions: QuickAction[]
@@ -18,7 +18,7 @@ export default function QuickActions({ actions, loading }: QuickActionsProps) {
           </div>
         </div>
       </div>
-    )
+    );
   }
   
   return (
@@ -72,5 +72,5 @@ export default function QuickActions({ actions, loading }: QuickActionsProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

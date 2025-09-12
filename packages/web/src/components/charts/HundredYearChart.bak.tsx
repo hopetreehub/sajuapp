@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,8 +10,8 @@ import {
   Tooltip,
   Legend,
   ChartOptions,
-} from 'chart.js'
-import { Chart } from 'react-chartjs-2'
+} from 'chart.js';
+import { Chart } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale,
@@ -21,8 +21,8 @@ ChartJS.register(
   PointElement,
   Title,
   Tooltip,
-  Legend
-)
+  Legend,
+);
 
 interface YearlyFortune {
   year: number
@@ -53,16 +53,16 @@ interface HundredYearChartProps {
 
 export default function HundredYearChart({ data, currentAge = 0 }: HundredYearChartProps) {
   const chartData = useMemo(() => {
-    const labels = data.map(d => `${d.age}세`)
+    const labels = data.map(d => `${d.age}세`);
     
     // 막대 그래프용 데이터 (종합 운세)
-    const barData = data.map(d => d.totalScore)
+    const barData = data.map(d => d.totalScore);
     
     // 선 그래프용 데이터 (4가지 기운)
-    const fortuneData = data.map(d => d.fortune)
-    const willpowerData = data.map(d => d.willpower)
-    const environmentData = data.map(d => d.environment)
-    const changeData = data.map(d => d.change)
+    const fortuneData = data.map(d => d.fortune);
+    const willpowerData = data.map(d => d.willpower);
+    const environmentData = data.map(d => d.environment);
+    const changeData = data.map(d => d.change);
 
     return {
       labels,
@@ -73,23 +73,23 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           label: '종합 운세',
           data: barData,
           backgroundColor: (context: any) => {
-            const score = context.parsed.y
+            const score = context.parsed.y;
             // 점수에 따른 그라데이션 색상
-            if (score >= 80) return 'rgba(34, 197, 94, 0.6)'   // 초록
-            if (score >= 60) return 'rgba(59, 130, 246, 0.6)'  // 파랑
-            if (score >= 40) return 'rgba(251, 191, 36, 0.6)'  // 노랑
-            return 'rgba(239, 68, 68, 0.6)'                    // 빨강
+            if (score >= 80) return 'rgba(34, 197, 94, 0.6)';   // 초록
+            if (score >= 60) return 'rgba(59, 130, 246, 0.6)';  // 파랑
+            if (score >= 40) return 'rgba(251, 191, 36, 0.6)';  // 노랑
+            return 'rgba(239, 68, 68, 0.6)';                    // 빨강
           },
           borderColor: (context: any) => {
-            const score = context.parsed.y
-            if (score >= 80) return 'rgba(34, 197, 94, 1)'
-            if (score >= 60) return 'rgba(59, 130, 246, 1)'
-            if (score >= 40) return 'rgba(251, 191, 36, 1)'
-            return 'rgba(239, 68, 68, 1)'
+            const score = context.parsed.y;
+            if (score >= 80) return 'rgba(34, 197, 94, 1)';
+            if (score >= 60) return 'rgba(59, 130, 246, 1)';
+            if (score >= 40) return 'rgba(251, 191, 36, 1)';
+            return 'rgba(239, 68, 68, 1)';
           },
           borderWidth: 1,
           yAxisID: 'y',
-          order: 2
+          order: 2,
         },
         // 선 차트들 - 4가지 기운
         {
@@ -103,7 +103,7 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           pointHoverRadius: 5,
           tension: 0.4,
           yAxisID: 'y',
-          order: 1
+          order: 1,
         },
         {
           type: 'line' as const,
@@ -116,7 +116,7 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           pointHoverRadius: 5,
           tension: 0.4,
           yAxisID: 'y',
-          order: 1
+          order: 1,
         },
         {
           type: 'line' as const,
@@ -129,7 +129,7 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           pointHoverRadius: 5,
           tension: 0.4,
           yAxisID: 'y',
-          order: 1
+          order: 1,
         },
         {
           type: 'line' as const,
@@ -142,11 +142,11 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           pointHoverRadius: 5,
           tension: 0.4,
           yAxisID: 'y',
-          order: 1
-        }
-      ]
-    }
-  }, [data])
+          order: 1,
+        },
+      ],
+    };
+  }, [data]);
 
   const options: ChartOptions<'bar' | 'line'> = useMemo(() => ({
     responsive: true,
@@ -163,7 +163,7 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           size: 18,
           weight: 'bold',
         },
-        padding: 20
+        padding: 20,
       },
       legend: {
         position: 'top' as const,
@@ -171,9 +171,9 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           usePointStyle: true,
           padding: 20,
           font: {
-            size: 12
-          }
-        }
+            size: 12,
+          },
+        },
       },
       tooltip: {
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -183,23 +183,23 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
         borderWidth: 1,
         callbacks: {
           title: (context) => {
-            const index = context[0].dataIndex
-            const yearData = data[index]
-            return `${yearData.age}세 (${yearData.year}년)`
+            const index = context[0].dataIndex;
+            const yearData = data[index];
+            return `${yearData.age}세 (${yearData.year}년)`;
           },
           afterLabel: (context) => {
-            const index = context.dataIndex
-            const yearData = data[index]
+            const index = context.dataIndex;
+            const yearData = data[index];
             if (context.dataset.label === '종합 운세') {
               return [
                 `대운: ${yearData.대운.천간}${yearData.대운.지지} (${yearData.대운.오행})`,
-                `세운: ${yearData.세운.천간}${yearData.세운.지지} (${yearData.세운.오행})`
-              ]
+                `세운: ${yearData.세운.천간}${yearData.세운.지지} (${yearData.세운.오행})`,
+              ];
             }
-            return []
-          }
-        }
-      }
+            return [];
+          },
+        },
+      },
     },
     scales: {
       x: {
@@ -208,21 +208,21 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           display: true,
           text: '나이',
           font: {
-            size: 14
-          }
+            size: 14,
+          },
         },
         ticks: {
-          callback: function(value: any, index: number) {
+          callback(value: any, index: number) {
             // 10년 단위로만 표시
             if (index % 10 === 0) {
-              return data[index]?.age + '세'
+              return `${data[index]?.age  }세`;
             }
-            return ''
+            return '';
           },
           font: {
-            size: 11
-          }
-        }
+            size: 11,
+          },
+        },
       },
       y: {
         type: 'linear' as const,
@@ -232,59 +232,59 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           display: true,
           text: '운세 점수',
           font: {
-            size: 14
-          }
+            size: 14,
+          },
         },
         min: 0,
         max: 100,
         ticks: {
           stepSize: 20,
           font: {
-            size: 11
-          }
+            size: 11,
+          },
         },
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)'
-        }
-      }
-    }
-  }), [data])
+          color: 'rgba(0, 0, 0, 0.1)',
+        },
+      },
+    },
+  }), [data]);
 
   // 현재 나이 표시용 플러그인
   const currentAgePlugin = useMemo(() => ({
     id: 'currentAgeIndicator',
     afterDraw: (chart: any) => {
-      if (!currentAge || currentAge <= 0) return
+      if (!currentAge || currentAge <= 0) return;
       
-      const ctx = chart.ctx
-      const chartArea = chart.chartArea
-      const meta = chart.getDatasetMeta(0)
+      const ctx = chart.ctx;
+      const chartArea = chart.chartArea;
+      const meta = chart.getDatasetMeta(0);
       
       // 현재 나이에 해당하는 인덱스 찾기
-      const currentIndex = data.findIndex(d => d.age === currentAge)
-      if (currentIndex === -1) return
+      const currentIndex = data.findIndex(d => d.age === currentAge);
+      if (currentIndex === -1) return;
       
-      const x = meta.data[currentIndex]?.x
-      if (!x) return
+      const x = meta.data[currentIndex]?.x;
+      if (!x) return;
       
       // 수직선 그리기
-      ctx.save()
-      ctx.strokeStyle = '#ef4444'
-      ctx.lineWidth = 3
-      ctx.setLineDash([5, 5])
-      ctx.beginPath()
-      ctx.moveTo(x, chartArea.top)
-      ctx.lineTo(x, chartArea.bottom)
-      ctx.stroke()
+      ctx.save();
+      ctx.strokeStyle = '#ef4444';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(x, chartArea.top);
+      ctx.lineTo(x, chartArea.bottom);
+      ctx.stroke();
       
       // 현재 나이 라벨
-      ctx.fillStyle = '#ef4444'
-      ctx.font = 'bold 12px sans-serif'
-      ctx.textAlign = 'center'
-      ctx.fillText(`현재 ${currentAge}세`, x, chartArea.top - 10)
-      ctx.restore()
-    }
-  }), [currentAge, data])
+      ctx.fillStyle = '#ef4444';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`현재 ${currentAge}세`, x, chartArea.top - 10);
+      ctx.restore();
+    },
+  }), [currentAge, data]);
 
   return (
     <div className="w-full">
@@ -347,5 +347,5 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
         </div>
       </div>
     </div>
-  )
+  );
 }

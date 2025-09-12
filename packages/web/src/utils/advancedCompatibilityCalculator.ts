@@ -8,7 +8,7 @@ import {
   GradeInfo,
   AnimalCompatibilityMatrix,
   FiveElementsRelation,
-  PersonalityCompatibility
+  PersonalityCompatibility,
 } from '@/types/compatibility';
 
 export class AdvancedCompatibilityCalculator {
@@ -17,32 +17,32 @@ export class AdvancedCompatibilityCalculator {
   private static readonly GRADE_SYSTEM: Record<CompatibilityGrade, GradeInfo> = {
     'S': { 
       min: 90, max: 100, label: '천생연분', color: '#FFD700', 
-      description: '완벽한 조화의 최상급 궁합', successRate: 95 
+      description: '완벽한 조화의 최상급 궁합', successRate: 95, 
     },
     'A+': { 
       min: 85, max: 89, label: '최상 궁합', color: '#FF6B6B', 
-      description: '매우 우수한 궁합으로 행복한 관계', successRate: 88 
+      description: '매우 우수한 궁합으로 행복한 관계', successRate: 88, 
     },
     'A': { 
       min: 75, max: 84, label: '매우 좋음', color: '#4ECDC4', 
-      description: '서로를 잘 이해하는 좋은 궁합', successRate: 78 
+      description: '서로를 잘 이해하는 좋은 궁합', successRate: 78, 
     },
     'B+': { 
       min: 65, max: 74, label: '좋은 궁합', color: '#45B7D1', 
-      description: '노력하면 행복한 관계 가능', successRate: 68 
+      description: '노력하면 행복한 관계 가능', successRate: 68, 
     },
     'B': { 
       min: 50, max: 64, label: '보통 궁합', color: '#96CEB4', 
-      description: '평범하지만 안정적인 관계', successRate: 55 
+      description: '평범하지만 안정적인 관계', successRate: 55, 
     },
     'C': { 
       min: 30, max: 49, label: '노력 필요', color: '#FFEAA7', 
-      description: '많은 노력과 이해가 필요', successRate: 35 
+      description: '많은 노력과 이해가 필요', successRate: 35, 
     },
     'D': { 
       min: 0, max: 29, label: '부적합', color: '#DDA0DD', 
-      description: '근본적인 차이로 어려운 관계', successRate: 15 
-    }
+      description: '근본적인 차이로 어려운 관계', successRate: 15, 
+    },
   };
 
   // 12지지 동물 상성 매트릭스
@@ -59,7 +59,7 @@ export class AdvancedCompatibilityCalculator {
       '신': { score: 25, type: 'sangHab', description: '삼합으로 최고의 궁합' },
       '유': { score: 16, type: 'normal', description: '무난한 관계' },
       '술': { score: 14, type: 'normal', description: '조화로운 관계' },
-      '해': { score: 20, type: 'normal', description: '깊이 있는 이해 관계' }
+      '해': { score: 20, type: 'normal', description: '깊이 있는 이해 관계' },
     },
     '축': { // 소
       '자': { score: 18, type: 'normal', description: '현실적인 조합으로 안정적' },
@@ -73,7 +73,7 @@ export class AdvancedCompatibilityCalculator {
       '신': { score: 17, type: 'normal', description: '실용적인 관계' },
       '유': { score: 25, type: 'sangHab', description: '삼합으로 완벽한 조화' },
       '술': { score: 12, type: 'normal', description: '조심스러운 관계' },
-      '해': { score: 19, type: 'normal', description: '따뜻한 관계' }
+      '해': { score: 19, type: 'normal', description: '따뜻한 관계' },
     },
     // ... 나머지 12지지 관계도 유사하게 정의
   };
@@ -81,11 +81,11 @@ export class AdvancedCompatibilityCalculator {
   // 오행 상생상극 관계
   private static readonly FIVE_ELEMENTS_RELATIONS = {
     sangSaeng: [
-      ['목', '화'], ['화', '토'], ['토', '금'], ['금', '수'], ['수', '목']
+      ['목', '화'], ['화', '토'], ['토', '금'], ['금', '수'], ['수', '목'],
     ],
     sangGeuk: [
-      ['목', '토'], ['토', '수'], ['수', '화'], ['화', '금'], ['금', '목']
-    ]
+      ['목', '토'], ['토', '수'], ['수', '화'], ['화', '금'], ['금', '목'],
+    ],
   };
 
   /**
@@ -104,7 +104,7 @@ export class AdvancedCompatibilityCalculator {
       components,
       analysis: this.generateAnalysis(person1, person2, components, totalScore),
       prediction: this.generatePrediction(totalScore, components),
-      timePeriods: this.calculateTimePeriods(person1, person2, totalScore)
+      timePeriods: this.calculateTimePeriods(person1, person2, totalScore),
     };
   }
 
@@ -126,7 +126,7 @@ export class AdvancedCompatibilityCalculator {
       // Tier 3: 현대적 보정 (20점)
       aiPrediction: this.calculateAIPrediction(person1, person2),
       statisticalAdjust: this.calculateStatisticalAdjust(person1, person2),
-      modernFactors: this.calculateModernFactors(person1, person2)
+      modernFactors: this.calculateModernFactors(person1, person2),
     };
   }
 
@@ -273,20 +273,20 @@ export class AdvancedCompatibilityCalculator {
       '병': '화', '정': '화',
       '무': '토', '기': '토',
       '경': '금', '신': '금',
-      '임': '수', '계': '수'
+      '임': '수', '계': '수',
     };
     return elementMap[heavenly] || '목';
   }
 
   private static isSangSaeng(element1: string, element2: string): boolean {
     return this.FIVE_ELEMENTS_RELATIONS.sangSaeng.some(
-      ([a, b]) => (a === element1 && b === element2) || (a === element2 && b === element1)
+      ([a, b]) => (a === element1 && b === element2) || (a === element2 && b === element1),
     );
   }
 
   private static isSangGeuk(element1: string, element2: string): boolean {
     return this.FIVE_ELEMENTS_RELATIONS.sangGeuk.some(
-      ([a, b]) => (a === element1 && b === element2) || (a === element2 && b === element1)
+      ([a, b]) => (a === element1 && b === element2) || (a === element2 && b === element1),
     );
   }
 
@@ -390,7 +390,7 @@ export class AdvancedCompatibilityCalculator {
     return {
       marriageSuccessRate,
       conflictResolution,
-      longTermSatisfaction
+      longTermSatisfaction,
     };
   }
 
@@ -405,15 +405,15 @@ export class AdvancedCompatibilityCalculator {
 
   private static generateKeyInsight(person1: SajuData, person2: SajuData, totalScore: number): string {
     if (totalScore >= 90) {
-      return "화토상생의 완벽한 조화로 서로를 성장시키는 이상적인 관계";
+      return '화토상생의 완벽한 조화로 서로를 성장시키는 이상적인 관계';
     } else if (totalScore >= 80) {
-      return "서로의 부족함을 채워주며 함께 발전해나가는 좋은 궁합";
+      return '서로의 부족함을 채워주며 함께 발전해나가는 좋은 궁합';
     } else if (totalScore >= 70) {
-      return "기본적인 조화를 바탕으로 노력을 통해 행복한 관계 구축 가능";
+      return '기본적인 조화를 바탕으로 노력을 통해 행복한 관계 구축 가능';
     } else if (totalScore >= 60) {
-      return "차이점이 있지만 서로 이해하려는 노력으로 안정적인 관계 가능";
+      return '차이점이 있지만 서로 이해하려는 노력으로 안정적인 관계 가능';
     } else {
-      return "근본적인 차이가 있어 많은 인내와 포용이 필요한 관계";
+      return '근본적인 차이가 있어 많은 인내와 포용이 필요한 관계';
     }
   }
 

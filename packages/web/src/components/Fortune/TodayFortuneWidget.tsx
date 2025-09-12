@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { 
   calculateTimeBasedScore, 
   SajuData, 
-  generateSampleSajuData 
+  generateSampleSajuData, 
 } from '@/utils/sajuScoreCalculator';
 import { 
   getLuckyItemsByDate, 
   getDailyFortuneModifier,
   generateDailyFortuneMessage,
-  getDailyPillar
+  getDailyPillar,
 } from '@/utils/dailyFortune';
 
 interface FortuneCategory {
@@ -57,7 +57,7 @@ const BarChart: React.FC<{ categories: FortuneCategory[] }> = ({ categories }) =
                 className="h-full rounded-full transition-all duration-500 flex items-center justify-end pr-2"
                 style={{ 
                   width: `${category.score}%`,
-                  backgroundColor: category.color
+                  backgroundColor: category.color,
                 }}
               >
                 <span className="text-xs text-white font-semibold">
@@ -90,25 +90,25 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
         icon: '💰', 
         label: '금전', 
         baseName: '금전운',
-        color: '#f59e0b' // amber
+        color: '#f59e0b', // amber
       },
       { 
         icon: '❤️', 
         label: '연애', 
         baseName: '연애운',
-        color: '#ef4444' // red
+        color: '#ef4444', // red
       },
       { 
         icon: '💼', 
         label: '직장', 
         baseName: '직장운',
-        color: '#3b82f6' // blue
+        color: '#3b82f6', // blue
       },
       { 
         icon: '🏃', 
         label: '건강', 
         baseName: '건강운',
-        color: '#10b981' // emerald
+        color: '#10b981', // emerald
       },
     ];
     
@@ -124,14 +124,14 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
         icon: cat.icon,
         label: cat.label,
         score: Math.round(finalScore),
-        color: cat.color
+        color: cat.color,
       };
     });
   };
   
   const [fortune, setFortune] = useState<DailyFortune>({
     totalScore: 85,
-    message: "오늘은 새로운 기회가 찾아올 수 있는 날입니다.",
+    message: '오늘은 새로운 기회가 찾아올 수 있는 날입니다.',
     categories: [],
     luckyItems: {
       색상: '파란색',
@@ -141,9 +141,9 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
       음식: '샐러드',
       활동: '산책',
       보석: '사파이어',
-      일진: '갑자'
+      일진: '갑자',
     },
-    advice: "새로운 도전을 두려워하지 마세요."
+    advice: '새로운 도전을 두려워하지 마세요.',
   });
   
   // 사주 데이터 또는 날짜 변경 시 운세 재계산
@@ -155,14 +155,14 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
     
     // 조언 생성 (확대된 점수 범위에 맞춰 조정)
     const advice = totalScore >= 80 
-      ? "오늘은 매우 좋은 기운이 가득한 날입니다! 중요한 결정이나 도전을 시작하기에 최적의 시기입니다."
+      ? '오늘은 매우 좋은 기운이 가득한 날입니다! 중요한 결정이나 도전을 시작하기에 최적의 시기입니다.'
       : totalScore >= 65
-      ? "오늘은 적극적으로 활동하기 좋은 날입니다. 기회를 놓치지 마세요."
+      ? '오늘은 적극적으로 활동하기 좋은 날입니다. 기회를 놓치지 마세요.'
       : totalScore >= 50
-      ? "평온한 하루가 예상됩니다. 일상적인 업무에 충실하며 안정을 유지하세요."
+      ? '평온한 하루가 예상됩니다. 일상적인 업무에 충실하며 안정을 유지하세요.'
       : totalScore >= 35
-      ? "오늘은 신중함이 필요한 날입니다. 중요한 결정은 미루고 충분히 고민해보세요."
-      : "오늘은 휴식과 재충전이 필요한 날입니다. 무리하지 말고 에너지를 아끼세요.";
+      ? '오늘은 신중함이 필요한 날입니다. 중요한 결정은 미루고 충분히 고민해보세요.'
+      : '오늘은 휴식과 재충전이 필요한 날입니다. 무리하지 말고 에너지를 아끼세요.';
     
     setFortune({
       totalScore,
@@ -176,9 +176,9 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
         음식: luckyItems.음식,
         활동: luckyItems.활동,
         보석: luckyItems.보석,
-        일진: luckyItems.일진
+        일진: luckyItems.일진,
       },
-      advice
+      advice,
     });
   }, [sajuData, selectedDate]);
 

@@ -10,7 +10,7 @@ const SIXTY_CYCLE = [
   '갑신', '을유', '병술', '정해', '무자', '기축', '경인', '신묘', '임진', '계사',  // 20-29
   '갑오', '을미', '병신', '정유', '무술', '기해', '경자', '신축', '임인', '계묘',  // 30-39
   '갑진', '을사', '병오', '정미', '무신', '기유', '경술', '신해', '임자', '계축',  // 40-49
-  '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해'   // 50-59
+  '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해',   // 50-59
 ];
 
 // 천간
@@ -32,7 +32,7 @@ const TIME_BRANCHES = [
   { name: '신', start: 15.5, end: 17 },  // 15:30 ~ 17:00
   { name: '유', start: 17, end: 19 },  // 17:00 ~ 19:00
   { name: '술', start: 19, end: 21 },  // 19:00 ~ 21:00
-  { name: '해', start: 21, end: 23 }   // 21:00 ~ 23:00
+  { name: '해', start: 21, end: 23 },   // 21:00 ~ 23:00
 ];
 
 // 일간에 따른 시간 천간 계산표
@@ -46,7 +46,7 @@ const HOUR_STEM_TABLE: { [key: string]: string[] } = {
   '경': ['병', '정', '무', '기', '경', '신', '임', '계', '갑', '을', '병', '정'],
   '신': ['무', '기', '경', '신', '임', '계', '갑', '을', '병', '정', '무', '기'],
   '임': ['경', '신', '임', '계', '갑', '을', '병', '정', '무', '기', '경', '신'],
-  '계': ['임', '계', '갑', '을', '병', '정', '무', '기', '경', '신', '임', '계']
+  '계': ['임', '계', '갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'],
 };
 
 // 윤년 확인
@@ -91,7 +91,7 @@ const YEAR_TO_MONTH_STEM: { [key: string]: string[] } = {
   '경': ['무', '기', '경', '신', '임', '계', '갑', '을', '병', '정', '무', '기'], // 경년 (을년과 동일)
   '신': ['경', '신', '임', '계', '갑', '을', '병', '정', '무', '기', '경', '신'], // 신년 (병년과 동일)
   '임': ['임', '계', '갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'], // 임년 (정년과 동일)
-  '계': ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계', '갑', '을']  // 계년 (무년과 동일)
+  '계': ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계', '갑', '을'],  // 계년 (무년과 동일)
 };
 
 // 월주 계산 (절기 기준)
@@ -147,9 +147,9 @@ export function calculateMonthPillar(year: number, month: number, day: number): 
 
 // Julian Day Number 계산
 function getJulianDay(year: number, month: number, day: number): number {
-  let a = Math.floor((14 - month) / 12);
-  let y = year + 4800 - a;
-  let m = month + 12 * a - 3;
+  const a = Math.floor((14 - month) / 12);
+  const y = year + 4800 - a;
+  const m = month + 12 * a - 3;
   
   return day + Math.floor((153 * m + 2) / 5) + 365 * y + 
          Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
@@ -223,7 +223,7 @@ function checkNeedsSummerTime(year: number, month: number, day: number): boolean
     { year: 1959, start: [5, 3], end: [9, 20] },
     { year: 1960, start: [5, 1], end: [9, 18] },
     { year: 1987, start: [5, 10], end: [10, 11] },
-    { year: 1988, start: [5, 8], end: [10, 9] }
+    { year: 1988, start: [5, 8], end: [10, 9] },
   ];
   
   const period = summerTimePeriods.find(p => p.year === year);
@@ -246,7 +246,7 @@ export function calculateCompleteSaju(
   day: number, 
   hour: number, 
   minute: number = 0,
-  applySummerTime?: boolean
+  applySummerTime?: boolean,
 ) {
   // 서머타임 자동 감지 (명시적으로 지정하지 않은 경우)
   const needsSummerTime = applySummerTime !== undefined ? applySummerTime : checkNeedsSummerTime(year, month, day);
@@ -272,7 +272,7 @@ export function calculateCompleteSaju(
     day: dayPillar,
     hour: hourPillar,
     fullSaju: `${yearPillar} ${monthPillar} ${dayPillar} ${hourPillar}`,
-    summerTimeApplied: applySummerTime && adjustedHour !== hour
+    summerTimeApplied: applySummerTime && adjustedHour !== hour,
   };
 }
 
@@ -335,6 +335,6 @@ export function testAccurateSaju() {
   return {
     target: result1971,
     correctBaseIndex,
-    isAccurate: isCorrect
+    isAccurate: isCorrect,
   };
 }

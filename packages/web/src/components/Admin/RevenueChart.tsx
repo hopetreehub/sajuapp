@@ -1,4 +1,4 @@
-import { ArrowTrendingUpIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline'
+import { ArrowTrendingUpIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
 
 interface RevenueChartProps {
   totalRevenue: number
@@ -10,8 +10,8 @@ export default function RevenueChart({ totalRevenue }: RevenueChartProps) {
       style: 'currency',
       currency: 'KRW',
       minimumFractionDigits: 0,
-    }).format(amount)
-  }
+    }).format(amount);
+  };
 
   // 임시 데이터 (실제로는 API에서 월별 데이터를 가져와야 함)
   const monthlyData = [
@@ -23,10 +23,10 @@ export default function RevenueChart({ totalRevenue }: RevenueChartProps) {
     { month: '6월', revenue: totalRevenue * 0.11 },
     { month: '7월', revenue: totalRevenue * 0.13 },
     { month: '8월', revenue: totalRevenue * 0.10 },
-    { month: '9월', revenue: totalRevenue * 0.16 }
-  ]
+    { month: '9월', revenue: totalRevenue * 0.16 },
+  ];
 
-  const maxRevenue = Math.max(...monthlyData.map(d => d.revenue))
+  const maxRevenue = Math.max(...monthlyData.map(d => d.revenue));
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
@@ -70,7 +70,7 @@ export default function RevenueChart({ totalRevenue }: RevenueChartProps) {
                 <div
                   className="bg-gradient-to-r from-emerald-500 to-emerald-600 h-full rounded-full transition-all duration-1000 ease-out"
                   style={{
-                    width: `${(data.revenue / maxRevenue) * 100}%`
+                    width: `${(data.revenue / maxRevenue) * 100}%`,
                   }}
                 >
                   <div className="absolute inset-0 bg-white/20 animate-pulse rounded-full"></div>
@@ -112,5 +112,5 @@ export default function RevenueChart({ totalRevenue }: RevenueChartProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

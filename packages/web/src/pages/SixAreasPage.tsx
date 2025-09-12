@@ -36,7 +36,7 @@ const SixAreasPage: React.FC = () => {
       fiveElements: sajuData.fiveElements,
       tenGods: sajuData.tenGods,
       totalScore: sajuData.totalScore,
-      averageScore: sajuData.averageScore
+      averageScore: sajuData.averageScore,
     };
   };
 

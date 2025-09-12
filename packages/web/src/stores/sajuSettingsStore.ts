@@ -1,6 +1,6 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { SajuBirthInfo } from '@/types/saju'
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { SajuBirthInfo } from '@/types/saju';
 
 interface SajuSettingsState {
   birthInfo: SajuBirthInfo | null
@@ -17,6 +17,6 @@ export const useSajuSettingsStore = create<SajuSettingsState>()(
     }),
     {
       name: 'saju-settings',
-    }
-  )
-)
+    },
+  ),
+);

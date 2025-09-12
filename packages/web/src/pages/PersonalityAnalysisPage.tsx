@@ -29,7 +29,7 @@ const PersonalityAnalysisPage: React.FC = () => {
               hour: hour || 0,
               minute: minute || 0,
               isLunar: parsed.calendarType === 'lunar',
-              gender: parsed.gender as 'male' | 'female' | undefined
+              gender: parsed.gender as 'male' | 'female' | undefined,
             };
             
             setPersonalInfo(sajuBirthInfo);
@@ -95,7 +95,7 @@ const PersonalityAnalysisPage: React.FC = () => {
       rational: Math.min(100, Math.max(0, fiveElements.earth * 0.4 + tenGods.bijeon * 0.3 + sixAreas.action * 0.3)),
       character: Math.min(100, Math.max(0, tenGods.jeongin * 0.5 + sixAreas.foundation * 0.3 + fiveElements.wood * 0.2)),
       intelligence: Math.min(100, Math.max(0, fiveElements.water * 0.4 + sixAreas.thinking * 0.4 + tenGods.jeongin * 0.2)),
-      learning: Math.min(100, Math.max(0, tenGods.jeongin * 0.4 + sixAreas.thinking * 0.3 + fiveElements.water * 0.3))
+      learning: Math.min(100, Math.max(0, tenGods.jeongin * 0.4 + sixAreas.thinking * 0.3 + fiveElements.water * 0.3)),
     };
   };
 
@@ -111,7 +111,7 @@ const PersonalityAnalysisPage: React.FC = () => {
         rational: 65,     // 이성
         character: 72,    // 인성
         intelligence: 68, // 지성
-        learning: 61      // 학습성
+        learning: 61,      // 학습성
       };
       
       setPersonalityTraits(traits);
@@ -136,7 +136,7 @@ const PersonalityAnalysisPage: React.FC = () => {
     rational: '감정보다는 이성을 우선시하여 객관적으로 판단하는 성향을 나타냅니다.',
     character: '도덕성, 인격, 타인에 대한 배려심과 인간성을 나타냅니다.',
     intelligence: '지적 능력과 복잡한 개념을 이해하고 활용하는 능력을 나타냅니다.',
-    learning: '새로운 지식과 기술을 습득하려는 의지와 학습 능력을 나타냅니다.'
+    learning: '새로운 지식과 기술을 습득하려는 의지와 학습 능력을 나타냅니다.',
   };
 
   return (

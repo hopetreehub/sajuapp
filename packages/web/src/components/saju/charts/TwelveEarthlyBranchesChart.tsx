@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -7,15 +7,15 @@ import {
   Filler,
   Tooltip,
   Legend,
-  ChartOptions
-} from 'chart.js'
-import { Radar } from 'react-chartjs-2'
-import { TwelveEarthlyBranchesAnalyzer } from '@/utils/twelveEarthlyBranchesAnalyzer'
-import { EARTHLY_BRANCHES_INFO, RELATIONSHIP_TYPES } from '@/types/twelveEarthlyBranches'
-import { SajuData } from '@/types/saju'
-import InterpretationPanel from '@/components/charts/InterpretationPanel'
-import { interpretationService, InterpretationResponse } from '@/services/api'
-import { ChartStyleUtils, TimeFrameData, DEFAULT_ENHANCED_OPTIONS } from '@/utils/chartStyleUtils'
+  ChartOptions,
+} from 'chart.js';
+import { Radar } from 'react-chartjs-2';
+import { TwelveEarthlyBranchesAnalyzer } from '@/utils/twelveEarthlyBranchesAnalyzer';
+import { EARTHLY_BRANCHES_INFO, RELATIONSHIP_TYPES } from '@/types/twelveEarthlyBranches';
+import { SajuData } from '@/types/saju';
+import InterpretationPanel from '@/components/charts/InterpretationPanel';
+import { interpretationService, InterpretationResponse } from '@/services/api';
+import { ChartStyleUtils, TimeFrameData, DEFAULT_ENHANCED_OPTIONS } from '@/utils/chartStyleUtils';
 
 // Chart.js 컴포넌트 등록
 ChartJS.register(
@@ -24,8 +24,8 @@ ChartJS.register(
   LineElement,
   Filler,
   Tooltip,
-  Legend
-)
+  Legend,
+);
 
 interface TwelveEarthlyBranchesChartProps {
   sajuData: SajuData
@@ -40,91 +40,91 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
   height = 400,
   className = '',
   showRelationships = true,
-  showSeasonalBalance = true
+  showSeasonalBalance = true,
 }) => {
-  const [viewMode, setViewMode] = useState<'branches' | 'seasonal'>('branches')
-  const [isDarkMode, setIsDarkMode] = useState(false)
+  const [viewMode, setViewMode] = useState<'branches' | 'seasonal'>('branches');
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // 다크모드 실시간 감지
   useEffect(() => {
     const checkDarkMode = () => {
-      setIsDarkMode(document.documentElement.classList.contains('dark'))
-    }
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    };
 
-    checkDarkMode()
+    checkDarkMode();
 
-    const observer = new MutationObserver(checkDarkMode)
+    const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class']
-    })
+      attributeFilter: ['class'],
+    });
 
-    return () => observer.disconnect()
-  }, [])
+    return () => observer.disconnect();
+  }, []);
   
   // 해석 데이터 상태
-  const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null)
-  const [interpretationLoading, setInterpretationLoading] = useState(false)
-  const [interpretationError, setInterpretationError] = useState<string | null>(null)
+  const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null);
+  const [interpretationLoading, setInterpretationLoading] = useState(false);
+  const [interpretationError, setInterpretationError] = useState<string | null>(null);
 
   // 12간지 데이터 분석
   const analysis = useMemo(() => {
-    return TwelveEarthlyBranchesAnalyzer.performFullAnalysis(sajuData)
-  }, [sajuData])
+    return TwelveEarthlyBranchesAnalyzer.performFullAnalysis(sajuData);
+  }, [sajuData]);
 
   // 해석 데이터 로드
   useEffect(() => {
     const loadInterpretation = async () => {
-      if (!sajuData) return
+      if (!sajuData) return;
       
-      setInterpretationLoading(true)
-      setInterpretationError(null)
+      setInterpretationLoading(true);
+      setInterpretationError(null);
       
       try {
-        const response = await interpretationService.getSpiritualAnalysis(sajuData)
-        setInterpretation({ spiritual: response })
+        const response = await interpretationService.getSpiritualAnalysis(sajuData);
+        setInterpretation({ spiritual: response });
       } catch (error) {
-        console.error('신살 분석 데이터 로드 실패:', error)
-        setInterpretationError('신살 분석 데이터를 불러올 수 없습니다.')
+        console.error('신살 분석 데이터 로드 실패:', error);
+        setInterpretationError('신살 분석 데이터를 불러올 수 없습니다.');
       } finally {
-        setInterpretationLoading(false)
+        setInterpretationLoading(false);
       }
-    }
+    };
 
-    loadInterpretation()
-  }, [sajuData])
+    loadInterpretation();
+  }, [sajuData]);
 
   // ChartStyleUtils용 TimeFrameData 생성 (12간지)
   const branchesTimeFrameData = useMemo((): TimeFrameData[] => {
-    const data = Object.values(analysis.data)
+    const data = Object.values(analysis.data);
     
     return [{
       label: '12간지 분포',
       values: data,
-      timeFrame: 'base'
-    }]
-  }, [analysis.data])
+      timeFrame: 'base',
+    }];
+  }, [analysis.data]);
   
   // 12간지 통합 차트 설정 생성
   const branchesChartConfig = useMemo(() => {
     const labels = Object.keys(analysis.data).map(key => {
-      const info = EARTHLY_BRANCHES_INFO[key as keyof typeof EARTHLY_BRANCHES_INFO]
-      return `${info.koreanName} ${info.animalEmoji}`
-    })
+      const info = EARTHLY_BRANCHES_INFO[key as keyof typeof EARTHLY_BRANCHES_INFO];
+      return `${info.koreanName} ${info.animalEmoji}`;
+    });
     
     return ChartStyleUtils.createStandardRadarConfig(
       labels,
       branchesTimeFrameData,
       isDarkMode,
-      true // 최대값 강조
-    )
-  }, [branchesTimeFrameData, isDarkMode])
+      true, // 최대값 강조
+    );
+  }, [branchesTimeFrameData, isDarkMode]);
   
-  const branchesChartData = branchesChartConfig.data
+  const branchesChartData = branchesChartConfig.data;
 
   // ChartStyleUtils용 TimeFrameData 생성 (계절별)
   const seasonalTimeFrameData = useMemo((): TimeFrameData[] => {
-    const { seasonalBalance } = analysis
+    const { seasonalBalance } = analysis;
     
     return [{
       label: '계절별 균형',
@@ -132,29 +132,29 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
         seasonalBalance.spring,
         seasonalBalance.summer,
         seasonalBalance.autumn,
-        seasonalBalance.winter
+        seasonalBalance.winter,
       ],
-      timeFrame: 'base'
-    }]
-  }, [analysis.seasonalBalance])
+      timeFrame: 'base',
+    }];
+  }, [analysis.seasonalBalance]);
   
   // 계절별 통합 차트 설정 생성
   const seasonalChartConfig = useMemo(() => {
-    const labels = ['봄 🌸', '여름 ☀️', '가을 🍂', '겨울 ❄️']
+    const labels = ['봄 🌸', '여름 ☀️', '가을 🍂', '겨울 ❄️'];
     
     return ChartStyleUtils.createStandardRadarConfig(
       labels,
       seasonalTimeFrameData,
       isDarkMode,
-      true // 최대값 강조
-    )
-  }, [seasonalTimeFrameData, isDarkMode])
+      true, // 최대값 강조
+    );
+  }, [seasonalTimeFrameData, isDarkMode]);
   
-  const seasonalChartData = seasonalChartConfig.data
+  const seasonalChartData = seasonalChartConfig.data;
 
   // 향상된 차트 옵션 (ChartStyleUtils + 기존 옵션 결합)
   const chartOptions: ChartOptions<'radar'> = useMemo(() => {
-    const baseOptions = viewMode === 'branches' ? branchesChartConfig.options : seasonalChartConfig.options
+    const baseOptions = viewMode === 'branches' ? branchesChartConfig.options : seasonalChartConfig.options;
     
     return {
       ...baseOptions,
@@ -164,7 +164,7 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
         ...baseOptions?.plugins,
         legend: {
           ...baseOptions?.plugins?.legend,
-          display: false
+          display: false,
         },
         tooltip: {
           ...baseOptions?.plugins?.tooltip,
@@ -174,34 +174,34 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
           titleFont: {
             family: 'Noto Sans KR, sans-serif',
             size: 14,
-            weight: 'bold'
+            weight: 'bold',
           },
           bodyFont: {
             family: 'Noto Sans KR, sans-serif',
-            size: 12
+            size: 12,
           },
           callbacks: {
             ...baseOptions?.plugins?.tooltip?.callbacks,
-            label: function(context) {
-              const value = context.parsed.r
+            label(context) {
+              const value = context.parsed.r;
               const percentage = analysis.total > 0 ? 
-                ((value / analysis.total) * 100).toFixed(1) : '0.0'
+                ((value / analysis.total) * 100).toFixed(1) : '0.0';
               
               if (viewMode === 'branches') {
-                const branchKey = Object.keys(analysis.data)[context.dataIndex]
-                const info = EARTHLY_BRANCHES_INFO[branchKey as keyof typeof EARTHLY_BRANCHES_INFO]
+                const branchKey = Object.keys(analysis.data)[context.dataIndex];
+                const info = EARTHLY_BRANCHES_INFO[branchKey as keyof typeof EARTHLY_BRANCHES_INFO];
                 
                 return [
                   `${context.label}: ${value}점 (${percentage}%)`,
                   `원소: ${info.element}`,
-                  `특성: ${info.characteristics.join(', ')}`
-                ]
+                  `특성: ${info.characteristics.join(', ')}`,
+                ];
               } else {
-                return `${context.label}: ${value.toFixed(1)}점`
+                return `${context.label}: ${value.toFixed(1)}점`;
               }
-            }
-          }
-        }
+            },
+          },
+        },
       },
       scales: {
         ...baseOptions?.scales,
@@ -216,51 +216,51 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
             display: false, // 점수 표시 제거
             font: {
               family: 'Noto Sans KR, sans-serif',
-              size: 10
+              size: 10,
             },
-            color: isDarkMode ? '#9CA3AF' : '#6B7280'
+            color: isDarkMode ? '#9CA3AF' : '#6B7280',
           },
           grid: {
             ...baseOptions?.scales?.r?.grid,
             color: isDarkMode 
               ? 'rgba(156, 163, 175, 0.2)' 
-              : 'rgba(156, 163, 175, 0.3)'
+              : 'rgba(156, 163, 175, 0.3)',
           },
           angleLines: {
             ...baseOptions?.scales?.r?.angleLines,
             color: isDarkMode
               ? 'rgba(156, 163, 175, 0.2)'
-              : 'rgba(156, 163, 175, 0.3)'
+              : 'rgba(156, 163, 175, 0.3)',
           },
           pointLabels: {
             ...baseOptions?.scales?.r?.pointLabels,
             font: {
               family: 'Noto Sans KR, sans-serif',
               size: 11,
-              weight: '500'
+              weight: '500',
             },
             color: isDarkMode ? '#E5E7EB' : '#1F2937',
-            padding: 10
-          }
-        }
+            padding: 10,
+          },
+        },
       },
       animation: {
         ...baseOptions?.animation,
-        duration: 1000
-      }
-    }
-  }, [viewMode, branchesChartConfig, seasonalChartConfig, analysis.data, analysis.total, isDarkMode])
+        duration: 1000,
+      },
+    };
+  }, [viewMode, branchesChartConfig, seasonalChartConfig, analysis.data, analysis.total, isDarkMode]);
 
   // 조화 상태 평가
   const getHarmonyStatus = () => {
-    const score = analysis.overallHarmony
-    if (score >= 80) return { status: '매우 조화', color: 'text-green-600 dark:text-green-400', icon: '🟢' }
-    if (score >= 60) return { status: '조화 양호', color: 'text-blue-600 dark:text-blue-400', icon: '🔵' }
-    if (score >= 40) return { status: '보통', color: 'text-yellow-600 dark:text-yellow-400', icon: '🟡' }
-    return { status: '부조화', color: 'text-red-600 dark:text-red-400', icon: '🔴' }
-  }
+    const score = analysis.overallHarmony;
+    if (score >= 80) return { status: '매우 조화', color: 'text-green-600 dark:text-green-400', icon: '🟢' };
+    if (score >= 60) return { status: '조화 양호', color: 'text-blue-600 dark:text-blue-400', icon: '🔵' };
+    if (score >= 40) return { status: '보통', color: 'text-yellow-600 dark:text-yellow-400', icon: '🟡' };
+    return { status: '부조화', color: 'text-red-600 dark:text-red-400', icon: '🔴' };
+  };
 
-  const harmonyStatus = getHarmonyStatus()
+  const harmonyStatus = getHarmonyStatus();
 
   // 데이터가 없는 경우
   if (analysis.total === 0) {
@@ -272,7 +272,7 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
           <div className="text-sm">사주 정보를 확인해주세요</div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -353,8 +353,8 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
           {analysis.dominant.length > 0 ? (
             <div className="text-green-700 dark:text-green-300 text-sm">
               {analysis.dominant.map(branch => {
-                const info = EARTHLY_BRANCHES_INFO[branch]
-                return `${info.koreanName}(${info.animal})`
+                const info = EARTHLY_BRANCHES_INFO[branch];
+                return `${info.koreanName}(${info.animal})`;
               }).join(', ')}
             </div>
           ) : (
@@ -385,8 +385,8 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
           </div>
           <div className="flex flex-wrap gap-2">
             {Object.entries(analysis.interactions).slice(0, 3).map(([key, interaction]) => {
-              const [branch1, branch2] = key.split('-')
-              const relationshipInfo = RELATIONSHIP_TYPES[interaction.relationship.type]
+              const [branch1, branch2] = key.split('-');
+              const relationshipInfo = RELATIONSHIP_TYPES[interaction.relationship.type];
               
               return (
                 <div 
@@ -394,7 +394,7 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
                   className="px-2 py-1 text-xs rounded-full flex items-center space-x-1"
                   style={{ 
                     backgroundColor: `${relationshipInfo.color}20`,
-                    color: relationshipInfo.color 
+                    color: relationshipInfo.color, 
                   }}
                 >
                   <span>{relationshipInfo.icon}</span>
@@ -403,7 +403,7 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
                     {EARTHLY_BRANCHES_INFO[branch2 as keyof typeof EARTHLY_BRANCHES_INFO].koreanName}
                   </span>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
@@ -419,7 +419,7 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TwelveEarthlyBranchesChart
+export default TwelveEarthlyBranchesChart;

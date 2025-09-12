@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useAuthStore } from '@/stores/authStore'
-import { authUtils } from '@/services/authService'
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/stores/authStore';
+import { authUtils } from '@/services/authService';
 
 interface LoginFormProps {
   className?: string
@@ -16,76 +16,76 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({
   className = '',
   onSuccess,
-  onSignUpClick
+  onSignUpClick,
 }) => {
-  const navigate = useNavigate()
-  const { login, isLoading, error } = useAuthStore()
+  const navigate = useNavigate();
+  const { login, isLoading, error } = useAuthStore();
 
   // 폼 상태
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false
-  })
+    rememberMe: false,
+  });
 
   // 유효성 검사 상태
   const [validation, setValidation] = useState({
     email: { isValid: false, message: '' },
-    password: { isValid: false, message: '' }
-  })
+    password: { isValid: false, message: '' },
+  });
 
   // 폼 제출 가능 여부
-  const [canSubmit, setCanSubmit] = useState(false)
+  const [canSubmit, setCanSubmit] = useState(false);
 
   // 실시간 유효성 검사
   useEffect(() => {
     // 이메일 검증
-    const emailValid = authUtils.isValidEmail(formData.email)
-    const emailMessage = formData.email && !emailValid ? '올바른 이메일 주소를 입력해주세요.' : ''
+    const emailValid = authUtils.isValidEmail(formData.email);
+    const emailMessage = formData.email && !emailValid ? '올바른 이메일 주소를 입력해주세요.' : '';
 
     // 비밀번호 검증
-    const passwordValid = formData.password.length >= 8
-    const passwordMessage = formData.password && !passwordValid ? '비밀번호는 8자리 이상입니다.' : ''
+    const passwordValid = formData.password.length >= 8;
+    const passwordMessage = formData.password && !passwordValid ? '비밀번호는 8자리 이상입니다.' : '';
 
     // 상태 업데이트를 한번에 처리하여 리렌더링 최소화
     setValidation({
       email: { isValid: emailValid, message: emailMessage },
-      password: { isValid: passwordValid, message: passwordMessage }
-    })
+      password: { isValid: passwordValid, message: passwordMessage },
+    });
 
     // 전체 폼 유효성 체크
-    setCanSubmit(emailValid && passwordValid)
-  }, [formData.email, formData.password])
+    setCanSubmit(emailValid && passwordValid);
+  }, [formData.email, formData.password]);
 
   // 입력값 변경 핸들러
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
-      [field]: value
-    }))
-  }
+      [field]: value,
+    }));
+  };
 
   // 폼 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     
-    if (!canSubmit || isLoading) return
+    if (!canSubmit || isLoading) return;
 
     try {
       await login({
         email: formData.email,
-        password: formData.password
-      })
+        password: formData.password,
+      });
 
       // 로그인 성공
-      onSuccess?.()
-      navigate('/dashboard') // 대시보드로 이동
+      onSuccess?.();
+      navigate('/dashboard'); // 대시보드로 이동
       
     } catch (error) {
-      console.error('로그인 실패:', error)
+      console.error('로그인 실패:', error);
       // 에러는 store에서 자동으로 설정됨
     }
-  }
+  };
 
   // 입력 필드 스타일
   const getInputStyle = (field: keyof typeof validation) => {
@@ -95,32 +95,32 @@ const LoginForm: React.FC<LoginFormProps> = ({
       bg-white dark:bg-gray-800 
       text-gray-800 dark:text-gray-200
       placeholder-gray-400
-    `
+    `;
     
     if (!formData[field] || formData[field] === '') {
-      return base + ' border-gray-300 dark:border-gray-600 focus:border-purple-500'
+      return `${base  } border-gray-300 dark:border-gray-600 focus:border-purple-500`;
     }
     
     if (validation[field].isValid) {
-      return base + ' border-green-500 focus:border-green-600'
+      return `${base  } border-green-500 focus:border-green-600`;
     } else {
-      return base + ' border-red-500 focus:border-red-600'
+      return `${base  } border-red-500 focus:border-red-600`;
     }
-  }
+  };
 
   // 데모 계정 로그인
   const handleDemoLogin = async () => {
     setFormData({
       email: 'demo@sajuapp.com',
       password: 'demo1234',
-      rememberMe: false
-    })
+      rememberMe: false,
+    });
     
     // 잠시 후 자동 로그인
     setTimeout(() => {
-      handleSubmit(new Event('submit') as any)
-    }, 500)
-  }
+      handleSubmit(new Event('submit') as any);
+    }, 500);
+  };
 
   return (
     <div className={`max-w-md mx-auto ${className}`}>
@@ -319,7 +319,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
         </p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;

@@ -23,7 +23,7 @@ ChartJS.register(
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 );
 
 interface FiveElementsChartProps {
@@ -35,7 +35,7 @@ interface FiveElementsChartProps {
 const FiveElementsChart: React.FC<FiveElementsChartProps> = ({
   birthInfo,
   birthDate,
-  showRecommendations = true
+  showRecommendations = true,
 }) => {
   // 오행 분석 데이터 계산
   const analysisResult: FiveElementsAnalysisResult = useMemo(() => {
@@ -49,7 +49,7 @@ const FiveElementsChart: React.FC<FiveElementsChartProps> = ({
     chartData,
     chartOptions,
     selectedTimeFrame,
-    setSelectedTimeFrame
+    setSelectedTimeFrame,
   } = useStandardRadarChart({
     baseData: elements,
     chartType: 'five-elements',
@@ -58,8 +58,8 @@ const FiveElementsChart: React.FC<FiveElementsChartProps> = ({
     colors: {
       primary: '#8b5cf6',
       secondary: '#06b6d4',
-      background: 'rgba(139, 92, 246, 0.1)'
-    }
+      background: 'rgba(139, 92, 246, 0.1)',
+    },
   });
 
   return (
@@ -190,7 +190,7 @@ const ElementStrengthCards: React.FC<{ elements: FiveElementsData }> = ({ elemen
                     className="h-2 rounded-full transition-all"
                     style={{ 
                       backgroundColor: detail.color.primary,
-                      width: `${value}%` 
+                      width: `${value}%`, 
                     }}
                   ></div>
                 </div>

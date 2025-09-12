@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react'
-import { useCalendar } from '@/contexts/CalendarContext'
-import { useDiaryData } from '@/hooks/useDiaryData'
-import AddItemModal from '@/components/AddItemModal'
-import DiaryBookModal from '@/components/DiaryBookModal'
-import EditTodoModal from '@/components/EditTodoModal'
-import { Todo } from '@/contexts/CalendarContext'
-import { ITEM_COLORS } from '@/types/todo'
+import { useMemo, useState } from 'react';
+import { useCalendar } from '@/contexts/CalendarContext';
+import { useDiaryData } from '@/hooks/useDiaryData';
+import AddItemModal from '@/components/AddItemModal';
+import DiaryBookModal from '@/components/DiaryBookModal';
+import EditTodoModal from '@/components/EditTodoModal';
+import { Todo } from '@/contexts/CalendarContext';
+import { ITEM_COLORS } from '@/types/todo';
 import { 
   startOfWeek, 
   endOfWeek,
@@ -13,12 +13,12 @@ import {
   format,
   isSameDay,
   isToday,
-  getHours
-} from 'date-fns'
-import { ko } from 'date-fns/locale'
-import { CalendarEvent } from '@/services/api'
+  getHours,
+} from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { CalendarEvent } from '@/services/api';
 
-const HOURS = Array.from({ length: 11 }, (_, i) => i + 9) // 9시-19시
+const HOURS = Array.from({ length: 11 }, (_, i) => i + 9); // 9시-19시
 
 interface WeekViewProps {
   events: CalendarEvent[]
@@ -31,84 +31,84 @@ interface WeekViewProps {
 }
 
 export default function WeekView({ events, onCreateEvent, onDateClick, onEditEvent, onDeleteEvent, highlightedEventId }: WeekViewProps) {
-  const { currentDate, getTodosForDate, addTodo, deleteTodo, toggleTodo } = useCalendar()
-  const [showAddModal, setShowAddModal] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
-  const [selectedHour, setSelectedHour] = useState<number | undefined>()
-  const [isDiaryOpen, setIsDiaryOpen] = useState(false)
-  const [diaryDate, setDiaryDate] = useState<Date>(new Date())
-  const [editingTodo, setEditingTodo] = useState<Todo | null>(null)
+  const { currentDate, getTodosForDate, addTodo, deleteTodo, toggleTodo } = useCalendar();
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedHour, setSelectedHour] = useState<number | undefined>();
+  const [isDiaryOpen, setIsDiaryOpen] = useState(false);
+  const [diaryDate, setDiaryDate] = useState<Date>(new Date());
+  const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   
   // 일기 데이터 가져오기
   const { diaryDates } = useDiaryData({ 
     viewMode: 'week', 
-    currentDate 
-  })
+    currentDate, 
+  });
 
   const weekDays = useMemo(() => {
-    const start = startOfWeek(currentDate, { weekStartsOn: 0 })
-    const end = endOfWeek(currentDate, { weekStartsOn: 0 })
-    return eachDayOfInterval({ start, end })
-  }, [currentDate])
+    const start = startOfWeek(currentDate, { weekStartsOn: 0 });
+    const end = endOfWeek(currentDate, { weekStartsOn: 0 });
+    return eachDayOfInterval({ start, end });
+  }, [currentDate]);
 
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
-      case 'high': return '🔴'
-      case 'medium': return '🟡'
-      case 'low': return '🟢'
-      default: return ''
+      case 'high': return '🔴';
+      case 'medium': return '🟡';
+      case 'low': return '🟢';
+      default: return '';
     }
-  }
+  };
 
   const handleDiaryClick = (date: Date) => {
-    setDiaryDate(date)
-    setIsDiaryOpen(true)
-  }
+    setDiaryDate(date);
+    setIsDiaryOpen(true);
+  };
 
   const getEventsForDayAndHour = (date: Date, hour: number) => {
-    if (!events || events.length === 0) return []
+    if (!events || events.length === 0) return [];
     
     return events.filter(event => {
-      if (!event.start_time) return false
+      if (!event.start_time) return false;
       
       try {
-        const eventStart = new Date(event.start_time)
-        if (isNaN(eventStart.getTime())) return false
+        const eventStart = new Date(event.start_time);
+        if (isNaN(eventStart.getTime())) return false;
         
-        const eventHour = getHours(eventStart)
-        return isSameDay(eventStart, date) && eventHour === hour
+        const eventHour = getHours(eventStart);
+        return isSameDay(eventStart, date) && eventHour === hour;
       } catch (error) {
-        console.warn('Invalid event date:', event.start_time, error)
-        return false
+        console.warn('Invalid event date:', event.start_time, error);
+        return false;
       }
-    })
-  }
+    });
+  };
 
   // 시간이 지정된 할일을 가져오는 함수
   const getTodosForDayAndHour = (date: Date, hour: number) => {
-    const dayTodos = getTodosForDate(date)
+    const dayTodos = getTodosForDate(date);
     return dayTodos.filter(todo => {
-      if (!todo.hasTime || !todo.startTime) return false
+      if (!todo.hasTime || !todo.startTime) return false;
       
       try {
-        const [todoHour] = todo.startTime.split(':').map(Number)
-        return todoHour === hour
+        const [todoHour] = todo.startTime.split(':').map(Number);
+        return todoHour === hour;
       } catch (error) {
-        console.warn('Invalid todo time:', todo.startTime, error)
-        return false
+        console.warn('Invalid todo time:', todo.startTime, error);
+        return false;
       }
-    })
-  }
+    });
+  };
 
   // 시간이 지정되지 않은 할일만 가져오는 함수
   const getUntimedTodosForDate = (date: Date) => {
-    const dayTodos = getTodosForDate(date)
-    return dayTodos.filter(todo => !todo.hasTime || !todo.startTime)
-  }
+    const dayTodos = getTodosForDate(date);
+    return dayTodos.filter(todo => !todo.hasTime || !todo.startTime);
+  };
 
-  const currentHour = new Date().getHours()
-  const currentMinute = new Date().getMinutes()
-  const currentTimePosition = (currentHour * 60 + currentMinute) / (24 * 60) * 100
+  const currentHour = new Date().getHours();
+  const currentMinute = new Date().getMinutes();
+  const currentTimePosition = (currentHour * 60 + currentMinute) / (24 * 60) * 100;
 
   return (
     <div className="h-full flex flex-col bg-background">
@@ -118,8 +118,8 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
           시간
         </div>
         {weekDays.map((day) => {
-          const dayOfWeek = day.getDay()
-          const isCurrentDay = isToday(day)
+          const dayOfWeek = day.getDay();
+          const isCurrentDay = isToday(day);
           
           return (
             <div 
@@ -148,7 +148,7 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                 )}
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
@@ -181,13 +181,13 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
 
             {/* Day columns */}
             {weekDays.map(day => {
-              const isCurrentDay = isToday(day)
+              const isCurrentDay = isToday(day);
               
               return (
                 <div key={day.toISOString()} className="border-r border-border">
                   {HOURS.map(hour => {
-                    const dayEvents = getEventsForDayAndHour(day, hour)
-                    const hourTodos = getTodosForDayAndHour(day, hour)
+                    const dayEvents = getEventsForDayAndHour(day, hour);
+                    const hourTodos = getTodosForDayAndHour(day, hour);
                     
                     return (
                       <div 
@@ -200,22 +200,22 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                         onClick={(e) => {
                           if (onDateClick) {
                             // 새로운 통합 날짜 클릭 핸들러가 있으면 그것을 사용
-                            onDateClick(day, e)
+                            onDateClick(day, e);
                           } else {
                             // 기존 방식
-                            setSelectedDate(new Date(day))
-                            setSelectedHour(hour)
-                            setShowAddModal(true)
+                            setSelectedDate(new Date(day));
+                            setSelectedHour(hour);
+                            setShowAddModal(true);
                           }
                         }}
                       >
                         {/* 일정 표시 */}
                         {dayEvents.map(event => {
-                          if (!event.id || !event.start_time || !event.title) return null
+                          if (!event.id || !event.start_time || !event.title) return null;
                           
                           try {
-                            const startTime = new Date(event.start_time)
-                            if (isNaN(startTime.getTime())) return null
+                            const startTime = new Date(event.start_time);
+                            if (isNaN(startTime.getTime())) return null;
                             
                             return (
                               <div
@@ -224,11 +224,11 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                                 style={{ 
                                   backgroundColor: ITEM_COLORS.event.background,
                                   color: ITEM_COLORS.event.text,
-                                  borderLeft: `2px solid ${ITEM_COLORS.event.border}`
+                                  borderLeft: `2px solid ${ITEM_COLORS.event.border}`,
                                 }}
                                 onClick={(e) => {
-                                  e.stopPropagation()
-                                  onEditEvent(event)
+                                  e.stopPropagation();
+                                  onEditEvent(event);
                                 }}
                               >
                                 <span className="truncate">
@@ -237,9 +237,9 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                                 {onDeleteEvent && (
                                   <button
                                     onClick={(e) => {
-                                      e.stopPropagation()
+                                      e.stopPropagation();
                                       if (confirm(`"${event.title}" 일정을 삭제하시겠습니까?`)) {
-                                        onDeleteEvent(event.id)
+                                        onDeleteEvent(event.id);
                                       }
                                     }}
                                     className="opacity-60 hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-1 flex-shrink-0 text-sm font-bold"
@@ -249,16 +249,16 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                                   </button>
                                 )}
                               </div>
-                            )
+                            );
                           } catch (error) {
-                            console.warn('Error rendering event:', event, error)
-                            return null
+                            console.warn('Error rendering event:', event, error);
+                            return null;
                           }
                         })}
                         
                         {/* 시간별 할일 표시 */}
                         {hourTodos.map(todo => {
-                          const todoColors = ITEM_COLORS.todo[todo.priority]
+                          const todoColors = ITEM_COLORS.todo[todo.priority];
                           return (
                             <div
                               key={todo.id}
@@ -266,17 +266,17 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                               style={{
                                 backgroundColor: todoColors.background,
                                 color: todoColors.text,
-                                borderLeft: `2px solid ${todoColors.border}`
+                                borderLeft: `2px solid ${todoColors.border}`,
                               }}
                             onClick={(e) => {
-                              e.stopPropagation()
+                              e.stopPropagation();
                               // 할일 편집 로직 추가 가능
                             }}
                           >
                             <button
                               onClick={(e) => {
-                                e.stopPropagation()
-                                toggleTodo(todo.id)
+                                e.stopPropagation();
+                                toggleTodo(todo.id);
                               }}
                               className={`
                                 w-2 h-2 rounded-full border flex items-center justify-center text-xs
@@ -293,13 +293,13 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                               {todo.startTime} {todo.text}
                             </span>
                             </div>
-                          )
+                          );
                         })}
                       </div>
-                    )
+                    );
                   })}
                 </div>
-              )
+              );
             })}
           </div>
 
@@ -312,8 +312,8 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
             
             {/* 각 요일의 시간이 지정되지 않은 할일 및 일기 */}
             {weekDays.map(day => {
-              const dayTodos = getUntimedTodosForDate(day)
-              const isCurrentDay = isToday(day)
+              const dayTodos = getUntimedTodosForDate(day);
+              const isCurrentDay = isToday(day);
               
               return (
                 <div 
@@ -381,7 +381,7 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                   
                   {/* 할일 추가 버튼 제거됨 - 타임라인 클릭으로 통합 */}
                 </div>
-              )
+              );
             })}
           </div>
         </div>
@@ -394,12 +394,12 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
           hour={selectedHour}
           onClose={() => setShowAddModal(false)}
           onAddEvent={(event) => {
-            onCreateEvent(new Date(event.start_time))
-            setShowAddModal(false)
+            onCreateEvent(new Date(event.start_time));
+            setShowAddModal(false);
           }}
           onAddTodo={(todo) => {
-            addTodo(todo)
-            setShowAddModal(false)
+            addTodo(todo);
+            setShowAddModal(false);
           }}
         />
       )}
@@ -419,5 +419,5 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
         todo={editingTodo}
       />
     </div>
-  )
+  );
 }

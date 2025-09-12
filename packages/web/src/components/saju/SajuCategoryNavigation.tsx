@@ -10,7 +10,7 @@ interface SajuCategoryNavigationProps {
 export default function SajuCategoryNavigation({
   categories,
   selectedCategory,
-  onCategoryChange
+  onCategoryChange,
 }: SajuCategoryNavigationProps) {
   return (
     <div className="mb-8">
@@ -40,5 +40,5 @@ export default function SajuCategoryNavigation({
         ))}
       </div>
     </div>
-  )
+  );
 }

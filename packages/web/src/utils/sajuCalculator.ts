@@ -3,12 +3,12 @@ import { lunarToSolar } from './lunarCalendar';
 
 // 천간(天干) - 10개
 export const HEAVENLY_STEMS = [
-  '갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'
+  '갑', '을', '병', '정', '무', '기', '경', '신', '임', '계',
 ] as const;
 
 // 지지(地支) - 12개  
 export const EARTHLY_BRANCHES = [
-  '자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'
+  '자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해',
 ] as const;
 
 // 60갑자 순환표
@@ -18,7 +18,7 @@ export const SIXTY_CYCLE = [
   '갑신', '을유', '병술', '정해', '무자', '기축', '경인', '신묘', '임진', '계사',
   '갑오', '을미', '병신', '정유', '무술', '기해', '경자', '신축', '임인', '계묘',
   '갑진', '을사', '병오', '정미', '무신', '기유', '경술', '신해', '임자', '계축',
-  '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해'
+  '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해',
 ] as const;
 
 // 월주 계산용 - 년간에 따른 월간 (절기월 기준)
@@ -34,7 +34,7 @@ const MONTHLY_STEMS: Record<string, string[]> = {
   '경': ['무인', '기묘', '경진', '신사', '임오', '계미', '갑신', '을유', '병술', '정해', '무자', '기축'],
   '신': ['경인', '신묘', '임진', '계사', '갑오', '을미', '병신', '정유', '무술', '기해', '경자', '신축'],
   '임': ['임인', '계묘', '갑진', '을사', '병오', '정미', '무신', '기유', '경술', '신해', '임자', '계축'],
-  '계': ['갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해', '갑자', '을축']
+  '계': ['갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해', '갑자', '을축'],
 };
 
 // 시주 계산용 - 일간에 따른 시간
@@ -48,7 +48,7 @@ const HOURLY_STEMS: Record<string, string[]> = {
   '경': ['병자', '정축', '무인', '기묘', '경진', '신사', '임오', '계미', '갑신', '을유', '병술', '정해'],
   '신': ['무자', '기축', '경인', '신묘', '임진', '계사', '갑오', '을미', '병신', '정유', '무술', '기해'],
   '임': ['경자', '신축', '임인', '계묘', '갑진', '을사', '병오', '정미', '무신', '기유', '경술', '신해'],
-  '계': ['임자', '계축', '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해']
+  '계': ['임자', '계축', '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해'],
 };
 
 export interface FourPillarsResult {
@@ -73,7 +73,7 @@ export class SajuCalculator {
     // 따라서 1924년 = 갑자년 (index 0)
     
     const baseYear = 1924; // 갑자년
-    let yearDiff = year - baseYear;
+    const yearDiff = year - baseYear;
     let cycleIndex = yearDiff % 60;
     
     // 음수 처리
@@ -85,7 +85,7 @@ export class SajuCalculator {
     return {
       heavenly: combined[0],
       earthly: combined[1],
-      combined
+      combined,
     };
   }
 
@@ -160,13 +160,13 @@ export class SajuCalculator {
       양력: `${year}년 ${month}월 ${day}일`,
       절기월: solarMonth,
       년간: yearStem,
-      월주: monthStem
+      월주: monthStem,
     });
     
     return {
       heavenly: monthStem[0],
       earthly: monthStem[1], 
-      combined: monthStem
+      combined: monthStem,
     };
   }
 
@@ -194,7 +194,7 @@ export class SajuCalculator {
     return {
       heavenly: combined[0],
       earthly: combined[1],
-      combined
+      combined,
     };
   }
 
@@ -249,7 +249,7 @@ export class SajuCalculator {
     return {
       heavenly: combined[0],
       earthly: combined[1],
-      combined
+      combined,
     };
   }
 
@@ -276,7 +276,7 @@ export class SajuCalculator {
       year: this.calculateYearPillar(year),
       month: this.calculateMonthPillar(year, month, day),
       day: this.calculateDayPillar(year, month, day),
-      hour: this.calculateHourPillar(year, month, day, hour, minute)
+      hour: this.calculateHourPillar(year, month, day, hour, minute),
     };
   }
 
@@ -293,7 +293,7 @@ export class SajuCalculator {
       day: 17,
       hour: 4,
       minute: 0,
-      isLunar: false
+      isLunar: false,
     };
     
     const result1 = this.calculateFourPillars(test1);
@@ -304,7 +304,7 @@ export class SajuCalculator {
       result1.year.combined === '신해' && 
       result1.month.combined === '기해' && 
       result1.day.combined === '병오' && 
-      result1.hour.combined === '경인' ? '✅ 정확' : '❌ 오류'
+      result1.hour.combined === '경인' ? '✅ 정확' : '❌ 오류',
     );
     
     // 테스트 케이스 2: 1976년 9월 16일 09시 40분
@@ -314,7 +314,7 @@ export class SajuCalculator {
       day: 16,
       hour: 9,
       minute: 40,
-      isLunar: false
+      isLunar: false,
     };
     
     const result2 = this.calculateFourPillars(test2);
@@ -325,7 +325,7 @@ export class SajuCalculator {
       result2.year.combined === '병진' && 
       result2.month.combined === '정유' && 
       result2.day.combined === '신미' && 
-      result2.hour.combined === '계사' ? '✅ 정확' : '❌ 오류'
+      result2.hour.combined === '계사' ? '✅ 정확' : '❌ 오류',
     );
   }
 }

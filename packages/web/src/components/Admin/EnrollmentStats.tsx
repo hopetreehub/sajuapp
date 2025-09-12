@@ -14,34 +14,34 @@ interface EnrollmentStatsProps {
 }
 
 export default function EnrollmentStats({ stats }: EnrollmentStatsProps) {
-  const completionRateNum = parseFloat(stats.completionRate)
+  const completionRateNum = parseFloat(stats.completionRate);
   
   // 파이 차트를 위한 SVG 경로 계산
   const calculatePieSlice = (percentage: number, startAngle: number = 0) => {
-    const angle = (percentage * 360) / 100
-    const endAngle = startAngle + angle
+    const angle = (percentage * 360) / 100;
+    const endAngle = startAngle + angle;
     
-    const x1 = 50 + 40 * Math.cos((Math.PI * startAngle) / 180)
-    const y1 = 50 + 40 * Math.sin((Math.PI * startAngle) / 180)
-    const x2 = 50 + 40 * Math.cos((Math.PI * endAngle) / 180)
-    const y2 = 50 + 40 * Math.sin((Math.PI * endAngle) / 180)
+    const x1 = 50 + 40 * Math.cos((Math.PI * startAngle) / 180);
+    const y1 = 50 + 40 * Math.sin((Math.PI * startAngle) / 180);
+    const x2 = 50 + 40 * Math.cos((Math.PI * endAngle) / 180);
+    const y2 = 50 + 40 * Math.sin((Math.PI * endAngle) / 180);
     
-    const largeArcFlag = angle > 180 ? 1 : 0
+    const largeArcFlag = angle > 180 ? 1 : 0;
     
     if (percentage === 100) {
-      return `M 50 10 A 40 40 0 1 1 49.99 10 Z`
+      return 'M 50 10 A 40 40 0 1 1 49.99 10 Z';
     }
     
-    return `M 50 50 L ${x1} ${y1} A 40 40 0 ${largeArcFlag} 1 ${x2} ${y2} Z`
-  }
+    return `M 50 50 L ${x1} ${y1} A 40 40 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+  };
 
   const activePercentage = stats.totalEnrollments > 0 
     ? (stats.activeEnrollments / stats.totalEnrollments) * 100 
-    : 0
+    : 0;
   
   const completedPercentage = stats.totalEnrollments > 0 
     ? (stats.completedEnrollments / stats.totalEnrollments) * 100 
-    : 0
+    : 0;
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
@@ -161,5 +161,5 @@ export default function EnrollmentStats({ stats }: EnrollmentStatsProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

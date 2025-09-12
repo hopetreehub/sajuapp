@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import { 
   ChartBarIcon,
   AcademicCapIcon,
@@ -9,12 +9,12 @@ import {
   BookOpenIcon,
   CheckCircleIcon,
   ClockIcon,
-  PlusIcon
-} from '@heroicons/react/24/outline'
-import AcademyStatsCards from '@/components/Admin/AcademyStatsCards'
-import CourseManagement from '@/components/Admin/CourseManagement'
-import EnrollmentStats from '@/components/Admin/EnrollmentStats'
-import RevenueChart from '@/components/Admin/RevenueChart'
+  PlusIcon,
+} from '@heroicons/react/24/outline';
+import AcademyStatsCards from '@/components/Admin/AcademyStatsCards';
+import CourseManagement from '@/components/Admin/CourseManagement';
+import EnrollmentStats from '@/components/Admin/EnrollmentStats';
+import RevenueChart from '@/components/Admin/RevenueChart';
 
 interface AcademyStats {
   totalCourses: number
@@ -41,79 +41,79 @@ interface Course {
 }
 
 export default function AdminDashboardPage() {
-  const [stats, setStats] = useState<AcademyStats | null>(null)
-  const [courses, setCourses] = useState<Course[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState<'overview' | 'courses' | 'enrollments' | 'analytics'>('overview')
+  const [stats, setStats] = useState<AcademyStats | null>(null);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'courses' | 'enrollments' | 'analytics'>('overview');
 
   // 아카데미 통계 데이터 로드
   const loadAcademyStats = async () => {
     try {
-      const response = await fetch('/api/academy/stats/overview')
+      const response = await fetch('/api/academy/stats/overview');
       if (!response.ok) {
-        throw new Error('Failed to fetch academy stats')
+        throw new Error('Failed to fetch academy stats');
       }
-      const result = await response.json()
+      const result = await response.json();
       
       if (result.success) {
-        setStats(result.data)
+        setStats(result.data);
       } else {
-        throw new Error(result.error || 'Failed to load stats')
+        throw new Error(result.error || 'Failed to load stats');
       }
     } catch (err) {
-      console.error('Failed to load academy stats:', err)
-      setError('통계 데이터를 불러오는데 실패했습니다.')
+      console.error('Failed to load academy stats:', err);
+      setError('통계 데이터를 불러오는데 실패했습니다.');
     }
-  }
+  };
 
   // 강좌 목록 로드
   const loadCourses = async () => {
     try {
-      const response = await fetch('/api/academy/courses?limit=10&sort_by=created_at&sort_order=desc')
+      const response = await fetch('/api/academy/courses?limit=10&sort_by=created_at&sort_order=desc');
       if (!response.ok) {
-        throw new Error('Failed to fetch courses')
+        throw new Error('Failed to fetch courses');
       }
-      const result = await response.json()
+      const result = await response.json();
       
       if (result.success) {
-        setCourses(result.data.courses)
+        setCourses(result.data.courses);
       } else {
-        throw new Error(result.error || 'Failed to load courses')
+        throw new Error(result.error || 'Failed to load courses');
       }
     } catch (err) {
-      console.error('Failed to load courses:', err)
-      setError('강좌 데이터를 불러오는데 실패했습니다.')
+      console.error('Failed to load courses:', err);
+      setError('강좌 데이터를 불러오는데 실패했습니다.');
     }
-  }
+  };
 
   // 초기 데이터 로드
   useEffect(() => {
     const loadData = async () => {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
       
       try {
         await Promise.all([
           loadAcademyStats(),
-          loadCourses()
-        ])
+          loadCourses(),
+        ]);
       } catch (err) {
-        console.error('Failed to load dashboard data:', err)
+        console.error('Failed to load dashboard data:', err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    loadData()
-  }, [])
+    loadData();
+  }, []);
 
   const refreshData = async () => {
     await Promise.all([
       loadAcademyStats(),
-      loadCourses()
-    ])
-  }
+      loadCourses(),
+    ]);
+  };
 
   if (loading) {
     return (
@@ -146,7 +146,7 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -168,7 +168,7 @@ export default function AdminDashboardPage() {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -208,7 +208,7 @@ export default function AdminDashboardPage() {
             { key: 'overview', label: '개요', icon: ChartBarIcon },
             { key: 'courses', label: '강좌 관리', icon: BookOpenIcon },
             { key: 'enrollments', label: '수강 현황', icon: UserGroupIcon },
-            { key: 'analytics', label: '분석', icon: ArrowTrendingUpIcon }
+            { key: 'analytics', label: '분석', icon: ArrowTrendingUpIcon },
           ].map(({ key, label, icon: Icon }) => (
             <button
               key={key}
@@ -269,5 +269,5 @@ export default function AdminDashboardPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

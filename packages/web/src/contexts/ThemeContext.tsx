@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 type Theme = 'light' | 'dark'
 
@@ -8,7 +8,7 @@ interface ThemeContextType {
   toggleTheme: () => void
 }
 
-export const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 interface ThemeProviderProps {
   children: ReactNode
@@ -23,66 +23,66 @@ export function ThemeProvider({
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(storageKey)
+      const stored = localStorage.getItem(storageKey);
       if (stored === 'light' || stored === 'dark') {
-        return stored
+        return stored;
       }
       // 시스템 선호도 확인
       if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark'
+        return 'dark';
       }
     }
-    return defaultTheme
-  })
+    return defaultTheme;
+  });
 
   useEffect(() => {
-    const root = window.document.documentElement
+    const root = window.document.documentElement;
     
-    root.classList.remove('light', 'dark')
-    root.classList.add(theme)
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
     
     // localStorage에 저장
-    localStorage.setItem(storageKey, theme)
-  }, [theme, storageKey])
+    localStorage.setItem(storageKey, theme);
+  }, [theme, storageKey]);
 
   // 시스템 테마 변경 감지
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
     const handleChange = (e: MediaQueryListEvent) => {
-      const stored = localStorage.getItem(storageKey)
+      const stored = localStorage.getItem(storageKey);
       if (!stored) {
-        setTheme(e.matches ? 'dark' : 'light')
+        setTheme(e.matches ? 'dark' : 'light');
       }
-    }
+    };
     
-    mediaQuery.addEventListener('change', handleChange)
-    return () => mediaQuery.removeEventListener('change', handleChange)
-  }, [storageKey])
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, [storageKey]);
 
   const value = {
     theme,
     setTheme: (theme: Theme) => {
-      setTheme(theme)
+      setTheme(theme);
     },
     toggleTheme: () => {
-      setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light')
+      setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
     },
-  }
+  };
 
   return (
     <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
-  )
+  );
 }
 
 export const useTheme = () => {
-  const context = useContext(ThemeContext)
+  const context = useContext(ThemeContext);
 
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider')
+    throw new Error('useTheme must be used within a ThemeProvider');
   }
 
-  return context
-}
+  return context;
+};

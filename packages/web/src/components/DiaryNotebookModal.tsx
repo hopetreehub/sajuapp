@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { format, addDays, subDays } from 'date-fns'
-import { ko } from 'date-fns/locale'
-import { Camera } from 'lucide-react'
-import { diaryService } from '@/services/diaryService'
+import React, { useState, useEffect, useRef } from 'react';
+import { format, addDays, subDays } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { Camera } from 'lucide-react';
+import { diaryService } from '@/services/diaryService';
 
 interface DiaryNotebookModalProps {
   isOpen: boolean
@@ -21,164 +21,164 @@ const MOODS = [
   { emoji: '😊', label: '기분 좋음', value: 'happy' },
   { emoji: '😐', label: '보통', value: 'neutral' },
   { emoji: '😢', label: '슬픔', value: 'sad' },
-  { emoji: '😠', label: '화남', value: 'angry' }
-]
+  { emoji: '😠', label: '화남', value: 'angry' },
+];
 
 const INSPIRATIONAL_MESSAGES = [
   { emoji: '🙏', message: '따뜻한 잠자리, 맛있는 음식... 당연한 것들에 감사해보세요.', color: 'amber' },
   { emoji: '💝', message: '마음이 무거울 때일수록, 작은 행복을 찾아보세요.', color: 'pink' },
   { emoji: '🌟', message: '오늘의 작은 성취도 충분히 축하할 만해요.', color: 'blue' },
-  { emoji: '🌱', message: '천천히라도 괜찮아요. 꾸준히 나아가고 있으니까요.', color: 'green' }
-]
+  { emoji: '🌱', message: '천천히라도 괜찮아요. 꾸준히 나아가고 있으니까요.', color: 'green' },
+];
 
 export default function DiaryNotebookModal({ isOpen, onClose, date, onSave }: DiaryNotebookModalProps) {
-  const [todayEntry, setTodayEntry] = useState<DiaryEntry>({ content: '', mood: 'neutral', images: [] })
-  const [yesterdayEntry, setYesterdayEntry] = useState<DiaryEntry>({ content: '', mood: 'neutral', images: [] })
-  const [isLoading, setIsLoading] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [todayEntry, setTodayEntry] = useState<DiaryEntry>({ content: '', mood: 'neutral', images: [] });
+  const [yesterdayEntry, setYesterdayEntry] = useState<DiaryEntry>({ content: '', mood: 'neutral', images: [] });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const today = date
-  const yesterday = subDays(date, 1)
-  const todayMessage = INSPIRATIONAL_MESSAGES[Math.floor(Math.random() * INSPIRATIONAL_MESSAGES.length)]
+  const today = date;
+  const yesterday = subDays(date, 1);
+  const todayMessage = INSPIRATIONAL_MESSAGES[Math.floor(Math.random() * INSPIRATIONAL_MESSAGES.length)];
 
   useEffect(() => {
     if (isOpen) {
-      loadDiaryEntries()
+      loadDiaryEntries();
     }
-  }, [isOpen, date])
+  }, [isOpen, date]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isOpen) return
+      if (!isOpen) return;
       
       if (e.ctrlKey && e.key === 'ArrowLeft') {
-        e.preventDefault()
+        e.preventDefault();
         // 어제로 이동 (구현 예정)
       } else if (e.ctrlKey && e.key === 'ArrowRight') {
-        e.preventDefault()
+        e.preventDefault();
         // 내일로 이동 (구현 예정)
       } else if (e.key === 'Escape') {
-        onClose()
+        onClose();
       }
-    }
+    };
 
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onClose])
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   const loadDiaryEntries = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
       // 오늘 일기 로드
-      const todayData = await diaryService.getDiaryByDate(format(today, 'yyyy-MM-dd'))
+      const todayData = await diaryService.getDiaryByDate(format(today, 'yyyy-MM-dd'));
       if (todayData) {
         setTodayEntry({
           content: todayData.content || '',
           mood: todayData.mood || 'neutral',
-          images: todayData.images || []
-        })
+          images: todayData.images || [],
+        });
       } else {
-        setTodayEntry({ content: '', mood: 'neutral', images: [] })
+        setTodayEntry({ content: '', mood: 'neutral', images: [] });
       }
 
       // 어제 일기 로드
-      const yesterdayData = await diaryService.getDiaryByDate(format(yesterday, 'yyyy-MM-dd'))
+      const yesterdayData = await diaryService.getDiaryByDate(format(yesterday, 'yyyy-MM-dd'));
       if (yesterdayData) {
         setYesterdayEntry({
           content: yesterdayData.content || '',
           mood: yesterdayData.mood || 'neutral',
-          images: yesterdayData.images || []
-        })
+          images: yesterdayData.images || [],
+        });
       } else {
-        setYesterdayEntry({ content: '', mood: 'neutral', images: [] })
+        setYesterdayEntry({ content: '', mood: 'neutral', images: [] });
       }
     } catch (error) {
-      console.error('일기 로드 실패:', error)
+      console.error('일기 로드 실패:', error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleSave = async () => {
-    if (!todayEntry.content.trim()) return
+    if (!todayEntry.content.trim()) return;
 
-    setIsSaving(true)
+    setIsSaving(true);
     try {
       await diaryService.saveDiary({
         date: format(today, 'yyyy-MM-dd'),
         content: todayEntry.content,
         mood: todayEntry.mood,
-        images: todayEntry.images
-      })
+        images: todayEntry.images,
+      });
       
-      onSave?.()
-      onClose()
+      onSave?.();
+      onClose();
     } catch (error) {
-      console.error('일기 저장 실패:', error)
+      console.error('일기 저장 실패:', error);
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
-    if (files.length === 0) return
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
     // 최대 3장 제한
-    const remainingSlots = 3 - todayEntry.images.length
-    const filesToProcess = files.slice(0, remainingSlots)
+    const remainingSlots = 3 - todayEntry.images.length;
+    const filesToProcess = files.slice(0, remainingSlots);
 
     try {
       const imagePromises = filesToProcess.map(file => {
         return new Promise<string>((resolve, reject) => {
-          const reader = new FileReader()
+          const reader = new FileReader();
           reader.onload = (e) => {
-            const img = new Image()
+            const img = new Image();
             img.onload = () => {
-              const canvas = document.createElement('canvas')
-              const ctx = canvas.getContext('2d')!
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d')!;
               
               // WebP로 압축
-              const maxWidth = 800
-              const maxHeight = 600
-              let { width, height } = img
+              const maxWidth = 800;
+              const maxHeight = 600;
+              let { width, height } = img;
               
               if (width > maxWidth || height > maxHeight) {
-                const ratio = Math.min(maxWidth / width, maxHeight / height)
-                width *= ratio
-                height *= ratio
+                const ratio = Math.min(maxWidth / width, maxHeight / height);
+                width *= ratio;
+                height *= ratio;
               }
               
-              canvas.width = width
-              canvas.height = height
-              ctx.drawImage(img, 0, 0, width, height)
+              canvas.width = width;
+              canvas.height = height;
+              ctx.drawImage(img, 0, 0, width, height);
               
-              const compressedData = canvas.toDataURL('image/webp', 0.8)
-              resolve(compressedData)
-            }
-            img.src = e.target?.result as string
-          }
-          reader.onerror = reject
-          reader.readAsDataURL(file)
-        })
-      })
+              const compressedData = canvas.toDataURL('image/webp', 0.8);
+              resolve(compressedData);
+            };
+            img.src = e.target?.result as string;
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      });
 
-      const newImages = await Promise.all(imagePromises)
+      const newImages = await Promise.all(imagePromises);
       setTodayEntry(prev => ({
         ...prev,
-        images: [...prev.images, ...newImages]
-      }))
+        images: [...prev.images, ...newImages],
+      }));
     } catch (error) {
-      console.error('이미지 업로드 실패:', error)
+      console.error('이미지 업로드 실패:', error);
     }
 
     // 파일 입력 초기화
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''
+      fileInputRef.current.value = '';
     }
-  }
+  };
 
   const getColorStyles = (color: string) => {
     switch (color) {
@@ -186,30 +186,30 @@ export default function DiaryNotebookModal({ isOpen, onClose, date, onSave }: Di
         return {
           backgroundColor: 'rgba(236, 72, 153, 0.082)',
           borderColor: 'rgba(236, 72, 153, 0.25)',
-          color: 'rgb(236, 72, 153)'
-        }
+          color: 'rgb(236, 72, 153)',
+        };
       case 'blue':
         return {
           backgroundColor: 'rgba(59, 130, 246, 0.082)',
           borderColor: 'rgba(59, 130, 246, 0.25)',
-          color: 'rgb(59, 130, 246)'
-        }
+          color: 'rgb(59, 130, 246)',
+        };
       case 'green':
         return {
           backgroundColor: 'rgba(34, 197, 94, 0.082)',
           borderColor: 'rgba(34, 197, 94, 0.25)',
-          color: 'rgb(34, 197, 94)'
-        }
+          color: 'rgb(34, 197, 94)',
+        };
       default: // amber
         return {
           backgroundColor: 'rgba(245, 158, 11, 0.082)',
           borderColor: 'rgba(245, 158, 11, 0.25)',
-          color: 'rgb(245, 158, 11)'
-        }
+          color: 'rgb(245, 158, 11)',
+        };
     }
-  }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -336,7 +336,7 @@ export default function DiaryNotebookModal({ isOpen, onClose, date, onSave }: Di
                     fontFamily: 'Georgia, serif',
                     fontSize: '14px',
                     lineHeight: '24px',
-                    background: 'repeating-linear-gradient(transparent, transparent 23px, rgba(251, 191, 36, 0.2) 23px, rgba(251, 191, 36, 0.2) 24px)'
+                    background: 'repeating-linear-gradient(transparent, transparent 23px, rgba(251, 191, 36, 0.2) 23px, rgba(251, 191, 36, 0.2) 24px)',
                   }}
                 />
                 <div className="mt-4">
@@ -410,5 +410,5 @@ export default function DiaryNotebookModal({ isOpen, onClose, date, onSave }: Di
         </div>
       </div>
     </div>
-  )
+  );
 }

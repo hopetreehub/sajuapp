@@ -1,7 +1,7 @@
-import React from 'react'
-import { motion } from 'framer-motion'
-import { SajuBirthInfo } from '@/types/saju'
-import { FourPillarsResult } from '@/utils/sajuCalculator'
+import React from 'react';
+import { motion } from 'framer-motion';
+import { SajuBirthInfo } from '@/types/saju';
+import { FourPillarsResult } from '@/utils/sajuCalculator';
 
 interface BirthInfoHeaderProps {
   birthInfo: SajuBirthInfo
@@ -18,19 +18,19 @@ export const BirthInfoHeader: React.FC<BirthInfoHeaderProps> = ({
   userName,
   className = '',
   showEditButton = true,
-  onEditClick
+  onEditClick,
 }) => {
   const formatBirthDate = (info: SajuBirthInfo) => {
-    const weekdays = ['일', '월', '화', '수', '목', '금', '토']
-    const date = new Date(info.year, info.month - 1, info.day)
-    const weekday = weekdays[date.getDay()]
+    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+    const date = new Date(info.year, info.month - 1, info.day);
+    const weekday = weekdays[date.getDay()];
     
-    return `${info.year}년 ${info.month}월 ${info.day}일 ${info.hour}시 ${info.minute || 0}분 (${weekday}요일) ${info.isLunar ? '음력' : '양력'}`
-  }
+    return `${info.year}년 ${info.month}월 ${info.day}일 ${info.hour}시 ${info.minute || 0}분 (${weekday}요일) ${info.isLunar ? '음력' : '양력'}`;
+  };
 
   const formatFourPillars = (pillars: FourPillarsResult) => {
-    return `${pillars.year.heavenly}${pillars.year.earthly}년 ${pillars.month.heavenly}${pillars.month.earthly}월 ${pillars.day.heavenly}${pillars.day.earthly}일 ${pillars.hour.heavenly}${pillars.hour.earthly}시`
-  }
+    return `${pillars.year.heavenly}${pillars.year.earthly}년 ${pillars.month.heavenly}${pillars.month.earthly}월 ${pillars.day.heavenly}${pillars.day.earthly}일 ${pillars.hour.heavenly}${pillars.hour.earthly}시`;
+  };
 
   // 천간 색상 (밝은 색상)
   const getHeavenlyColor = (heavenly: string) => {
@@ -39,10 +39,10 @@ export const BirthInfoHeader: React.FC<BirthInfoHeaderProps> = ({
       '병': 'text-red-600 dark:text-red-400', '정': 'text-pink-600 dark:text-pink-400', // 화  
       '무': 'text-yellow-600 dark:text-yellow-400', '기': 'text-amber-600 dark:text-amber-400', // 토
       '경': 'text-slate-600 dark:text-slate-400', '신': 'text-gray-600 dark:text-gray-400', // 금
-      '임': 'text-blue-600 dark:text-blue-400', '계': 'text-cyan-600 dark:text-cyan-400' // 수
-    }
-    return colorMap[heavenly] || 'text-gray-600 dark:text-gray-400'
-  }
+      '임': 'text-blue-600 dark:text-blue-400', '계': 'text-cyan-600 dark:text-cyan-400', // 수
+    };
+    return colorMap[heavenly] || 'text-gray-600 dark:text-gray-400';
+  };
 
   // 지지 색상 (어두운 색상)
   const getEarthlyColor = (earthly: string) => {
@@ -52,10 +52,10 @@ export const BirthInfoHeader: React.FC<BirthInfoHeaderProps> = ({
       '미': 'text-orange-800 dark:text-orange-300', '술': 'text-yellow-800 dark:text-yellow-300', // 토
       '인': 'text-green-800 dark:text-green-300', '묘': 'text-emerald-800 dark:text-emerald-300', // 목
       '사': 'text-red-800 dark:text-red-300', '오': 'text-rose-800 dark:text-rose-300', // 화
-      '신': 'text-gray-800 dark:text-gray-300', '유': 'text-slate-800 dark:text-slate-300' // 금
-    }
-    return colorMap[earthly] || 'text-gray-800 dark:text-gray-300'
-  }
+      '신': 'text-gray-800 dark:text-gray-300', '유': 'text-slate-800 dark:text-slate-300', // 금
+    };
+    return colorMap[earthly] || 'text-gray-800 dark:text-gray-300';
+  };
 
   // 천간 오행 매핑
   const getHeavenlyElement = (heavenly: string) => {
@@ -64,10 +64,10 @@ export const BirthInfoHeader: React.FC<BirthInfoHeaderProps> = ({
       '병': '火(화)', '정': '火(화)',  
       '무': '土(토)', '기': '土(토)',
       '경': '金(금)', '신': '金(금)',
-      '임': '水(수)', '계': '水(수)'
-    }
-    return elementMap[heavenly] || ''
-  }
+      '임': '水(수)', '계': '水(수)',
+    };
+    return elementMap[heavenly] || '';
+  };
 
   // 지지 오행 매핑 (12지지 완전 매핑)
   const getEarthlyElement = (earthly: string) => {
@@ -85,10 +85,10 @@ export const BirthInfoHeader: React.FC<BirthInfoHeaderProps> = ({
       '사': '火(화)', '오': '火(화)',
       
       // 금(金) - 2개
-      '신': '金(금)', '유': '金(금)'
-    }
-    return elementMap[earthly] || `${earthly}(?)`
-  }
+      '신': '金(금)', '유': '金(금)',
+    };
+    return elementMap[earthly] || `${earthly}(?)`;
+  };
 
   return (
     <motion.div 
@@ -277,5 +277,5 @@ export const BirthInfoHeader: React.FC<BirthInfoHeaderProps> = ({
         )}
       </div>
     </motion.div>
-  )
-}
+  );
+};

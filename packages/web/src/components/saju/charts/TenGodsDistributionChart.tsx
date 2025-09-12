@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,14 +8,14 @@ import {
   Title,
   Tooltip,
   Legend,
-  ChartOptions
-} from 'chart.js'
-import { Bar, Doughnut } from 'react-chartjs-2'
-import { TenGodsAnalyzer } from '@/utils/tenGodsAnalyzer'
-import { TEN_GODS_INFO, TEN_GODS_CATEGORIES } from '@/types/tenGods'
-import { SajuData } from '@/types/saju'
-import InterpretationPanel from '@/components/charts/InterpretationPanel'
-import { interpretationService, InterpretationResponse } from '@/services/api'
+  ChartOptions,
+} from 'chart.js';
+import { Bar, Doughnut } from 'react-chartjs-2';
+import { TenGodsAnalyzer } from '@/utils/tenGodsAnalyzer';
+import { TEN_GODS_INFO, TEN_GODS_CATEGORIES } from '@/types/tenGods';
+import { SajuData } from '@/types/saju';
+import InterpretationPanel from '@/components/charts/InterpretationPanel';
+import { interpretationService, InterpretationResponse } from '@/services/api';
 
 // Chart.js 컴포넌트 등록
 ChartJS.register(
@@ -25,8 +25,8 @@ ChartJS.register(
   ArcElement,
   Title,
   Tooltip,
-  Legend
-)
+  Legend,
+);
 
 interface TenGodsDistributionChartProps {
   sajuData: SajuData
@@ -41,51 +41,51 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
   height = 400,
   className = '',
   chartType = 'bar',
-  showCategory = false
+  showCategory = false,
 }) => {
-  const [viewMode, setViewMode] = useState<'individual' | 'category'>('individual')
+  const [viewMode, setViewMode] = useState<'individual' | 'category'>('individual');
   
   // 해석 데이터 상태
-  const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null)
-  const [interpretationLoading, setInterpretationLoading] = useState(false)
-  const [interpretationError, setInterpretationError] = useState<string | null>(null)
+  const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null);
+  const [interpretationLoading, setInterpretationLoading] = useState(false);
+  const [interpretationError, setInterpretationError] = useState<string | null>(null);
 
   // 십성 데이터 분석
   const analysis = useMemo(() => {
-    return TenGodsAnalyzer.performFullAnalysis(sajuData)
-  }, [sajuData])
+    return TenGodsAnalyzer.performFullAnalysis(sajuData);
+  }, [sajuData]);
 
   // 해석 데이터 로드
   useEffect(() => {
     const loadInterpretation = async () => {
-      if (!sajuData) return
+      if (!sajuData) return;
       
-      setInterpretationLoading(true)
-      setInterpretationError(null)
+      setInterpretationLoading(true);
+      setInterpretationError(null);
       
       try {
-        const response = await interpretationService.getPersonalityAnalysis(sajuData)
-        setInterpretation({ personality: response })
+        const response = await interpretationService.getPersonalityAnalysis(sajuData);
+        setInterpretation({ personality: response });
       } catch (error) {
-        console.error('성격 분석 데이터 로드 실패:', error)
-        setInterpretationError('성격 분석 데이터를 불러올 수 없습니다.')
+        console.error('성격 분석 데이터 로드 실패:', error);
+        setInterpretationError('성격 분석 데이터를 불러올 수 없습니다.');
       } finally {
-        setInterpretationLoading(false)
+        setInterpretationLoading(false);
       }
-    }
+    };
 
-    loadInterpretation()
-  }, [sajuData])
+    loadInterpretation();
+  }, [sajuData]);
 
   // 개별 십성 차트 데이터
   const individualChartData = useMemo(() => {
-    return TenGodsAnalyzer.generateChartData(analysis.data)
-  }, [analysis.data])
+    return TenGodsAnalyzer.generateChartData(analysis.data);
+  }, [analysis.data]);
 
   // 카테고리별 차트 데이터
   const categoryChartData = useMemo(() => {
-    return TenGodsAnalyzer.generateCategoryChartData(analysis.data)
-  }, [analysis.data])
+    return TenGodsAnalyzer.generateCategoryChartData(analysis.data);
+  }, [analysis.data]);
 
   // 바 차트 옵션
   const barOptions: ChartOptions<'bar'> = useMemo(() => ({
@@ -94,7 +94,7 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
     indexAxis: 'y' as const,
     plugins: {
       legend: {
-        display: false
+        display: false,
       },
       tooltip: {
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -103,67 +103,67 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
         titleFont: {
           family: 'Noto Sans KR, sans-serif',
           size: 14,
-          weight: 'bold'
+          weight: 'bold',
         },
         bodyFont: {
           family: 'Noto Sans KR, sans-serif',
-          size: 12
+          size: 12,
         },
         callbacks: {
-          title: function(context) {
-            return context[0].label || ''
+          title(context) {
+            return context[0].label || '';
           },
-          label: function(context) {
-            const value = context.parsed.x as number
+          label(context) {
+            const value = context.parsed.x as number;
             const percentage = analysis.total > 0 ? 
-              ((value / analysis.total) * 100).toFixed(1) : '0.0'
+              ((value / analysis.total) * 100).toFixed(1) : '0.0';
             
             // 십성 정보 추가
-            const tenGodKey = Object.keys(analysis.data)[context.dataIndex]
-            const info = TEN_GODS_INFO[tenGodKey as keyof typeof TEN_GODS_INFO]
+            const tenGodKey = Object.keys(analysis.data)[context.dataIndex];
+            const info = TEN_GODS_INFO[tenGodKey as keyof typeof TEN_GODS_INFO];
             
             return [
               `점수: ${value}점 (${percentage}%)`,
               `특성: ${info.keywords.join(', ')}`,
-              `장점: ${info.positiveTraits.join(', ')}`
-            ]
-          }
-        }
-      }
+              `장점: ${info.positiveTraits.join(', ')}`,
+            ];
+          },
+        },
+      },
     },
     scales: {
       x: {
         beginAtZero: true,
         grid: {
-          color: 'rgba(0, 0, 0, 0.1)'
+          color: 'rgba(0, 0, 0, 0.1)',
         },
         ticks: {
           font: {
             family: 'Noto Sans KR, sans-serif',
-            size: 11
-          }
-        }
+            size: 11,
+          },
+        },
       },
       y: {
         grid: {
-          display: false
+          display: false,
         },
         ticks: {
           font: {
             family: 'Noto Sans KR, sans-serif',
-            size: 11
+            size: 11,
           },
-          callback: function(value) {
-            const label = this.getLabelForValue(value as number)
-            return label.split('\n')[0] // 첫 번째 줄만 표시
-          }
-        }
-      }
+          callback(value) {
+            const label = this.getLabelForValue(value as number);
+            return label.split('\n')[0]; // 첫 번째 줄만 표시
+          },
+        },
+      },
     },
     animation: {
-      duration: 1000
-    }
-  }), [analysis.data, analysis.total])
+      duration: 1000,
+    },
+  }), [analysis.data, analysis.total]);
 
   // 도넛 차트 옵션
   const doughnutOptions: ChartOptions<'doughnut'> = useMemo(() => ({
@@ -175,21 +175,21 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
         labels: {
           font: {
             family: 'Noto Sans KR, sans-serif',
-            size: 11
+            size: 11,
           },
           padding: 15,
           usePointStyle: true,
           pointStyle: 'rectRounded',
           generateLabels: (chart) => {
-            const datasets = chart.data.datasets
+            const datasets = chart.data.datasets;
             if (datasets.length > 0) {
-              const dataset = datasets[0]
+              const dataset = datasets[0];
               return chart.data.labels?.map((label, index) => {
-                const value = dataset.data[index] as number
-                if (value === 0) return null
+                const value = dataset.data[index] as number;
+                if (value === 0) return null;
                 
                 const percentage = analysis.total > 0 ? 
-                  ((value / analysis.total) * 100).toFixed(1) : '0.0'
+                  ((value / analysis.total) * 100).toFixed(1) : '0.0';
                 
                 return {
                   text: `${label} (${percentage}%)`,
@@ -197,45 +197,45 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
                   strokeStyle: dataset.borderColor?.[index] as string || '#000',
                   lineWidth: 2,
                   hidden: false,
-                  index
-                }
-              }).filter(Boolean) || []
+                  index,
+                };
+              }).filter(Boolean) || [];
             }
-            return []
-          }
-        }
+            return [];
+          },
+        },
       },
       tooltip: {
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
         titleColor: '#fff',
         bodyColor: '#fff',
         callbacks: {
-          label: function(context) {
-            const value = context.parsed as number
+          label(context) {
+            const value = context.parsed as number;
             const percentage = analysis.total > 0 ? 
-              ((value / analysis.total) * 100).toFixed(1) : '0.0'
-            return `${context.label}: ${value}점 (${percentage}%)`
-          }
-        }
-      }
+              ((value / analysis.total) * 100).toFixed(1) : '0.0';
+            return `${context.label}: ${value}점 (${percentage}%)`;
+          },
+        },
+      },
     },
     cutout: '40%',
     animation: {
       animateRotate: true,
-      duration: 1000
-    }
-  }), [analysis.total])
+      duration: 1000,
+    },
+  }), [analysis.total]);
 
   // 균형 상태 평가
   const getBalanceStatus = () => {
-    const score = analysis.balance.score
-    if (score >= 80) return { status: '매우 균형', color: 'text-green-600', icon: '🟢' }
-    if (score >= 60) return { status: '균형 양호', color: 'text-blue-600', icon: '🔵' }
-    if (score >= 40) return { status: '보통', color: 'text-yellow-600', icon: '🟡' }
-    return { status: '불균형', color: 'text-red-600', icon: '🔴' }
-  }
+    const score = analysis.balance.score;
+    if (score >= 80) return { status: '매우 균형', color: 'text-green-600', icon: '🟢' };
+    if (score >= 60) return { status: '균형 양호', color: 'text-blue-600', icon: '🔵' };
+    if (score >= 40) return { status: '보통', color: 'text-yellow-600', icon: '🟡' };
+    return { status: '불균형', color: 'text-red-600', icon: '🔴' };
+  };
 
-  const balanceStatus = getBalanceStatus()
+  const balanceStatus = getBalanceStatus();
 
   // 데이터가 없는 경우
   if (analysis.total === 0) {
@@ -247,7 +247,7 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
           <div className="text-sm">사주 정보를 확인해주세요</div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -333,7 +333,7 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
           {analysis.dominant.length > 0 ? (
             <div className="text-green-700 dark:text-green-300 text-sm">
               {analysis.dominant.map(tenGod => 
-                TEN_GODS_INFO[tenGod].koreanName
+                TEN_GODS_INFO[tenGod].koreanName,
               ).join(', ')}
             </div>
           ) : (
@@ -370,7 +370,7 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
           '창의성': analysis.personality.creativity,
           '안정성': analysis.personality.stability,
           '사교성': analysis.personality.sociability,
-          '독립성': analysis.personality.independence
+          '독립성': analysis.personality.independence,
         }).map(([name, value]) => (
           <div key={name} className="flex items-center space-x-3">
             <div className="w-16 text-xs text-gray-600 dark:text-gray-400">
@@ -399,7 +399,7 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TenGodsDistributionChart
+export default TenGodsDistributionChart;

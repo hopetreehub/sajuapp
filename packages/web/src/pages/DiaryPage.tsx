@@ -1,64 +1,64 @@
-import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { format } from 'date-fns'
-import { ko } from 'date-fns/locale'
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 export default function DiaryPage() {
-  const { date } = useParams()
-  const navigate = useNavigate()
-  const [selectedDate, setSelectedDate] = useState(new Date())
-  const [content, setContent] = useState('')
-  const [mood, setMood] = useState<1 | 2 | 3 | 4 | 5>(3)
-  const [tags, setTags] = useState<string[]>([])
-  const [tagInput, setTagInput] = useState('')
-  const [todos, setTodos] = useState<Array<{ id: string; text: string; completed: boolean }>>([])
-  const [todoInput, setTodoInput] = useState('')
+  const { date } = useParams();
+  const navigate = useNavigate();
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [content, setContent] = useState('');
+  const [mood, setMood] = useState<1 | 2 | 3 | 4 | 5>(3);
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState('');
+  const [todos, setTodos] = useState<Array<{ id: string; text: string; completed: boolean }>>([]);
+  const [todoInput, setTodoInput] = useState('');
 
   useEffect(() => {
     if (date) {
-      setSelectedDate(new Date(date))
+      setSelectedDate(new Date(date));
     }
-  }, [date])
+  }, [date]);
 
   const moodEmojis = {
     1: { emoji: '😢', label: '매우 나쁨', color: 'text-red-500' },
     2: { emoji: '😕', label: '나쁨', color: 'text-orange-500' },
     3: { emoji: '😐', label: '보통', color: 'text-yellow-500' },
     4: { emoji: '🙂', label: '좋음', color: 'text-green-500' },
-    5: { emoji: '😄', label: '매우 좋음', color: 'text-blue-500' }
-  }
+    5: { emoji: '😄', label: '매우 좋음', color: 'text-blue-500' },
+  };
 
   const handleAddTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-      setTags([...tags, tagInput.trim()])
-      setTagInput('')
+      setTags([...tags, tagInput.trim()]);
+      setTagInput('');
     }
-  }
+  };
 
   const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove))
-  }
+    setTags(tags.filter(tag => tag !== tagToRemove));
+  };
 
   const handleAddTodo = () => {
     if (todoInput.trim()) {
       setTodos([...todos, { 
         id: Date.now().toString(), 
         text: todoInput.trim(), 
-        completed: false 
-      }])
-      setTodoInput('')
+        completed: false, 
+      }]);
+      setTodoInput('');
     }
-  }
+  };
 
   const handleToggleTodo = (id: string) => {
     setTodos(todos.map(todo => 
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ))
-  }
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo,
+    ));
+  };
 
   const handleRemoveTodo = (id: string) => {
-    setTodos(todos.filter(todo => todo.id !== id))
-  }
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
 
   const handleSave = () => {
     // Save diary entry
@@ -67,11 +67,11 @@ export default function DiaryPage() {
       content,
       mood,
       tags,
-      todos
-    })
+      todos,
+    });
     // Show success message
-    alert('다이어리가 저장되었습니다!')
-  }
+    alert('다이어리가 저장되었습니다!');
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -91,9 +91,9 @@ export default function DiaryPage() {
               type="date"
               value={format(selectedDate, 'yyyy-MM-dd')}
               onChange={(e) => {
-                const newDate = new Date(e.target.value)
-                setSelectedDate(newDate)
-                navigate(`/diary/${format(newDate, 'yyyy-MM-dd')}`)
+                const newDate = new Date(e.target.value);
+                setSelectedDate(newDate);
+                navigate(`/diary/${format(newDate, 'yyyy-MM-dd')}`);
               }}
               className="px-3 py-2 border border-border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-background text-foreground"
             />
@@ -113,7 +113,7 @@ export default function DiaryPage() {
           <h2 className="text-lg font-semibold text-foreground mb-4">오늘의 기분</h2>
           <div className="flex justify-around">
             {([1, 2, 3, 4, 5] as const).map((moodValue) => {
-              const moodData = moodEmojis[moodValue]
+              const moodData = moodEmojis[moodValue];
               return (
                 <button
                   key={moodValue}
@@ -133,7 +133,7 @@ export default function DiaryPage() {
                     {moodData.label}
                   </span>
                 </button>
-              )
+              );
             })}
           </div>
         </div>
@@ -243,7 +243,7 @@ export default function DiaryPage() {
                 <div 
                   className="bg-primary h-2 rounded-full transition-all duration-300" 
                   style={{ 
-                    width: `${todos.length ? (todos.filter(t => t.completed).length / todos.length) * 100 : 0}%` 
+                    width: `${todos.length ? (todos.filter(t => t.completed).length / todos.length) * 100 : 0}%`, 
                   }}
                 ></div>
               </div>
@@ -276,5 +276,5 @@ export default function DiaryPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

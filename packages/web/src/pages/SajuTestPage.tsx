@@ -24,7 +24,7 @@ export default function SajuTestPage() {
       fullSaju: accurateResult.fullSaju,
       summerTimeApplied: accurateResult.summerTimeApplied,
       ohHaengBalance: { 목: 20, 화: 20, 토: 20, 금: 20, 수: 20 }, // 임시값
-      ohHaengCount: { 목: 2, 화: 2, 토: 2, 금: 2, 수: 2 } // 임시값
+      ohHaengCount: { 목: 2, 화: 2, 토: 2, 금: 2, 수: 2 }, // 임시값
     };
     
     setResult(convertedResult);

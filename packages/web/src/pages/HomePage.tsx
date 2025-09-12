@@ -52,7 +52,7 @@ const HomePage: React.FC = () => {
       year: 'numeric', 
       month: 'long', 
       day: 'numeric',
-      weekday: 'long' 
+      weekday: 'long', 
     }),
     luckyNumber: Math.floor(Math.random() * 100),
     luckyColor: '보라색',

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { useAuthStore } from '@/stores/authStore'
-import QRCodeGenerator from './QRCodeGenerator'
+import React, { useState, useEffect } from 'react';
+import { useAuthStore } from '@/stores/authStore';
+import QRCodeGenerator from './QRCodeGenerator';
 
 interface ReferralSectionProps {
   className?: string
@@ -11,7 +11,7 @@ interface ReferralSectionProps {
  * 사용자의 추천 코드 표시, 공유 기능, 실적 대시보드
  */
 const ReferralSection: React.FC<ReferralSectionProps> = ({
-  className = ''
+  className = '',
 }) => {
   const {
     user,
@@ -21,59 +21,59 @@ const ReferralSection: React.FC<ReferralSectionProps> = ({
     isLoadingReferralStats,
     error,
     generateMyReferralCode,
-    loadReferralStats
-  } = useAuthStore()
+    loadReferralStats,
+  } = useAuthStore();
 
-  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle')
-  const [showStats, setShowStats] = useState(false)
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle');
+  const [showStats, setShowStats] = useState(false);
 
   // 컴포넌트 마운트 시 추천 코드와 통계 로드
   useEffect(() => {
     if (user && !myReferralCode) {
-      generateMyReferralCode()
+      generateMyReferralCode();
     }
-  }, [user, myReferralCode, generateMyReferralCode])
+  }, [user, myReferralCode, generateMyReferralCode]);
 
   // 추천 코드 복사 기능
   const handleCopyCode = async () => {
-    if (!myReferralCode) return
+    if (!myReferralCode) return;
 
     try {
-      await navigator.clipboard.writeText(myReferralCode)
-      setCopyStatus('copied')
-      setTimeout(() => setCopyStatus('idle'), 2000)
+      await navigator.clipboard.writeText(myReferralCode);
+      setCopyStatus('copied');
+      setTimeout(() => setCopyStatus('idle'), 2000);
     } catch (error) {
-      console.error('복사 실패:', error)
-      setCopyStatus('error')
-      setTimeout(() => setCopyStatus('idle'), 2000)
+      console.error('복사 실패:', error);
+      setCopyStatus('error');
+      setTimeout(() => setCopyStatus('idle'), 2000);
     }
-  }
+  };
 
   // 통계 토글 및 로드
   const handleToggleStats = async () => {
     if (!showStats && (!referralStats || Object.keys(referralStats).length === 0)) {
-      await loadReferralStats()
+      await loadReferralStats();
     }
-    setShowStats(!showStats)
-  }
+    setShowStats(!showStats);
+  };
 
   // 공유 URL 생성
   const getShareUrl = () => {
-    if (!myReferralCode) return ''
-    const baseUrl = window.location.origin
-    return `${baseUrl}/auth?mode=signup&ref=${myReferralCode}`
-  }
+    if (!myReferralCode) return '';
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/auth?mode=signup&ref=${myReferralCode}`;
+  };
 
   // 공유 메시지 생성
   const getShareMessage = () => {
-    if (!myReferralCode) return ''
-    return `🔮 운명나침반에서 당신의 운명을 확인해보세요!\n\n추천인 코드: ${myReferralCode}\n링크: ${getShareUrl()}\n\n✨ 함께 가입하면 특별 혜택을 받을 수 있어요!`
-  }
+    if (!myReferralCode) return '';
+    return `🔮 운명나침반에서 당신의 운명을 확인해보세요!\n\n추천인 코드: ${myReferralCode}\n링크: ${getShareUrl()}\n\n✨ 함께 가입하면 특별 혜택을 받을 수 있어요!`;
+  };
 
   // 소셜 공유 기능
   const handleSocialShare = (platform: 'kakao' | 'facebook' | 'twitter' | 'copy') => {
-    const message = getShareMessage()
-    const url = getShareUrl()
+    const message = getShareMessage();
+    const url = getShareUrl();
 
     switch (platform) {
       case 'kakao':
@@ -84,35 +84,35 @@ const ReferralSection: React.FC<ReferralSectionProps> = ({
             text: message,
             link: {
               mobileWebUrl: url,
-              webUrl: url
-            }
-          })
+              webUrl: url,
+            },
+          });
         } else {
-          handleCopyCode()
+          handleCopyCode();
         }
-        break
+        break;
 
       case 'facebook':
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank')
-        break
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+        break;
 
       case 'twitter':
-        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`, '_blank')
-        break
+        window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`, '_blank');
+        break;
 
       case 'copy':
-        navigator.clipboard.writeText(message)
-        setCopyStatus('copied')
-        setTimeout(() => setCopyStatus('idle'), 2000)
-        break
+        navigator.clipboard.writeText(message);
+        setCopyStatus('copied');
+        setTimeout(() => setCopyStatus('idle'), 2000);
+        break;
 
       default:
-        break
+        break;
     }
-  }
+  };
 
   if (!user) {
-    return null
+    return null;
   }
 
   return (
@@ -337,8 +337,8 @@ const ReferralSection: React.FC<ReferralSectionProps> = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 // TypeScript 전역 타입 확장 (Kakao SDK용)
 declare global {
@@ -351,4 +351,4 @@ declare global {
   }
 }
 
-export default ReferralSection
+export default ReferralSection;

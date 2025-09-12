@@ -13,7 +13,7 @@ const StandardChartHeader: React.FC<StandardChartHeaderProps> = ({
   description,
   birthDate,
   icon = '📊',
-  className = ''
+  className = '',
 }) => {
   return (
     <div className={`mb-6 ${className}`}>

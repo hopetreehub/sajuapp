@@ -7,7 +7,7 @@ export const HADO_NUMBERS: Record<CheonGan, number> = {
   '병': 2, '정': 7,  // 화: 생수 2, 성수 7
   '무': 5, '기': 10, // 토: 생수 5, 성수 10
   '경': 4, '신': 9,  // 금: 생수 4, 성수 9
-  '임': 1, '계': 6   // 수: 생수 1, 성수 6
+  '임': 1, '계': 6,   // 수: 생수 1, 성수 6
 };
 
 // 지지별 숫자 (낙서 기반)
@@ -23,26 +23,26 @@ export const JIJI_NUMBERS: Record<JiJi, number> = {
   '신': 4,  // 금
   '유': 9,  // 금
   '술': 5,  // 토
-  '해': 6   // 수
+  '해': 6,   // 수
 };
 
 // 천간 충 관계
 export function checkCheonganClash(gan1: CheonGan, gan2: CheonGan): boolean {
   const clashPairs: [CheonGan, CheonGan][] = [
-    ['갑', '경'], ['을', '신'], ['병', '임'], ['정', '계']
+    ['갑', '경'], ['을', '신'], ['병', '임'], ['정', '계'],
   ];
   return clashPairs.some(([a, b]) => 
-    (gan1 === a && gan2 === b) || (gan1 === b && gan2 === a)
+    (gan1 === a && gan2 === b) || (gan1 === b && gan2 === a),
   );
 }
 
 // 천간 합 관계
 export function checkCheonganHarmony(gan1: CheonGan, gan2: CheonGan): boolean {
   const harmonyPairs: [CheonGan, CheonGan][] = [
-    ['갑', '기'], ['을', '경'], ['병', '신'], ['정', '임'], ['무', '계']
+    ['갑', '기'], ['을', '경'], ['병', '신'], ['정', '임'], ['무', '계'],
   ];
   return harmonyPairs.some(([a, b]) => 
-    (gan1 === a && gan2 === b) || (gan1 === b && gan2 === a)
+    (gan1 === a && gan2 === b) || (gan1 === b && gan2 === a),
   );
 }
 
@@ -50,10 +50,10 @@ export function checkCheonganHarmony(gan1: CheonGan, gan2: CheonGan): boolean {
 export function checkJijiClash(ji1: JiJi, ji2: JiJi): boolean {
   const clashPairs: [JiJi, JiJi][] = [
     ['자', '오'], ['축', '미'], ['인', '신'], 
-    ['묘', '유'], ['진', '술'], ['사', '해']
+    ['묘', '유'], ['진', '술'], ['사', '해'],
   ];
   return clashPairs.some(([a, b]) => 
-    (ji1 === a && ji2 === b) || (ji1 === b && ji2 === a)
+    (ji1 === a && ji2 === b) || (ji1 === b && ji2 === a),
   );
 }
 
@@ -61,10 +61,10 @@ export function checkJijiClash(ji1: JiJi, ji2: JiJi): boolean {
 export function checkJijiHarmony(ji1: JiJi, ji2: JiJi): boolean {
   const harmonyPairs: [JiJi, JiJi][] = [
     ['자', '축'], ['인', '해'], ['묘', '술'],
-    ['진', '유'], ['사', '신'], ['오', '미']
+    ['진', '유'], ['사', '신'], ['오', '미'],
   ];
   return harmonyPairs.some(([a, b]) => 
-    (ji1 === a && ji2 === b) || (ji1 === b && ji2 === a)
+    (ji1 === a && ji2 === b) || (ji1 === b && ji2 === a),
   );
 }
 
@@ -81,7 +81,7 @@ export const TWELVE_LIFE_STAGES: Record<CheonGan, LifeStageTable> = {
   '경': { '사': '장생', '오': '목욕', '미': '관대', '신': '건록', '유': '제왕', '술': '쇠', '해': '병', '자': '사', '축': '묘', '인': '절', '묘': '태', '진': '양' },
   '신': { '자': '장생', '해': '목욕', '술': '관대', '유': '건록', '신': '제왕', '미': '쇠', '오': '병', '사': '사', '진': '묘', '묘': '절', '인': '태', '축': '양' },
   '임': { '신': '장생', '유': '목욕', '술': '관대', '해': '건록', '자': '제왕', '축': '쇠', '인': '병', '묘': '사', '진': '묘', '사': '절', '오': '태', '미': '양' },
-  '계': { '묘': '장생', '인': '목욕', '축': '관대', '자': '건록', '해': '제왕', '술': '쇠', '유': '병', '신': '사', '미': '묘', '오': '절', '사': '태', '진': '양' }
+  '계': { '묘': '장생', '인': '목욕', '축': '관대', '자': '건록', '해': '제왕', '술': '쇠', '유': '병', '신': '사', '미': '묘', '오': '절', '사': '태', '진': '양' },
 };
 
 // 12운성 계산
@@ -106,7 +106,7 @@ export const VOID_DAYS: Record<CheonGan, VoidDayTable> = {
   '경': { '경': ['진', '사'], '신': ['진', '사'] },
   '신': { '경': ['진', '사'], '신': ['진', '사'] },
   '임': { '임': ['인', '묘'], '계': ['인', '묘'] },
-  '계': { '임': ['인', '묘'], '계': ['인', '묘'] }
+  '계': { '임': ['인', '묘'], '계': ['인', '묘'] },
 };
 
 // 천을귀인 테이블 (타입 정의 개선)
@@ -122,7 +122,7 @@ export const NOBLE_HELPER: Record<CheonGan, NobleHelperTable> = {
   '경': { '경': ['축', '미'], '신': ['인', '오'] },
   '신': { '경': ['인', '오'], '신': ['인', '오'] },
   '임': { '임': ['묘', '사'], '계': ['묘', '사'] },
-  '계': { '임': ['묘', '사'], '계': ['묘', '사'] }
+  '계': { '임': ['묘', '사'], '계': ['묘', '사'] },
 };
 
 // 공망일 체크
@@ -200,7 +200,7 @@ export function calculateMonthlyFortune(date: Date, sajuData: SajuData): number 
     9: { '경': 10, '신': 10, '임': 3, '계': 3 },    // 가을
     10: { '임': 5, '계': 5, '경': 5, '신': 5 },     // 늦가을
     11: { '임': 8, '계': 8, '갑': -3, '을': -3 },   // 초겨울
-    12: { '임': 10, '계': 10, '병': -5, '정': -5 }  // 겨울
+    12: { '임': 10, '계': 10, '병': -5, '정': -5 },  // 겨울
   };
   
   const monthPreference = seasonalPreference[month];

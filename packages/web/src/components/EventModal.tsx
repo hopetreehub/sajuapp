@@ -17,7 +17,7 @@ const EventModal: React.FC<EventModalProps> = ({
   onClose,
   onSave,
   event,
-  initialDate
+  initialDate,
 }) => {
   const { addTodo } = useCalendar();
   const [activeTab, setActiveTab] = useState<'event' | 'todo'>('event');
@@ -31,7 +31,7 @@ const EventModal: React.FC<EventModalProps> = ({
     type: 'personal',
     color: '#3b82f6',
     reminder_minutes: 15,
-    tags: []
+    tags: [],
   });
 
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
@@ -39,7 +39,7 @@ const EventModal: React.FC<EventModalProps> = ({
   const [todoData, setTodoData] = useState({
     text: '',
     priority: 'medium' as 'high' | 'medium' | 'low',
-    date: initialDate ? format(initialDate, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd')
+    date: initialDate ? format(initialDate, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd'),
   });
 
 
@@ -56,7 +56,7 @@ const EventModal: React.FC<EventModalProps> = ({
       }));
       setTodoData(prev => ({
         ...prev,
-        date: format(initialDate, 'yyyy-MM-dd')
+        date: format(initialDate, 'yyyy-MM-dd'),
       }));
     }
   }, [event, initialDate]);
@@ -72,7 +72,7 @@ const EventModal: React.FC<EventModalProps> = ({
         text: todoData.text.trim(),
         completed: false,
         priority: todoData.priority,
-        date: todoData.date
+        date: todoData.date,
       });
       onClose();
     } catch (error) {
@@ -84,10 +84,10 @@ const EventModal: React.FC<EventModalProps> = ({
 
   const getPriorityIcon = (priority: string) => {
     switch (priority) {
-      case 'high': return '🔴'
-      case 'medium': return '🟡'
-      case 'low': return '🟢'
-      default: return '🟡'
+      case 'high': return '🔴';
+      case 'medium': return '🟡';
+      case 'low': return '🟢';
+      default: return '🟡';
     }
   };
 
@@ -116,7 +116,7 @@ const EventModal: React.FC<EventModalProps> = ({
         location: formData.location,
         type: formData.type,
         color: formData.color,
-        reminder_minutes: formData.reminder_minutes === undefined ? null : formData.reminder_minutes
+        reminder_minutes: formData.reminder_minutes === undefined ? null : formData.reminder_minutes,
       };
       
       console.log('Sending API data:', apiData);
@@ -224,7 +224,7 @@ const EventModal: React.FC<EventModalProps> = ({
                   {[
                     { value: 'high', label: '높음', icon: '🔴' },
                     { value: 'medium', label: '보통', icon: '🟡' },
-                    { value: 'low', label: '낮음', icon: '🟢' }
+                    { value: 'low', label: '낮음', icon: '🟢' },
                   ].map((priority) => (
                     <button
                       key={priority.value}

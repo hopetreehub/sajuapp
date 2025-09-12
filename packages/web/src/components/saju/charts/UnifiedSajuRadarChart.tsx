@@ -9,7 +9,7 @@ import {
   Legend,
   CategoryScale,
   LinearScale,
-  BarElement
+  BarElement,
 } from 'chart.js';
 import { Radar, Bar } from 'react-chartjs-2';
 import { SajuRadarData, SajuRadarItem, TimeFrame, TimeFrameWeights } from '@/types/sajuRadar';
@@ -26,7 +26,7 @@ ChartJS.register(
   Legend,
   CategoryScale,
   LinearScale,
-  BarElement
+  BarElement,
 );
 
 interface UnifiedSajuRadarChartProps {
@@ -38,7 +38,7 @@ interface UnifiedSajuRadarChartProps {
 const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({ 
   data, 
   birthDate, 
-  sajuData 
+  sajuData, 
 }) => {
   console.log('[차트 컴포넌트] 받은 사주 데이터:', sajuData);
   
@@ -59,7 +59,7 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class']
+      attributeFilter: ['class'],
     });
 
     return () => observer.disconnect();
@@ -73,22 +73,22 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
       emotion: 1.3,
       social: 1.2,
       energy: 1.4,
-      intuitive: 1.3
+      intuitive: 1.3,
     },
     month: {
       // 이달: 논리적, 계획적 요소 강화
       logical: 1.3,
       planning: 1.3,
       relationship: 1.35,
-      career: 1.2
+      career: 1.2,
     },
     year: {
       // 올해: 안정적, 장기적 요소 강화
       stability: 1.3,
       wisdom: 1.4,
       growth: 1.3,
-      foundation: 1.2
-    }
+      foundation: 1.2,
+    },
   };
 
   // 개선된 시간대별 데이터 생성 함수 (기존과 동일 로직)
@@ -96,7 +96,7 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     baseScore: number,
     weight: number = 1.0,
     variance: number,
-    maxLimit: number = 85
+    maxLimit: number = 85,
   ): number => {
     // 기본 점수를 낮춤 (0.8 배율 적용)
     const adjustedBase = baseScore * 0.8;
@@ -179,15 +179,15 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     } else {
       // 사주 데이터가 없으면 기존 랜덤 방식
       result.today = data.items.map(item => 
-        generateTimeBasedScore(item.baseScore, 1.0, 25)
+        generateTimeBasedScore(item.baseScore, 1.0, 25),
       );
       
       result.month = data.items.map(item => 
-        generateTimeBasedScore(item.baseScore, 1.0, 18)
+        generateTimeBasedScore(item.baseScore, 1.0, 18),
       );
       
       result.year = data.items.map(item => 
-        generateTimeBasedScore(item.baseScore, 1.0, 12)
+        generateTimeBasedScore(item.baseScore, 1.0, 12),
       );
     }
     
@@ -203,7 +203,7 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     datasets.push({
       label: '나의 기본 사주',
       values: baseValues,
-      timeFrame: 'base'
+      timeFrame: 'base',
     });
     
     // 선택된 시간대 데이터셋 추가
@@ -211,13 +211,13 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
       const timeFrameLabels = {
         today: '오늘의 운세',
         month: '이번달 운세', 
-        year: '올해 운세'
+        year: '올해 운세',
       };
       
       datasets.push({
         label: timeFrameLabels[selectedTimeFrame] || selectedTimeFrame,
         values: timeFrameData[selectedTimeFrame]!,
-        timeFrame: selectedTimeFrame
+        timeFrame: selectedTimeFrame,
       });
     }
     
@@ -233,14 +233,14 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
   const timeFrameColors = {
     today: getTimeFrameColors('today'),
     month: getTimeFrameColors('month'),
-    year: getTimeFrameColors('year')
+    year: getTimeFrameColors('year'),
   };
 
   // 시간대별 라벨 (기존과 동일)
   const timeFrameLabels = {
     today: '오늘의 운세',
     month: '이번달 운세',
-    year: '올해 운세'
+    year: '올해 운세',
   };
 
   // 통합 차트 설정 생성 (ChartStyleUtils 사용)
@@ -250,7 +250,7 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
       labels,
       chartTimeFrameDatasets,
       isDarkMode,
-      true // 최대값 강조 활성화
+      true, // 최대값 강조 활성화
     );
   }, [data.items, chartTimeFrameDatasets, isDarkMode]);
   
@@ -262,16 +262,16 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     const customOptions = getChartOptions(isDarkMode, {
       plugins: {
         legend: {
-          display: selectedTimeFrame !== 'base'
+          display: selectedTimeFrame !== 'base',
         },
         tooltip: {
           callbacks: {
             label: (context: any) => {
               return `${context.dataset.label}: ${context.parsed.r}점`;
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     });
     
     // 옵션 병합 (깊은 병합)
@@ -283,17 +283,17 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
         ...customOptions.plugins,
         legend: {
           ...baseOptions?.plugins?.legend,
-          ...customOptions.plugins?.legend
+          ...customOptions.plugins?.legend,
         },
         tooltip: {
           ...baseOptions?.plugins?.tooltip,
-          ...customOptions.plugins?.tooltip
-        }
+          ...customOptions.plugins?.tooltip,
+        },
       },
       scales: {
         ...baseOptions?.scales,
-        ...customOptions.scales
-      }
+        ...customOptions.scales,
+      },
     };
   }, [enhancedChartConfig, isDarkMode, selectedTimeFrame]);
 
@@ -310,18 +310,18 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
         backgroundColor: scoreValues.map((_, index) => 
           maxScoreIndexes.includes(index) 
             ? ChartStyleUtils.COLOR_PALETTE.accent  // 골드 (최고점)
-            : getTimeFrameColors('base').background
+            : getTimeFrameColors('base').background,
         ),
         borderColor: scoreValues.map((_, index) => 
           maxScoreIndexes.includes(index) 
             ? ChartStyleUtils.COLOR_PALETTE.accent  // 골드 (최고점)
-            : getTimeFrameColors('base').border
+            : getTimeFrameColors('base').border,
         ),
         borderWidth: 2,
         borderRadius: 8,
-        borderSkipped: false
-      }
-    ]
+        borderSkipped: false,
+      },
+    ],
   };
 
   const barOptions = {
@@ -329,7 +329,7 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false
+        display: false,
       },
       tooltip: {
         backgroundColor: isDarkMode ? '#374151' : '#f3f4f6',
@@ -340,30 +340,30 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
         callbacks: {
           label: (context: any) => {
             return `${context.dataset.label}: ${context.parsed.y}점`;
-          }
-        }
-      }
+          },
+        },
+      },
     },
     scales: {
       x: {
         grid: {
-          display: false
+          display: false,
         },
         ticks: {
-          color: isDarkMode ? '#9ca3af' : '#6b7280'
-        }
+          color: isDarkMode ? '#9ca3af' : '#6b7280',
+        },
       },
       y: {
         beginAtZero: true,
         max: 100,
         grid: {
-          color: isDarkMode ? '#374151' : '#e5e7eb'
+          color: isDarkMode ? '#374151' : '#e5e7eb',
         },
         ticks: {
-          color: isDarkMode ? '#9ca3af' : '#6b7280'
-        }
-      }
-    }
+          color: isDarkMode ? '#9ca3af' : '#6b7280',
+        },
+      },
+    },
   };
 
   // 2개 이하 항목일 때는 바 차트 사용
@@ -402,7 +402,7 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
           { key: 'base' as TimeFrame, label: '기본', active: 'base' },
           { key: 'today' as TimeFrame, label: '오늘', active: 'today' },
           { key: 'month' as TimeFrame, label: '이달', active: 'month' },
-          { key: 'year' as TimeFrame, label: '올해', active: 'year' }
+          { key: 'year' as TimeFrame, label: '올해', active: 'year' },
         ].map(({ key, label, active }) => (
           <button
             key={key}

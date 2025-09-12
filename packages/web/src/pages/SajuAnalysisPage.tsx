@@ -73,7 +73,7 @@ const SajuAnalysisPage: React.FC = () => {
       day: info.day,
       hour: info.hour || 12,
       isLunar: info.isLunar || false,
-      gender: info.gender || 'male'
+      gender: info.gender || 'male',
     }).then(fortuneData => {
       setLifetimeFortune(fortuneData);
       console.log('✅ 100년 인생운세 계산 완료:', fortuneData);
@@ -94,7 +94,7 @@ const SajuAnalysisPage: React.FC = () => {
         fiveElements: sajuData.fiveElements,
         tenGods: sajuData.tenGods,
         totalScore: sajuData.totalScore,
-        averageScore: sajuData.averageScore
+        averageScore: sajuData.averageScore,
       };
       
       setAnalysisResult(result);

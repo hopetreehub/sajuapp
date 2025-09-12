@@ -67,8 +67,8 @@ export const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = (
             borderDash: [5, 5],
             pointRadius: 0,
             pointHoverRadius: 0,
-          }
-        ]
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -84,17 +84,17 @@ export const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = (
               padding: 20,
               usePointStyle: true,
               color: textColor,
-            }
+            },
           },
           tooltip: {
             callbacks: {
-              label: function(context) {
+              label(context) {
                 const label = context.dataset.label || '';
                 const value = context.parsed.r || context.parsed.y;
                 return `${label}: ${Math.round(value)}점`;
-              }
-            }
-          }
+              },
+            },
+          },
         },
         scales: {
           r: {
@@ -106,9 +106,9 @@ export const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = (
                 size: 10,
               },
               color: textColor,
-              callback: function(value) {
-                return value + '점';
-              }
+              callback(value) {
+                return `${value  }점`;
+              },
             },
             pointLabels: {
               font: {
@@ -116,17 +116,17 @@ export const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = (
                 weight: 'bold',
               },
               color: textColor,
-              callback: function(value, index) {
+              callback(value, index) {
                 const score = scores[index];
                 return `${value}\n(${Math.round(score)}점)`;
-              }
+              },
             },
             grid: {
               color: gridColor,
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     });
 
     return () => {

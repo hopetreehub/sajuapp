@@ -129,7 +129,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
     if (!currentCategory || !selectedSubcategory) return null;
 
     const subcategory = currentCategory.subcategories.find(
-      sub => sub.id === selectedSubcategory
+      sub => sub.id === selectedSubcategory,
     );
 
     if (!subcategory) return null;
@@ -140,7 +140,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
       title: `${currentCategory.name} - ${subcategory.name}`,
       items: subcategory.items,
       chartData: subcategory.items.map(item => item.baseScore),
-      maxValue: 100
+      maxValue: 100,
     };
   }, [selectedCategory, selectedSubcategory, currentCategory]);
 
@@ -301,7 +301,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
           <div className="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl p-4 text-center">
             <div className="text-2xl font-bold">
               {SAJU_RADAR_CATEGORIES.reduce((sum, cat) => 
-                sum + cat.subcategories.reduce((subSum, sub) => subSum + sub.items.length, 0), 0
+                sum + cat.subcategories.reduce((subSum, sub) => subSum + sub.items.length, 0), 0,
               )}
             </div>
             <div className="text-sm">세부항목</div>

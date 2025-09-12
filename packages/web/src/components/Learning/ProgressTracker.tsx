@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import { 
   ChartBarIcon, 
   ClockIcon, 
   CalendarIcon,
   TrophyIcon,
   BookOpenIcon,
-  StarIcon
-} from '@heroicons/react/24/outline'
+  StarIcon,
+} from '@heroicons/react/24/outline';
 
 interface LearningStats {
   totalCoursesEnrolled: number
@@ -30,14 +30,14 @@ interface ProgressTrackerProps {
 }
 
 export default function ProgressTracker({ userId }: ProgressTrackerProps) {
-  const [stats, setStats] = useState<LearningStats | null>(null)
-  const [weeklyData, setWeeklyData] = useState<WeeklyProgress[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [stats, setStats] = useState<LearningStats | null>(null);
+  const [weeklyData, setWeeklyData] = useState<WeeklyProgress[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    loadLearningStats()
-    loadWeeklyProgress()
-  }, [userId])
+    loadLearningStats();
+    loadWeeklyProgress();
+  }, [userId]);
 
   const loadLearningStats = async () => {
     try {
@@ -50,16 +50,16 @@ export default function ProgressTracker({ userId }: ProgressTrackerProps) {
         totalStudyTime: 14400, // 4시간 (초 단위)
         averageScore: 87,
         streak: 7,
-        certificates: 2
-      }
+        certificates: 2,
+      };
       
-      setStats(mockStats)
-      setIsLoading(false)
+      setStats(mockStats);
+      setIsLoading(false);
     } catch (error) {
-      console.error('학습 통계 로딩 실패:', error)
-      setIsLoading(false)
+      console.error('학습 통계 로딩 실패:', error);
+      setIsLoading(false);
     }
-  }
+  };
 
   const loadWeeklyProgress = () => {
     // 임시 데이터
@@ -68,23 +68,23 @@ export default function ProgressTracker({ userId }: ProgressTrackerProps) {
       { week: '2주', lessonsCompleted: 4, studyTime: 2400 },
       { week: '3주', lessonsCompleted: 6, studyTime: 3200 },
       { week: '4주', lessonsCompleted: 5, studyTime: 2800 },
-      { week: '5주', lessonsCompleted: 7, studyTime: 4200 }
-    ]
+      { week: '5주', lessonsCompleted: 7, studyTime: 4200 },
+    ];
     
-    setWeeklyData(mockWeeklyData)
-  }
+    setWeeklyData(mockWeeklyData);
+  };
 
   const formatStudyTime = (seconds: number) => {
-    const hours = Math.floor(seconds / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     
     if (hours > 0) {
-      return `${hours}시간 ${minutes}분`
+      return `${hours}시간 ${minutes}분`;
     }
-    return `${minutes}분`
-  }
+    return `${minutes}분`;
+  };
 
-  const maxLessons = Math.max(...weeklyData.map(d => d.lessonsCompleted))
+  const maxLessons = Math.max(...weeklyData.map(d => d.lessonsCompleted));
 
   if (isLoading) {
     return (
@@ -97,10 +97,10 @@ export default function ProgressTracker({ userId }: ProgressTrackerProps) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  if (!stats) return null
+  if (!stats) return null;
 
   return (
     <div className="space-y-6">
@@ -305,5 +305,5 @@ export default function ProgressTracker({ userId }: ProgressTrackerProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

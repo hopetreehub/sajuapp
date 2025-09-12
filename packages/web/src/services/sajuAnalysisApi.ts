@@ -125,7 +125,7 @@ export async function fetchComprehensiveScores(birthInfo: SajuBirthInfo): Promis
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(birthInfo)
+      body: JSON.stringify(birthInfo),
     });
 
     if (!response.ok) {
@@ -156,8 +156,8 @@ export function transformApiDataToRadarCategories(apiData: ApiCategoryResponse['
       items: categoryData.items.map((item, index) => ({
         id: `${categoryName.toLowerCase()}_${index}`,
         name: item.name,
-        baseScore: Math.round(item.weight * item.confidence)
-      }))
+        baseScore: Math.round(item.weight * item.confidence),
+      })),
     }));
 
     categories.push({
@@ -165,7 +165,7 @@ export function transformApiDataToRadarCategories(apiData: ApiCategoryResponse['
       name: '주능',
       icon: '⚡',
       description: '능력과 잠재력 분석',
-      subcategories: positiveSubcategories
+      subcategories: positiveSubcategories,
     });
   }
 
@@ -177,8 +177,8 @@ export function transformApiDataToRadarCategories(apiData: ApiCategoryResponse['
       items: categoryData.items.map((item, index) => ({
         id: `${categoryName.toLowerCase()}_${index}`,
         name: item.name,
-        baseScore: Math.round((100 - item.weight) * item.confidence) // 주흉은 역산
-      }))
+        baseScore: Math.round((100 - item.weight) * item.confidence), // 주흉은 역산
+      })),
     }));
 
     categories.push({
@@ -186,7 +186,7 @@ export function transformApiDataToRadarCategories(apiData: ApiCategoryResponse['
       name: '주흉',
       icon: '⚠️',
       description: '위험과 주의사항 분석',
-      subcategories: negativeSubcategories
+      subcategories: negativeSubcategories,
     });
   }
 
@@ -198,7 +198,7 @@ export function transformApiDataToRadarCategories(apiData: ApiCategoryResponse['
  */
 export function transformComprehensiveScoreToRadarCategories(
   scoreData: ComprehensiveScoreResponse['data'],
-  timeframe: 'base' | 'daily' | 'monthly' | 'yearly' = 'base'
+  timeframe: 'base' | 'daily' | 'monthly' | 'yearly' = 'base',
 ): SajuRadarCategory[] {
   const categories: SajuRadarCategory[] = [];
 
@@ -214,8 +214,8 @@ export function transformComprehensiveScoreToRadarCategories(
         // 시점별 점수 추가
         dailyScore: timeframe === 'daily' ? item.score : undefined,
         monthlyScore: timeframe === 'monthly' ? item.score : undefined,
-        yearlyScore: timeframe === 'yearly' ? item.score : undefined
-      }))
+        yearlyScore: timeframe === 'yearly' ? item.score : undefined,
+      })),
     }));
 
     categories.push({
@@ -223,7 +223,7 @@ export function transformComprehensiveScoreToRadarCategories(
       name: '주능',
       icon: '⚡',
       description: '능력과 잠재력 분석',
-      subcategories: positiveSubcategories
+      subcategories: positiveSubcategories,
     });
   }
 
@@ -239,8 +239,8 @@ export function transformComprehensiveScoreToRadarCategories(
         // 시점별 점수 추가
         dailyScore: timeframe === 'daily' ? (100 - item.score) : undefined,
         monthlyScore: timeframe === 'monthly' ? (100 - item.score) : undefined,
-        yearlyScore: timeframe === 'yearly' ? (100 - item.score) : undefined
-      }))
+        yearlyScore: timeframe === 'yearly' ? (100 - item.score) : undefined,
+      })),
     }));
 
     categories.push({
@@ -248,7 +248,7 @@ export function transformComprehensiveScoreToRadarCategories(
       name: '주흉',
       icon: '⚠️',
       description: '위험과 주의사항 분석',
-      subcategories: negativeSubcategories
+      subcategories: negativeSubcategories,
     });
   }
 
@@ -307,7 +307,7 @@ export async function getSajuCategories(): Promise<SajuRadarCategory[]> {
  */
 export async function getComprehensiveSajuAnalysis(
   birthInfo: SajuBirthInfo,
-  timeframe: 'base' | 'daily' | 'monthly' | 'yearly' = 'base'
+  timeframe: 'base' | 'daily' | 'monthly' | 'yearly' = 'base',
 ): Promise<{
   categories: SajuRadarCategory[],
   summary: ComprehensiveScoreResponse['data']['summary']
@@ -321,7 +321,7 @@ export async function getComprehensiveSajuAnalysis(
     
     return {
       categories,
-      summary: response.data.summary
+      summary: response.data.summary,
     };
   } catch (error) {
     console.error('❌ 종합 사주 분석 실패:', error);

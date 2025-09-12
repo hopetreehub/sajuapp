@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
-import { useCalendar } from '@/contexts/CalendarContext'
-import { Todo } from '@/contexts/CalendarContext'
+import { useState, useEffect } from 'react';
+import { useCalendar } from '@/contexts/CalendarContext';
+import { Todo } from '@/contexts/CalendarContext';
 
 interface EditTodoModalProps {
   isOpen: boolean
@@ -9,36 +9,36 @@ interface EditTodoModalProps {
 }
 
 export default function EditTodoModal({ isOpen, onClose, todo }: EditTodoModalProps) {
-  const { updateTodo } = useCalendar()
-  const [text, setText] = useState('')
-  const [priority, setPriority] = useState<'high' | 'medium' | 'low'>('medium')
-  const [hasTime, setHasTime] = useState(false)
-  const [startTime, setStartTime] = useState('')
+  const { updateTodo } = useCalendar();
+  const [text, setText] = useState('');
+  const [priority, setPriority] = useState<'high' | 'medium' | 'low'>('medium');
+  const [hasTime, setHasTime] = useState(false);
+  const [startTime, setStartTime] = useState('');
 
   useEffect(() => {
     if (todo) {
-      setText(todo.text)
-      setPriority(todo.priority)
-      setHasTime(todo.hasTime || false)
-      setStartTime(todo.startTime || '')
+      setText(todo.text);
+      setPriority(todo.priority);
+      setHasTime(todo.hasTime || false);
+      setStartTime(todo.startTime || '');
     }
-  }, [todo])
+  }, [todo]);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!todo || !text.trim()) return
+    e.preventDefault();
+    if (!todo || !text.trim()) return;
 
     updateTodo(todo.id, {
       text: text.trim(),
       priority,
       hasTime,
-      startTime: hasTime ? startTime : undefined
-    })
+      startTime: hasTime ? startTime : undefined,
+    });
 
-    onClose()
-  }
+    onClose();
+  };
 
-  if (!isOpen || !todo) return null
+  if (!isOpen || !todo) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -152,5 +152,5 @@ export default function EditTodoModal({ isOpen, onClose, todo }: EditTodoModalPr
         </div>
       </div>
     </div>
-  )
+  );
 }

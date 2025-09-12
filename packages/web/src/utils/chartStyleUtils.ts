@@ -38,13 +38,13 @@ export class ChartStyleUtils {
     dark: {
       background: 'rgba(255, 255, 255, 0.1)',
       text: '#ffffff',
-      gridLines: 'rgba(255, 255, 255, 0.2)'
+      gridLines: 'rgba(255, 255, 255, 0.2)',
     },
     light: {
       background: 'rgba(0, 0, 0, 0.1)',
       text: '#333333',
-      gridLines: 'rgba(0, 0, 0, 0.1)'
-    }
+      gridLines: 'rgba(0, 0, 0, 0.1)',
+    },
   };
 
   // 기본 레이더 차트 옵션
@@ -59,9 +59,9 @@ export class ChartStyleUtils {
           usePointStyle: true,
           font: {
             size: 12,
-            weight: 'normal'
-          }
-        }
+            weight: 'normal',
+          },
+        },
       },
       tooltip: {
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
@@ -72,13 +72,13 @@ export class ChartStyleUtils {
         cornerRadius: 8,
         displayColors: true,
         callbacks: {
-          label: function(context) {
+          label(context) {
             const label = context.dataset.label || '';
             const value = Math.round(context.parsed.r * 10) / 10;
             return `${label}: ${value}점`;
-          }
-        }
-      }
+          },
+        },
+      },
     },
     scales: {
       r: {
@@ -88,29 +88,29 @@ export class ChartStyleUtils {
           stepSize: 20,
           display: false, // 점수 표시 제거
           font: {
-            size: 10
-          }
+            size: 10,
+          },
         },
         grid: {
           color: 'rgba(128, 128, 128, 0.2)',
-          lineWidth: 1
+          lineWidth: 1,
         },
         angleLines: {
           color: 'rgba(128, 128, 128, 0.2)',
-          lineWidth: 1
+          lineWidth: 1,
         },
         pointLabels: {
           font: {
             size: 12,
-            weight: 'bold'
-          }
-        }
-      }
+            weight: 'bold',
+          },
+        },
+      },
     },
     animation: {
       duration: 1500,
-      easing: 'easeInOutQuart'
-    }
+      easing: 'easeInOutQuart',
+    },
   };
 
   /**
@@ -126,7 +126,7 @@ export class ChartStyleUtils {
       maxValues.push({
         datasetIndex,
         pointIndex: maxIndex,
-        value: maxValue
+        value: maxValue,
       });
     });
 
@@ -138,7 +138,7 @@ export class ChartStyleUtils {
    */
   public static createHighlightedPointStyles(
     datasets: TimeFrameData[], 
-    options: EnhancedRadarOptions
+    options: EnhancedRadarOptions,
   ): any[] {
     const maxValues = this.findMaximumValues(datasets);
     
@@ -180,7 +180,7 @@ export class ChartStyleUtils {
         pointRadius: pointRadii,
         pointBorderWidth: pointBorderWidths,
         borderWidth: 2,
-        tension: 0.1
+        tension: 0.1,
       };
     });
   }
@@ -199,9 +199,9 @@ export class ChartStyleUtils {
           ...baseOptions.plugins?.legend,
           labels: {
             ...baseOptions.plugins?.legend?.labels,
-            color: theme.text
-          }
-        }
+            color: theme.text,
+          },
+        },
       },
       scales: {
         r: {
@@ -209,22 +209,22 @@ export class ChartStyleUtils {
           ticks: {
             ...baseOptions.scales?.r?.ticks,
             color: theme.text,
-            display: false // 점수 표시 제거 유지
+            display: false, // 점수 표시 제거 유지
           },
           grid: {
             ...baseOptions.scales?.r?.grid,
-            color: theme.gridLines
+            color: theme.gridLines,
           },
           angleLines: {
             ...baseOptions.scales?.r?.angleLines,
-            color: theme.gridLines
+            color: theme.gridLines,
           },
           pointLabels: {
             ...baseOptions.scales?.r?.pointLabels,
-            color: theme.text
-          }
-        }
-      }
+            color: theme.text,
+          },
+        },
+      },
     };
   }
 
@@ -235,7 +235,7 @@ export class ChartStyleUtils {
     labels: string[],
     datasets: TimeFrameData[],
     options: EnhancedRadarOptions,
-    isDarkMode: boolean = false
+    isDarkMode: boolean = false,
   ): ChartConfiguration<'radar'> {
     const enhancedDatasets = this.createHighlightedPointStyles(datasets, options);
     const chartOptions = this.applyDarkMode(this.DEFAULT_RADAR_OPTIONS, isDarkMode);
@@ -244,16 +244,16 @@ export class ChartStyleUtils {
       type: 'radar',
       data: {
         labels,
-        datasets: enhancedDatasets
+        datasets: enhancedDatasets,
       },
       options: {
         ...chartOptions,
         animation: {
           ...chartOptions.animation,
           duration: options.animation.duration,
-          easing: options.animation.easing
-        }
-      }
+          easing: options.animation.easing,
+        },
+      },
     };
   }
 
@@ -264,7 +264,7 @@ export class ChartStyleUtils {
     labels: string[],
     datasets: TimeFrameData[],
     isDarkMode: boolean = false,
-    highlightMax: boolean = true
+    highlightMax: boolean = true,
   ): ChartConfiguration<'radar'> {
     const options: EnhancedRadarOptions = {
       highlightMaximum: highlightMax,
@@ -272,16 +272,16 @@ export class ChartStyleUtils {
         radius: 6,
         backgroundColor: this.COLOR_PALETTE.accent,
         borderColor: this.COLOR_PALETTE.accent,
-        borderWidth: 3
+        borderWidth: 3,
       },
       normalPointStyle: {
         radius: 3,
-        borderWidth: 2
+        borderWidth: 2,
       },
       animation: {
         duration: 1200,
-        easing: 'easeInOutQuart'
-      }
+        easing: 'easeInOutQuart',
+      },
     };
 
     return this.createCompatibilityRadarConfig(labels, datasets, options, isDarkMode);
@@ -298,7 +298,7 @@ export class ChartStyleUtils {
       'B+': '#45B7D1',     // 블루
       'B': '#96CEB4',      // 그린
       'C': '#FFEAA7',      // 옐로우
-      'D': '#DDA0DD'       // 퍼플
+      'D': '#DDA0DD',       // 퍼플
     };
 
     return gradeColors[grade] || gradeColors['B'];
@@ -316,25 +316,25 @@ export class ChartStyleUtils {
         legend: {
           labels: {
             font: {
-              size: fontSize
-            }
-          }
-        }
+              size: fontSize,
+            },
+          },
+        },
       },
       scales: {
         r: {
           ticks: {
             font: {
-              size: Math.max(8, fontSize - 2)
-            }
+              size: Math.max(8, fontSize - 2),
+            },
           },
           pointLabels: {
             font: {
-              size: fontSize
-            }
-          }
-        }
-      }
+              size: fontSize,
+            },
+          },
+        },
+      },
     };
   }
 
@@ -345,9 +345,9 @@ export class ChartStyleUtils {
     return {
       duration: 800,
       easing: 'easeInOutQuart',
-      onComplete: function() {
+      onComplete() {
         // 애니메이션 완료 후 콜백
-      }
+      },
     };
   }
 
@@ -378,14 +378,14 @@ export const CHART_CONSTANTS = {
     NORMAL: 3,
     HIGHLIGHTED: 6,
     SMALL: 2,
-    LARGE: 8
+    LARGE: 8,
   },
   BORDER_WIDTH: {
     NORMAL: 2,
     HIGHLIGHTED: 3,
     THIN: 1,
-    THICK: 4
-  }
+    THICK: 4,
+  },
 };
 
 // 내보낼 기본 설정들
@@ -395,14 +395,14 @@ export const DEFAULT_ENHANCED_OPTIONS: EnhancedRadarOptions = {
     radius: CHART_CONSTANTS.POINT_RADIUS.HIGHLIGHTED,
     backgroundColor: ChartStyleUtils.COLOR_PALETTE.accent,
     borderColor: ChartStyleUtils.COLOR_PALETTE.accent,
-    borderWidth: CHART_CONSTANTS.BORDER_WIDTH.HIGHLIGHTED
+    borderWidth: CHART_CONSTANTS.BORDER_WIDTH.HIGHLIGHTED,
   },
   normalPointStyle: {
     radius: CHART_CONSTANTS.POINT_RADIUS.NORMAL,
-    borderWidth: CHART_CONSTANTS.BORDER_WIDTH.NORMAL
+    borderWidth: CHART_CONSTANTS.BORDER_WIDTH.NORMAL,
   },
   animation: {
     duration: CHART_CONSTANTS.ANIMATION_DURATION,
-    easing: 'easeInOutQuart'
-  }
+    easing: 'easeInOutQuart',
+  },
 };

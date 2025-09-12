@@ -4,7 +4,7 @@ import {
   createCustomer, 
   updateCustomer, 
   deleteCustomer,
-  Customer 
+  Customer, 
 } from '@/services/customerApi';
 
 export default function CustomerManagementPage() {
@@ -24,7 +24,7 @@ export default function CustomerManagementPage() {
     phone: '',
     lunar_solar: 'solar',
     gender: 'male',
-    memo: ''
+    memo: '',
   });
 
   // Load customers
@@ -76,7 +76,7 @@ export default function CustomerManagementPage() {
       phone: customer.phone,
       lunar_solar: customer.lunar_solar,
       gender: customer.gender,
-      memo: customer.memo || ''
+      memo: customer.memo || '',
     });
     setIsFormOpen(true);
   };
@@ -101,7 +101,7 @@ export default function CustomerManagementPage() {
       phone: '',
       lunar_solar: 'solar',
       gender: 'male',
-      memo: ''
+      memo: '',
     });
   };
 

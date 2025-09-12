@@ -1,13 +1,13 @@
 // 9개 대항목 구조로 완전 재편성된 데이터
-import { SajuRadarCategory } from '@/types/sajuRadar'
-import { calculateSajuScore, generateSampleSajuData, SajuData } from '@/utils/sajuScoreCalculator'
-import { getSajuCategories } from '@/services/sajuAnalysisApi'
+import { SajuRadarCategory } from '@/types/sajuRadar';
+import { calculateSajuScore, generateSampleSajuData, SajuData } from '@/utils/sajuScoreCalculator';
+import { getSajuCategories } from '@/services/sajuAnalysisApi';
 
 // 전역 사주 데이터 관리
 let globalSajuData: SajuData | null = null;
 
 // 동적 카테고리 데이터 관리
-let dynamicCategories: SajuRadarCategory[] = [];
+const dynamicCategories: SajuRadarCategory[] = [];
 
 // 사주 데이터 설정 함수 (외부에서 호출)
 export function setGlobalSajuData(sajuData: SajuData | null) {
@@ -42,8 +42,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'inyeon', name: '인연', baseScore: getSajuScore('인연', 65) },
           { id: 'haengdong', name: '행동', baseScore: getSajuScore('행동', 72) },
           { id: 'haengun', name: '행운', baseScore: getSajuScore('행운', 68) },
-          { id: 'hwangyeong', name: '환경', baseScore: getSajuScore('환경', 70) }
-        ]
+          { id: 'hwangyeong', name: '환경', baseScore: getSajuScore('환경', 70) },
+        ],
       },
       {
         id: 'seonghyang',
@@ -55,8 +55,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'iseong', name: '이성', baseScore: getSajuScore('이성', 72) },
           { id: 'inseong', name: '인성', baseScore: getSajuScore('인성', 75) },
           { id: 'jiseong', name: '지성', baseScore: getSajuScore('지성', 70) },
-          { id: 'hakseupseong', name: '학습성', baseScore: getSajuScore('학습성', 68) }
-        ]
+          { id: 'hakseupseong', name: '학습성', baseScore: getSajuScore('학습성', 68) },
+        ],
       },
       {
         id: 'yokjeong',
@@ -77,8 +77,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'seungbuyok', name: '승부욕', baseScore: getSajuScore('승부욕', 70) },
           { id: 'sigyok', name: '식욕', baseScore: getSajuScore('식욕', 60) },
           { id: 'yoksim', name: '욕심', baseScore: getSajuScore('욕심', 55) },
-          { id: 'jeulgeoum', name: '즐거움', baseScore: getSajuScore('즐거움', 75) }
-        ]
+          { id: 'jeulgeoum', name: '즐거움', baseScore: getSajuScore('즐거움', 75) },
+        ],
       },
       {
         id: 'jugak',
@@ -93,8 +93,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'igijeogin', name: '이기적', baseScore: getSajuScore('이기적', 50) },
           { id: 'jinchwijeogin', name: '진취적', baseScore: getSajuScore('진취적', 72) },
           { id: 'haprijeogin', name: '합리적', baseScore: getSajuScore('합리적', 75) },
-          { id: 'heuisaengjeogin', name: '희생적', baseScore: getSajuScore('희생적', 65) }
-        ]
+          { id: 'heuisaengjeogin', name: '희생적', baseScore: getSajuScore('희생적', 65) },
+        ],
       },
       {
         id: 'juun',
@@ -116,10 +116,10 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'jigeobun', name: '직업운', baseScore: getSajuScore('직업운', 68) },
           { id: 'jibangun', name: '집안운', baseScore: getSajuScore('집안운', 65) },
           { id: 'hageobun', name: '학업운', baseScore: getSajuScore('학업운', 70) },
-          { id: 'haengunun', name: '행운운', baseScore: getSajuScore('행운운', 60) }
-        ]
-      }
-    ]
+          { id: 'haengunun', name: '행운운', baseScore: getSajuScore('행운운', 60) },
+        ],
+      },
+    ],
   },
 
   // 2. 주건 (기존 5개 + 뇌 추가)
@@ -144,8 +144,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'eumsik', name: '음식', baseScore: getSajuScore('음식', 65) },
           { id: 'chehyeong', name: '체형', baseScore: getSajuScore('체형', 60) },
           { id: 'chiryo', name: '치료', baseScore: getSajuScore('치료', 70) },
-          { id: 'keondisyeon', name: '컨디션', baseScore: getSajuScore('컨디션', 72) }
-        ]
+          { id: 'keondisyeon', name: '컨디션', baseScore: getSajuScore('컨디션', 72) },
+        ],
       },
       {
         id: 'simri',
@@ -162,8 +162,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'jiltu', name: '질투', baseScore: getSajuScore('질투', 40) },
           { id: 'jjajeung', name: '짜증', baseScore: getSajuScore('짜증', 45) },
           { id: 'hogisim', name: '호기심', baseScore: getSajuScore('호기심', 75) },
-          { id: 'heungbun', name: '흥분', baseScore: getSajuScore('흥분', 60) }
-        ]
+          { id: 'heungbun', name: '흥분', baseScore: getSajuScore('흥분', 60) },
+        ],
       },
       {
         id: 'inchegye',
@@ -180,8 +180,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'oehyeonggye', name: '외형계', baseScore: getSajuScore('외형계', 60) },
           { id: 'jeonsingye', name: '정신계', baseScore: getSajuScore('정신계', 70) },
           { id: 'pibugye', name: '피부계', baseScore: getSajuScore('피부계', 65) },
-          { id: 'hoheupgye', name: '호흡계', baseScore: getSajuScore('호흡계', 72) }
-        ]
+          { id: 'hoheupgye', name: '호흡계', baseScore: getSajuScore('호흡계', 72) },
+        ],
       },
       {
         id: 'jeongryeok',
@@ -194,8 +194,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'joyeol', name: '조절', baseScore: getSajuScore('조절', 68) },
           { id: 'junbi', name: '준비', baseScore: getSajuScore('준비', 65) },
           { id: 'chungdong', name: '충동', baseScore: getSajuScore('충동', 60) },
-          { id: 'taim', name: '타임', baseScore: getSajuScore('타임', 62) }
-        ]
+          { id: 'taim', name: '타임', baseScore: getSajuScore('타임', 62) },
+        ],
       },
       {
         id: 'jilhwan',
@@ -227,8 +227,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'taae', name: '태아질환', baseScore: getSajuScore('태아질환', 30) },
           { id: 'pibu', name: '피부질환', baseScore: getSajuScore('피부질환', 50) },
           { id: 'horumon', name: '호르몬질환', baseScore: getSajuScore('호르몬질환', 40) },
-          { id: 'hoheup', name: '호흡질환', baseScore: getSajuScore('호흡질환', 45) }
-        ]
+          { id: 'hoheup', name: '호흡질환', baseScore: getSajuScore('호흡질환', 45) },
+        ],
       },
       {
         id: 'noe',
@@ -250,10 +250,10 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'cheoksu', name: '척수', baseScore: getSajuScore('척수', 60) },
           { id: 'cheukdueop', name: '측두엽', baseScore: getSajuScore('측두엽', 70) },
           { id: 'hutueop', name: '후투엽', baseScore: getSajuScore('후투엽', 65) },
-          { id: 'hueop', name: '후엽', baseScore: getSajuScore('후엽', 68) }
-        ]
-      }
-    ]
+          { id: 'hueop', name: '후엽', baseScore: getSajuScore('후엽', 68) },
+        ],
+      },
+    ],
   },
 
   // 3. 주물 (새로 추가)
@@ -279,8 +279,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'yeonrip', name: '연립', baseScore: getSajuScore('연립', 60) },
           { id: 'opiseu', name: '오피스', baseScore: getSajuScore('오피스', 70) },
           { id: 'jusangbokhap', name: '주상복합', baseScore: getSajuScore('주상복합', 68) },
-          { id: 'jutaek', name: '주택', baseScore: getSajuScore('주택', 67) }
-        ]
+          { id: 'jutaek', name: '주택', baseScore: getSajuScore('주택', 67) },
+        ],
       },
       {
         id: 'jaemul',
@@ -294,8 +294,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'chaegwon', name: '채권', baseScore: getSajuScore('채권', 58) },
           { id: 'tuja', name: '투자', baseScore: getSajuScore('투자', 60) },
           { id: 'peondeu', name: '펀드', baseScore: getSajuScore('펀드', 57) },
-          { id: 'hyeongeum', name: '현금', baseScore: getSajuScore('현금', 75) }
-        ]
+          { id: 'hyeongeum', name: '현금', baseScore: getSajuScore('현금', 75) },
+        ],
       },
       {
         id: 'tuja_jumul',
@@ -312,10 +312,10 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'seonmul', name: '선물', baseScore: getSajuScore('선물', 55) },
           { id: 'yeneung', name: '예능', baseScore: getSajuScore('예능', 60) },
           { id: 'inryeok', name: '인력', baseScore: getSajuScore('인력', 63) },
-          { id: 'jepum', name: '제품', baseScore: getSajuScore('제품', 65) }
-        ]
-      }
-    ]
+          { id: 'jepum', name: '제품', baseScore: getSajuScore('제품', 65) },
+        ],
+      },
+    ],
   },
 
   // 4. 주연 (기존 7개 + 가정, 가족 추가)
@@ -338,8 +338,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'oejongomo', name: '외종조모', baseScore: getSajuScore('외종조모', 65) },
           { id: 'oejongjobu', name: '외종조부', baseScore: getSajuScore('외종조부', 68) },
           { id: 'imo', name: '이모', baseScore: getSajuScore('이모', 70) },
-          { id: 'imobu', name: '이모부', baseScore: getSajuScore('이모부', 65) }
-        ]
+          { id: 'imobu', name: '이모부', baseScore: getSajuScore('이모부', 65) },
+        ],
       },
       {
         id: 'iseong',
@@ -350,8 +350,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'dongneiseong', name: '동네이성', baseScore: getSajuScore('동네이성', 68) },
           { id: 'dongmuniseong', name: '동문이성', baseScore: getSajuScore('동문이성', 70) },
           { id: 'moimiseong', name: '모임이성', baseScore: getSajuScore('모임이성', 65) },
-          { id: 'hoesaiseong', name: '회사이성', baseScore: getSajuScore('회사이성', 72) }
-        ]
+          { id: 'hoesaiseong', name: '회사이성', baseScore: getSajuScore('회사이성', 72) },
+        ],
       },
       {
         id: 'inyeon',
@@ -368,8 +368,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'seuseung', name: '스승', baseScore: getSajuScore('스승', 72) },
           { id: 'aein', name: '애인', baseScore: getSajuScore('애인', 75) },
           { id: 'oega_inyeon', name: '외가', baseScore: getSajuScore('외가', 68) },
-          { id: 'chinga_inyeon', name: '친가', baseScore: getSajuScore('친가', 70) }
-        ]
+          { id: 'chinga_inyeon', name: '친가', baseScore: getSajuScore('친가', 70) },
+        ],
       },
       {
         id: 'seonbae',
@@ -381,8 +381,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'dongmunseonbae', name: '동문선배', baseScore: getSajuScore('동문선배', 70) },
           { id: 'moimseonbae', name: '모임선배', baseScore: getSajuScore('모임선배', 65) },
           { id: 'iseongseonbae', name: '이성선배', baseScore: getSajuScore('이성선배', 68) },
-          { id: 'hoesaseonbae', name: '회사선배', baseScore: getSajuScore('회사선배', 75) }
-        ]
+          { id: 'hoesaseonbae', name: '회사선배', baseScore: getSajuScore('회사선배', 75) },
+        ],
       },
       {
         id: 'chinga',
@@ -399,8 +399,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'jobu', name: '조부', baseScore: getSajuScore('조부', 72) },
           { id: 'joka', name: '조카', baseScore: getSajuScore('조카', 60) },
           { id: 'jeungjomo', name: '증조모', baseScore: getSajuScore('증조모', 65) },
-          { id: 'jeungjobu', name: '증조부', baseScore: getSajuScore('증조부', 68) }
-        ]
+          { id: 'jeungjobu', name: '증조부', baseScore: getSajuScore('증조부', 68) },
+        ],
       },
       {
         id: 'chingu',
@@ -412,8 +412,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'dongmunchingu', name: '동문친구', baseScore: getSajuScore('동문친구', 72) },
           { id: 'moimchingu', name: '모임친구', baseScore: getSajuScore('모임친구', 65) },
           { id: 'iseongchingu', name: '이성친구', baseScore: getSajuScore('이성친구', 75) },
-          { id: 'hoesachingu', name: '회사친구', baseScore: getSajuScore('회사친구', 68) }
-        ]
+          { id: 'hoesachingu', name: '회사친구', baseScore: getSajuScore('회사친구', 68) },
+        ],
       },
       {
         id: 'hubae',
@@ -425,8 +425,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'dongmunhubae', name: '동문후배', baseScore: getSajuScore('동문후배', 68) },
           { id: 'moimhubae', name: '모임후배', baseScore: getSajuScore('모임후배', 60) },
           { id: 'iseonghubae', name: '이성후배', baseScore: getSajuScore('이성후배', 65) },
-          { id: 'hoesahubae', name: '회사후배', baseScore: getSajuScore('회사후배', 70) }
-        ]
+          { id: 'hoesahubae', name: '회사후배', baseScore: getSajuScore('회사후배', 70) },
+        ],
       },
       {
         id: 'gajeong',
@@ -434,8 +434,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
         items: [
           { id: 'ttal', name: '딸', baseScore: getSajuScore('딸', 75) },
           { id: 'baeuja_gajeong', name: '배우자', baseScore: getSajuScore('배우자', 80) },
-          { id: 'adeul', name: '아들', baseScore: getSajuScore('아들', 75) }
-        ]
+          { id: 'adeul', name: '아들', baseScore: getSajuScore('아들', 75) },
+        ],
       },
       {
         id: 'gajok_juyeon',
@@ -447,10 +447,10 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'eomeoni', name: '어머니', baseScore: getSajuScore('어머니', 80) },
           { id: 'halmeoni', name: '할머니', baseScore: getSajuScore('할머니', 72) },
           { id: 'harabeoji', name: '할아버지', baseScore: getSajuScore('할아버지', 70) },
-          { id: 'hyeong', name: '형', baseScore: getSajuScore('형', 68) }
-        ]
-      }
-    ]
+          { id: 'hyeong', name: '형', baseScore: getSajuScore('형', 68) },
+        ],
+      },
+    ],
   },
 
   // 5. 주재 (기존 유지 - 3개 중항목)
@@ -487,8 +487,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'pyeonghaeng', name: '평행', baseScore: getSajuScore('평행', 60) },
           { id: 'hakseup_nonri', name: '학습', baseScore: getSajuScore('학습', 75) },
           { id: 'hoheup_nonri', name: '호흡', baseScore: getSajuScore('호흡', 65) },
-          { id: 'hwasul', name: '화술', baseScore: getSajuScore('화술', 70) }
-        ]
+          { id: 'hwasul', name: '화술', baseScore: getSajuScore('화술', 70) },
+        ],
       },
       {
         id: 'yesul',
@@ -517,8 +517,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'changjak', name: '창작', baseScore: getSajuScore('창작', 75) },
           { id: 'chegye', name: '체계', baseScore: getSajuScore('체계', 65) },
           { id: 'hyeongsang', name: '형상', baseScore: getSajuScore('형상', 70) },
-          { id: 'hwaldong_yesul', name: '활동', baseScore: getSajuScore('활동', 72) }
-        ]
+          { id: 'hwaldong_yesul', name: '활동', baseScore: getSajuScore('활동', 72) },
+        ],
       },
       {
         id: 'hakseup',
@@ -547,10 +547,10 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'jiri', name: '지리', baseScore: getSajuScore('지리', 60) },
           { id: 'pandoan', name: '판단', baseScore: getSajuScore('판단', 72) },
           { id: 'puri', name: '풀이', baseScore: getSajuScore('풀이', 70) },
-          { id: 'haeseok', name: '해석', baseScore: getSajuScore('해석', 72) }
-        ]
-      }
-    ]
+          { id: 'haeseok', name: '해석', baseScore: getSajuScore('해석', 72) },
+        ],
+      },
+    ],
   },
 
   // 6. 주업 (기존 유지 - 5개 중항목)
@@ -600,8 +600,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'pyohyeonryeok', name: '표현력', baseScore: getSajuScore('표현력', 70) },
           { id: 'haegeolryeok', name: '해결력', baseScore: getSajuScore('해결력', 75) },
           { id: 'hwahapryeok', name: '화합력', baseScore: getSajuScore('화합력', 68) },
-          { id: 'hwaldongryeok', name: '활동력', baseScore: getSajuScore('활동력', 72) }
-        ]
+          { id: 'hwaldongryeok', name: '활동력', baseScore: getSajuScore('활동력', 72) },
+        ],
       },
       {
         id: 'seonghyang_jueop',
@@ -613,8 +613,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'sukjiseong', name: '숙지성', baseScore: getSajuScore('숙지성', 65) },
           { id: 'jeonmunseong', name: '전문성', baseScore: getSajuScore('전문성', 75) },
           { id: 'changyiseong', name: '창의성', baseScore: getSajuScore('창의성', 70) },
-          { id: 'hwaldongseong', name: '활동성', baseScore: getSajuScore('활동성', 68) }
-        ]
+          { id: 'hwaldongseong', name: '활동성', baseScore: getSajuScore('활동성', 68) },
+        ],
       },
       {
         id: 'eommu',
@@ -638,8 +638,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'panmae', name: '판매', baseScore: getSajuScore('판매', 65) },
           { id: 'hyeonjang', name: '현장', baseScore: getSajuScore('현장', 68) },
           { id: 'hongbo', name: '홍보', baseScore: getSajuScore('홍보', 70) },
-          { id: 'hoegye', name: '회계', baseScore: getSajuScore('회계', 68) }
-        ]
+          { id: 'hoegye', name: '회계', baseScore: getSajuScore('회계', 68) },
+        ],
       },
       {
         id: 'eopjong',
@@ -653,8 +653,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'yeonye_bangsong', name: '연예/방송', baseScore: getSajuScore('연예/방송', 60) },
           { id: 'yutong', name: '유통', baseScore: getSajuScore('유통', 65) },
           { id: 'jeonja_tongsin', name: '전자/통신', baseScore: getSajuScore('전자/통신', 72) },
-          { id: 'jejjo', name: '제조', baseScore: getSajuScore('제조', 68) }
-        ]
+          { id: 'jejjo', name: '제조', baseScore: getSajuScore('제조', 68) },
+        ],
       },
       {
         id: 'jigeop',
@@ -669,10 +669,10 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'gisulga', name: '기술자', baseScore: getSajuScore('기술자', 70) },
           { id: 'yesulga', name: '예술가', baseScore: getSajuScore('예술가', 65) },
           { id: 'saeopga', name: '사업가', baseScore: getSajuScore('사업가', 65) },
-          { id: 'yeongunja', name: '연구자', baseScore: getSajuScore('연구자', 72) }
-        ]
-      }
-    ]
+          { id: 'yeongunja', name: '연구자', baseScore: getSajuScore('연구자', 72) },
+        ],
+      },
+    ],
   },
 
   // 7. 주생 (새로 추가 - 17개 중항목)
@@ -696,8 +696,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'oesik', name: '외식', baseScore: getSajuScore('외식', 68) },
           { id: 'isa', name: '이사', baseScore: getSajuScore('이사', 60) },
           { id: 'jaesan', name: '재산', baseScore: getSajuScore('재산', 65) },
-          { id: 'haengsa', name: '행사', baseScore: getSajuScore('행사', 68) }
-        ]
+          { id: 'haengsa', name: '행사', baseScore: getSajuScore('행사', 68) },
+        ],
       },
       {
         id: 'geongang',
@@ -716,8 +716,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'biman_geongang', name: '비만', baseScore: getSajuScore('비만', 50) },
           { id: 'sauna', name: '사우나', baseScore: getSajuScore('사우나', 62) },
           { id: 'chimi', name: '취미', baseScore: getSajuScore('취미', 70) },
-          { id: 'hyusik', name: '휴식', baseScore: getSajuScore('휴식', 75) }
-        ]
+          { id: 'hyusik', name: '휴식', baseScore: getSajuScore('휴식', 75) },
+        ],
       },
       {
         id: 'gyeolhon',
@@ -736,8 +736,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'yusan', name: '유산', baseScore: getSajuScore('유산', 60) },
           { id: 'jasik', name: '자식', baseScore: getSajuScore('자식', 75) },
           { id: 'jonggyo', name: '종교', baseScore: getSajuScore('종교', 55) },
-          { id: 'jigeop_gyeolhon', name: '직업', baseScore: getSajuScore('직업', 68) }
-        ]
+          { id: 'jigeop_gyeolhon', name: '직업', baseScore: getSajuScore('직업', 68) },
+        ],
       },
       {
         id: 'gyeyak_jusaeng',
@@ -754,8 +754,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'gongjeung', name: '공증', baseScore: getSajuScore('공증', 60) },
           { id: 'bojeung', name: '보증', baseScore: getSajuScore('보증', 55) },
           { id: 'bunsil', name: '분실', baseScore: getSajuScore('분실', 40) },
-          { id: 'sinyong', name: '신용', baseScore: getSajuScore('신용', 72) }
-        ]
+          { id: 'sinyong', name: '신용', baseScore: getSajuScore('신용', 72) },
+        ],
       },
       {
         id: 'byuti',
@@ -772,8 +772,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'anmyeon', name: '안면', baseScore: getSajuScore('안면', 70) },
           { id: 'oemo', name: '외모', baseScore: getSajuScore('외모', 72) },
           { id: 'heeo', name: '헤어', baseScore: getSajuScore('헤어', 68) },
-          { id: 'hwajangpum', name: '화장품', baseScore: getSajuScore('화장품', 65) }
-        ]
+          { id: 'hwajangpum', name: '화장품', baseScore: getSajuScore('화장품', 65) },
+        ],
       },
       {
         id: 'sago_jusaeng',
@@ -792,8 +792,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'sagi', name: '사기', baseScore: getSajuScore('사기', 30) },
           { id: 'wiban', name: '위반', baseScore: getSajuScore('위반', 45) },
           { id: 'wiheom', name: '위험', baseScore: getSajuScore('위험', 40) },
-          { id: 'pokhaeng', name: '폭행', baseScore: getSajuScore('폭행', 25) }
-        ]
+          { id: 'pokhaeng', name: '폭행', baseScore: getSajuScore('폭행', 25) },
+        ],
       },
       {
         id: 'saeop_jusaeng',
@@ -810,8 +810,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'jageum_saeop', name: '자금', baseScore: getSajuScore('자금', 65) },
           { id: 'gyeyak_saeop', name: '계약', baseScore: getSajuScore('계약', 68) },
           { id: 'gihoek', name: '기획', baseScore: getSajuScore('기획', 72) },
-          { id: 'dongeop', name: '동업', baseScore: getSajuScore('동업', 60) }
-        ]
+          { id: 'dongeop', name: '동업', baseScore: getSajuScore('동업', 60) },
+        ],
       },
       {
         id: 'yeonae',
@@ -827,8 +827,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'gwanram', name: '관람', baseScore: getSajuScore('관람', 68) },
           { id: 'simri', name: '심리', baseScore: getSajuScore('심리', 65) },
           { id: 'ibyeol', name: '이별', baseScore: getSajuScore('이별', 40) },
-          { id: 'hogam', name: '호감', baseScore: getSajuScore('호감', 75) }
-        ]
+          { id: 'hogam', name: '호감', baseScore: getSajuScore('호감', 75) },
+        ],
       },
       {
         id: 'siheom',
@@ -845,8 +845,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'puri_siheom', name: '풀이', baseScore: getSajuScore('풀이', 70) },
           { id: 'geongang_siheom', name: '건강', baseScore: getSajuScore('건강', 68) },
           { id: 'siheom_item', name: '시험', baseScore: getSajuScore('시험', 65) },
-          { id: 'junbimul', name: '준비물', baseScore: getSajuScore('준비물', 60) }
-        ]
+          { id: 'junbimul', name: '준비물', baseScore: getSajuScore('준비물', 60) },
+        ],
       },
       {
         id: 'undong_jusaeng',
@@ -863,8 +863,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'jeongsinryeok', name: '정신력', baseScore: getSajuScore('정신력', 72) },
           { id: 'jiguryeok', name: '지구력', baseScore: getSajuScore('지구력', 75) },
           { id: 'hoejeon', name: '회전', baseScore: getSajuScore('회전', 65) },
-          { id: 'heureum', name: '흐름', baseScore: getSajuScore('흐름', 68) }
-        ]
+          { id: 'heureum', name: '흐름', baseScore: getSajuScore('흐름', 68) },
+        ],
       },
       {
         id: 'idong',
@@ -882,8 +882,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'guknae', name: '국내', baseScore: getSajuScore('국내', 70) },
           { id: 'gugoe', name: '국외', baseScore: getSajuScore('국외', 65) },
           { id: 'seom', name: '섬', baseScore: getSajuScore('섬', 60) },
-          { id: 'hageop_idong', name: '학업', baseScore: getSajuScore('학업', 68) }
-        ]
+          { id: 'hageop_idong', name: '학업', baseScore: getSajuScore('학업', 68) },
+        ],
       },
       {
         id: 'ilsang',
@@ -899,8 +899,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'hageop_ilsang', name: '학업', baseScore: getSajuScore('학업', 68) },
           { id: 'bongsa', name: '봉사', baseScore: getSajuScore('봉사', 65) },
           { id: 'yeonae_ilsang', name: '연애', baseScore: getSajuScore('연애', 70) },
-          { id: 'jaemul_ilsang', name: '재물', baseScore: getSajuScore('재물', 62) }
-        ]
+          { id: 'jaemul_ilsang', name: '재물', baseScore: getSajuScore('재물', 62) },
+        ],
       },
       {
         id: 'jayeongeop',
@@ -917,8 +917,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'yeyak', name: '예약', baseScore: getSajuScore('예약', 62) },
           { id: 'jaego', name: '재고', baseScore: getSajuScore('재고', 60) },
           { id: 'chaeyong', name: '채용', baseScore: getSajuScore('채용', 65) },
-          { id: 'chinjeol', name: '친절', baseScore: getSajuScore('친절', 72) }
-        ]
+          { id: 'chinjeol', name: '친절', baseScore: getSajuScore('친절', 72) },
+        ],
       },
       {
         id: 'jaeneung',
@@ -935,8 +935,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'deutgi', name: '듣기', baseScore: getSajuScore('듣기', 68) },
           { id: 'malhagi', name: '말하기', baseScore: getSajuScore('말하기', 70) },
           { id: 'sseugi', name: '쓰기', baseScore: getSajuScore('쓰기', 68) },
-          { id: 'oegugeo', name: '외국어', baseScore: getSajuScore('외국어', 65) }
-        ]
+          { id: 'oegugeo', name: '외국어', baseScore: getSajuScore('외국어', 65) },
+        ],
       },
       {
         id: 'jeongchi',
@@ -953,8 +953,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'balpyo', name: '발표', baseScore: getSajuScore('발표', 65) },
           { id: 'jeongchaek', name: '정책', baseScore: getSajuScore('정책', 70) },
           { id: 'julma', name: '줄마', baseScore: getSajuScore('줄마', 55) },
-          { id: 'huwon', name: '후원', baseScore: getSajuScore('후원', 62) }
-        ]
+          { id: 'huwon', name: '후원', baseScore: getSajuScore('후원', 62) },
+        ],
       },
       {
         id: 'jikjang',
@@ -971,8 +971,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'bogoseo', name: '보고서', baseScore: getSajuScore('보고서', 65) },
           { id: 'siljeok', name: '실적', baseScore: getSajuScore('실적', 70) },
           { id: 'jeopdae', name: '접대', baseScore: getSajuScore('접대', 62) },
-          { id: 'jingeup', name: '진급', baseScore: getSajuScore('진급', 68) }
-        ]
+          { id: 'jingeup', name: '진급', baseScore: getSajuScore('진급', 68) },
+        ],
       },
       {
         id: 'chieop',
@@ -989,8 +989,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'myeonjeop', name: '면접', baseScore: getSajuScore('면접', 68) },
           { id: 'jeongong', name: '전공', baseScore: getSajuScore('전공', 72) },
           { id: 'chucheon', name: '추천', baseScore: getSajuScore('추천', 65) },
-          { id: 'chieop_item', name: '취업', baseScore: getSajuScore('취업', 70) }
-        ]
+          { id: 'chieop_item', name: '취업', baseScore: getSajuScore('취업', 70) },
+        ],
       },
       {
         id: 'chimi_jusaeng',
@@ -1009,8 +1009,8 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'bongsa_chimi', name: '봉사', baseScore: getSajuScore('봉사', 62) },
           { id: 'dokseo_chimi', name: '독서', baseScore: getSajuScore('독서', 70) },
           { id: 'gongye', name: '공예', baseScore: getSajuScore('공예', 65) },
-          { id: 'daenseu', name: '댄스', baseScore: getSajuScore('댄스', 68) }
-        ]
+          { id: 'daenseu', name: '댄스', baseScore: getSajuScore('댄스', 68) },
+        ],
       },
       {
         id: 'haksaeng',
@@ -1027,10 +1027,10 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
           { id: 'ibyeol_haksaeng', name: '이별', baseScore: getSajuScore('이별', 45) },
           { id: 'hageop_haksaeng', name: '학업', baseScore: getSajuScore('학업', 72) },
           { id: 'balpyo_haksaeng', name: '발표', baseScore: getSajuScore('발표', 65) },
-          { id: 'geunsim_haksaeng', name: '근심', baseScore: getSajuScore('근심', 50) }
-        ]
-      }
-    ]
+          { id: 'geunsim_haksaeng', name: '근심', baseScore: getSajuScore('근심', 50) },
+        ],
+      },
+    ],
   },
 
   // 8. 주능 (동적으로 백엔드에서 로드)
@@ -1039,7 +1039,7 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
     name: '주능',
     icon: '⚡',
     description: '능력과 잠재력 분석',
-    subcategories: [] // 동적으로 로드됨
+    subcategories: [], // 동적으로 로드됨
   },
 
   // 9. 주흉 (동적으로 백엔드에서 로드)
@@ -1048,9 +1048,9 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
     name: '주흉',
     icon: '⚠️',
     description: '위험과 주의사항 분석',
-    subcategories: [] // 동적으로 로드됨
-  }
-]
+    subcategories: [], // 동적으로 로드됨
+  },
+];
 
 /**
  * 백엔드에서 동적 카테고리 데이터 로드하여 업데이트

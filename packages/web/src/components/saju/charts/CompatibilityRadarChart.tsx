@@ -6,7 +6,7 @@ import {
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { CompatibilityAnalysisResult } from '@/types/compatibility';
@@ -18,7 +18,7 @@ ChartJS.register(
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 );
 
 interface CompatibilityRadarChartProps {
@@ -30,7 +30,7 @@ interface CompatibilityRadarChartProps {
 const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = ({
   compatibilityResult,
   className = '',
-  height = 400
+  height = 400,
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -45,7 +45,7 @@ const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = ({
     const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class']
+      attributeFilter: ['class'],
     });
     
     return () => observer.disconnect();
@@ -58,7 +58,7 @@ const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = ({
     // 카테고리별 라벨 정의
     const labels = [
       '일간궁합', '용신관계', '지지조화', '대운매칭', 
-      '성격궁합', '나이균형', 'AI예측', '통계보정', '현대요소'
+      '성격궁합', '나이균형', 'AI예측', '통계보정', '현대요소',
     ];
 
     // 각 시간대별 데이터 (궁합은 현재 기준이므로 동일한 데이터 사용)
@@ -74,10 +74,10 @@ const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = ({
           components.ageBalance,
           components.aiPrediction,
           components.statisticalAdjust,
-          components.modernFactors
+          components.modernFactors,
         ],
-        timeFrame: 'base'
-      }
+        timeFrame: 'base',
+      },
     ];
 
     // 차트 설정 생성
@@ -89,10 +89,10 @@ const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = ({
         maxPointStyle: {
           ...DEFAULT_ENHANCED_OPTIONS.maxPointStyle,
           backgroundColor: ChartStyleUtils.getGradeColor(compatibilityResult.grade),
-          borderColor: ChartStyleUtils.getGradeColor(compatibilityResult.grade)
-        }
+          borderColor: ChartStyleUtils.getGradeColor(compatibilityResult.grade),
+        },
       },
-      isDarkMode
+      isDarkMode,
     );
   }, [compatibilityResult, isDarkMode]);
 
@@ -104,25 +104,25 @@ const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = ({
         ...chartData.options?.plugins,
         legend: {
           ...chartData.options?.plugins?.legend,
-          display: false // 궁합 차트는 단일 데이터셋이므로 범례 숨김
+          display: false, // 궁합 차트는 단일 데이터셋이므로 범례 숨김
         },
         tooltip: {
           ...chartData.options?.plugins?.tooltip,
           callbacks: {
-            title: function(context: any) {
+            title(context: any) {
               return `${context[0].label} 분석`;
             },
-            label: function(context: any) {
+            label(context: any) {
               const maxScore = getMaxScoreForCategory(context.label);
               const percentage = Math.round((context.parsed.r / maxScore) * 100);
               return `점수: ${Math.round(context.parsed.r * 10) / 10}/${maxScore}점 (${percentage}%)`;
             },
-            afterBody: function(context: any) {
+            afterBody(context: any) {
               const category = context[0].label;
               return getCategoryDescription(category);
-            }
-          }
-        }
+            },
+          },
+        },
       },
       scales: {
         ...chartData.options?.scales,
@@ -131,12 +131,12 @@ const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = ({
           max: getMaxValue(),
           ticks: {
             ...chartData.options?.scales?.r?.ticks,
-            callback: function(value: any) {
+            callback(value: any) {
               return `${value}점`;
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     };
   }, [chartData, compatibilityResult]);
 
@@ -144,7 +144,7 @@ const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = ({
   function getMaxScoreForCategory(category: string): number {
     const maxScores: { [key: string]: number } = {
       '일간궁합': 20, '용신관계': 15, '지지조화': 15, '대운매칭': 12,
-      '성격궁합': 10, '나이균형': 8, 'AI예측': 10, '통계보정': 5, '현대요소': 5
+      '성격궁합': 10, '나이균형': 8, 'AI예측': 10, '통계보정': 5, '현대요소': 5,
     };
     return maxScores[category] || 10;
   }
@@ -165,7 +165,7 @@ const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = ({
       '나이균형': '나이 차이의 적절성',
       'AI예측': 'AI 모델 기반 성공 예측',
       '통계보정': '통계 데이터 기반 보정',
-      '현대요소': '현대 사회 요인 반영'
+      '현대요소': '현대 사회 요인 반영',
     };
     return descriptions[category] || '';
   }

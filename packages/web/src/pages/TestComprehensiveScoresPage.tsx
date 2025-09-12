@@ -8,10 +8,10 @@ const TestComprehensiveScoresPage: React.FC = () => {
   const [timeframe, setTimeframe] = useState<'base' | 'daily' | 'monthly' | 'yearly'>('base');
 
   const testBirthInfo: SajuBirthInfo = {
-    user_id: "test-comprehensive-user",
-    birth_date: "1990-05-15", 
-    birth_time: "14:30",
-    is_lunar: false
+    user_id: 'test-comprehensive-user',
+    birth_date: '1990-05-15', 
+    birth_time: '14:30',
+    is_lunar: false,
   };
 
   const fetchAnalysis = async (selectedTimeframe: 'base' | 'daily' | 'monthly' | 'yearly') => {
@@ -26,7 +26,7 @@ const TestComprehensiveScoresPage: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(testBirthInfo)
+        body: JSON.stringify(testBirthInfo),
       });
       
       const result = await response.json();
@@ -48,7 +48,7 @@ const TestComprehensiveScoresPage: React.FC = () => {
     base: '기본 사주',
     daily: '오늘의 운세',
     monthly: '이달의 운세', 
-    yearly: '올해의 운세'
+    yearly: '올해의 운세',
   };
 
   return (

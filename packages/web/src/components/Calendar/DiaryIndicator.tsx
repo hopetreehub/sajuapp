@@ -13,14 +13,14 @@ const DiaryIndicator: React.FC<DiaryIndicatorProps> = ({
   hasDiary,
   onClick,
   size = 'small',
-  showTooltip = true
+  showTooltip = true,
 }) => {
   if (!hasDiary) return null;
 
   const sizeClasses = {
     small: 'w-4 h-4 text-xs',
     medium: 'w-5 h-5 text-sm',
-    large: 'w-6 h-6 text-base'
+    large: 'w-6 h-6 text-base',
   };
 
   return (

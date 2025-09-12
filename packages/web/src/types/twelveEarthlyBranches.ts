@@ -122,7 +122,7 @@ export const EARTHLY_BRANCHES_INFO: Record<EarthlyBranchType, EarthlyBranchInfo>
     positiveTraits: ['지혜', '민첩성', '실용성', '생존력'],
     negativeTraits: ['욕심', '계산적', '의심', '소심함'],
     compatibility: ['jin', 'sin'],  // 자진합, 자신합
-    conflict: ['o']  // 자오충
+    conflict: ['o'],  // 자오충
   },
   chuk: {
     name: 'Chuk', 
@@ -140,7 +140,7 @@ export const EARTHLY_BRANCHES_INFO: Record<EarthlyBranchType, EarthlyBranchInfo>
     positiveTraits: ['근면', '신중함', '책임감', '안정성'],
     negativeTraits: ['완고함', '보수적', '느림', '고집'],
     compatibility: ['sa', 'yu'],  // 축사합, 축유합
-    conflict: ['mi']  // 축미충
+    conflict: ['mi'],  // 축미충
   },
   in: {
     name: 'In',
@@ -158,7 +158,7 @@ export const EARTHLY_BRANCHES_INFO: Record<EarthlyBranchType, EarthlyBranchInfo>
     positiveTraits: ['용기', '추진력', '정의감', '보호본능'],
     negativeTraits: ['성급함', '독선', '고집', '감정적'],
     compatibility: ['o', 'sul'],  // 인오합, 인술합  
-    conflict: ['sin']  // 인신충
+    conflict: ['sin'],  // 인신충
   },
   myo: {
     name: 'Myo',
@@ -176,7 +176,7 @@ export const EARTHLY_BRANCHES_INFO: Record<EarthlyBranchType, EarthlyBranchInfo>
     positiveTraits: ['부드러움', '예술감각', '평화주의', '직관'],
     negativeTraits: ['우유부단', '소심함', '의존성', '현실도피'],
     compatibility: ['mi', 'hae'],  // 묘미합, 묘해합
-    conflict: ['yu']  // 묘유충
+    conflict: ['yu'],  // 묘유충
   },
   jin: {
     name: 'Jin',
@@ -194,7 +194,7 @@ export const EARTHLY_BRANCHES_INFO: Record<EarthlyBranchType, EarthlyBranchInfo>
     positiveTraits: ['포용력', '변화적응', '신비성', '창조력'],
     negativeTraits: ['변덕', '과도함', '신경질', '불안정'],
     compatibility: ['ja', 'yu'],  // 진자합, 진유합
-    conflict: ['sul']  // 진술충
+    conflict: ['sul'],  // 진술충
   },
   sa: {
     name: 'Sa', 
@@ -212,7 +212,7 @@ export const EARTHLY_BRANCHES_INFO: Record<EarthlyBranchType, EarthlyBranchInfo>
     positiveTraits: ['지혜', '통찰력', '신중함', '집중력'],
     negativeTraits: ['의심', '질투', '복잡함', '집착'],
     compatibility: ['chuk', 'yu'],  // 사축합, 사유합
-    conflict: ['hae']  // 사해충
+    conflict: ['hae'],  // 사해충
   },
   o: {
     name: 'O',
@@ -230,7 +230,7 @@ export const EARTHLY_BRANCHES_INFO: Record<EarthlyBranchType, EarthlyBranchInfo>
     positiveTraits: ['활력', '자유로움', '열정', '진취성'],
     negativeTraits: ['성급함', '변덕', '불안정', '산만함'],
     compatibility: ['in', 'sul'],  // 오인합, 오술합
-    conflict: ['ja']  // 오자충
+    conflict: ['ja'],  // 오자충
   },
   mi: {
     name: 'Mi',
@@ -248,7 +248,7 @@ export const EARTHLY_BRANCHES_INFO: Record<EarthlyBranchType, EarthlyBranchInfo>
     positiveTraits: ['온순함', '협조성', '예술성', '평화주의'],
     negativeTraits: ['우유부단', '의존성', '소극적', '걱정'],
     compatibility: ['myo', 'hae'],  // 미묘합, 미해합
-    conflict: ['chuk']  // 미축충
+    conflict: ['chuk'],  // 미축충
   },
   sin: {
     name: 'Sin',
@@ -266,7 +266,7 @@ export const EARTHLY_BRANCHES_INFO: Record<EarthlyBranchType, EarthlyBranchInfo>
     positiveTraits: ['재치', '활발함', '적응력', '창의성'],
     negativeTraits: ['변덕', '경박함', '불안정', '장난'],
     compatibility: ['ja', 'jin'],  // 신자합, 신진합
-    conflict: ['in']  // 신인충
+    conflict: ['in'],  // 신인충
   },
   yu: {
     name: 'Yu',
@@ -284,7 +284,7 @@ export const EARTHLY_BRANCHES_INFO: Record<EarthlyBranchType, EarthlyBranchInfo>
     positiveTraits: ['정확성', '부지런함', '완벽주의', '책임감'],
     negativeTraits: ['까다로움', '비판적', '경직성', '걱정'],
     compatibility: ['chuk', 'sa', 'jin'],  // 유축합, 유사합, 유진합
-    conflict: ['myo']  // 유묘충
+    conflict: ['myo'],  // 유묘충
   },
   sul: {
     name: 'Sul',
@@ -302,7 +302,7 @@ export const EARTHLY_BRANCHES_INFO: Record<EarthlyBranchType, EarthlyBranchInfo>
     positiveTraits: ['충성심', '정의감', '보호본능', '신뢰성'],
     negativeTraits: ['완고함', '의심', '보수적', '걱정'],
     compatibility: ['in', 'o'],  // 술인합, 술오합
-    conflict: ['jin']  // 술진충
+    conflict: ['jin'],  // 술진충
   },
   hae: {
     name: 'Hae',
@@ -320,9 +320,9 @@ export const EARTHLY_BRANCHES_INFO: Record<EarthlyBranchType, EarthlyBranchInfo>
     positiveTraits: ['관대함', '성실함', '정직함', '포용력'],
     negativeTraits: ['단순함', '게으름', '욕심', '고집'],
     compatibility: ['myo', 'mi'],  // 해묘합, 해미합  
-    conflict: ['sa']  // 해사충
-  }
-}
+    conflict: ['sa'],  // 해사충
+  },
+};
 
 // 관계 유형별 정보
 export const RELATIONSHIP_TYPES = {
@@ -330,30 +330,30 @@ export const RELATIONSHIP_TYPES = {
     name: '조화',
     description: '서로를 보완하고 발전시키는 관계',
     color: '#10B981',
-    icon: '🤝'
+    icon: '🤝',
   },
   conflict: {
     name: '충돌',
     description: '서로 대립하고 견제하는 관계',
     color: '#EF4444', 
-    icon: '⚔️'
+    icon: '⚔️',
   },
   punishment: {
     name: '형',
     description: '서로를 억제하고 제약하는 관계',
     color: '#F59E0B',
-    icon: '⚠️'
+    icon: '⚠️',
   },
   destruction: {
     name: '파괴',
     description: '서로를 해치고 파괴하는 관계',
     color: '#DC2626',
-    icon: '💥'
+    icon: '💥',
   },
   neutral: {
     name: '중립',
     description: '특별한 영향을 주고받지 않는 관계',
     color: '#6B7280',
-    icon: '➖'
-  }
-}
+    icon: '➖',
+  },
+};

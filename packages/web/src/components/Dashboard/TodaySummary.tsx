@@ -1,13 +1,13 @@
-import { format, isValid } from 'date-fns'
-import { ko } from 'date-fns/locale'
+import { format, isValid } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import { 
   CalendarIcon, 
   CheckCircleIcon, 
   BookOpenIcon, 
   ClockIcon,
-  ExclamationCircleIcon 
-} from '@heroicons/react/24/outline'
-import { DashboardStats } from '@/services/dashboardService'
+  ExclamationCircleIcon, 
+} from '@heroicons/react/24/outline';
+import { DashboardStats } from '@/services/dashboardService';
 
 interface TodaySummaryProps {
   todayData: DashboardStats['today']
@@ -17,40 +17,40 @@ interface TodaySummaryProps {
 // 안전한 날짜 포맷팅 유틸리티 함수
 const safeFormatDate = (dateValue: string | Date, formatString: string, fallback: string = '시간 오류') => {
   try {
-    if (!dateValue) return fallback
+    if (!dateValue) return fallback;
     
-    const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue
+    const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue;
     
     if (!isValid(date)) {
-      console.warn('Invalid date value:', dateValue)
-      return fallback
+      console.warn('Invalid date value:', dateValue);
+      return fallback;
     }
     
-    return format(date, formatString, { locale: ko })
+    return format(date, formatString, { locale: ko });
   } catch (error) {
-    console.error('Date formatting error:', error, 'Input:', dateValue)
-    return fallback
+    console.error('Date formatting error:', error, 'Input:', dateValue);
+    return fallback;
   }
-}
+};
 
 // 안전한 날짜 비교 함수
 const safeIsBeforeNow = (dateValue: string | Date) => {
   try {
-    if (!dateValue) return false
+    if (!dateValue) return false;
     
-    const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue
+    const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue;
     
-    if (!isValid(date)) return false
+    if (!isValid(date)) return false;
     
-    return date < new Date()
+    return date < new Date();
   } catch (error) {
-    console.error('Date comparison error:', error, 'Input:', dateValue)
-    return false
+    console.error('Date comparison error:', error, 'Input:', dateValue);
+    return false;
   }
-}
+};
 
 export default function TodaySummary({ todayData, loading }: TodaySummaryProps) {
-  const today = new Date()
+  const today = new Date();
   
   if (loading) {
     return (
@@ -63,12 +63,12 @@ export default function TodaySummary({ todayData, loading }: TodaySummaryProps) 
           </div>
         </div>
       </div>
-    )
+    );
   }
   
   const completionPercentage = todayData.totalTodos > 0 
     ? Math.round((todayData.completedTodos / todayData.totalTodos) * 100)
-    : 0
+    : 0;
   
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -263,5 +263,5 @@ export default function TodaySummary({ todayData, loading }: TodaySummaryProps) 
         </div>
       </div>
     </div>
-  )
+  );
 }

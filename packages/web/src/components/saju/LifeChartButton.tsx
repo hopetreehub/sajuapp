@@ -24,7 +24,7 @@ const LifeChartButton: React.FC<LifeChartButtonProps> = ({
   loading = false,
   error = null,
   onLoadChart,
-  onScrollToChart
+  onScrollToChart,
 }) => {
   const customerName = getCustomerName(customer);
   const birthDateString = getCustomerBirthDateString(customer);

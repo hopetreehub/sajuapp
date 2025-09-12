@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
-import { format } from 'date-fns'
-import { ko } from 'date-fns/locale'
+import React, { useEffect } from 'react';
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 interface TaskSelectionModalProps {
   isOpen: boolean
@@ -19,35 +19,35 @@ export default function TaskSelectionModal({
   position,
   onSelectEvent,
   onSelectTodo,
-  onSelectDiary
+  onSelectDiary,
 }: TaskSelectionModalProps) {
   
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose()
+        onClose();
       }
-    }
+    };
 
     const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as Element
+      const target = e.target as Element;
       if (!target.closest('.task-selection-modal')) {
-        onClose()
+        onClose();
       }
-    }
+    };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown)
-      document.addEventListener('click', handleClickOutside)
+      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('click', handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-      document.removeEventListener('click', handleClickOutside)
-    }
-  }, [isOpen, onClose])
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [isOpen, onClose]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div 
@@ -55,7 +55,7 @@ export default function TaskSelectionModal({
       style={{ 
         left: `${position.x}px`, 
         top: `${position.y}px`,
-        transform: 'translate(-50%, -10px)' // 중앙 정렬 및 약간 위로 이동
+        transform: 'translate(-50%, -10px)', // 중앙 정렬 및 약간 위로 이동
       }}
     >
       {/* 헤더 */}
@@ -81,8 +81,8 @@ export default function TaskSelectionModal({
         {/* 일정 추가 */}
         <button 
           onClick={() => {
-            onSelectEvent()
-            onClose()
+            onSelectEvent();
+            onClose();
           }}
           className="w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150 group"
         >
@@ -105,8 +105,8 @@ export default function TaskSelectionModal({
         {/* 할일 추가 */}
         <button 
           onClick={() => {
-            onSelectTodo()
-            onClose()
+            onSelectTodo();
+            onClose();
           }}
           className="w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150 group"
         >
@@ -129,8 +129,8 @@ export default function TaskSelectionModal({
         {/* 일기 쓰기 */}
         <button 
           onClick={() => {
-            onSelectDiary()
-            onClose()
+            onSelectDiary();
+            onClose();
           }}
           className="w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150 group"
         >
@@ -158,5 +158,5 @@ export default function TaskSelectionModal({
         </p>
       </div>
     </div>
-  )
+  );
 }

@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
-import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { searchService, SearchResult, SearchOptions } from '@/services/searchService'
-import { useCalendar } from '@/contexts/CalendarContext'
-import { useDebounce, getCategoryLabel, groupResultsByType } from '@/utils/searchUtils'
-import SearchResultItem from './SearchResultItem'
-import { parseISO } from 'date-fns'
+import { useState, useEffect, useRef } from 'react';
+import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { searchService, SearchResult, SearchOptions } from '@/services/searchService';
+import { useCalendar } from '@/contexts/CalendarContext';
+import { useDebounce, getCategoryLabel, groupResultsByType } from '@/utils/searchUtils';
+import SearchResultItem from './SearchResultItem';
+import { parseISO } from 'date-fns';
 
 interface SearchBarProps {
   onSearch?: (results: SearchResult[]) => void
@@ -15,31 +15,31 @@ interface SearchBarProps {
 
 export default function SearchBar({ 
   onSearch, 
-  placeholder = "일정, 할일, 일기 검색...", 
-  className = "",
-  showCategories = true 
+  placeholder = '일정, 할일, 일기 검색...', 
+  className = '',
+  showCategories = true, 
 }: SearchBarProps) {
-  const [query, setQuery] = useState('')
-  const [results, setResults] = useState<SearchResult[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [showDropdown, setShowDropdown] = useState(false)
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(['all'])
-  const [error, setError] = useState<string | null>(null)
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(['all']);
+  const [error, setError] = useState<string | null>(null);
   
-  const { todos, setCurrentDate, setViewMode, setSelectedDate } = useCalendar()
-  const debouncedQuery = useDebounce(query, 300)
-  const searchRef = useRef<HTMLDivElement>(null)
+  const { todos, setCurrentDate, setViewMode, setSelectedDate } = useCalendar();
+  const debouncedQuery = useDebounce(query, 300);
+  const searchRef = useRef<HTMLDivElement>(null);
   
   // 검색 실행
   const performSearch = async () => {
     if (debouncedQuery.length < 2) {
-      setResults([])
-      setShowDropdown(false)
-      return
+      setResults([]);
+      setShowDropdown(false);
+      return;
     }
     
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
     
     try {
       const options: SearchOptions = {
@@ -48,103 +48,103 @@ export default function SearchBar({
           ? ['events', 'todos', 'diaries'] 
           : selectedCategories as ('events' | 'todos' | 'diaries')[],
         limit: 15,
-        sortBy: 'relevance'
-      }
+        sortBy: 'relevance',
+      };
       
-      const searchResults = await searchService.searchAll(options, todos)
-      setResults(searchResults)
-      setShowDropdown(true)
+      const searchResults = await searchService.searchAll(options, todos);
+      setResults(searchResults);
+      setShowDropdown(true);
       
       if (onSearch) {
-        onSearch(searchResults)
+        onSearch(searchResults);
       }
     } catch (err) {
-      console.error('Search failed:', err)
-      setError('검색 중 오류가 발생했습니다.')
+      console.error('Search failed:', err);
+      setError('검색 중 오류가 발생했습니다.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
   
   // 디바운스된 쿼리 변경 시 검색
   useEffect(() => {
-    performSearch()
-  }, [debouncedQuery, selectedCategories])
+    performSearch();
+  }, [debouncedQuery, selectedCategories]);
   
   // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setShowDropdown(false)
+        setShowDropdown(false);
       }
-    }
+    };
     
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
   
   // 키보드 이벤트 처리
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
-      setShowDropdown(false)
-      setQuery('')
+      setShowDropdown(false);
+      setQuery('');
     }
-  }
+  };
   
   // 카테고리 토글
   const toggleCategory = (category: string) => {
     if (category === 'all') {
-      setSelectedCategories(['all'])
+      setSelectedCategories(['all']);
     } else {
       const newCategories = selectedCategories.includes('all')
         ? [category]
         : selectedCategories.includes(category)
           ? selectedCategories.filter(c => c !== category)
-          : [...selectedCategories.filter(c => c !== 'all'), category]
+          : [...selectedCategories.filter(c => c !== 'all'), category];
       
-      setSelectedCategories(newCategories.length === 0 ? ['all'] : newCategories)
+      setSelectedCategories(newCategories.length === 0 ? ['all'] : newCategories);
     }
-  }
+  };
   
   // 검색 결과 클릭 처리
   const handleResultClick = (result: SearchResult) => {
-    setShowDropdown(false)
-    setQuery('')
+    setShowDropdown(false);
+    setQuery('');
     
     // 결과에 따른 네비게이션 처리
     switch (result.type) {
       case 'event':
         // 이벤트 날짜로 이동하고 일간 뷰로 전환
         if (result.date) {
-          const eventDate = parseISO(result.date)
-          setCurrentDate(eventDate)
-          setSelectedDate(eventDate)
-          setViewMode('day')
+          const eventDate = parseISO(result.date);
+          setCurrentDate(eventDate);
+          setSelectedDate(eventDate);
+          setViewMode('day');
         }
-        break
+        break;
       case 'todo':
         // 할일 날짜로 이동하고 일간 뷰로 전환
         if (result.date) {
-          const todoDate = parseISO(result.date)
-          setCurrentDate(todoDate)
-          setSelectedDate(todoDate)
-          setViewMode('day')
+          const todoDate = parseISO(result.date);
+          setCurrentDate(todoDate);
+          setSelectedDate(todoDate);
+          setViewMode('day');
         }
-        break
+        break;
       case 'diary':
         // 일기 날짜로 이동하고 일간 뷰로 전환
         if (result.date) {
-          const diaryDate = parseISO(result.date)
-          setCurrentDate(diaryDate)
-          setSelectedDate(diaryDate)
-          setViewMode('dayEnhanced') // 일기는 향상된 일간 뷰로 이동
+          const diaryDate = parseISO(result.date);
+          setCurrentDate(diaryDate);
+          setSelectedDate(diaryDate);
+          setViewMode('dayEnhanced'); // 일기는 향상된 일간 뷰로 이동
         }
-        break
+        break;
     }
-  }
+  };
   
   // 검색 결과 그룹화
-  const groupedResults = groupResultsByType(results)
+  const groupedResults = groupResultsByType(results);
   
   return (
     <div ref={searchRef} className={`relative ${className}`}>
@@ -165,9 +165,9 @@ export default function SearchBar({
         {query && (
           <button
             onClick={() => {
-              setQuery('')
-              setResults([])
-              setShowDropdown(false)
+              setQuery('');
+              setResults([]);
+              setShowDropdown(false);
             }}
             className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 hover:text-gray-600"
           >
@@ -243,5 +243,5 @@ export default function SearchBar({
         </div>
       )}
     </div>
-  )
+  );
 }

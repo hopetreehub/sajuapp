@@ -18,7 +18,7 @@ const TestSajuPage: React.FC = () => {
       birthTime: '04:00',
       calendarType: 'solar',
       gender: 'male',
-      birthPlace: ''
+      birthPlace: '',
     });
     
     const result1 = test1?.fullSaju === '신해 기해 병오 경인' ? '✅ 정확' : '❌ 오류';
@@ -29,7 +29,7 @@ const TestSajuPage: React.FC = () => {
       birthTime: '09:40',
       calendarType: 'solar',
       gender: 'male',
-      birthPlace: ''
+      birthPlace: '',
     });
     
     const result2 = test2?.fullSaju === '병진 정유 신미 계사' ? '✅ 정확' : '❌ 오류';
@@ -63,7 +63,7 @@ const TestSajuPage: React.FC = () => {
       birthTime: '14:30',
       calendarType: 'solar',
       gender: 'male',
-      birthPlace: ''
+      birthPlace: '',
     });
     
     if (!testSaju) {
@@ -105,7 +105,7 @@ ${testDate.getMonth() + 1}월 ${testDate.getDate()}일 (${luckyItems.일진})
       `);
     }
     
-    setFortuneTestResult(results.join('\n' + '='.repeat(40)));
+    setFortuneTestResult(results.join(`\n${  '='.repeat(40)}`));
   };
   
   return (

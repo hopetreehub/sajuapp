@@ -14,7 +14,7 @@ const SajuInputForm: React.FC<SajuInputFormProps> = ({ onSubmit }) => {
     hour: 6,
     minute: 0,
     isLunar: false,
-    name: ''
+    name: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -22,7 +22,7 @@ const SajuInputForm: React.FC<SajuInputFormProps> = ({ onSubmit }) => {
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : 
-              type === 'number' ? parseInt(value) : value
+              type === 'number' ? parseInt(value) : value,
     }));
   };
 
@@ -37,7 +37,7 @@ const SajuInputForm: React.FC<SajuInputFormProps> = ({ onSubmit }) => {
         year: solarDate.getFullYear(),
         month: solarDate.getMonth() + 1,
         day: solarDate.getDate(),
-        isLunar: false // 변환 후에는 양력으로 저장
+        isLunar: false, // 변환 후에는 양력으로 저장
       };
       onSubmit(convertedData);
     } else {

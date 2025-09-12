@@ -1,20 +1,20 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   Chart as ChartJS,
   ArcElement,
   Tooltip,
   Legend,
-  ChartOptions
-} from 'chart.js'
-import { Doughnut } from 'react-chartjs-2'
-import { FiveElementsData } from '@/types/fiveElements'
-import { FiveElementsAnalyzer } from '@/utils/fiveElementsAnalyzer'
-import { SajuData } from '@/types/saju'
-import InterpretationPanel from '@/components/charts/InterpretationPanel'
-import { interpretationService, InterpretationResponse } from '@/services/api'
+  ChartOptions,
+} from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
+import { FiveElementsData } from '@/types/fiveElements';
+import { FiveElementsAnalyzer } from '@/utils/fiveElementsAnalyzer';
+import { SajuData } from '@/types/saju';
+import InterpretationPanel from '@/components/charts/InterpretationPanel';
+import { interpretationService, InterpretationResponse } from '@/services/api';
 
 // Chart.js 컴포넌트 등록
-ChartJS.register(ArcElement, Tooltip, Legend)
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface FiveElementsBalanceChartProps {
   sajuData: SajuData
@@ -29,58 +29,58 @@ export const FiveElementsBalanceChart: React.FC<FiveElementsBalanceChartProps> =
   height = 350,
   className = '',
   showLegend = true,
-  showTooltips = true
+  showTooltips = true,
 }) => {
   // 해석 데이터 상태
-  const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null)
-  const [interpretationLoading, setInterpretationLoading] = useState(false)
-  const [interpretationError, setInterpretationError] = useState<string | null>(null)
+  const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null);
+  const [interpretationLoading, setInterpretationLoading] = useState(false);
+  const [interpretationError, setInterpretationError] = useState<string | null>(null);
   // 사주 데이터로부터 오행 분석
   const elementsData = useMemo(() => {
-    return FiveElementsAnalyzer.analyzeFromSaju(sajuData)
-  }, [sajuData])
+    return FiveElementsAnalyzer.analyzeFromSaju(sajuData);
+  }, [sajuData]);
 
   // 오행 관계 분석
   const relationships = useMemo(() => {
-    return FiveElementsAnalyzer.analyzeElementRelationships(elementsData)
-  }, [elementsData])
+    return FiveElementsAnalyzer.analyzeElementRelationships(elementsData);
+  }, [elementsData]);
 
   // 추천사항 생성
   const recommendations = useMemo(() => {
-    return FiveElementsAnalyzer.generateRecommendations(elementsData, relationships)
-  }, [elementsData, relationships])
+    return FiveElementsAnalyzer.generateRecommendations(elementsData, relationships);
+  }, [elementsData, relationships]);
 
   // 오행 세부 정보
   const elementDetails = useMemo(() => {
-    return FiveElementsAnalyzer.getElementDetails()
-  }, [])
+    return FiveElementsAnalyzer.getElementDetails();
+  }, []);
 
   // 해석 데이터 로드
   useEffect(() => {
     const loadInterpretation = async () => {
-      if (!sajuData) return
+      if (!sajuData) return;
       
-      setInterpretationLoading(true)
-      setInterpretationError(null)
+      setInterpretationLoading(true);
+      setInterpretationError(null);
       
       try {
-        const response = await interpretationService.getComprehensiveInterpretation(sajuData)
-        setInterpretation(response)
+        const response = await interpretationService.getComprehensiveInterpretation(sajuData);
+        setInterpretation(response);
       } catch (error) {
-        console.error('해석 데이터 로드 실패:', error)
-        setInterpretationError('해석 데이터를 불러올 수 없습니다.')
+        console.error('해석 데이터 로드 실패:', error);
+        setInterpretationError('해석 데이터를 불러올 수 없습니다.');
       } finally {
-        setInterpretationLoading(false)
+        setInterpretationLoading(false);
       }
-    }
+    };
 
-    loadInterpretation()
-  }, [sajuData])
+    loadInterpretation();
+  }, [sajuData]);
 
   // Chart.js용 데이터 생성
   const chartData = useMemo(() => {
-    return FiveElementsAnalyzer.generateChartData(elementsData)
-  }, [elementsData])
+    return FiveElementsAnalyzer.generateChartData(elementsData);
+  }, [elementsData]);
 
   // 차트 옵션 설정
   const options: ChartOptions<'doughnut'> = useMemo(() => ({
@@ -93,19 +93,19 @@ export const FiveElementsBalanceChart: React.FC<FiveElementsBalanceChartProps> =
         labels: {
           font: {
             family: 'Noto Sans KR, sans-serif',
-            size: 12
+            size: 12,
           },
           padding: 15,
           usePointStyle: true,
           pointStyle: 'circle',
           generateLabels: (chart) => {
-            const datasets = chart.data.datasets
+            const datasets = chart.data.datasets;
             if (datasets.length > 0) {
-              const dataset = datasets[0]
+              const dataset = datasets[0];
               return chart.data.labels?.map((label, index) => {
-                const value = dataset.data[index] as number
-                const total = (dataset.data as number[]).reduce((sum, val) => sum + val, 0)
-                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0'
+                const value = dataset.data[index] as number;
+                const total = (dataset.data as number[]).reduce((sum, val) => sum + val, 0);
+                const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
                 
                 return {
                   text: `${label} (${percentage}%)`,
@@ -113,13 +113,13 @@ export const FiveElementsBalanceChart: React.FC<FiveElementsBalanceChartProps> =
                   strokeStyle: dataset.borderColor?.[index] as string || '#000',
                   lineWidth: 2,
                   hidden: false,
-                  index
-                }
-              }) || []
+                  index,
+                };
+              }) || [];
             }
-            return []
-          }
-        }
+            return [];
+          },
+        },
       },
       tooltip: {
         enabled: showTooltips,
@@ -129,52 +129,52 @@ export const FiveElementsBalanceChart: React.FC<FiveElementsBalanceChartProps> =
         titleFont: {
           family: 'Noto Sans KR, sans-serif',
           size: 14,
-          weight: 'bold'
+          weight: 'bold',
         },
         bodyFont: {
           family: 'Noto Sans KR, sans-serif',
-          size: 12
+          size: 12,
         },
         callbacks: {
-          label: function(context) {
-            const label = context.label || ''
-            const value = context.parsed as number
-            const total = context.dataset.data.reduce((sum: number, val) => sum + (val as number), 0)
-            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0'
+          label(context) {
+            const label = context.label || '';
+            const value = context.parsed as number;
+            const total = context.dataset.data.reduce((sum: number, val) => sum + (val as number), 0);
+            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
             
             // 오행별 특성 정보 추가
-            const elementKey = Object.keys(elementsData)[context.dataIndex] as keyof FiveElementsData
-            const detail = elementDetails[elementKey]
+            const elementKey = Object.keys(elementsData)[context.dataIndex] as keyof FiveElementsData;
+            const detail = elementDetails[elementKey];
             
             return [
               `${label}: ${value}점 (${percentage}%)`,
-              `특성: ${detail.characteristics.positive.join(', ')}`
-            ]
-          }
-        }
-      }
+              `특성: ${detail.characteristics.positive.join(', ')}`,
+            ];
+          },
+        },
+      },
     },
     cutout: '50%',  // 도넛 형태 (중앙 구멍 크기)
     animation: {
       animateRotate: true,
       animateScale: true,
-      duration: 1000
-    }
-  }), [showLegend, showTooltips, elementsData, elementDetails])
+      duration: 1000,
+    },
+  }), [showLegend, showTooltips, elementsData, elementDetails]);
 
   // 균형 상태 평가
   const getBalanceStatus = () => {
-    const score = relationships.balance_score
-    if (score >= 80) return { status: '매우 균형', color: 'text-green-600', icon: '🟢' }
-    if (score >= 60) return { status: '균형 양호', color: 'text-blue-600', icon: '🔵' }
-    if (score >= 40) return { status: '보통', color: 'text-yellow-600', icon: '🟡' }
-    return { status: '불균형', color: 'text-red-600', icon: '🔴' }
-  }
+    const score = relationships.balance_score;
+    if (score >= 80) return { status: '매우 균형', color: 'text-green-600', icon: '🟢' };
+    if (score >= 60) return { status: '균형 양호', color: 'text-blue-600', icon: '🔵' };
+    if (score >= 40) return { status: '보통', color: 'text-yellow-600', icon: '🟡' };
+    return { status: '불균형', color: 'text-red-600', icon: '🔴' };
+  };
 
-  const balanceStatus = getBalanceStatus()
+  const balanceStatus = getBalanceStatus();
 
   // 데이터가 없는 경우
-  const hasData = Object.values(elementsData).some(value => value > 0)
+  const hasData = Object.values(elementsData).some(value => value > 0);
   if (!hasData) {
     return (
       <div className={`flex items-center justify-center ${className}`} style={{ height }}>
@@ -184,7 +184,7 @@ export const FiveElementsBalanceChart: React.FC<FiveElementsBalanceChartProps> =
           <div className="text-sm">사주 정보를 확인해주세요</div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -235,7 +235,7 @@ export const FiveElementsBalanceChart: React.FC<FiveElementsBalanceChartProps> =
           {relationships.dominant_elements.length > 0 ? (
             <div className="text-green-700 dark:text-green-300">
               {relationships.dominant_elements.map(element => 
-                elementDetails[element as keyof FiveElementsData].korean
+                elementDetails[element as keyof FiveElementsData].korean,
               ).join(', ')}
             </div>
           ) : (
@@ -253,7 +253,7 @@ export const FiveElementsBalanceChart: React.FC<FiveElementsBalanceChartProps> =
           {relationships.weak_elements.length > 0 ? (
             <div className="text-red-700 dark:text-red-300">
               {relationships.weak_elements.map(element => 
-                elementDetails[element as keyof FiveElementsData].korean
+                elementDetails[element as keyof FiveElementsData].korean,
               ).join(', ')}
             </div>
           ) : (
@@ -296,7 +296,7 @@ export const FiveElementsBalanceChart: React.FC<FiveElementsBalanceChartProps> =
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default FiveElementsBalanceChart
+export default FiveElementsBalanceChart;

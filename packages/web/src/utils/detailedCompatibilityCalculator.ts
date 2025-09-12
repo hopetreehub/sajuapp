@@ -9,46 +9,46 @@ import { SajuData } from './compatibilityCalculator';
 const GAN_YINYANG: { [key: string]: string } = {
   '갑': '양', '을': '음', '병': '양', '정': '음',
   '무': '양', '기': '음', '경': '양', '신': '음',
-  '임': '양', '계': '음'
+  '임': '양', '계': '음',
 };
 
 // 천간 오행
 const GAN_ELEMENTS: { [key: string]: string } = {
   '갑': '목', '을': '목', '병': '화', '정': '화',
   '무': '토', '기': '토', '경': '금', '신': '금',
-  '임': '수', '계': '수'
+  '임': '수', '계': '수',
 };
 
 // 지지 오행
 const JI_ELEMENTS: { [key: string]: string } = {
   '자': '수', '축': '토', '인': '목', '묘': '목',
   '진': '토', '사': '화', '오': '화', '미': '토',
-  '신': '금', '유': '금', '술': '토', '해': '수'
+  '신': '금', '유': '금', '술': '토', '해': '수',
 };
 
 // 지지 충
 const JI_CLASH: string[][] = [
   ['자', '오'], ['축', '미'], ['인', '신'],
-  ['묘', '유'], ['진', '술'], ['사', '해']
+  ['묘', '유'], ['진', '술'], ['사', '해'],
 ];
 
 // 지지 형
 const JI_PUNISHMENT: string[][] = [
   ['인', '사', '신'], // 무은형
   ['축', '술', '미'], // 무례형
-  ['자', '묘']        // 무례형
+  ['자', '묘'],        // 무례형
 ];
 
 // 지지 파
 const JI_DESTRUCTION: string[][] = [
   ['자', '유'], ['오', '묘'], ['신', '사'], ['인', '해'],
-  ['축', '진'], ['미', '술']
+  ['축', '진'], ['미', '술'],
 ];
 
 // 지지 해
 const JI_HARM: string[][] = [
   ['자', '미'], ['축', '오'], ['인', '사'],
-  ['묘', '진'], ['신', '해'], ['유', '술']
+  ['묘', '진'], ['신', '해'], ['유', '술'],
 ];
 
 // 상세 점수 인터페이스
@@ -99,7 +99,7 @@ export function calculateFirstImpressionScore(saju1: SajuData, saju2: SajuData):
   
   // 상생 관계 체크
   const SHENG_CYCLE: { [key: string]: string } = {
-    '목': '화', '화': '토', '토': '금', '금': '수', '수': '목'
+    '목': '화', '화': '토', '토': '금', '금': '수', '수': '목',
   };
   
   if (SHENG_CYCLE[elem1] === elem2 || SHENG_CYCLE[elem2] === elem1) {
@@ -133,7 +133,7 @@ export function calculateFirstImpressionScore(saju1: SajuData, saju2: SajuData):
     score,
     level: getLevel(score),
     description: `년주 기반 첫인상 궁합은 ${score}점입니다. ${score >= 70 ? '좋은 첫인상을 주고받습니다.' : '천천히 친해지는 스타일입니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -183,7 +183,7 @@ export function calculateCommunicationScore(saju1: SajuData, saju2: SajuData): D
     '인': '봄', '묘': '봄', '진': '봄',
     '사': '여름', '오': '여름', '미': '여름',
     '신': '가을', '유': '가을', '술': '가을',
-    '해': '겨울', '자': '겨울', '축': '겨울'
+    '해': '겨울', '자': '겨울', '축': '겨울',
   };
   
   if (seasons[monthJi1] === seasons[monthJi2]) {
@@ -197,7 +197,7 @@ export function calculateCommunicationScore(saju1: SajuData, saju2: SajuData): D
     score,
     level: getLevel(score),
     description: `월주 기반 소통 궁합은 ${score}점입니다. ${score >= 70 ? '원활한 의사소통이 가능합니다.' : '소통 방식의 차이를 이해할 필요가 있습니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -230,7 +230,7 @@ export function calculateValueSystemScore(saju1: SajuData, saju2: SajuData): Det
   
   // 상생 관계
   const SHENG: { [key: string]: string } = {
-    '목': '화', '화': '토', '토': '금', '금': '수', '수': '목'
+    '목': '화', '화': '토', '토': '금', '금': '수', '수': '목',
   };
   
   if (SHENG[dayElem1] === dayElem2) {
@@ -243,7 +243,7 @@ export function calculateValueSystemScore(saju1: SajuData, saju2: SajuData): Det
   
   // 상극 관계
   const KE: { [key: string]: string } = {
-    '목': '토', '토': '수', '수': '화', '화': '금', '금': '목'
+    '목': '토', '토': '수', '수': '화', '화': '금', '금': '목',
   };
   
   if (KE[dayElem1] === dayElem2 || KE[dayElem2] === dayElem1) {
@@ -257,7 +257,7 @@ export function calculateValueSystemScore(saju1: SajuData, saju2: SajuData): Det
     score,
     level: getLevel(score),
     description: `일간 기반 가치관 궁합은 ${score}점입니다. ${score >= 70 ? '핵심 가치관이 잘 맞습니다.' : '서로의 가치관을 존중하는 노력이 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -279,7 +279,7 @@ export function calculateLifePatternScore(saju1: SajuData, saju2: SajuData): Det
     '진': '아침형(07-09시)', '사': '오전형(09-11시)',
     '오': '낮형(11-13시)', '미': '오후형(13-15시)',
     '신': '오후형(15-17시)', '유': '저녁형(17-19시)',
-    '술': '저녁형(19-21시)', '해': '밤형(21-23시)'
+    '술': '저녁형(19-21시)', '해': '밤형(21-23시)',
   };
   
   // 같은 시간대 그룹
@@ -330,7 +330,7 @@ export function calculateLifePatternScore(saju1: SajuData, saju2: SajuData): Det
     score,
     level: getLevel(score),
     description: `시주 기반 생활패턴 궁합은 ${score}점입니다. ${score >= 70 ? '일상생활이 조화롭게 흘러갑니다.' : '생활 패턴 조율이 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -348,7 +348,7 @@ export function calculateConflictResolutionScore(saju1: SajuData, saju2: SajuDat
   let clashCount = 0;
   let punishmentCount = 0;
   let destructionCount = 0;
-  let harmCount = 0;
+  const harmCount = 0;
   
   // 충 체크
   for (const ji1 of allJi1) {
@@ -422,7 +422,7 @@ export function calculateConflictResolutionScore(saju1: SajuData, saju2: SajuDat
     score,
     level: getLevel(score),
     description: `갈등해결 궁합은 ${score}점입니다. ${score >= 70 ? '갈등을 잘 해결할 수 있습니다.' : '갈등 발생 시 신중한 대처가 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -487,7 +487,7 @@ export function calculateEmotionalScore(saju1: SajuData, saju2: SajuData): Detai
     score,
     level: getLevel(score),
     description: `정서적 궁합은 ${score}점입니다. ${score >= 70 ? '깊은 정서적 교감이 가능합니다.' : '감정 표현과 이해에 노력이 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -547,7 +547,7 @@ export function calculateTrustScore(saju1: SajuData, saju2: SajuData): DetailSco
     score,
     level: getLevel(score),
     description: `신뢰도 궁합은 ${score}점입니다. ${score >= 70 ? '서로를 깊이 신뢰할 수 있습니다.' : '신뢰 구축에 시간과 노력이 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -596,7 +596,7 @@ export function analyzeRelationship(saju1: SajuData, saju2: SajuData): Relations
     lifePattern.score,
     conflictResolution.score,
     emotional.score,
-    trust.score
+    trust.score,
   ];
   
   const averageScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
@@ -623,6 +623,6 @@ export function analyzeRelationship(saju1: SajuData, saju2: SajuData): Relations
     emotional,
     trust,
     averageScore,
-    summary
+    summary,
   };
 }

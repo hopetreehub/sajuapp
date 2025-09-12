@@ -15,11 +15,11 @@ export interface SajuData {
 // 천간 상생상극 관계
 const STEM_RELATIONSHIPS = {
   상생: {
-    '목': '화', '화': '토', '토': '금', '금': '수', '수': '목'
+    '목': '화', '화': '토', '토': '금', '금': '수', '수': '목',
   },
   상극: {
-    '목': '토', '화': '금', '토': '수', '금': '목', '수': '화'
-  }
+    '목': '토', '화': '금', '토': '수', '금': '목', '수': '화',
+  },
 };
 
 // 지지 삼합
@@ -27,19 +27,19 @@ const BRANCH_HARMONY = {
   '인오술': '화',
   '신자진': '수',
   '해묘미': '목',
-  '사유축': '금'
+  '사유축': '금',
 };
 
 // 지지 육합
 const BRANCH_COMBINE = {
   '자축': '토', '인해': '목', '묘술': '화',
-  '진유': '금', '사신': '수', '오미': '화토'
+  '진유': '금', '사신': '수', '오미': '화토',
 };
 
 // 지지 충
 const BRANCH_CLASH = [
   ['자', '오'], ['축', '미'], ['인', '신'],
-  ['묘', '유'], ['진', '술'], ['사', '해']
+  ['묘', '유'], ['진', '술'], ['사', '해'],
 ];
 
 // 오행 속성
@@ -48,7 +48,7 @@ const STEM_ELEMENTS: { [key: string]: string } = {
   '병': '화', '정': '화',
   '무': '토', '기': '토',
   '경': '금', '신': '금',
-  '임': '수', '계': '수'
+  '임': '수', '계': '수',
 };
 
 const BRANCH_ELEMENTS: { [key: string]: string } = {
@@ -56,7 +56,7 @@ const BRANCH_ELEMENTS: { [key: string]: string } = {
   '사': '화', '오': '화',
   '진': '토', '술': '토', '축': '토', '미': '토',
   '신': '금', '유': '금',
-  '자': '수', '해': '수'
+  '자': '수', '해': '수',
 };
 
 // 십신 관계 계산
@@ -67,7 +67,7 @@ function calculateSipsin(dayGan: string, targetGan: string): string {
   const ganYinYang = {
     '갑': '양', '을': '음', '병': '양', '정': '음',
     '무': '양', '기': '음', '경': '양', '신': '음',
-    '임': '양', '계': '음'
+    '임': '양', '계': '음',
   };
   
   const dayYinYang = ganYinYang[dayGan];
@@ -83,7 +83,7 @@ function calculateSipsin(dayGan: string, targetGan: string): string {
     '화': { '토': ['식신', '상관'], '금': ['편재', '정재'], '수': ['편관', '정관'], '목': ['편인', '정인'] },
     '토': { '금': ['식신', '상관'], '수': ['편재', '정재'], '목': ['편관', '정관'], '화': ['편인', '정인'] },
     '금': { '수': ['식신', '상관'], '목': ['편재', '정재'], '화': ['편관', '정관'], '토': ['편인', '정인'] },
-    '수': { '목': ['식신', '상관'], '화': ['편재', '정재'], '토': ['편관', '정관'], '금': ['편인', '정인'] }
+    '수': { '목': ['식신', '상관'], '화': ['편재', '정재'], '토': ['편관', '정관'], '금': ['편인', '정인'] },
   };
   
   const rel = relationships[dayElement][targetElement];
@@ -212,7 +212,7 @@ export function calculateAccurateLoveScore(saju1: SajuData, saju2: SajuData): nu
   const ganYinYang: { [key: string]: string } = {
     '갑': '양', '을': '음', '병': '양', '정': '음',
     '무': '양', '기': '음', '경': '양', '신': '음',
-    '임': '양', '계': '음'
+    '임': '양', '계': '음',
   };
   
   let yinYangScore = 60;
@@ -313,7 +313,7 @@ export function calculateAccurateFutureScore(saju1: SajuData, saju2: SajuData): 
 // 궁합 조언 생성
 export function generateDetailedAdvice(
   totalScore: number,
-  categories: { name: string; score: number }[]
+  categories: { name: string; score: number }[],
 ): string {
   let advice = '';
   

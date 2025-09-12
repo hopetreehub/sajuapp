@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react'
-import { useCalendar } from '@/contexts/CalendarContext'
-import { useDiaryData } from '@/hooks/useDiaryData'
-import DiaryBookModal from '@/components/DiaryBookModal'
-import EditTodoModal from '@/components/EditTodoModal'
-import { Todo } from '@/contexts/CalendarContext'
+import { useMemo, useState } from 'react';
+import { useCalendar } from '@/contexts/CalendarContext';
+import { useDiaryData } from '@/hooks/useDiaryData';
+import DiaryBookModal from '@/components/DiaryBookModal';
+import EditTodoModal from '@/components/EditTodoModal';
+import { Todo } from '@/contexts/CalendarContext';
 import { 
   startOfMonth, 
   endOfMonth, 
@@ -14,12 +14,12 @@ import {
   isSameMonth,
   isSameDay,
   isToday,
-  getDay
-} from 'date-fns'
-import { CalendarEvent } from '@/services/api'
-import { formatLunarDate, getSpecialLunarDay } from '@/utils/lunarCalendar'
+  getDay,
+} from 'date-fns';
+import { CalendarEvent } from '@/services/api';
+import { formatLunarDate, getSpecialLunarDay } from '@/utils/lunarCalendar';
 
-const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
+const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
 interface MonthViewProps {
   events: CalendarEvent[]
@@ -32,76 +32,76 @@ interface MonthViewProps {
 }
 
 export default function MonthView({ events, onCreateEvent, onDateClick, onEditEvent, onDeleteEvent, highlightedEventId }: MonthViewProps) {
-  const { currentDate, getTodosForDate, deleteTodo } = useCalendar()
-  const [hoveredDate, setHoveredDate] = useState<Date | null>(null)
-  const [isDiaryOpen, setIsDiaryOpen] = useState(false)
-  const [diaryDate, setDiaryDate] = useState<Date>(new Date())
-  const [editingTodo, setEditingTodo] = useState<Todo | null>(null)
+  const { currentDate, getTodosForDate, deleteTodo } = useCalendar();
+  const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
+  const [isDiaryOpen, setIsDiaryOpen] = useState(false);
+  const [diaryDate, setDiaryDate] = useState<Date>(new Date());
+  const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   
   // 일기 데이터 가져오기
   const { diaryDates } = useDiaryData({ 
     viewMode: 'month', 
-    currentDate 
-  })
+    currentDate, 
+  });
 
   const monthDays = useMemo(() => {
-    const start = startOfMonth(currentDate)
-    const end = endOfMonth(currentDate)
-    const startWeek = startOfWeek(start, { weekStartsOn: 0 })
-    const endWeek = endOfWeek(end, { weekStartsOn: 0 })
+    const start = startOfMonth(currentDate);
+    const end = endOfMonth(currentDate);
+    const startWeek = startOfWeek(start, { weekStartsOn: 0 });
+    const endWeek = endOfWeek(end, { weekStartsOn: 0 });
     
-    return eachDayOfInterval({ start: startWeek, end: endWeek })
-  }, [currentDate])
+    return eachDayOfInterval({ start: startWeek, end: endWeek });
+  }, [currentDate]);
 
   const getEventsForDay = (date: Date): CalendarEvent[] => {
     return events.filter(event => {
-      const eventDate = new Date(event.start_time)
-      return isSameDay(eventDate, date)
-    }).slice(0, 3) // 최대 3개만 표시
-  }
+      const eventDate = new Date(event.start_time);
+      return isSameDay(eventDate, date);
+    }).slice(0, 3); // 최대 3개만 표시
+  };
 
   // 날짜별 할일 데이터 메모이제이션
   const todosForMonth = useMemo(() => {
-    const todosMap = new Map<string, ReturnType<typeof getTodosForDate>>()
+    const todosMap = new Map<string, ReturnType<typeof getTodosForDate>>();
     monthDays.forEach(day => {
-      const dateKey = format(day, 'yyyy-MM-dd')
-      todosMap.set(dateKey, getTodosForDate(day))
-    })
-    return todosMap
-  }, [monthDays, getTodosForDate])
+      const dateKey = format(day, 'yyyy-MM-dd');
+      todosMap.set(dateKey, getTodosForDate(day));
+    });
+    return todosMap;
+  }, [monthDays, getTodosForDate]);
 
   // 우선순위별 아이콘
   const getPriorityIcon = (priority: 'high' | 'medium' | 'low') => {
     switch (priority) {
       case 'high':
-        return '🔴'
+        return '🔴';
       case 'medium':
-        return '🟡'
+        return '🟡';
       case 'low':
-        return '🟢'
+        return '🟢';
       default:
-        return '⚪'
+        return '⚪';
     }
-  }
+  };
 
   const handleDayClick = (date: Date, event: React.MouseEvent) => {
     // 새로운 통합 날짜 클릭 핸들러가 있으면 그것을 사용, 없으면 기존 방식
     if (onDateClick) {
-      onDateClick(date, event)
+      onDateClick(date, event);
     } else {
-      onCreateEvent(date)
+      onCreateEvent(date);
     }
-  }
+  };
 
   const handleEventClick = (event: CalendarEvent, e: React.MouseEvent) => {
-    e.stopPropagation()
-    onEditEvent(event)
-  }
+    e.stopPropagation();
+    onEditEvent(event);
+  };
 
   const handleDiaryClick = (date: Date) => {
-    setDiaryDate(date)
-    setIsDiaryOpen(true)
-  }
+    setDiaryDate(date);
+    setIsDiaryOpen(true);
+  };
 
   return (
     <div className="h-full flex flex-col bg-background">
@@ -123,14 +123,14 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
       {/* Calendar Grid */}
       <div className="flex-1 grid grid-cols-7 grid-rows-6 gap-px bg-border">
         {monthDays.map((day) => {
-          const dayOfWeek = getDay(day)
-          const isCurrentMonth = isSameMonth(day, currentDate)
-          const isCurrentDay = isToday(day)
-          const dayEvents = getEventsForDay(day)
-          const dateKey = format(day, 'yyyy-MM-dd')
-          const dayTodos = todosForMonth.get(dateKey) || []
-          const incompleteTodos = dayTodos.filter(todo => !todo.completed)
-          const completedTodos = dayTodos.filter(todo => todo.completed)
+          const dayOfWeek = getDay(day);
+          const isCurrentMonth = isSameMonth(day, currentDate);
+          const isCurrentDay = isToday(day);
+          const dayEvents = getEventsForDay(day);
+          const dateKey = format(day, 'yyyy-MM-dd');
+          const dayTodos = todosForMonth.get(dateKey) || [];
+          const incompleteTodos = dayTodos.filter(todo => !todo.completed);
+          const completedTodos = dayTodos.filter(todo => todo.completed);
           
           return (
             <div
@@ -181,8 +181,8 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                     {diaryDates.has(format(day, 'yyyy-MM-dd')) && (
                       <button
                         onClick={(e) => {
-                          e.stopPropagation()
-                          handleDiaryClick(day)
+                          e.stopPropagation();
+                          handleDiaryClick(day);
                         }}
                         className="p-1 rounded text-xs transition-all hover:scale-110 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400"
                         title="일기 보기/수정"
@@ -232,7 +232,7 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                     style={{ 
                       backgroundColor: `${event.color || '#3b82f6'}20`,
                       color: event.color || '#3b82f6',
-                      borderLeft: `2px solid ${event.color || '#3b82f6'}`
+                      borderLeft: `2px solid ${event.color || '#3b82f6'}`,
                     }}
                     onClick={(e) => handleEventClick(event, e)}
                   >
@@ -243,9 +243,9 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                     {onDeleteEvent && (
                       <button
                         onClick={(e) => {
-                          e.stopPropagation()
+                          e.stopPropagation();
                           if (confirm(`"${event.title}" 일정을 삭제하시겠습니까?`)) {
-                            onDeleteEvent?.(event.id)
+                            onDeleteEvent?.(event.id);
                           }
                         }}
                         className="opacity-50 hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-1 text-lg font-bold"
@@ -279,16 +279,16 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                         <span 
                           className={`flex-1 cursor-pointer hover:underline ${todo.completed ? 'line-through text-gray-500' : 'text-gray-700 dark:text-gray-300'}`}
                           onClick={(e) => {
-                            e.stopPropagation()
-                            setEditingTodo(todo)
+                            e.stopPropagation();
+                            setEditingTodo(todo);
                           }}
                         >
                           {todo.text}
                         </span>
                         <button
                           onClick={(e) => {
-                            e.stopPropagation()
-                            setEditingTodo(todo)
+                            e.stopPropagation();
+                            setEditingTodo(todo);
                           }}
                           className="opacity-0 group-hover:opacity-100 text-blue-500 hover:text-blue-700 transition-opacity text-xs"
                           title="할일 수정"
@@ -297,8 +297,8 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                         </button>
                         <button
                           onClick={(e) => {
-                            e.stopPropagation()
-                            deleteTodo(todo.id)
+                            e.stopPropagation();
+                            deleteTodo(todo.id);
                           }}
                           className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity"
                           title="할일 삭제"
@@ -316,7 +316,7 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                 </div>
               )}
             </div>
-          )
+          );
         })}
       </div>
       
@@ -335,5 +335,5 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
         todo={editingTodo}
       />
     </div>
-  )
+  );
 }

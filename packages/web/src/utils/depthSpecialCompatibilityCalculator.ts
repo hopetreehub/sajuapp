@@ -94,7 +94,7 @@ export function calculateSexualScore(saju1: SajuData, saju2: SajuData): DetailSc
   const ganYinYang: { [key: string]: string } = {
     '갑': '양', '을': '음', '병': '양', '정': '음',
     '무': '양', '기': '음', '경': '양', '신': '음',
-    '임': '양', '계': '음'
+    '임': '양', '계': '음',
   };
   
   if (ganYinYang[saju1.day.gan] !== ganYinYang[saju2.day.gan]) {
@@ -108,7 +108,7 @@ export function calculateSexualScore(saju1: SajuData, saju2: SajuData): DetailSc
     score,
     level: getLevel(score),
     description: `성적 궁합은 ${score}점입니다. ${score >= 70 ? '서로에게 성적 매력을 느낍니다.' : '성적 조화를 위한 노력이 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -175,7 +175,7 @@ export function calculateSpiritualScore(saju1: SajuData, saju2: SajuData): Detai
     score,
     level: getLevel(score),
     description: `종교/신앙 궁합은 ${score}점입니다. ${score >= 70 ? '정신적 가치관이 잘 맞습니다.' : '종교나 신념에 대한 상호 이해가 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -241,7 +241,7 @@ export function calculateHobbyScore(saju1: SajuData, saju2: SajuData): DetailSco
     score,
     level: getLevel(score),
     description: `여행/취미 궁합은 ${score}점입니다. ${score >= 70 ? '취미와 여가를 함께 즐길 수 있습니다.' : '서로의 취미를 존중하는 노력이 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -308,7 +308,7 @@ export function calculateRetirementScore(saju1: SajuData, saju2: SajuData): Deta
     score,
     level: getLevel(score),
     description: `노후생활 궁합은 ${score}점입니다. ${score >= 70 ? '행복하고 안정된 노후를 보낼 수 있습니다.' : '노후 계획을 함께 준비해야 합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -326,7 +326,7 @@ export function calculateNoblePersonScore(saju1: SajuData, saju2: SajuData): Det
     '병': ['해', '유'], '정': ['해', '유'],
     '무': ['축', '미'], '기': ['자', '신'],
     '경': ['축', '미'], '신': ['인', '오'],
-    '임': ['묘', '사'], '계': ['묘', '사']
+    '임': ['묘', '사'], '계': ['묘', '사'],
   };
   
   const dayGan1 = saju1.day.gan;
@@ -367,7 +367,7 @@ export function calculateNoblePersonScore(saju1: SajuData, saju2: SajuData): Det
     '인': ['병', '정'], '묘': ['갑', '을'],
     '사': ['병', '정'], '오': ['임', '계'],
     '신': ['경', '신'], '유': ['경', '신'],
-    '해': ['임', '계'], '자': ['임', '계']
+    '해': ['임', '계'], '자': ['임', '계'],
   };
   
   const monthJi1 = saju1.month.ji;
@@ -384,7 +384,7 @@ export function calculateNoblePersonScore(saju1: SajuData, saju2: SajuData): Det
     score,
     level: getLevel(score),
     description: `천을귀인 궁합은 ${score}점입니다. ${score >= 70 ? '귀인의 도움으로 순조로운 삶이 예상됩니다.' : '스스로 노력하여 길을 개척해야 합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -453,7 +453,7 @@ export function calculatePeachBlossomScore(saju1: SajuData, saju2: SajuData): De
     score,
     level: getLevel(score),
     description: `도화살 영향은 ${score}점입니다. ${score >= 70 ? '이성 문제 없이 안정적인 관계입니다.' : '이성 관계에 특별한 주의가 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -472,7 +472,7 @@ export function calculateEmptinessScore(saju1: SajuData, saju2: SajuData): Detai
     '진': ['인', '묘'], '사': ['인', '묘'],
     '오': ['진', '사'], '미': ['진', '사'],
     '신': ['오', '미'], '유': ['오', '미'],
-    '술': ['신', '유'], '해': ['신', '유']
+    '술': ['신', '유'], '해': ['신', '유'],
   };
   
   const yearJi1 = saju1.year.ji;
@@ -533,7 +533,7 @@ export function calculateEmptinessScore(saju1: SajuData, saju2: SajuData): Detai
     score,
     level: getLevel(score),
     description: `공망 분석은 ${score}점입니다. ${score >= 70 ? '실속있고 충실한 관계입니다.' : '공허함을 채우기 위한 노력이 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -572,7 +572,7 @@ export function calculateSinsalScore(saju1: SajuData, saju2: SajuData): DetailSc
   const MUNCHANG: { [key: string]: string } = {
     '갑': '사', '을': '오', '병': '신', '정': '유',
     '무': '신', '기': '유', '경': '해', '신': '자',
-    '임': '인', '계': '묘'
+    '임': '인', '계': '묘',
   };
   
   const dayGan1 = saju1.day.gan;
@@ -587,7 +587,7 @@ export function calculateSinsalScore(saju1: SajuData, saju2: SajuData): DetailSc
   const JANGSEONG: { [key: string]: string } = {
     '갑': '묘', '을': '진', '병': '오', '정': '미',
     '무': '오', '기': '미', '경': '유', '신': '술',
-    '임': '자', '계': '축'
+    '임': '자', '계': '축',
   };
   
   if (allJi1.includes(JANGSEONG[dayGan1]) && allJi2.includes(JANGSEONG[dayGan2])) {
@@ -621,7 +621,7 @@ export function calculateSinsalScore(saju1: SajuData, saju2: SajuData): DetailSc
     score,
     level: getLevel(score),
     description: `신살 종합 점수는 ${score}점입니다. ${score >= 70 ? '길신이 많아 순조로운 관계입니다.' : '흉신의 영향을 주의해야 합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -630,13 +630,13 @@ function countElement(saju: SajuData, element: string): number {
   const ganElements: { [key: string]: string } = {
     '갑': '목', '을': '목', '병': '화', '정': '화',
     '무': '토', '기': '토', '경': '금', '신': '금',
-    '임': '수', '계': '수'
+    '임': '수', '계': '수',
   };
   
   const jiElements: { [key: string]: string } = {
     '자': '수', '축': '토', '인': '목', '묘': '목',
     '진': '토', '사': '화', '오': '화', '미': '토',
-    '신': '금', '유': '금', '술': '토', '해': '수'
+    '신': '금', '유': '금', '술': '토', '해': '수',
   };
   
   let count = 0;
@@ -670,13 +670,13 @@ function calculateSipsin(dayGan: string, targetGan: string): string {
   const ganElements: { [key: string]: string } = {
     '갑': '목', '을': '목', '병': '화', '정': '화',
     '무': '토', '기': '토', '경': '금', '신': '금',
-    '임': '수', '계': '수'
+    '임': '수', '계': '수',
   };
   
   const ganYinYang: { [key: string]: string } = {
     '갑': '양', '을': '음', '병': '양', '정': '음',
     '무': '양', '기': '음', '경': '양', '신': '음',
-    '임': '양', '계': '음'
+    '임': '양', '계': '음',
   };
   
   const dayElement = ganElements[dayGan];
@@ -692,7 +692,7 @@ function calculateSipsin(dayGan: string, targetGan: string): string {
     '화': { '토': ['식신', '상관'], '금': ['편재', '정재'], '수': ['편관', '정관'], '목': ['편인', '정인'] },
     '토': { '금': ['식신', '상관'], '수': ['편재', '정재'], '목': ['편관', '정관'], '화': ['편인', '정인'] },
     '금': { '수': ['식신', '상관'], '목': ['편재', '정재'], '화': ['편관', '정관'], '토': ['편인', '정인'] },
-    '수': { '목': ['식신', '상관'], '화': ['편재', '정재'], '토': ['편관', '정관'], '금': ['편인', '정인'] }
+    '수': { '목': ['식신', '상관'], '화': ['편재', '정재'], '토': ['편관', '정관'], '금': ['편인', '정인'] },
   };
   
   const rel = relationships[dayElement]?.[targetElement];

@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react'
-import { useAuthStore } from '@/stores/authStore'
-import { WELCOME_CODE_MESSAGES, COMPANY_WELCOME_CODE } from '@/constants/referral'
+import React, { useState, useCallback, useEffect } from 'react';
+import { useAuthStore } from '@/stores/authStore';
+import { WELCOME_CODE_MESSAGES, COMPANY_WELCOME_CODE } from '@/constants/referral';
 
 interface ReferralCodeInputProps {
   className?: string
@@ -16,7 +16,7 @@ interface ReferralCodeInputProps {
 const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
   className = '',
   onValidationChange,
-  disabled = false
+  disabled = false,
 }) => {
   const {
     referralCode,
@@ -24,98 +24,98 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
     referralValidation,
     setReferralCode,
     validateReferralCode,
-    clearReferralValidation
-  } = useAuthStore()
+    clearReferralValidation,
+  } = useAuthStore();
 
   // 로컬 상태
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [inputValue, setInputValue] = useState('')
-  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null)
-  const [hasUserReferralCode, setHasUserReferralCode] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
+  const [hasUserReferralCode, setHasUserReferralCode] = useState(false);
 
   // 컴포넌트 마운트 시 웰컴 코드 자동 적용
   useEffect(() => {
     if (referralCode) {
-      setInputValue(referralCode)
-      setIsExpanded(true)
-      setHasUserReferralCode(true)
+      setInputValue(referralCode);
+      setIsExpanded(true);
+      setHasUserReferralCode(true);
     } else {
       // 웰컴 코드 자동 적용 알림 (사용자 코드가 없을 때)
-      onValidationChange?.(true, COMPANY_WELCOME_CODE)
+      onValidationChange?.(true, COMPANY_WELCOME_CODE);
     }
-  }, [referralCode, onValidationChange])
+  }, [referralCode, onValidationChange]);
 
   // 디바운스된 검증 함수
   const debouncedValidation = useCallback((code: string) => {
     if (debounceTimer) {
-      clearTimeout(debounceTimer)
+      clearTimeout(debounceTimer);
     }
 
     const timer = setTimeout(async () => {
       if (code.length === 6) {
-        const isValid = await validateReferralCode(code)
-        onValidationChange?.(isValid, isValid ? code : COMPANY_WELCOME_CODE)
-        setHasUserReferralCode(isValid)
+        const isValid = await validateReferralCode(code);
+        onValidationChange?.(isValid, isValid ? code : COMPANY_WELCOME_CODE);
+        setHasUserReferralCode(isValid);
       } else if (code.length === 0) {
-        clearReferralValidation()
+        clearReferralValidation();
         // 친구 코드가 없으면 웰컴 코드로 복귀
-        onValidationChange?.(true, COMPANY_WELCOME_CODE)
-        setHasUserReferralCode(false)
+        onValidationChange?.(true, COMPANY_WELCOME_CODE);
+        setHasUserReferralCode(false);
       }
-    }, 500) // 500ms 디바운스
+    }, 500); // 500ms 디바운스
 
-    setDebounceTimer(timer)
-  }, [debounceTimer, validateReferralCode, clearReferralValidation, onValidationChange])
+    setDebounceTimer(timer);
+  }, [debounceTimer, validateReferralCode, clearReferralValidation, onValidationChange]);
 
   // 입력값 변경 처리
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '') // 영숫자만 허용
+    const value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''); // 영숫자만 허용
     
     if (value.length <= 6) {
-      setInputValue(value)
-      setReferralCode(value)
-      debouncedValidation(value)
+      setInputValue(value);
+      setReferralCode(value);
+      debouncedValidation(value);
     }
-  }
+  };
 
   // 섹션 토글
   const toggleExpanded = () => {
-    if (disabled) return
+    if (disabled) return;
     
-    setIsExpanded(!isExpanded)
+    setIsExpanded(!isExpanded);
     if (!isExpanded && inputValue) {
-      clearReferralValidation()
+      clearReferralValidation();
     }
-  }
+  };
 
   // 클리어 버튼 핸들러
   const handleClear = () => {
-    setInputValue('')
-    setReferralCode('')
-    clearReferralValidation()
+    setInputValue('');
+    setReferralCode('');
+    clearReferralValidation();
     // 웰컴 코드로 복귀
-    onValidationChange?.(true, COMPANY_WELCOME_CODE)
-    setHasUserReferralCode(false)
-  }
+    onValidationChange?.(true, COMPANY_WELCOME_CODE);
+    setHasUserReferralCode(false);
+  };
 
   // 검증 상태에 따른 스타일링
   const getValidationStyle = () => {
-    if (!inputValue || inputValue.length < 6) return ''
+    if (!inputValue || inputValue.length < 6) return '';
     
     if (isValidatingReferral) {
-      return 'border-blue-500 ring-2 ring-blue-200'
+      return 'border-blue-500 ring-2 ring-blue-200';
     }
     
     if (referralValidation?.isValid) {
-      return 'border-green-500 ring-2 ring-green-200'
+      return 'border-green-500 ring-2 ring-green-200';
     }
     
     if (referralValidation && !referralValidation.isValid) {
-      return 'border-red-500 ring-2 ring-red-200'
+      return 'border-red-500 ring-2 ring-red-200';
     }
     
-    return ''
-  }
+    return '';
+  };
 
   // 아이콘 렌더링
   const renderIcon = () => {
@@ -126,7 +126,7 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
         </div>
-      )
+      );
     }
     
     if (referralValidation?.isValid) {
@@ -136,7 +136,7 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-      )
+      );
     }
     
     if (referralValidation && !referralValidation.isValid && inputValue.length === 6) {
@@ -146,11 +146,11 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </div>
-      )
+      );
     }
     
-    return null
-  }
+    return null;
+  };
 
   return (
     <div className={`space-y-4 ${className}`}>
@@ -386,7 +386,7 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ReferralCodeInput
+export default ReferralCodeInput;

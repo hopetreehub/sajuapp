@@ -45,7 +45,7 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
     const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class']
+      attributeFilter: ['class'],
     });
 
     return () => observer.disconnect();
@@ -55,7 +55,7 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
   const defaultColors = {
     primary: '#8b5cf6',
     secondary: '#06b6d4', 
-    background: 'rgba(139, 92, 246, 0.1)'
+    background: 'rgba(139, 92, 246, 0.1)',
   };
 
   const colors = options.colors || defaultColors;
@@ -68,7 +68,7 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
         base: Object.values(options.baseData),
         today: Object.values(options.baseData),
         month: Object.values(options.baseData),
-        year: Object.values(options.baseData)
+        year: Object.values(options.baseData),
       };
     }
 
@@ -79,7 +79,7 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
       base: Object.values(timeframes.base),
       today: Object.values(timeframes.today),
       month: Object.values(timeframes.month),
-      year: Object.values(timeframes.year)
+      year: Object.values(timeframes.year),
     };
   }, [options.baseData, options.calculator]);
 
@@ -87,27 +87,27 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
   const timeFrameColors = {
     base: {
       background: colors.background,
-      border: colors.primary
+      border: colors.primary,
     },
     today: {
       background: 'rgba(239, 68, 68, 0.1)',
-      border: '#ef4444'
+      border: '#ef4444',
     },
     month: {
       background: 'rgba(34, 197, 94, 0.1)',
-      border: '#22c55e'
+      border: '#22c55e',
     },
     year: {
       background: 'rgba(59, 130, 246, 0.1)',
-      border: '#3b82f6'
-    }
+      border: '#3b82f6',
+    },
   };
 
   const timeFrameLabels = {
     base: '기본',
     today: '오늘',
     month: '이달',
-    year: '올해'
+    year: '올해',
   };
 
   // ChartStyleUtils용 TimeFrameData 배열 생성
@@ -118,7 +118,7 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
     datasets.push({
       label: timeFrameLabels.base,
       values: timeFrameData.base,
-      timeFrame: 'base'
+      timeFrame: 'base',
     });
     
     // 선택된 시간대 데이터셋 추가
@@ -126,7 +126,7 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
       datasets.push({
         label: timeFrameLabels[selectedTimeFrame],
         values: timeFrameData[selectedTimeFrame],
-        timeFrame: selectedTimeFrame
+        timeFrame: selectedTimeFrame,
       });
     }
     
@@ -139,7 +139,7 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
       options.labels,
       chartTimeFrameDatasets,
       isDarkMode,
-      true // 최대값 강조 활성화
+      true, // 최대값 강조 활성화
     );
   }, [options.labels, chartTimeFrameDatasets, isDarkMode]);
   
@@ -147,7 +147,7 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
   const chartData: StandardRadarChartData = useMemo(() => {
     return {
       labels: enhancedChartConfig.data.labels,
-      datasets: enhancedChartConfig.data.datasets
+      datasets: enhancedChartConfig.data.datasets,
     };
   }, [enhancedChartConfig]);
 
@@ -171,11 +171,11 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
             color: isDarkMode ? '#f8fafc' : '#2c3e50',
             font: {
               size: 12,
-              weight: 600
+              weight: 600,
             },
             padding: 16,
-            usePointStyle: true
-          }
+            usePointStyle: true,
+          },
         },
         tooltip: {
           ...baseOptions?.plugins?.tooltip,
@@ -192,9 +192,9 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
             ...baseOptions?.plugins?.tooltip?.callbacks,
             label: (context: any) => {
               return `${context.dataset.label}: ${context.parsed.r}점`;
-            }
-          }
-        }
+            },
+          },
+        },
       },
       scales: {
         ...baseOptions?.scales,
@@ -209,30 +209,30 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
             color: isDarkMode ? '#cbd5e1' : '#64748b',
             font: {
               size: isDarkMode ? 11 : 10,
-              weight: 600
+              weight: 600,
             },
-            showLabelBackdrop: false
+            showLabelBackdrop: false,
           },
           grid: {
             ...baseOptions?.scales?.r?.grid,
             color: isDarkMode ? 'rgba(203, 213, 225, 0.4)' : 'rgba(0, 0, 0, 0.1)',
-            lineWidth: isDarkMode ? 2 : 1
+            lineWidth: isDarkMode ? 2 : 1,
           },
           angleLines: {
             ...baseOptions?.scales?.r?.angleLines,
             color: isDarkMode ? 'rgba(203, 213, 225, 0.3)' : 'rgba(0, 0, 0, 0.1)',
-            lineWidth: isDarkMode ? 2 : 1
+            lineWidth: isDarkMode ? 2 : 1,
           },
           pointLabels: {
             ...baseOptions?.scales?.r?.pointLabels,
             color: isDarkMode ? '#f1f5f9' : '#2c3e50',
             font: {
               size: isDarkMode ? 13 : 11,
-              weight: 700
-            }
-          }
-        }
-      }
+              weight: 700,
+            },
+          },
+        },
+      },
     };
   }, [enhancedChartConfig, selectedTimeFrame, isDarkMode, colors.primary]);
 
@@ -243,7 +243,7 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
     setSelectedTimeFrame,
     isDarkMode,
     timeFrameData,
-    timeFrameColors
+    timeFrameColors,
   };
 };
 

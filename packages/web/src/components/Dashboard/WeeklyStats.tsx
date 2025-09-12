@@ -1,12 +1,12 @@
-import { format } from 'date-fns'
-import { ko } from 'date-fns/locale'
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 import { 
   CalendarIcon, 
   CheckCircleIcon, 
   BookOpenIcon,
-  ChartBarIcon 
-} from '@heroicons/react/24/outline'
-import { DashboardStats } from '@/services/dashboardService'
+  ChartBarIcon, 
+} from '@heroicons/react/24/outline';
+import { DashboardStats } from '@/services/dashboardService';
 
 interface WeeklyStatsProps {
   weeklyData: DashboardStats['week']
@@ -26,13 +26,13 @@ export default function WeeklyStats({ weeklyData, loading }: WeeklyStatsProps) {
           </div>
         </div>
       </div>
-    )
+    );
   }
   
   const maxActivity = Math.max(
     ...weeklyData.activityData.map(day => day.events + day.todos + (day.diary ? 1 : 0)),
-    1
-  )
+    1,
+  );
   
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
@@ -104,10 +104,10 @@ export default function WeeklyStats({ weeklyData, loading }: WeeklyStatsProps) {
         
         <div className="space-y-3">
           {weeklyData.activityData.map((day, index) => {
-            const totalActivity = day.events + day.todos + (day.diary ? 1 : 0)
-            const percentage = maxActivity > 0 ? (totalActivity / maxActivity) * 100 : 0
-            const dayName = format(new Date(day.date), 'E', { locale: ko })
-            const dayOfMonth = format(new Date(day.date), 'd')
+            const totalActivity = day.events + day.todos + (day.diary ? 1 : 0);
+            const percentage = maxActivity > 0 ? (totalActivity / maxActivity) * 100 : 0;
+            const dayName = format(new Date(day.date), 'E', { locale: ko });
+            const dayOfMonth = format(new Date(day.date), 'd');
             
             return (
               <div key={day.date} className="flex items-center gap-3">
@@ -144,7 +144,7 @@ export default function WeeklyStats({ weeklyData, loading }: WeeklyStatsProps) {
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       </div>
@@ -158,9 +158,9 @@ export default function WeeklyStats({ weeklyData, loading }: WeeklyStatsProps) {
           
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
             {weeklyData.moodTrend.map((mood, index) => {
-              const date = new Date(mood.date)
-              const dayName = format(date, 'E', { locale: ko })
-              const dayOfMonth = format(date, 'd')
+              const date = new Date(mood.date);
+              const dayName = format(date, 'E', { locale: ko });
+              const dayOfMonth = format(date, 'd');
               
               return (
                 <div key={mood.date} className="flex-shrink-0 text-center p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
@@ -169,7 +169,7 @@ export default function WeeklyStats({ weeklyData, loading }: WeeklyStatsProps) {
                     {dayName} {dayOfMonth}
                   </div>
                 </div>
-              )
+              );
             })}
           </div>
         </div>
@@ -184,5 +184,5 @@ export default function WeeklyStats({ weeklyData, loading }: WeeklyStatsProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

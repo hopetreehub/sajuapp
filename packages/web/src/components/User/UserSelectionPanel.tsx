@@ -7,7 +7,7 @@ import {
   setCurrentUser, 
   deleteUserProfile,
   formatBirthDate,
-  formatDate 
+  formatDate, 
 } from '@/utils/userStorage';
 
 interface UserSelectionPanelProps {
@@ -23,7 +23,7 @@ const UserSelectionPanel: React.FC<UserSelectionPanelProps> = ({
   onUserSelect,
   onUserChange,
   alwaysShowAddButton = true,
-  maxUsers = Infinity
+  maxUsers = Infinity,
 }) => {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -36,7 +36,7 @@ const UserSelectionPanel: React.FC<UserSelectionPanelProps> = ({
     day: 1,
     hour: 12,
     minute: 0,
-    isLunar: false
+    isLunar: false,
   });
 
   // 사용자 목록 로드
@@ -69,7 +69,7 @@ const UserSelectionPanel: React.FC<UserSelectionPanelProps> = ({
         day: 1,
         hour: 12,
         minute: 0,
-        isLunar: false
+        isLunar: false,
       });
       
       // 연속 입력 모드가 아니면 폼 닫기
@@ -108,7 +108,7 @@ const UserSelectionPanel: React.FC<UserSelectionPanelProps> = ({
   // 필터링된 사용자 목록
   const filteredUsers = users.filter(user => 
     user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    `${user.birthInfo.year}${user.birthInfo.month}${user.birthInfo.day}`.includes(searchQuery)
+    `${user.birthInfo.year}${user.birthInfo.month}${user.birthInfo.day}`.includes(searchQuery),
   );
 
   // 추가 가능 여부 확인

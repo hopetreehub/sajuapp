@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react'
-import { useSajuSettingsStore } from '@/stores/sajuSettingsStore'
-import { calculateDailyFortune, getFortuneInfo } from '@/utils/dailyFortuneCalculator'
-import { DailyFortune } from '@/types/saju'
+import React, { useMemo } from 'react';
+import { useSajuSettingsStore } from '@/stores/sajuSettingsStore';
+import { calculateDailyFortune, getFortuneInfo } from '@/utils/dailyFortuneCalculator';
+import { DailyFortune } from '@/types/saju';
 
 interface TodayFortuneSectionProps {
   currentDate: Date
@@ -15,8 +15,8 @@ interface FortuneCardProps {
 }
 
 const FortuneCard: React.FC<FortuneCardProps> = ({ label, score, icon, description }) => {
-  const fortuneInfo = getFortuneInfo(score)
-  const percentage = Math.round(score)
+  const fortuneInfo = getFortuneInfo(score);
+  const percentage = Math.round(score);
   
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover:scale-105 border border-border/50">
@@ -42,7 +42,7 @@ const FortuneCard: React.FC<FortuneCardProps> = ({ label, score, icon, descripti
           style={{ 
             width: `${percentage}%`, 
             backgroundColor: fortuneInfo.color,
-            boxShadow: `0 0 10px ${fortuneInfo.color}40`
+            boxShadow: `0 0 10px ${fortuneInfo.color}40`,
           }}
         />
       </div>
@@ -51,8 +51,8 @@ const FortuneCard: React.FC<FortuneCardProps> = ({ label, score, icon, descripti
         <p className="text-sm text-muted-foreground mt-3 italic">{description}</p>
       )}
     </div>
-  )
-}
+  );
+};
 
 const LoadingFortuneSection: React.FC = () => (
   <div className="h-full flex flex-col">
@@ -75,7 +75,7 @@ const LoadingFortuneSection: React.FC = () => (
       ))}
     </div>
   </div>
-)
+);
 
 const NoSettingsSection: React.FC = () => (
   <div className="h-full flex flex-col items-center justify-center">
@@ -90,7 +90,7 @@ const NoSettingsSection: React.FC = () => (
       <button 
         onClick={() => {
           // 설정 페이지로 이동하는 로직 (향후 구현)
-          console.log('Navigate to settings')
+          console.log('Navigate to settings');
         }}
         className="px-8 py-4 bg-primary-500 text-white text-lg font-semibold rounded-xl hover:bg-primary-600 transition-colors shadow-lg"
       >
@@ -98,38 +98,38 @@ const NoSettingsSection: React.FC = () => (
       </button>
     </div>
   </div>
-)
+);
 
 const fortuneDescriptions: { [key: string]: string } = {
   '총운': '하루 전반적인 운의 흐름을 나타냅니다',
   '연애운': '사랑과 인간관계의 조화를 보여줍니다',
   '재물운': '금전적 이득과 재산 증식의 기회를 알려줍니다',
   '건강운': '신체와 정신의 건강 상태를 나타냅니다',
-  '직업운': '업무 성과와 경력 발전 가능성을 보여줍니다'
-}
+  '직업운': '업무 성과와 경력 발전 가능성을 보여줍니다',
+};
 
 const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate, onDiaryClick, hasDiary }) => {
-  const { birthInfo } = useSajuSettingsStore()
+  const { birthInfo } = useSajuSettingsStore();
 
   const dailyFortune: DailyFortune | null = useMemo(() => {
-    if (!birthInfo) return null
+    if (!birthInfo) return null;
     
     try {
-      return calculateDailyFortune(birthInfo, currentDate)
+      return calculateDailyFortune(birthInfo, currentDate);
     } catch (error) {
-      console.error('Failed to calculate daily fortune:', error)
-      return null
+      console.error('Failed to calculate daily fortune:', error);
+      return null;
     }
-  }, [birthInfo, currentDate])
+  }, [birthInfo, currentDate]);
 
   // 생년월일시 정보가 없는 경우
   if (!birthInfo) {
-    return <NoSettingsSection />
+    return <NoSettingsSection />;
   }
 
   // 운세 계산 실패한 경우
   if (!dailyFortune) {
-    return <LoadingFortuneSection />
+    return <LoadingFortuneSection />;
   }
 
   const fortuneItems = [
@@ -137,8 +137,8 @@ const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate, 
     { label: '연애운', score: dailyFortune.loveLuck, icon: '💕' },
     { label: '재물운', score: dailyFortune.wealthLuck, icon: '💰' },
     { label: '건강운', score: dailyFortune.healthLuck, icon: '🏥' },
-    { label: '직업운', score: dailyFortune.careerLuck, icon: '💼' }
-  ]
+    { label: '직업운', score: dailyFortune.careerLuck, icon: '💼' },
+  ];
 
   return (
     <div className="h-full flex flex-col p-2">
@@ -227,7 +227,7 @@ const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate, 
 
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TodayFortuneSection
+export default TodayFortuneSection;

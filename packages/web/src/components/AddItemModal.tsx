@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
-import { format } from 'date-fns'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { CalendarEvent } from '@/services/api'
-import { TodoInput } from '@/types/todo'
+import React, { useState } from 'react';
+import { format } from 'date-fns';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { CalendarEvent } from '@/services/api';
+import { TodoInput } from '@/types/todo';
 
 type ItemType = 'event' | 'todo'
 
@@ -15,28 +15,28 @@ interface AddItemModalProps {
 }
 
 export default function AddItemModal({ date, hour, onClose, onAddEvent, onAddTodo }: AddItemModalProps) {
-  const [itemType, setItemType] = useState<ItemType>('event')
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [startTime, setStartTime] = useState(hour ? `${hour.toString().padStart(2, '0')}:00` : '09:00')
-  const [endTime, setEndTime] = useState(hour ? `${(hour + 1).toString().padStart(2, '0')}:00` : '10:00')
-  const [priority, setPriority] = useState<'high' | 'medium' | 'low'>('medium')
-  const [hasTime, setHasTime] = useState(Boolean(hour))
+  const [itemType, setItemType] = useState<ItemType>('event');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [startTime, setStartTime] = useState(hour ? `${hour.toString().padStart(2, '0')}:00` : '09:00');
+  const [endTime, setEndTime] = useState(hour ? `${(hour + 1).toString().padStart(2, '0')}:00` : '10:00');
+  const [priority, setPriority] = useState<'high' | 'medium' | 'low'>('medium');
+  const [hasTime, setHasTime] = useState(Boolean(hour));
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     
-    if (!title.trim()) return
+    if (!title.trim()) return;
 
     if (itemType === 'event') {
       // 일정 추가
-      const eventDateTime = new Date(date)
-      const [hours, minutes] = startTime.split(':').map(Number)
-      eventDateTime.setHours(hours, minutes, 0, 0)
+      const eventDateTime = new Date(date);
+      const [hours, minutes] = startTime.split(':').map(Number);
+      eventDateTime.setHours(hours, minutes, 0, 0);
       
-      const endDateTime = new Date(date)
-      const [endHours, endMinutes] = endTime.split(':').map(Number)
-      endDateTime.setHours(endHours, endMinutes, 0, 0)
+      const endDateTime = new Date(date);
+      const [endHours, endMinutes] = endTime.split(':').map(Number);
+      endDateTime.setHours(endHours, endMinutes, 0, 0);
 
       onAddEvent({
         title: title.trim(),
@@ -45,8 +45,8 @@ export default function AddItemModal({ date, hour, onClose, onAddEvent, onAddTod
         end_time: endDateTime.toISOString(),
         all_day: false,
         location: undefined,
-        color: '#3b82f6'
-      })
+        color: '#3b82f6',
+      });
     } else {
       // 할일 추가
       const todoData: TodoInput = {
@@ -57,14 +57,14 @@ export default function AddItemModal({ date, hour, onClose, onAddEvent, onAddTod
         date: format(date, 'yyyy-MM-dd'),
         hasTime,
         startTime: hasTime ? startTime : undefined,
-        endTime: hasTime ? endTime : undefined
-      }
+        endTime: hasTime ? endTime : undefined,
+      };
 
-      onAddTodo(todoData)
+      onAddTodo(todoData);
     }
 
-    onClose()
-  }
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -230,5 +230,5 @@ export default function AddItemModal({ date, hour, onClose, onAddEvent, onAddTod
         </form>
       </div>
     </div>
-  )
+  );
 }

@@ -26,38 +26,38 @@ export type TodoUpdate = Partial<Todo>
 export const TODO_PRIORITY_COLORS = {
   high: '#ef4444',    // red-500
   medium: '#f59e0b',  // amber-500
-  low: '#10b981'      // emerald-500
-} as const
+  low: '#10b981',      // emerald-500
+} as const;
 
 // Todo 우선순위별 아이콘
 export const TODO_PRIORITY_ICONS = {
   high: '🔴',
   medium: '🟡',
-  low: '🟢'
-} as const
+  low: '🟢',
+} as const;
 
 // 캘린더에서 사용하는 항목 색상 시스템
 export const ITEM_COLORS = {
   event: {
     background: '#3b82f620',
     border: '#3b82f6',
-    text: '#3b82f6'
+    text: '#3b82f6',
   },
   todo: {
     high: { 
       background: '#ef444420', 
       border: '#ef4444', 
-      text: '#ef4444' 
+      text: '#ef4444', 
     },
     medium: { 
       background: '#f59e0b20', 
       border: '#f59e0b', 
-      text: '#f59e0b' 
+      text: '#f59e0b', 
     },
     low: { 
       background: '#10b98120', 
       border: '#10b981', 
-      text: '#10b981' 
-    }
-  }
-} as const
+      text: '#10b981', 
+    },
+  },
+} as const;

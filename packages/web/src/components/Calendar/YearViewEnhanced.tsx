@@ -10,7 +10,7 @@ import {
   MemoType, 
   ImportanceLevel,
   MEMO_TYPE_CONFIG,
-  IMPORTANCE_CONFIG 
+  IMPORTANCE_CONFIG, 
 } from '@/types/yearlyMemo';
 import { Plus, X, Check, Edit2, Trash2, Filter, Search } from 'lucide-react';
 
@@ -24,7 +24,7 @@ interface YearViewEnhancedProps {
 
 const MONTHS = [
   '1월', '2월', '3월', '4월', '5월', '6월',
-  '7월', '8월', '9월', '10월', '11월', '12월'
+  '7월', '8월', '9월', '10월', '11월', '12월',
 ];
 
 export default function YearViewEnhanced({ events, onDateClick, highlightedEventId }: YearViewEnhancedProps) {
@@ -35,13 +35,13 @@ export default function YearViewEnhanced({ events, onDateClick, highlightedEvent
     updateMemo, 
     deleteMemo, 
     toggleComplete,
-    getMonthStatistics 
+    getMonthStatistics, 
   } = useYearlyMemo();
   
   // 일기 데이터 가져오기
   const { diaries } = useDiaryData({ 
     viewMode: 'year', 
-    currentDate 
+    currentDate, 
   });
 
   const currentYear = currentDate.getFullYear();
@@ -69,7 +69,7 @@ export default function YearViewEnhanced({ events, onDateClick, highlightedEvent
       const query = searchQuery.toLowerCase();
       memos = memos.filter(m => 
         m.title.toLowerCase().includes(query) ||
-        m.description?.toLowerCase().includes(query)
+        m.description?.toLowerCase().includes(query),
       );
     }
     
@@ -91,7 +91,7 @@ export default function YearViewEnhanced({ events, onDateClick, highlightedEvent
       color: typeConfig.color,
       importance: newMemoImportance,
       completed: false,
-      position: 0
+      position: 0,
     });
 
     // Reset form
@@ -110,7 +110,7 @@ export default function YearViewEnhanced({ events, onDateClick, highlightedEvent
     const yearMonthStr = `${currentYear}-${monthStr}`;
     
     return diaries.filter(diary => 
-      diary.date && diary.date.startsWith(yearMonthStr)
+      diary.date && diary.date.startsWith(yearMonthStr),
     ).length;
   };
 
@@ -122,7 +122,7 @@ export default function YearViewEnhanced({ events, onDateClick, highlightedEvent
       goal: 0,
       event: 0,
       memo: 0,
-      milestone: 0
+      milestone: 0,
     };
 
     for (let month = 1; month <= 12; month++) {

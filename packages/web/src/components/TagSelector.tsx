@@ -85,7 +85,7 @@ const TagSelector: React.FC<TagSelectorProps> = ({
   const filteredTags = availableTags.filter(
     tag => 
       tag.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      !selectedTags.find(t => t.id === tag.id)
+      !selectedTags.find(t => t.id === tag.id),
   );
 
   return (

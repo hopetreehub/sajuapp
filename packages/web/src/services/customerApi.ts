@@ -36,12 +36,12 @@ export interface CustomerResponse {
 export async function getCustomers(
   page: number = 1, 
   limit: number = 20, 
-  search: string = ''
+  search: string = '',
 ): Promise<CustomerListResponse> {
   const params = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
-    search
+    search,
   });
   
   const response = await fetch(`${API_BASE_URL}/customers?${params}`);
@@ -83,7 +83,7 @@ export async function createCustomer(customer: Customer): Promise<CustomerRespon
 // 고객 수정
 export async function updateCustomer(
   id: number, 
-  customer: Customer
+  customer: Customer,
 ): Promise<CustomerResponse> {
   const response = await fetch(`${API_BASE_URL}/customers/${id}`, {
     method: 'PUT',
@@ -132,7 +132,7 @@ export async function searchCustomers(query: string): Promise<Customer[]> {
 export async function calculateSaju(
   birth_date: string,
   birth_time: string,
-  lunar_solar: 'lunar' | 'solar' = 'solar'
+  lunar_solar: 'lunar' | 'solar' = 'solar',
 ): Promise<any> {
   const response = await fetch(`${API_BASE_URL}/saju/calculate`, {
     method: 'POST',

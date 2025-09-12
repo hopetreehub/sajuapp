@@ -1,5 +1,5 @@
-import React from 'react'
-import { InterpretationResponse } from '@/services/api'
+import React from 'react';
+import { InterpretationResponse } from '@/services/api';
 
 interface InterpretationSummaryCardProps {
   interpretation: InterpretationResponse | null
@@ -10,7 +10,7 @@ interface InterpretationSummaryCardProps {
 const InterpretationSummaryCard: React.FC<InterpretationSummaryCardProps> = ({
   interpretation,
   loading = false,
-  className = ''
+  className = '',
 }) => {
   if (loading) {
     return (
@@ -24,16 +24,16 @@ const InterpretationSummaryCard: React.FC<InterpretationSummaryCardProps> = ({
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (!interpretation) {
-    return null
+    return null;
   }
 
   // 주요 정보 추출
   const getKeyInsights = () => {
-    const insights = []
+    const insights = [];
     
     // 일간 정보
     if (interpretation.basic?.dayMaster) {
@@ -41,8 +41,8 @@ const InterpretationSummaryCard: React.FC<InterpretationSummaryCardProps> = ({
         icon: '☀️',
         label: '일간',
         value: interpretation.basic.dayMaster,
-        color: 'blue'
-      })
+        color: 'blue',
+      });
     }
     
     // 용신
@@ -51,8 +51,8 @@ const InterpretationSummaryCard: React.FC<InterpretationSummaryCardProps> = ({
         icon: '⭐',
         label: '용신',
         value: interpretation.basic.yongshin,
-        color: 'purple'
-      })
+        color: 'purple',
+      });
     }
     
     // 격국
@@ -61,8 +61,8 @@ const InterpretationSummaryCard: React.FC<InterpretationSummaryCardProps> = ({
         icon: '🎯',
         label: '격국',
         value: interpretation.basic.gyeokguk,
-        color: 'green'
-      })
+        color: 'green',
+      });
     }
     
     // 주요 성격 특성
@@ -71,15 +71,15 @@ const InterpretationSummaryCard: React.FC<InterpretationSummaryCardProps> = ({
         .filter(([_, value]) => (value as number) > 70)
         .map(([key]) => key)
         .slice(0, 2)
-        .join(', ')
+        .join(', ');
       
       if (traits) {
         insights.push({
           icon: '🧠',
           label: '주요 특성',
           value: traits,
-          color: 'indigo'
-        })
+          color: 'indigo',
+        });
       }
     }
     
@@ -89,8 +89,8 @@ const InterpretationSummaryCard: React.FC<InterpretationSummaryCardProps> = ({
         icon: '🍀',
         label: '행운 요소',
         value: interpretation.fortune.luckyElements[0],
-        color: 'yellow'
-      })
+        color: 'yellow',
+      });
     }
     
     // 적합 직업
@@ -99,14 +99,14 @@ const InterpretationSummaryCard: React.FC<InterpretationSummaryCardProps> = ({
         icon: '💼',
         label: '적합 직업',
         value: interpretation.career.suitableCareers[0],
-        color: 'cyan'
-      })
+        color: 'cyan',
+      });
     }
     
-    return insights
-  }
+    return insights;
+  };
 
-  const insights = getKeyInsights()
+  const insights = getKeyInsights();
 
   return (
     <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 ${className}`}>
@@ -209,7 +209,7 @@ const InterpretationSummaryCard: React.FC<InterpretationSummaryCardProps> = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default InterpretationSummaryCard
+export default InterpretationSummaryCard;

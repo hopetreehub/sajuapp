@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   BookOpenIcon,
   ClockIcon,
@@ -7,9 +7,9 @@ import {
   StarIcon,
   PlayIcon,
   CheckCircleIcon,
-  LockClosedIcon
-} from '@heroicons/react/24/outline'
-import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/24/solid'
+  LockClosedIcon,
+} from '@heroicons/react/24/outline';
+import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/24/solid';
 
 interface Course {
   id: string
@@ -50,65 +50,65 @@ export default function CourseCard({
   course, 
   progress, 
   showEnrollButton = true,
-  onEnroll 
+  onEnroll, 
 }: CourseCardProps) {
-  const navigate = useNavigate()
-  const [isEnrolling, setIsEnrolling] = useState(false)
+  const navigate = useNavigate();
+  const [isEnrolling, setIsEnrolling] = useState(false);
 
   const levelLabels = {
     beginner: '초급',
     intermediate: '중급', 
     advanced: '고급',
-    expert: '전문가'
-  }
+    expert: '전문가',
+  };
 
   const categoryLabels = {
     basic: '기초',
     fortune: '운세',
     compatibility: '궁합',
     professional: '전문가',
-    special: '특강'
-  }
+    special: '특강',
+  };
 
   const formatPrice = (price: number) => {
-    if (price === 0) return '무료'
+    if (price === 0) return '무료';
     return new Intl.NumberFormat('ko-KR', {
       style: 'currency',
       currency: 'KRW',
       minimumFractionDigits: 0,
-    }).format(price)
-  }
+    }).format(price);
+  };
 
   const formatDuration = (minutes: number) => {
-    const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
     
     if (hours > 0) {
-      return `${hours}시간 ${mins}분`
+      return `${hours}시간 ${mins}분`;
     }
-    return `${mins}분`
-  }
+    return `${mins}분`;
+  };
 
   const handleEnroll = async () => {
-    if (!onEnroll) return
+    if (!onEnroll) return;
     
-    setIsEnrolling(true)
+    setIsEnrolling(true);
     try {
-      await onEnroll(course.id)
+      await onEnroll(course.id);
     } catch (error) {
-      console.error('수강신청 실패:', error)
+      console.error('수강신청 실패:', error);
     } finally {
-      setIsEnrolling(false)
+      setIsEnrolling(false);
     }
-  }
+  };
 
   const handleContinue = () => {
-    navigate(`/learning/${course.id}`)
-  }
+    navigate(`/learning/${course.id}`);
+  };
 
   const handleStart = () => {
-    navigate(`/learning/${course.id}`)
-  }
+    navigate(`/learning/${course.id}`);
+  };
 
   const getActionButton = () => {
     if (!progress?.isEnrolled) {
@@ -121,7 +121,7 @@ export default function CourseCard({
           {isEnrolling ? '수강신청 중...' : 
            course.price === 0 ? '무료 수강하기' : `${formatPrice(course.price)} 결제`}
         </button>
-      )
+      );
     }
 
     if (progress.status === 'completed') {
@@ -133,7 +133,7 @@ export default function CourseCard({
           <CheckCircleIconSolid className="h-4 w-4 mr-1" />
           다시 보기
         </button>
-      )
+      );
     }
 
     if (progress.progress > 0) {
@@ -145,7 +145,7 @@ export default function CourseCard({
           <PlayIcon className="h-4 w-4 mr-1" />
           이어서 보기
         </button>
-      )
+      );
     }
 
     return (
@@ -156,8 +156,8 @@ export default function CourseCard({
         <PlayIcon className="h-4 w-4 mr-1" />
         시작하기
       </button>
-    )
-  }
+    );
+  };
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden group hover:shadow-md transition-shadow">
@@ -293,5 +293,5 @@ export default function CourseCard({
         )}
       </div>
     </div>
-  )
+  );
 }

@@ -5,8 +5,8 @@ import {
   StarIcon,
   AcademicCapIcon,
   CheckCircleIcon,
-  ArrowTrendingUpIcon
-} from '@heroicons/react/24/outline'
+  ArrowTrendingUpIcon,
+} from '@heroicons/react/24/outline';
 
 interface AcademyStats {
   totalCourses: number
@@ -29,12 +29,12 @@ export default function AcademyStatsCards({ stats }: AcademyStatsCardsProps) {
       style: 'currency',
       currency: 'KRW',
       minimumFractionDigits: 0,
-    }).format(amount)
-  }
+    }).format(amount);
+  };
 
   const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('ko-KR').format(num)
-  }
+    return new Intl.NumberFormat('ko-KR').format(num);
+  };
 
   const statsCards = [
     {
@@ -45,7 +45,7 @@ export default function AcademyStatsCards({ stats }: AcademyStatsCardsProps) {
       bgColor: 'bg-blue-50 dark:bg-blue-900/20',
       iconColor: 'text-blue-600 dark:text-blue-400',
       textColor: 'text-blue-600 dark:text-blue-400',
-      description: '개설된 강좌 수'
+      description: '개설된 강좌 수',
     },
     {
       title: '전체 학생',
@@ -55,7 +55,7 @@ export default function AcademyStatsCards({ stats }: AcademyStatsCardsProps) {
       bgColor: 'bg-green-50 dark:bg-green-900/20',
       iconColor: 'text-green-600 dark:text-green-400',
       textColor: 'text-green-600 dark:text-green-400',
-      description: '등록된 학생 수'
+      description: '등록된 학생 수',
     },
     {
       title: '수강신청',
@@ -68,8 +68,8 @@ export default function AcademyStatsCards({ stats }: AcademyStatsCardsProps) {
       description: '총 수강신청 건수',
       subStats: [
         { label: '진행중', value: stats.activeEnrollments },
-        { label: '완료', value: stats.completedEnrollments }
-      ]
+        { label: '완료', value: stats.completedEnrollments },
+      ],
     },
     {
       title: '총 수익',
@@ -79,7 +79,7 @@ export default function AcademyStatsCards({ stats }: AcademyStatsCardsProps) {
       bgColor: 'bg-emerald-50 dark:bg-emerald-900/20',
       iconColor: 'text-emerald-600 dark:text-emerald-400',
       textColor: 'text-emerald-600 dark:text-emerald-400',
-      description: '전체 매출 현황'
+      description: '전체 매출 현황',
     },
     {
       title: '평균 평점',
@@ -90,7 +90,7 @@ export default function AcademyStatsCards({ stats }: AcademyStatsCardsProps) {
       iconColor: 'text-yellow-600 dark:text-yellow-400',
       textColor: 'text-yellow-600 dark:text-yellow-400',
       description: '강좌 평균 만족도',
-      suffix: '/5.0'
+      suffix: '/5.0',
     },
     {
       title: '완료율',
@@ -100,9 +100,9 @@ export default function AcademyStatsCards({ stats }: AcademyStatsCardsProps) {
       bgColor: 'bg-indigo-50 dark:bg-indigo-900/20',
       iconColor: 'text-indigo-600 dark:text-indigo-400',
       textColor: 'text-indigo-600 dark:text-indigo-400',
-      description: '수강 완료율'
-    }
-  ]
+      description: '수강 완료율',
+    },
+  ];
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -157,5 +157,5 @@ export default function AcademyStatsCards({ stats }: AcademyStatsCardsProps) {
         </div>
       ))}
     </div>
-  )
+  );
 }

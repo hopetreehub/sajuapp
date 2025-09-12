@@ -15,12 +15,12 @@ const InterpretationPanel: React.FC<InterpretationPanelProps> = ({
   interpretation,
   loading = false,
   error = null,
-  category = 'basic'
+  category = 'basic',
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   type TabType = 'basic' | 'personality' | 'fortune' | 'career' | 'relationship' | 'health';
   const [activeTab, setActiveTab] = useState<TabType>(
-    (category === 'spiritual' || category === 'johoo') ? 'basic' : category as TabType
+    (category === 'spiritual' || category === 'johoo') ? 'basic' : category as TabType,
   );
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const InterpretationPanel: React.FC<InterpretationPanelProps> = ({
     { id: 'fortune', label: '운세', icon: Sparkles },
     { id: 'career', label: '직업', icon: Briefcase },
     { id: 'relationship', label: '인연', icon: Users },
-    { id: 'health', label: '건강', icon: Activity }
+    { id: 'health', label: '건강', icon: Activity },
   ];
 
   const renderBasicAnalysis = () => {

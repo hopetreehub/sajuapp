@@ -1,41 +1,41 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 
 /**
  * 디바운싱 훅 - 값이 변경된 후 일정 시간 동안 변경이 없을 때만 업데이트
  */
 export function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value)
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
   
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedValue(value)
-    }, delay)
+      setDebouncedValue(value);
+    }, delay);
     
     return () => {
-      clearTimeout(handler)
-    }
-  }, [value, delay])
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
   
-  return debouncedValue
+  return debouncedValue;
 }
 
 /**
  * 검색 결과를 타입별로 그룹화
  */
 export function groupResultsByType<T extends { type: string }>(
-  results: T[]
+  results: T[],
 ): Map<string, T[]> {
-  const grouped = new Map<string, T[]>()
+  const grouped = new Map<string, T[]>();
   
   results.forEach(result => {
-    const type = result.type
+    const type = result.type;
     if (!grouped.has(type)) {
-      grouped.set(type, [])
+      grouped.set(type, []);
     }
-    grouped.get(type)!.push(result)
-  })
+    grouped.get(type)!.push(result);
+  });
   
-  return grouped
+  return grouped;
 }
 
 /**
@@ -47,9 +47,9 @@ export function getCategoryLabel(category: string): string {
     events: '일정',
     todos: '할일',
     diaries: '일기',
-    tags: '태그'
-  }
-  return labels[category] || category
+    tags: '태그',
+  };
+  return labels[category] || category;
 }
 
 /**
@@ -60,30 +60,30 @@ export function getTypeLabel(type: string): string {
     event: '일정',
     todo: '할일',
     diary: '일기',
-    tag: '태그'
-  }
-  return labels[type] || type
+    tag: '태그',
+  };
+  return labels[type] || type;
 }
 
 /**
  * HTML 태그 제거
  */
 export function stripHtml(html: string): string {
-  const doc = new DOMParser().parseFromString(html, 'text/html')
-  return doc.body.textContent || ''
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  return doc.body.textContent || '';
 }
 
 /**
  * 텍스트 자르기
  */
 export function truncateText(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text
-  return text.substring(0, maxLength) + '...'
+  if (text.length <= maxLength) return text;
+  return `${text.substring(0, maxLength)  }...`;
 }
 
 /**
  * 검색어 정규식 이스케이프
  */
 export function escapeRegex(string: string): string {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

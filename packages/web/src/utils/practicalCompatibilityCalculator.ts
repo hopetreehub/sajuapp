@@ -10,13 +10,13 @@ function calculateSipsin(dayGan: string, targetGan: string): string {
   const ganElements: { [key: string]: string } = {
     '갑': '목', '을': '목', '병': '화', '정': '화',
     '무': '토', '기': '토', '경': '금', '신': '금',
-    '임': '수', '계': '수'
+    '임': '수', '계': '수',
   };
   
   const ganYinYang: { [key: string]: string } = {
     '갑': '양', '을': '음', '병': '양', '정': '음',
     '무': '양', '기': '음', '경': '양', '신': '음',
-    '임': '양', '계': '음'
+    '임': '양', '계': '음',
   };
   
   const dayElement = ganElements[dayGan];
@@ -32,7 +32,7 @@ function calculateSipsin(dayGan: string, targetGan: string): string {
     '화': { '토': ['식신', '상관'], '금': ['편재', '정재'], '수': ['편관', '정관'], '목': ['편인', '정인'] },
     '토': { '금': ['식신', '상관'], '수': ['편재', '정재'], '목': ['편관', '정관'], '화': ['편인', '정인'] },
     '금': { '수': ['식신', '상관'], '목': ['편재', '정재'], '화': ['편관', '정관'], '토': ['편인', '정인'] },
-    '수': { '목': ['식신', '상관'], '화': ['편재', '정재'], '토': ['편관', '정관'], '금': ['편인', '정인'] }
+    '수': { '목': ['식신', '상관'], '화': ['편재', '정재'], '토': ['편관', '정관'], '금': ['편인', '정인'] },
   };
   
   const rel = relationships[dayElement]?.[targetElement];
@@ -153,7 +153,7 @@ export function calculateEconomicScore(saju1: SajuData, saju2: SajuData): Detail
     score,
     level: getLevel(score),
     description: `경제관념 궁합은 ${score}점입니다. ${score >= 70 ? '경제적 가치관이 잘 맞습니다.' : '금전 관리 방식에 대한 조율이 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -252,7 +252,7 @@ export function calculateCareerScore(saju1: SajuData, saju2: SajuData): DetailSc
     score,
     level: getLevel(score),
     description: `직업운 궁합은 ${score}점입니다. ${score >= 70 ? '서로의 커리어를 지지할 수 있습니다.' : '직업적 목표에 대한 이해가 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -327,7 +327,7 @@ export function calculateResidenceScore(saju1: SajuData, saju2: SajuData): Detai
     score,
     level: getLevel(score),
     description: `주거환경 궁합은 ${score}점입니다. ${score >= 70 ? '편안한 보금자리를 만들 수 있습니다.' : '주거 스타일 조율이 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -419,7 +419,7 @@ export function calculateChildrenScore(saju1: SajuData, saju2: SajuData): Detail
     score,
     level: getLevel(score),
     description: `자녀운 궁합은 ${score}점입니다. ${score >= 70 ? '자녀와 행복한 가정을 이룰 수 있습니다.' : '자녀 계획에 대한 충분한 대화가 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -440,7 +440,7 @@ export function calculateInLawScore(saju1: SajuData, saju2: SajuData): DetailSco
   // 년지 충돌 체크 (부모와의 관계)
   const JI_CLASH: string[][] = [
     ['자', '오'], ['축', '미'], ['인', '신'],
-    ['묘', '유'], ['진', '술'], ['사', '해']
+    ['묘', '유'], ['진', '술'], ['사', '해'],
   ];
   
   let hasClash = false;
@@ -474,7 +474,7 @@ export function calculateInLawScore(saju1: SajuData, saju2: SajuData): DetailSco
   const yearGanElem2 = getGanElement(saju2.year.gan);
   
   const SHENG: { [key: string]: string } = {
-    '목': '화', '화': '토', '토': '금', '금': '수', '수': '목'
+    '목': '화', '화': '토', '토': '금', '금': '수', '수': '목',
   };
   
   if (SHENG[yearGanElem1] === yearGanElem2 || SHENG[yearGanElem2] === yearGanElem1) {
@@ -510,7 +510,7 @@ export function calculateInLawScore(saju1: SajuData, saju2: SajuData): DetailSco
     score,
     level: getLevel(score),
     description: `시댁/처가 궁합은 ${score}점입니다. ${score >= 70 ? '양가 가족과 원만한 관계를 유지할 수 있습니다.' : '가족 관계에서 서로 배려가 필요합니다.'}`,
-    factors: { positive, negative }
+    factors: { positive, negative },
   };
 }
 
@@ -519,13 +519,13 @@ function countElement(saju: SajuData, element: string): number {
   const ganElements: { [key: string]: string } = {
     '갑': '목', '을': '목', '병': '화', '정': '화',
     '무': '토', '기': '토', '경': '금', '신': '금',
-    '임': '수', '계': '수'
+    '임': '수', '계': '수',
   };
   
   const jiElements: { [key: string]: string } = {
     '자': '수', '축': '토', '인': '목', '묘': '목',
     '진': '토', '사': '화', '오': '화', '미': '토',
-    '신': '금', '유': '금', '술': '토', '해': '수'
+    '신': '금', '유': '금', '술': '토', '해': '수',
   };
   
   let count = 0;
@@ -546,7 +546,7 @@ function getGanElement(gan: string): string {
   const ganElements: { [key: string]: string } = {
     '갑': '목', '을': '목', '병': '화', '정': '화',
     '무': '토', '기': '토', '경': '금', '신': '금',
-    '임': '수', '계': '수'
+    '임': '수', '계': '수',
   };
   return ganElements[gan] || '';
 }
@@ -574,7 +574,7 @@ export function analyzePractical(saju1: SajuData, saju2: SajuData): PracticalAna
     career.score,
     residence.score,
     children.score,
-    inLaw.score
+    inLaw.score,
   ];
   
   const averageScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
@@ -599,6 +599,6 @@ export function analyzePractical(saju1: SajuData, saju2: SajuData): PracticalAna
     children,
     inLaw,
     averageScore,
-    summary
+    summary,
   };
 }

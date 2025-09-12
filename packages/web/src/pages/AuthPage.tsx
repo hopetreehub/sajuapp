@@ -1,56 +1,56 @@
-import React, { useState, useEffect } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
-import { useAuthStore } from '@/stores/authStore'
-import SignUpForm from '@/components/Auth/SignUpForm'
-import LoginForm from '@/components/Auth/LoginForm'
+import React, { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/stores/authStore';
+import SignUpForm from '@/components/Auth/SignUpForm';
+import LoginForm from '@/components/Auth/LoginForm';
 
 /**
  * 통합 인증 페이지 (로그인/회원가입)
  * URL 파라미터로 모드 전환: /auth?mode=signup or /auth?mode=login
  */
 const AuthPage: React.FC = () => {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const navigate = useNavigate()
-  const { isAuthenticated, user } = useAuthStore()
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuthStore();
 
   // URL 파라미터에서 모드 읽기 (기본값: login)
-  const mode = searchParams.get('mode') || 'login'
-  const [currentMode, setCurrentMode] = useState<'login' | 'signup'>(mode as 'login' | 'signup')
+  const mode = searchParams.get('mode') || 'login';
+  const [currentMode, setCurrentMode] = useState<'login' | 'signup'>(mode as 'login' | 'signup');
 
   // 이미 로그인된 사용자 처리
   useEffect(() => {
     if (isAuthenticated && user) {
-      navigate('/dashboard')
+      navigate('/dashboard');
     }
-  }, [isAuthenticated, user, navigate])
+  }, [isAuthenticated, user, navigate]);
 
   // 모드 변경 시 URL 업데이트
   useEffect(() => {
-    setSearchParams({ mode: currentMode })
-  }, [currentMode, setSearchParams])
+    setSearchParams({ mode: currentMode });
+  }, [currentMode, setSearchParams]);
 
   // URL 파라미터 변경 감지
   useEffect(() => {
-    const urlMode = searchParams.get('mode') || 'login'
+    const urlMode = searchParams.get('mode') || 'login';
     if (urlMode !== currentMode && (urlMode === 'login' || urlMode === 'signup')) {
-      setCurrentMode(urlMode as 'login' | 'signup')
+      setCurrentMode(urlMode as 'login' | 'signup');
     }
-  }, [searchParams, currentMode])
+  }, [searchParams, currentMode]);
 
   // 모드 전환 핸들러
   const switchToSignUp = () => {
-    setCurrentMode('signup')
-  }
+    setCurrentMode('signup');
+  };
 
   const switchToLogin = () => {
-    setCurrentMode('login')
-  }
+    setCurrentMode('login');
+  };
 
   // 인증 성공 핸들러
   const handleAuthSuccess = () => {
-    console.log('인증 성공!')
+    console.log('인증 성공!');
     // 페이지 이동은 각 컴포넌트에서 처리
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 dark:from-purple-900 dark:via-gray-900 dark:to-blue-900 flex flex-col justify-center py-12 px-4">
@@ -207,7 +207,7 @@ const AuthPage: React.FC = () => {
         </div>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default AuthPage
+export default AuthPage;

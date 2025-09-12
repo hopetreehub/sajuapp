@@ -14,13 +14,13 @@ const StandardTimeFrameSelector: React.FC<StandardTimeFrameSelectorProps> = ({
   selected,
   onChange,
   disabled = [],
-  className = ''
+  className = '',
 }) => {
   const timeFrameOptions: Array<{ key: TimeFrame; label: string; active: string }> = [
     { key: 'base', label: '기본', active: 'base' },
     { key: 'today', label: '오늘', active: 'today' },
     { key: 'month', label: '이달', active: 'month' },
-    { key: 'year', label: '올해', active: 'year' }
+    { key: 'year', label: '올해', active: 'year' },
   ];
 
   return (

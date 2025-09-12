@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
-import { useCalendar } from '@/contexts/CalendarContext'
-import NotificationSettings from '@/components/NotificationSettings'
-import ReferralSection from '@/components/Auth/ReferralSection'
+import { useState, useEffect } from 'react';
+import { useCalendar } from '@/contexts/CalendarContext';
+import NotificationSettings from '@/components/NotificationSettings';
+import ReferralSection from '@/components/Auth/ReferralSection';
 
 interface PersonalInfo {
   birthDate: string
@@ -12,30 +12,30 @@ interface PersonalInfo {
 }
 
 export default function SettingsPage() {
-  const { settings } = useCalendar()
-  const [localSettings, setLocalSettings] = useState(settings)
-  const [activeTab, setActiveTab] = useState<'general' | 'calendar' | 'diary' | 'notifications' | 'account' | 'customers'>('general')
+  const { settings } = useCalendar();
+  const [localSettings, setLocalSettings] = useState(settings);
+  const [activeTab, setActiveTab] = useState<'general' | 'calendar' | 'diary' | 'notifications' | 'account' | 'customers'>('general');
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     birthDate: '',
     birthTime: '',
     calendarType: 'solar',
     gender: '',
-    birthPlace: ''
-  })
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+    birthPlace: '',
+  });
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   // localStorage에서 개인정보 불러오기
   useEffect(() => {
-    const savedPersonalInfo = localStorage.getItem('sajuapp-personal-info')
+    const savedPersonalInfo = localStorage.getItem('sajuapp-personal-info');
     if (savedPersonalInfo) {
       try {
-        const parsed = JSON.parse(savedPersonalInfo)
-        setPersonalInfo(parsed)
+        const parsed = JSON.parse(savedPersonalInfo);
+        setPersonalInfo(parsed);
       } catch (error) {
-        console.error('Failed to parse saved personal info:', error)
+        console.error('Failed to parse saved personal info:', error);
       }
     }
-  }, [])
+  }, []);
 
   const tabs = [
     { id: 'general', label: '일반', icon: '⚙️' },
@@ -43,64 +43,64 @@ export default function SettingsPage() {
     { id: 'diary', label: '다이어리', icon: '📝' },
     { id: 'notifications', label: '알림', icon: '🔔' },
     { id: 'account', label: '계정', icon: '👤' },
-    { id: 'customers', label: '고객관리', icon: '👥' }
-  ]
+    { id: 'customers', label: '고객관리', icon: '👥' },
+  ];
 
   const validatePersonalInfo = () => {
     if (!personalInfo.birthDate) {
-      alert('생년월일을 입력해주세요.')
-      return false
+      alert('생년월일을 입력해주세요.');
+      return false;
     }
     if (!personalInfo.birthTime) {
-      alert('출생시간을 입력해주세요.')
-      return false
+      alert('출생시간을 입력해주세요.');
+      return false;
     }
     if (!personalInfo.gender) {
-      alert('성별을 선택해주세요.')
-      return false
+      alert('성별을 선택해주세요.');
+      return false;
     }
-    return true
-  }
+    return true;
+  };
 
   const handleSave = async () => {
     if (activeTab === 'general' && !validatePersonalInfo()) {
-      return
+      return;
     }
 
-    setSaveStatus('saving')
+    setSaveStatus('saving');
     
     try {
       // 개인정보 저장
       if (activeTab === 'general') {
-        localStorage.setItem('sajuapp-personal-info', JSON.stringify(personalInfo))
+        localStorage.setItem('sajuapp-personal-info', JSON.stringify(personalInfo));
         
         // 사주 정보가 저장되었음을 다른 컴포넌트들에게 알림
         window.dispatchEvent(new CustomEvent('personalInfoUpdated', {
-          detail: personalInfo
-        }))
+          detail: personalInfo,
+        }));
       }
       
       // 기타 설정 저장 (향후 구현)
-      localStorage.setItem('sajuapp-settings', JSON.stringify(localSettings))
+      localStorage.setItem('sajuapp-settings', JSON.stringify(localSettings));
       
-      setSaveStatus('saved')
+      setSaveStatus('saved');
       
       // 2초 후 상태 초기화
       setTimeout(() => {
-        setSaveStatus('idle')
-      }, 2000)
+        setSaveStatus('idle');
+      }, 2000);
       
       console.log('Settings saved successfully:', {
         personalInfo: activeTab === 'general' ? personalInfo : 'not updated',
-        localSettings
-      })
+        localSettings,
+      });
       
     } catch (error) {
-      console.error('Failed to save settings:', error)
-      setSaveStatus('error')
-      alert('설정 저장에 실패했습니다. 다시 시도해주세요.')
+      console.error('Failed to save settings:', error);
+      setSaveStatus('error');
+      alert('설정 저장에 실패했습니다. 다시 시도해주세요.');
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -563,5 +563,5 @@ export default function SettingsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
-import { format, addDays, subDays } from 'date-fns'
-import { ko } from 'date-fns/locale'
-import { diaryService, DiaryEntry } from '@/services/api'
-import { generateDiaryAdvice, getCategoryIcon, getCategoryColor } from '@/utils/diaryAdvice'
+import { useState, useEffect } from 'react';
+import { format, addDays, subDays } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { diaryService, DiaryEntry } from '@/services/api';
+import { generateDiaryAdvice, getCategoryIcon, getCategoryColor } from '@/utils/diaryAdvice';
 
 interface DiaryModalProps {
   isOpen: boolean
@@ -19,101 +19,101 @@ const MOODS = [
   { emoji: '😴', label: '피곤함' },
   { emoji: '🤔', label: '고민' },
   { emoji: '😍', label: '설렘' },
-  { emoji: '😱', label: '놀람' }
-]
+  { emoji: '😱', label: '놀람' },
+];
 
 export default function DiaryModal({ isOpen, onClose, date, onSave }: DiaryModalProps) {
-  const [currentDate, setCurrentDate] = useState(date)
-  const [content, setContent] = useState('')
-  const [selectedMood, setSelectedMood] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [existingEntry, setExistingEntry] = useState<DiaryEntry | null>(null)
-  const [yesterdayEntry, setYesterdayEntry] = useState<DiaryEntry | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [isAutoSaving, setIsAutoSaving] = useState(false)
+  const [currentDate, setCurrentDate] = useState(date);
+  const [content, setContent] = useState('');
+  const [selectedMood, setSelectedMood] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [existingEntry, setExistingEntry] = useState<DiaryEntry | null>(null);
+  const [yesterdayEntry, setYesterdayEntry] = useState<DiaryEntry | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isAutoSaving, setIsAutoSaving] = useState(false);
 
   // 날짜가 변경되거나 모달이 열릴 때 기존 일기 조회
   useEffect(() => {
     if (isOpen && date) {
-      fetchDiary()
+      fetchDiary();
     }
-  }, [date, isOpen])
+  }, [date, isOpen]);
 
   const fetchDiary = async () => {
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
     try {
-      const dateStr = format(date, 'yyyy-MM-dd')
-      const diary = await diaryService.getDiaryByDate(dateStr)
-      setExistingEntry(diary)
-      setContent(diary.content)
-      setSelectedMood(diary.mood || '')
+      const dateStr = format(date, 'yyyy-MM-dd');
+      const diary = await diaryService.getDiaryByDate(dateStr);
+      setExistingEntry(diary);
+      setContent(diary.content);
+      setSelectedMood(diary.mood || '');
     } catch (error: any) {
       // 404는 정상 상황 (해당 날짜에 일기가 없음)
       if (error.response?.status === 404) {
-        setExistingEntry(null)
-        setContent('')
-        setSelectedMood('')
+        setExistingEntry(null);
+        setContent('');
+        setSelectedMood('');
       } else {
-        console.error('Failed to fetch diary:', error)
-        setError('일기를 불러오는데 실패했습니다.')
+        console.error('Failed to fetch diary:', error);
+        setError('일기를 불러오는데 실패했습니다.');
       }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleSave = async () => {
-    if (!content.trim()) return
+    if (!content.trim()) return;
 
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
     try {
-      const dateStr = format(date, 'yyyy-MM-dd')
+      const dateStr = format(date, 'yyyy-MM-dd');
       const diaryData = {
         date: dateStr,
         content: content.trim(),
         mood: selectedMood || '😐',
         weather: undefined as string | undefined,
-        tags: [] as string[]
-      }
+        tags: [] as string[],
+      };
 
-      let savedEntry: DiaryEntry
+      let savedEntry: DiaryEntry;
       
       if (existingEntry?.id) {
         // 기존 일기 수정
-        savedEntry = await diaryService.updateDiary(existingEntry.id, diaryData)
+        savedEntry = await diaryService.updateDiary(existingEntry.id, diaryData);
       } else {
         // 새 일기 작성
-        savedEntry = await diaryService.createDiary(diaryData)
+        savedEntry = await diaryService.createDiary(diaryData);
       }
 
       // 부모 컴포넌트에 저장된 데이터 전달 (선택적)
       if (onSave) {
-        onSave(savedEntry)
+        onSave(savedEntry);
       }
       
       // 성공 메시지 (선택적)
-      alert(existingEntry ? '일기가 수정되었습니다.' : '일기가 저장되었습니다.')
+      alert(existingEntry ? '일기가 수정되었습니다.' : '일기가 저장되었습니다.');
       
-      onClose()
+      onClose();
     } catch (error: any) {
-      console.error('Failed to save diary:', error)
-      setError('일기 저장에 실패했습니다. 다시 시도해주세요.')
+      console.error('Failed to save diary:', error);
+      setError('일기 저장에 실패했습니다. 다시 시도해주세요.');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleClose = () => {
     if (content !== (existingEntry?.content || '') || selectedMood !== (existingEntry?.mood || '')) {
       if (window.confirm('작성 중인 내용이 있습니다. 정말 닫으시겠습니까?')) {
-        onClose()
+        onClose();
       }
     } else {
-      onClose()
+      onClose();
     }
-  }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} className="max-w-2xl">
@@ -228,5 +228,5 @@ export default function DiaryModal({ isOpen, onClose, date, onSave }: DiaryModal
         </div>
       </div>
     </Modal>
-  )
+  );
 }

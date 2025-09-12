@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react';
 
 export type ActionType = 'event' | 'diary'
 
@@ -15,40 +15,40 @@ export default function ActionMenu({
   onClose, 
   date, 
   position, 
-  onSelectAction 
+  onSelectAction, 
 }: ActionMenuProps) {
-  const menuRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        onClose()
+        onClose();
       }
-    }
+    };
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        onClose()
+        onClose();
       }
-    }
+    };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-      document.addEventListener('keydown', handleEscape)
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscape);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('keydown', handleEscape)
-    }
-  }, [isOpen, onClose])
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [isOpen, onClose]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const adjustedPosition = {
     x: Math.min(position.x, window.innerWidth - 200), // 메뉴가 화면을 벗어나지 않도록
-    y: Math.min(position.y, window.innerHeight - 160)
-  }
+    y: Math.min(position.y, window.innerHeight - 160),
+  };
 
   const actions = [
     {
@@ -56,30 +56,30 @@ export default function ActionMenu({
       icon: '📅',
       label: '일정,할일 추가',
       description: '새로운 일정과 할일을 만듭니다',
-      color: 'text-blue-600 dark:text-blue-400'
+      color: 'text-blue-600 dark:text-blue-400',
     },
     {
       type: 'diary' as ActionType,
       icon: '📝',
       label: '일기 쓰기',
       description: '오늘의 일기를 작성합니다',
-      color: 'text-purple-600 dark:text-purple-400'
-    }
-  ]
+      color: 'text-purple-600 dark:text-purple-400',
+    },
+  ];
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('ko-KR', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
-      weekday: 'long'
-    }).format(date)
-  }
+      weekday: 'long',
+    }).format(date);
+  };
 
   const handleAction = (actionType: ActionType) => {
-    onSelectAction(actionType)
-    onClose()
-  }
+    onSelectAction(actionType);
+    onClose();
+  };
 
   return (
     <div 
@@ -148,5 +148,5 @@ export default function ActionMenu({
         </div>
       </div>
     </div>
-  )
+  );
 }

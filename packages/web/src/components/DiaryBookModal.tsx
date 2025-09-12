@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
-import { format, addDays, subDays, isToday } from 'date-fns'
-import { ko } from 'date-fns/locale'
-import { diaryService, DiaryEntry } from '@/services/api'
-import { generateDiaryAdvice, getCategoryIcon, getCategoryColor } from '@/utils/diaryAdvice'
-import { Camera, X, Calendar } from 'lucide-react'
-import ImageViewer from './ImageViewer'
+import { useState, useEffect } from 'react';
+import { format, addDays, subDays, isToday } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { diaryService, DiaryEntry } from '@/services/api';
+import { generateDiaryAdvice, getCategoryIcon, getCategoryColor } from '@/utils/diaryAdvice';
+import { Camera, X, Calendar } from 'lucide-react';
+import ImageViewer from './ImageViewer';
 
 interface DiaryBookModalProps {
   isOpen: boolean
@@ -21,72 +21,72 @@ const MOODS = [
   { emoji: '😴', label: '피곤함' },
   { emoji: '🤔', label: '고민' },
   { emoji: '😍', label: '설렘' },
-  { emoji: '😱', label: '놀람' }
-]
+  { emoji: '😱', label: '놀람' },
+];
 
 export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryBookModalProps) {
-  const [currentDate, setCurrentDate] = useState(date)
-  const [content, setContent] = useState('')
-  const [selectedMood, setSelectedMood] = useState('😊')
-  const [isLoading, setIsLoading] = useState(false)
-  const [todayEntry, setTodayEntry] = useState<DiaryEntry | null>(null)
-  const [yesterdayEntry, setYesterdayEntry] = useState<DiaryEntry | null>(null)
-  const [isAutoSaving, setIsAutoSaving] = useState(false)
-  const [wordCount, setWordCount] = useState(0)
-  const [images, setImages] = useState<string[]>([])
-  const [isUploading, setIsUploading] = useState(false)
-  const [imageViewerOpen, setImageViewerOpen] = useState(false)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [currentDate, setCurrentDate] = useState(date);
+  const [content, setContent] = useState('');
+  const [selectedMood, setSelectedMood] = useState('😊');
+  const [isLoading, setIsLoading] = useState(false);
+  const [todayEntry, setTodayEntry] = useState<DiaryEntry | null>(null);
+  const [yesterdayEntry, setYesterdayEntry] = useState<DiaryEntry | null>(null);
+  const [isAutoSaving, setIsAutoSaving] = useState(false);
+  const [wordCount, setWordCount] = useState(0);
+  const [images, setImages] = useState<string[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [imageViewerOpen, setImageViewerOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // 디버깅: 모달 상태 변화 로그
   console.log('📔 DiaryBookModal 렌더링:', {
     isOpen,
     date: format(date, 'yyyy-MM-dd'),
     currentDate: format(currentDate, 'yyyy-MM-dd'),
-    content: content.slice(0, 50) + '...',
-    contentLength: content.length
-  })
+    content: `${content.slice(0, 50)  }...`,
+    contentLength: content.length,
+  });
 
   // 오늘과 어제의 운세 조언 생성
-  const todayAdvice = generateDiaryAdvice(currentDate)
-  const yesterdayAdvice = generateDiaryAdvice(subDays(currentDate, 1))
-  const yesterday = subDays(currentDate, 1)
+  const todayAdvice = generateDiaryAdvice(currentDate);
+  const yesterdayAdvice = generateDiaryAdvice(subDays(currentDate, 1));
+  const yesterday = subDays(currentDate, 1);
 
   // 날짜 변경 시 일기 조회
   useEffect(() => {
     if (isOpen) {
-      setCurrentDate(date)
+      setCurrentDate(date);
       // 초기 상태 설정은 loadDiaries에서 처리
-      loadDiaries(date)
+      loadDiaries(date);
     }
-  }, [isOpen, date])
+  }, [isOpen, date]);
 
   // currentDate 변경 시 일기 조회
   useEffect(() => {
     if (isOpen && currentDate) {
-      loadDiaries(currentDate)
+      loadDiaries(currentDate);
     }
-  }, [currentDate])
+  }, [currentDate]);
 
   // 자동 저장 (3초 후)
   useEffect(() => {
-    if (!content.trim() || !todayEntry) return
+    if (!content.trim() || !todayEntry) return;
 
     const timer = setTimeout(() => {
       if (content !== todayEntry?.content || 
           selectedMood !== todayEntry?.mood || 
           JSON.stringify(images) !== JSON.stringify(todayEntry?.images || [])) {
-        autoSave()
+        autoSave();
       }
-    }, 3000)
+    }, 3000);
 
-    return () => clearTimeout(timer)
-  }, [content, selectedMood, images])
+    return () => clearTimeout(timer);
+  }, [content, selectedMood, images]);
 
   // 글자 수 계산
   useEffect(() => {
-    setWordCount(content.length)
-  }, [content])
+    setWordCount(content.length);
+  }, [content]);
 
   // todayEntry 변경 시 이미지 상태 동기화 (디버그 로그 포함)
   useEffect(() => {
@@ -95,53 +95,53 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
         date: todayEntry.date,
         hasImages: !!todayEntry.images,
         imageCount: todayEntry.images?.length || 0,
-        images: todayEntry.images
-      })
+        images: todayEntry.images,
+      });
       
       // 기존 상태와 비교해서 다를 경우에만 업데이트
-      const existingImageStr = JSON.stringify(images)
-      const newImageStr = JSON.stringify(todayEntry.images || [])
+      const existingImageStr = JSON.stringify(images);
+      const newImageStr = JSON.stringify(todayEntry.images || []);
       
       if (existingImageStr !== newImageStr) {
         console.log('🔄 이미지 상태 업데이트:', {
           기존: images.length,
-          새로운: todayEntry.images?.length || 0
-        })
-        setImages(todayEntry.images || [])
+          새로운: todayEntry.images?.length || 0,
+        });
+        setImages(todayEntry.images || []);
       }
     } else {
-      console.log('📝 새 일기 작성 모드 - 이미지 초기화')
+      console.log('📝 새 일기 작성 모드 - 이미지 초기화');
       if (images.length > 0) {
-        setImages([])
+        setImages([]);
       }
     }
-  }, [todayEntry])
+  }, [todayEntry]);
 
   const loadDiaries = async (targetDate: Date) => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const todayStr = format(targetDate, 'yyyy-MM-dd')
-      const yesterdayStr = format(subDays(targetDate, 1), 'yyyy-MM-dd')
+      const todayStr = format(targetDate, 'yyyy-MM-dd');
+      const yesterdayStr = format(subDays(targetDate, 1), 'yyyy-MM-dd');
 
       // 오늘 일기 조회
       try {
-        const todayDiary = await diaryService.getDiaryByDate(todayStr)
+        const todayDiary = await diaryService.getDiaryByDate(todayStr);
         console.log('📖 일기 로드 성공:', {
           date: todayStr,
           hasContent: !!todayDiary.content,
           hasImages: !!todayDiary.images,
           imageCount: todayDiary.images?.length || 0,
-          imagesFirstChar: todayDiary.images?.[0]?.substring(0, 30) || 'none'
-        })
+          imagesFirstChar: todayDiary.images?.[0]?.substring(0, 30) || 'none',
+        });
         
-        setTodayEntry(todayDiary)
-        setContent(todayDiary.content || '')  // 기존 일기가 있으면 내용 로드
-        setSelectedMood(todayDiary.mood || '😊')
-        setImages(todayDiary.images || [])
+        setTodayEntry(todayDiary);
+        setContent(todayDiary.content || '');  // 기존 일기가 있으면 내용 로드
+        setSelectedMood(todayDiary.mood || '😊');
+        setImages(todayDiary.images || []);
       } catch (error: any) {
         if (error.response?.status === 404) {
-          console.log('📄 일기 없음 - 새 일기 모드')
-          setTodayEntry(null)
+          console.log('📄 일기 없음 - 새 일기 모드');
+          setTodayEntry(null);
           // 새 일기 모드: 아무것도 초기화하지 않음
           // 사용자가 입력 중이던 내용 모두 유지
         }
@@ -149,69 +149,69 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
 
       // 어제 일기 조회
       try {
-        const yesterdayDiary = await diaryService.getDiaryByDate(yesterdayStr)
-        setYesterdayEntry(yesterdayDiary)
+        const yesterdayDiary = await diaryService.getDiaryByDate(yesterdayStr);
+        setYesterdayEntry(yesterdayDiary);
       } catch (error: any) {
         if (error.response?.status === 404) {
-          setYesterdayEntry(null)
+          setYesterdayEntry(null);
         }
       }
     } catch (error) {
-      console.error('Failed to load diaries:', error)
+      console.error('Failed to load diaries:', error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const autoSave = async () => {
-    if (!content.trim()) return
+    if (!content.trim()) return;
     
-    setIsAutoSaving(true)
+    setIsAutoSaving(true);
     try {
-      const dateStr = format(currentDate, 'yyyy-MM-dd')
+      const dateStr = format(currentDate, 'yyyy-MM-dd');
       const diaryData = {
         date: dateStr,
         content: content.trim(),
         mood: selectedMood,
         weather: undefined as string | undefined,
         images: images.length > 0 ? images : undefined,
-        tags: [] as string[]
-      }
+        tags: [] as string[],
+      };
 
       if (todayEntry?.id) {
-        await diaryService.updateDiary(todayEntry.id, diaryData)
+        await diaryService.updateDiary(todayEntry.id, diaryData);
       } else {
-        const newEntry = await diaryService.createDiary(diaryData)
-        setTodayEntry(newEntry)
+        const newEntry = await diaryService.createDiary(diaryData);
+        setTodayEntry(newEntry);
       }
     } catch (error) {
-      console.error('Auto save failed:', error)
+      console.error('Auto save failed:', error);
     } finally {
-      setIsAutoSaving(false)
+      setIsAutoSaving(false);
     }
-  }
+  };
 
   const handleSave = async () => {
-    if (!content.trim()) return
+    if (!content.trim()) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      const dateStr = format(currentDate, 'yyyy-MM-dd')
+      const dateStr = format(currentDate, 'yyyy-MM-dd');
       
       // 이미지 크기 검증 및 디버그 정보
-      let processedImages: string[] | undefined = undefined
+      let processedImages: string[] | undefined = undefined;
       if (images.length > 0) {
-        processedImages = []
+        processedImages = [];
         for (const img of images) {
           // Base64 크기 확인
-          const sizeMB = (img.length * 3) / 4 / (1024 * 1024)
-          console.log(`이미지 크기: ${sizeMB.toFixed(2)}MB`)
+          const sizeMB = (img.length * 3) / 4 / (1024 * 1024);
+          console.log(`이미지 크기: ${sizeMB.toFixed(2)}MB`);
           
           // 크기가 너무 크면 재압축
           if (sizeMB > 1) {
-            console.warn(`이미지가 1MB를 초과합니다. 현재: ${sizeMB.toFixed(2)}MB`)
+            console.warn(`이미지가 1MB를 초과합니다. 현재: ${sizeMB.toFixed(2)}MB`);
           }
-          processedImages.push(img)
+          processedImages.push(img);
         }
       }
       
@@ -221,228 +221,228 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
         mood: selectedMood,
         weather: undefined as string | undefined,
         images: processedImages,
-        tags: [] as string[]
-      }
+        tags: [] as string[],
+      };
 
       console.log('저장할 일기 데이터:', {
         date: dateStr,
         contentLength: content.length,
         mood: selectedMood,
         imageCount: processedImages?.length || 0,
-        totalDataSize: JSON.stringify(diaryData).length / 1024 + 'KB'
-      })
+        totalDataSize: `${JSON.stringify(diaryData).length / 1024  }KB`,
+      });
 
-      let savedEntry: DiaryEntry
+      let savedEntry: DiaryEntry;
       
       if (todayEntry?.id) {
-        console.log('기존 일기 업데이트:', todayEntry.id)
-        savedEntry = await diaryService.updateDiary(todayEntry.id, diaryData)
+        console.log('기존 일기 업데이트:', todayEntry.id);
+        savedEntry = await diaryService.updateDiary(todayEntry.id, diaryData);
       } else {
-        console.log('새 일기 생성')
-        savedEntry = await diaryService.createDiary(diaryData)
+        console.log('새 일기 생성');
+        savedEntry = await diaryService.createDiary(diaryData);
       }
 
-      console.log('저장 성공:', savedEntry)
-      setTodayEntry(savedEntry)
+      console.log('저장 성공:', savedEntry);
+      setTodayEntry(savedEntry);
       
       if (onSave) {
-        onSave(savedEntry)
+        onSave(savedEntry);
       }
       
       // 성공 알림
-      alert('일기가 저장되었습니다!')
+      alert('일기가 저장되었습니다!');
     } catch (error: any) {
-      console.error('일기 저장 실패 상세 정보:')
-      console.error('Error object:', error)
-      console.error('Error message:', error?.message)
-      console.error('Error response:', error?.response)
-      console.error('Error status:', error?.response?.status)
-      console.error('Error data:', error?.response?.data)
+      console.error('일기 저장 실패 상세 정보:');
+      console.error('Error object:', error);
+      console.error('Error message:', error?.message);
+      console.error('Error response:', error?.response);
+      console.error('Error status:', error?.response?.status);
+      console.error('Error data:', error?.response?.data);
       
       // 더 구체적인 에러 메시지
-      let errorMessage = '일기 저장에 실패했습니다.'
+      let errorMessage = '일기 저장에 실패했습니다.';
       if (error?.response?.status === 413) {
-        errorMessage = '이미지 크기가 너무 큽니다. 더 작은 이미지를 선택해주세요.'
+        errorMessage = '이미지 크기가 너무 큽니다. 더 작은 이미지를 선택해주세요.';
       } else if (error?.response?.status === 500) {
-        errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'
+        errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
       } else if (error?.response?.status === 404) {
-        errorMessage = '다이어리 서비스에 연결할 수 없습니다.'
+        errorMessage = '다이어리 서비스에 연결할 수 없습니다.';
       } else if (error?.message) {
-        errorMessage = `저장 실패: ${error.message}`
+        errorMessage = `저장 실패: ${error.message}`;
       }
       
-      alert(errorMessage)
+      alert(errorMessage);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handlePrevDay = () => {
-    setCurrentDate(subDays(currentDate, 1))
-  }
+    setCurrentDate(subDays(currentDate, 1));
+  };
 
   const handleNextDay = () => {
-    setCurrentDate(addDays(currentDate, 1))
-  }
+    setCurrentDate(addDays(currentDate, 1));
+  };
 
   const handleGoToToday = () => {
-    const today = new Date()
-    setCurrentDate(today)
-  }
+    const today = new Date();
+    setCurrentDate(today);
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowLeft' && e.ctrlKey) {
-      handlePrevDay()
+      handlePrevDay();
     } else if (e.key === 'ArrowRight' && e.ctrlKey) {
-      handleNextDay()
+      handleNextDay();
     } else if (e.key === 'Escape') {
-      onClose()
+      onClose();
     } else if (e.key === 's' && e.ctrlKey) {
-      e.preventDefault()
-      handleSave()
+      e.preventDefault();
+      handleSave();
     }
-  }
+  };
 
   // 이미지를 WebP로 변환하고 압축하는 함수 (고급 압축 알고리즘)
   const compressAndConvertImage = async (file: File): Promise<string> => {
     return new Promise((resolve) => {
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')!
-      const img = new Image()
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d')!;
+      const img = new Image();
       
       img.onload = () => {
-        let { width, height } = img
+        let { width, height } = img;
         
         // 스마트 크기 조정 - 파일 크기에 따라 다른 전략
-        const originalSizeMB = file.size / (1024 * 1024)
-        let maxWidth = 1920, maxHeight = 1920, quality = 0.85
+        const originalSizeMB = file.size / (1024 * 1024);
+        let maxWidth = 1920, maxHeight = 1920, quality = 0.85;
         
         // 파일 크기별 최적화 전략
         if (originalSizeMB > 20) {
           // 매우 큰 파일 (20MB+) - 적극적 압축
-          maxWidth = 1200
-          maxHeight = 1200
-          quality = 0.7
+          maxWidth = 1200;
+          maxHeight = 1200;
+          quality = 0.7;
         } else if (originalSizeMB > 10) {
           // 큰 파일 (10-20MB) - 중간 압축
-          maxWidth = 1600
-          maxHeight = 1600
-          quality = 0.75
+          maxWidth = 1600;
+          maxHeight = 1600;
+          quality = 0.75;
         } else if (originalSizeMB > 5) {
           // 중간 파일 (5-10MB) - 경량 압축
-          maxWidth = 1920
-          maxHeight = 1920
-          quality = 0.8
+          maxWidth = 1920;
+          maxHeight = 1920;
+          quality = 0.8;
         }
         // 5MB 이하는 기본 설정 유지
         
         // 비율 유지하면서 크기 조정
-        const ratio = Math.min(maxWidth / width, maxHeight / height)
+        const ratio = Math.min(maxWidth / width, maxHeight / height);
         if (ratio < 1) {
-          width = Math.floor(width * ratio)
-          height = Math.floor(height * ratio)
+          width = Math.floor(width * ratio);
+          height = Math.floor(height * ratio);
         }
         
         // 캔버스 크기 설정
-        canvas.width = width
-        canvas.height = height
+        canvas.width = width;
+        canvas.height = height;
         
         // 고품질 렌더링 설정
-        ctx.imageSmoothingEnabled = true
-        ctx.imageSmoothingQuality = 'high'
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
         
         // 이미지 그리기
-        ctx.drawImage(img, 0, 0, width, height)
+        ctx.drawImage(img, 0, 0, width, height);
         
         // WebP 지원 여부 확인
-        const testCanvas = document.createElement('canvas')
-        testCanvas.width = testCanvas.height = 1
-        const testCtx = testCanvas.getContext('2d')!
-        testCtx.fillRect(0, 0, 1, 1)
-        const supportsWebP = testCanvas.toDataURL('image/webp').startsWith('data:image/webp')
+        const testCanvas = document.createElement('canvas');
+        testCanvas.width = testCanvas.height = 1;
+        const testCtx = testCanvas.getContext('2d')!;
+        testCtx.fillRect(0, 0, 1, 1);
+        const supportsWebP = testCanvas.toDataURL('image/webp').startsWith('data:image/webp');
         
         // 최적 포맷 선택 및 압축
-        let compressedDataUrl: string
+        let compressedDataUrl: string;
         if (supportsWebP) {
-          compressedDataUrl = canvas.toDataURL('image/webp', quality)
+          compressedDataUrl = canvas.toDataURL('image/webp', quality);
         } else {
-          compressedDataUrl = canvas.toDataURL('image/jpeg', quality)
+          compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
         }
         
         // 추가 압축이 필요한 경우 품질 조정
-        const compressedSize = (compressedDataUrl.length * 3) / 4 / (1024 * 1024)
+        const compressedSize = (compressedDataUrl.length * 3) / 4 / (1024 * 1024);
         if (compressedSize > 2 && quality > 0.5) {
-          const newQuality = Math.max(0.5, quality * 0.8)
-          compressedDataUrl = canvas.toDataURL(supportsWebP ? 'image/webp' : 'image/jpeg', newQuality)
+          const newQuality = Math.max(0.5, quality * 0.8);
+          compressedDataUrl = canvas.toDataURL(supportsWebP ? 'image/webp' : 'image/jpeg', newQuality);
         }
         
-        resolve(compressedDataUrl)
-      }
+        resolve(compressedDataUrl);
+      };
       
-      img.src = URL.createObjectURL(file)
-    })
-  }
+      img.src = URL.createObjectURL(file);
+    });
+  };
 
   // Image upload handlers
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files || files.length === 0) return
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
     
     // 최대 3장 제한
     if (images.length + files.length > 3) {
-      alert('최대 3장까지 업로드 가능합니다')
-      return
+      alert('최대 3장까지 업로드 가능합니다');
+      return;
     }
     
-    setIsUploading(true)
+    setIsUploading(true);
     
     try {
-      const newImages: string[] = []
+      const newImages: string[] = [];
       for (const file of Array.from(files)) {
         // 이미지 파일 타입 확인
         if (!file.type.startsWith('image/')) {
-          alert('이미지 파일만 업로드 가능합니다')
-          continue
+          alert('이미지 파일만 업로드 가능합니다');
+          continue;
         }
         
         // 원본 파일이 너무 큰 경우 (50MB 제한)
         if (file.size > 50 * 1024 * 1024) {
-          alert('파일 크기는 50MB 이하만 가능합니다')
-          continue
+          alert('파일 크기는 50MB 이하만 가능합니다');
+          continue;
         }
         
         // 압축 및 WebP 변환
-        const compressedImage = await compressAndConvertImage(file)
+        const compressedImage = await compressAndConvertImage(file);
         
         // 압축된 이미지 크기 확인 (Base64는 원본의 약 1.33배)
-        const compressedSizeBytes = (compressedImage.length * 3) / 4
-        const compressedSizeMB = compressedSizeBytes / (1024 * 1024)
-        const compressionRatio = ((1 - compressedSizeBytes / file.size) * 100).toFixed(1)
-        const format = compressedImage.startsWith('data:image/webp') ? 'WebP' : 'JPEG'
+        const compressedSizeBytes = (compressedImage.length * 3) / 4;
+        const compressedSizeMB = compressedSizeBytes / (1024 * 1024);
+        const compressionRatio = ((1 - compressedSizeBytes / file.size) * 100).toFixed(1);
+        const format = compressedImage.startsWith('data:image/webp') ? 'WebP' : 'JPEG';
         
-        console.log(`✅ 이미지 압축 완료: ${file.name}`)
-        console.log(`📐 포맷: ${format} | 원본: ${(file.size / (1024 * 1024)).toFixed(2)}MB → 압축: ${compressedSizeMB.toFixed(2)}MB`)
-        console.log(`📈 압축률: ${compressionRatio}% 감소`)
+        console.log(`✅ 이미지 압축 완료: ${file.name}`);
+        console.log(`📐 포맷: ${format} | 원본: ${(file.size / (1024 * 1024)).toFixed(2)}MB → 압축: ${compressedSizeMB.toFixed(2)}MB`);
+        console.log(`📈 압축률: ${compressionRatio}% 감소`);
         
-        newImages.push(compressedImage)
+        newImages.push(compressedImage);
       }
       
-      setImages(prev => [...prev, ...newImages])
+      setImages(prev => [...prev, ...newImages]);
     } catch (error) {
-      console.error('Image upload failed:', error)
-      alert('이미지 업로드 중 오류가 발생했습니다')
+      console.error('Image upload failed:', error);
+      alert('이미지 업로드 중 오류가 발생했습니다');
     } finally {
-      setIsUploading(false)
+      setIsUploading(false);
       // Clear input
-      e.target.value = ''
+      e.target.value = '';
     }
-  }
+  };
 
   const removeImage = (index: number) => {
-    setImages(prev => prev.filter((_, i) => i !== index))
-  }
+    setImages(prev => prev.filter((_, i) => i !== index));
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div 
@@ -583,8 +583,8 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
                   <div 
                     className="mt-3 p-3 rounded-lg border-2 border-dashed shadow-sm"
                     style={{ 
-                      backgroundColor: getCategoryColor(todayAdvice.category) + '15',
-                      borderColor: getCategoryColor(todayAdvice.category) + '40'
+                      backgroundColor: `${getCategoryColor(todayAdvice.category)  }15`,
+                      borderColor: `${getCategoryColor(todayAdvice.category)  }40`,
                     }}
                   >
                     <div className="flex items-start gap-2 text-xs">
@@ -606,13 +606,13 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
                   <textarea
                     value={content}
                     onChange={(e) => {
-                      const newContent = e.target.value
+                      const newContent = e.target.value;
                       console.log('📝 Content 변경:', { 
                         길이: newContent.length, 
                         trim길이: newContent.trim().length,
-                        내용: newContent
-                      })
-                      setContent(newContent)
+                        내용: newContent,
+                      });
+                      setContent(newContent);
                     }}
                     placeholder="오늘 하루는 어땠나요? 마음속 이야기를 자유롭게 적어보세요..."
                     className="w-full h-64 p-0 border-none bg-transparent resize-none focus:outline-none text-gray-700 dark:text-gray-300 placeholder-amber-400 dark:placeholder-gray-500 leading-relaxed"
@@ -625,7 +625,7 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
                         transparent 23px,
                         rgba(251, 191, 36, 0.2) 23px,
                         rgba(251, 191, 36, 0.2) 24px
-                      )`
+                      )`,
                     }}
                   />
 
@@ -668,8 +668,8 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
                               className="w-full h-20 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity"
                               alt={`업로드된 이미지 ${idx + 1}`}
                               onClick={() => {
-                                setCurrentImageIndex(idx)
-                                setImageViewerOpen(true)
+                                setCurrentImageIndex(idx);
+                                setImageViewerOpen(true);
                               }}
                             />
                             <button 
@@ -758,9 +758,9 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
                     content길이: content.length,
                     trim길이: content.trim().length,
                     isLoading,
-                    조건: content.trim() && !isLoading
-                  })
-                  handleSave()
+                    조건: content.trim() && !isLoading,
+                  });
+                  handleSave();
                 }}
                 disabled={!content.trim() || isLoading}
                 className={`
@@ -786,5 +786,5 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
         onClose={() => setImageViewerOpen(false)}
       />
     </div>
-  )
+  );
 }

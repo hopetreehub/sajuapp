@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useSajuSettingsStore } from '@/stores/sajuSettingsStore'
-import { calculateSajuData } from '@/utils/sajuDataCalculator'
-import { interpretationService, InterpretationResponse } from '@/services/api'
-import { BirthInfoHeader } from '@/components/saju/BirthInfoHeader'
-import InterpretationPanel from '@/components/charts/InterpretationPanel'
-import { SajuData } from '@/types/saju'
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSajuSettingsStore } from '@/stores/sajuSettingsStore';
+import { calculateSajuData } from '@/utils/sajuDataCalculator';
+import { interpretationService, InterpretationResponse } from '@/services/api';
+import { BirthInfoHeader } from '@/components/saju/BirthInfoHeader';
+import InterpretationPanel from '@/components/charts/InterpretationPanel';
+import { SajuData } from '@/types/saju';
 
 // 카테고리 정보
 const INTERPRETATION_CATEGORIES = [
@@ -16,52 +16,52 @@ const INTERPRETATION_CATEGORIES = [
   { id: 'relationship', name: '관계 분석', icon: '❤️', color: 'red' },
   { id: 'health', name: '건강 지도', icon: '🏥', color: 'cyan' },
   { id: 'spiritual', name: '신살 분석', icon: '⚡', color: 'indigo' },
-  { id: 'johoo', name: '조후 분석', icon: '🌡️', color: 'orange' }
-] as const
+  { id: 'johoo', name: '조후 분석', icon: '🌡️', color: 'orange' },
+] as const;
 
 type CategoryId = typeof INTERPRETATION_CATEGORIES[number]['id']
 
 const InterpretationPage: React.FC = () => {
-  const navigate = useNavigate()
-  const { birthInfo } = useSajuSettingsStore()
-  const [activeCategory, setActiveCategory] = useState<CategoryId>('basic')
-  const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate();
+  const { birthInfo } = useSajuSettingsStore();
+  const [activeCategory, setActiveCategory] = useState<CategoryId>('basic');
+  const [interpretation, setInterpretation] = useState<InterpretationResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // 사주 데이터 계산
   const sajuData = useMemo((): SajuData | null => {
-    if (!birthInfo) return null
+    if (!birthInfo) return null;
     
     try {
-      return calculateSajuData(birthInfo)
+      return calculateSajuData(birthInfo);
     } catch (error) {
-      console.error('사주 계산 오류:', error)
-      return null
+      console.error('사주 계산 오류:', error);
+      return null;
     }
-  }, [birthInfo])
+  }, [birthInfo]);
 
   // 종합 해석 데이터 로드
   useEffect(() => {
     const loadInterpretation = async () => {
-      if (!sajuData) return
+      if (!sajuData) return;
       
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
       
       try {
-        const response = await interpretationService.getComprehensiveInterpretation(sajuData)
-        setInterpretation(response)
+        const response = await interpretationService.getComprehensiveInterpretation(sajuData);
+        setInterpretation(response);
       } catch (error) {
-        console.error('해석 데이터 로드 실패:', error)
-        setError('해석 데이터를 불러올 수 없습니다.')
+        console.error('해석 데이터 로드 실패:', error);
+        setError('해석 데이터를 불러올 수 없습니다.');
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    loadInterpretation()
-  }, [sajuData])
+    loadInterpretation();
+  }, [sajuData]);
 
   // 생년월일 정보가 없는 경우
   if (!birthInfo || !sajuData) {
@@ -85,7 +85,7 @@ const InterpretationPage: React.FC = () => {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -99,7 +99,7 @@ const InterpretationPage: React.FC = () => {
               year: { heavenly: sajuData.fourPillars.year.heavenly, earthly: sajuData.fourPillars.year.earthly, combined: `${sajuData.fourPillars.year.heavenly}${sajuData.fourPillars.year.earthly}` },
               month: { heavenly: sajuData.fourPillars.month.heavenly, earthly: sajuData.fourPillars.month.earthly, combined: `${sajuData.fourPillars.month.heavenly}${sajuData.fourPillars.month.earthly}` },
               day: { heavenly: sajuData.fourPillars.day.heavenly, earthly: sajuData.fourPillars.day.earthly, combined: `${sajuData.fourPillars.day.heavenly}${sajuData.fourPillars.day.earthly}` },
-              hour: { heavenly: sajuData.fourPillars.hour.heavenly, earthly: sajuData.fourPillars.hour.earthly, combined: `${sajuData.fourPillars.hour.heavenly}${sajuData.fourPillars.hour.earthly}` }
+              hour: { heavenly: sajuData.fourPillars.hour.heavenly, earthly: sajuData.fourPillars.hour.earthly, combined: `${sajuData.fourPillars.hour.heavenly}${sajuData.fourPillars.hour.earthly}` },
             }}
             userName={birthInfo.name}
             showEditButton
@@ -166,7 +166,7 @@ const InterpretationPage: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default InterpretationPage
+export default InterpretationPage;

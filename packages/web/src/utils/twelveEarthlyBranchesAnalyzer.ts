@@ -9,9 +9,9 @@ import {
   SeasonalBalance,
   AnimalPersonality,
   BranchRecommendations,
-  EARTHLY_BRANCHES_INFO
-} from '@/types/twelveEarthlyBranches'
-import { SajuData } from '@/types/saju'
+  EARTHLY_BRANCHES_INFO,
+} from '@/types/twelveEarthlyBranches';
+import { SajuData } from '@/types/saju';
 
 export class TwelveEarthlyBranchesAnalyzer {
   
@@ -33,43 +33,43 @@ export class TwelveEarthlyBranchesAnalyzer {
       sin: Math.floor(Math.random() * 30),    // 신(申) - 원숭이
       yu: Math.floor(Math.random() * 30),     // 유(酉) - 닭
       sul: Math.floor(Math.random() * 30),    // 술(戌) - 개
-      hae: Math.floor(Math.random() * 30)     // 해(亥) - 돼지
-    }
+      hae: Math.floor(Math.random() * 30),     // 해(亥) - 돼지
+    };
     
     // 생년지지, 월지, 일지, 시지에 따라 가중치 부여
-    const yearBranch = this.getYearBranch(sajuData.birthDate.year)
+    const yearBranch = this.getYearBranch(sajuData.birthDate.year);
     if (yearBranch) {
-      branches[yearBranch] += 30
+      branches[yearBranch] += 30;
     }
     
-    return branches
+    return branches;
   }
 
   /**
    * 종합 12간지 분석 실행
    */
   static performFullAnalysis(sajuData: SajuData): EarthlyBranchAnalysis {
-    const data = this.analyzeFromSaju(sajuData)
-    const total = Object.values(data).reduce((sum, val) => sum + val, 0)
+    const data = this.analyzeFromSaju(sajuData);
+    const total = Object.values(data).reduce((sum, val) => sum + val, 0);
     
     // 강한/약한/없는 간지 판정
-    const dominant: EarthlyBranchType[] = []
-    const missing: EarthlyBranchType[] = []
+    const dominant: EarthlyBranchType[] = [];
+    const missing: EarthlyBranchType[] = [];
     
     Object.entries(data).forEach(([key, value]) => {
-      const branch = key as EarthlyBranchType
+      const branch = key as EarthlyBranchType;
       if (value === 0) {
-        missing.push(branch)
+        missing.push(branch);
       } else if (value >= 30) {
-        dominant.push(branch)
+        dominant.push(branch);
       }
-    })
+    });
     
-    const interactions = this.analyzeInteractions(data)
-    const overallHarmony = this.calculateOverallHarmony(data, interactions)
-    const seasonalBalance = this.calculateSeasonalBalance(data)
-    const animalPersonality = this.analyzeAnimalPersonality(data, dominant)
-    const recommendations = this.generateRecommendations(data, dominant, missing)
+    const interactions = this.analyzeInteractions(data);
+    const overallHarmony = this.calculateOverallHarmony(data, interactions);
+    const seasonalBalance = this.calculateSeasonalBalance(data);
+    const animalPersonality = this.analyzeAnimalPersonality(data, dominant);
+    const recommendations = this.generateRecommendations(data, dominant, missing);
     
     return {
       data,
@@ -80,8 +80,8 @@ export class TwelveEarthlyBranchesAnalyzer {
       overallHarmony,
       seasonalBalance,
       animalPersonality,
-      recommendations
-    }
+      recommendations,
+    };
   }
 
   /**
@@ -90,34 +90,34 @@ export class TwelveEarthlyBranchesAnalyzer {
   private static getYearBranch(year: number): EarthlyBranchType | null {
     const branches: EarthlyBranchType[] = [
       'sin', 'yu', 'sul', 'hae', 'ja', 'chuk', 
-      'in', 'myo', 'jin', 'sa', 'o', 'mi'
-    ]
-    const index = year % 12
-    return branches[index] || null
+      'in', 'myo', 'jin', 'sa', 'o', 'mi',
+    ];
+    const index = year % 12;
+    return branches[index] || null;
   }
 
   /**
    * 간지 간 상호작용 분석
    */
   private static analyzeInteractions(data: TwelveEarthlyBranchesData): BranchInteractionMatrix {
-    const interactions: BranchInteractionMatrix = {}
+    const interactions: BranchInteractionMatrix = {};
     
     // 주요 간지들 간의 관계 분석
     const significantBranches = Object.entries(data)
       .filter(([_, value]) => value > 10)
-      .map(([key]) => key as EarthlyBranchType)
+      .map(([key]) => key as EarthlyBranchType);
     
     for (let i = 0; i < significantBranches.length; i++) {
       for (let j = i + 1; j < significantBranches.length; j++) {
-        const branch1 = significantBranches[i]
-        const branch2 = significantBranches[j]
-        const key = `${branch1}-${branch2}`
+        const branch1 = significantBranches[i];
+        const branch2 = significantBranches[j];
+        const key = `${branch1}-${branch2}`;
         
-        interactions[key] = this.analyzeRelationship(branch1, branch2)
+        interactions[key] = this.analyzeRelationship(branch1, branch2);
       }
     }
     
-    return interactions
+    return interactions;
   }
 
   /**
@@ -125,14 +125,14 @@ export class TwelveEarthlyBranchesAnalyzer {
    */
   private static analyzeRelationship(
     branch1: EarthlyBranchType, 
-    branch2: EarthlyBranchType
+    branch2: EarthlyBranchType,
   ): {
     relationship: BranchRelationship
     effects: string[]
     recommendations: string[]
   } {
-    const info1 = EARTHLY_BRANCHES_INFO[branch1]
-    const info2 = EARTHLY_BRANCHES_INFO[branch2]
+    const info1 = EARTHLY_BRANCHES_INFO[branch1];
+    const info2 = EARTHLY_BRANCHES_INFO[branch2];
     
     // 합(合) 관계 체크
     if (info1.compatibility.includes(branch2)) {
@@ -140,11 +140,11 @@ export class TwelveEarthlyBranchesAnalyzer {
         relationship: {
           type: 'harmony',
           strength: 80,
-          description: '서로 조화를 이루며 시너지를 발생시킴'
+          description: '서로 조화를 이루며 시너지를 발생시킴',
         },
         effects: ['긍정적 에너지 증폭', '목표 달성 용이', '관계 개선'],
-        recommendations: ['함께 협력하면 좋은 결과', '파트너십 강화 필요']
-      }
+        recommendations: ['함께 협력하면 좋은 결과', '파트너십 강화 필요'],
+      };
     }
     
     // 충(沖) 관계 체크
@@ -153,11 +153,11 @@ export class TwelveEarthlyBranchesAnalyzer {
         relationship: {
           type: 'conflict',
           strength: 70,
-          description: '서로 대립하고 충돌하는 관계'
+          description: '서로 대립하고 충돌하는 관계',
         },
         effects: ['갈등 가능성', '스트레스 증가', '의견 충돌'],
-        recommendations: ['중재자 필요', '거리두기 권장', '이해와 배려 필요']
-      }
+        recommendations: ['중재자 필요', '거리두기 권장', '이해와 배려 필요'],
+      };
     }
     
     // 중립 관계
@@ -165,11 +165,11 @@ export class TwelveEarthlyBranchesAnalyzer {
       relationship: {
         type: 'neutral',
         strength: 30,
-        description: '특별한 영향 없는 중립적 관계'
+        description: '특별한 영향 없는 중립적 관계',
       },
       effects: ['평범한 관계', '특별한 영향 없음'],
-      recommendations: ['자연스러운 관계 유지']
-    }
+      recommendations: ['자연스러운 관계 유지'],
+    };
   }
 
   /**
@@ -177,65 +177,65 @@ export class TwelveEarthlyBranchesAnalyzer {
    */
   private static calculateOverallHarmony(
     data: TwelveEarthlyBranchesData,
-    interactions: BranchInteractionMatrix
+    interactions: BranchInteractionMatrix,
   ): number {
-    let harmonyScore = 50
+    let harmonyScore = 50;
     
     // 상호작용 기반 점수 조정
     Object.values(interactions).forEach(interaction => {
       if (interaction.relationship.type === 'harmony') {
-        harmonyScore += 10
+        harmonyScore += 10;
       } else if (interaction.relationship.type === 'conflict') {
-        harmonyScore -= 10
+        harmonyScore -= 10;
       }
-    })
+    });
     
     // 분포 균형도 반영
-    const values = Object.values(data)
-    const average = values.reduce((sum, val) => sum + val, 0) / values.length
-    const variance = values.reduce((sum, val) => sum + Math.pow(val - average, 2), 0) / values.length
+    const values = Object.values(data);
+    const average = values.reduce((sum, val) => sum + val, 0) / values.length;
+    const variance = values.reduce((sum, val) => sum + Math.pow(val - average, 2), 0) / values.length;
     
     // 분산이 작을수록 균형적
-    harmonyScore += Math.max(0, 30 - Math.sqrt(variance))
+    harmonyScore += Math.max(0, 30 - Math.sqrt(variance));
     
-    return Math.max(0, Math.min(100, harmonyScore))
+    return Math.max(0, Math.min(100, harmonyScore));
   }
 
   /**
    * 계절별 균형도 계산
    */
   private static calculateSeasonalBalance(data: TwelveEarthlyBranchesData): SeasonalBalance {
-    const spring = (data.in || 0) + (data.myo || 0) + (data.jin || 0)
-    const summer = (data.sa || 0) + (data.o || 0) + (data.mi || 0)
-    const autumn = (data.sin || 0) + (data.yu || 0) + (data.sul || 0)
-    const winter = (data.hae || 0) + (data.ja || 0) + (data.chuk || 0)
+    const spring = (data.in || 0) + (data.myo || 0) + (data.jin || 0);
+    const summer = (data.sa || 0) + (data.o || 0) + (data.mi || 0);
+    const autumn = (data.sin || 0) + (data.yu || 0) + (data.sul || 0);
+    const winter = (data.hae || 0) + (data.ja || 0) + (data.chuk || 0);
     
-    const total = spring + summer + autumn + winter
+    const total = spring + summer + autumn + winter;
     
     // 계절별 백분율 계산
-    const springPct = total > 0 ? (spring / total) * 100 : 25
-    const summerPct = total > 0 ? (summer / total) * 100 : 25
-    const autumnPct = total > 0 ? (autumn / total) * 100 : 25
-    const winterPct = total > 0 ? (winter / total) * 100 : 25
+    const springPct = total > 0 ? (spring / total) * 100 : 25;
+    const summerPct = total > 0 ? (summer / total) * 100 : 25;
+    const autumnPct = total > 0 ? (autumn / total) * 100 : 25;
+    const winterPct = total > 0 ? (winter / total) * 100 : 25;
     
     // 균형도 계산 (이상적인 25%에서 벗어난 정도)
     const deviations = [
       Math.abs(springPct - 25),
       Math.abs(summerPct - 25),
       Math.abs(autumnPct - 25),
-      Math.abs(winterPct - 25)
-    ]
+      Math.abs(winterPct - 25),
+    ];
     
-    const maxDeviation = Math.max(...deviations)
-    const balance = Math.max(0, 100 - (maxDeviation * 2))
+    const maxDeviation = Math.max(...deviations);
+    const balance = Math.max(0, 100 - (maxDeviation * 2));
     
     return {
       spring: springPct,
       summer: summerPct,
       autumn: autumnPct,
       winter: winterPct,
-      balance
-    }
+      balance,
+    };
   }
 
   /**
@@ -243,21 +243,21 @@ export class TwelveEarthlyBranchesAnalyzer {
    */
   private static analyzeAnimalPersonality(
     data: TwelveEarthlyBranchesData,
-    dominant: EarthlyBranchType[]
+    dominant: EarthlyBranchType[],
   ): AnimalPersonality {
     // 가장 강한 간지의 동물 성격
-    const primaryBranch = dominant[0] || 'ja'
-    const info = EARTHLY_BRANCHES_INFO[primaryBranch]
+    const primaryBranch = dominant[0] || 'ja';
+    const info = EARTHLY_BRANCHES_INFO[primaryBranch];
     
     return {
       primaryAnimal: `${info.animalEmoji} ${info.animal}형 인격`,
       traits: info.positiveTraits,
       compatibility: info.compatibility.map(branch => 
-        EARTHLY_BRANCHES_INFO[branch].animal
+        EARTHLY_BRANCHES_INFO[branch].animal,
       ),
       cautions: info.negativeTraits,
-      lifePattern: `${info.time} 시간대에 활동적, ${info.direction}방향 선호`
-    }
+      lifePattern: `${info.time} 시간대에 활동적, ${info.direction}방향 선호`,
+    };
   }
 
   /**
@@ -266,54 +266,54 @@ export class TwelveEarthlyBranchesAnalyzer {
   private static generateRecommendations(
     data: TwelveEarthlyBranchesData,
     dominant: EarthlyBranchType[],
-    missing: EarthlyBranchType[]
+    missing: EarthlyBranchType[],
   ): BranchRecommendations {
-    const colors: BranchRecommendations['colors'] = []
-    const directions: BranchRecommendations['directions'] = []
-    const timing: BranchRecommendations['timing'] = []
-    const relationships: BranchRecommendations['relationships'] = []
+    const colors: BranchRecommendations['colors'] = [];
+    const directions: BranchRecommendations['directions'] = [];
+    const timing: BranchRecommendations['timing'] = [];
+    const relationships: BranchRecommendations['relationships'] = [];
     
     // 강한 간지 기반 추천
     dominant.forEach(branch => {
-      const info = EARTHLY_BRANCHES_INFO[branch]
+      const info = EARTHLY_BRANCHES_INFO[branch];
       
       colors.push({
         color: info.color.primary,
         hex: info.color.primary,
-        reason: `${info.animal}의 기운을 강화`
-      })
+        reason: `${info.animal}의 기운을 강화`,
+      });
       
       directions.push({
         direction: info.direction,
-        benefit: `${info.element} 오행 에너지 증진`
-      })
+        benefit: `${info.element} 오행 에너지 증진`,
+      });
       
       timing.push({
         period: info.time,
         activity: '중요한 일정',
-        effect: '최상의 컨디션과 운세'
-      })
-    })
+        effect: '최상의 컨디션과 운세',
+      });
+    });
     
     // 관계 추천
     if (dominant.length > 0) {
-      const primaryInfo = EARTHLY_BRANCHES_INFO[dominant[0]]
+      const primaryInfo = EARTHLY_BRANCHES_INFO[dominant[0]];
       relationships.push({
         compatible: primaryInfo.compatibility.map(b => 
-          EARTHLY_BRANCHES_INFO[b].animal
+          EARTHLY_BRANCHES_INFO[b].animal,
         ),
         avoid: primaryInfo.conflict.map(b => 
-          EARTHLY_BRANCHES_INFO[b].animal
+          EARTHLY_BRANCHES_INFO[b].animal,
         ),
-        reason: '간지 상성과 상충 관계'
-      })
+        reason: '간지 상성과 상충 관계',
+      });
     }
     
     return {
       colors: colors.slice(0, 3),
       directions: directions.slice(0, 2),
       timing: timing.slice(0, 3),
-      relationships: relationships.slice(0, 1)
-    }
+      relationships: relationships.slice(0, 1),
+    };
   }
 }

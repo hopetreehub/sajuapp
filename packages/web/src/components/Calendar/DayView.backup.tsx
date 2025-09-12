@@ -1,13 +1,13 @@
-import { useMemo, useState } from 'react'
-import { useCalendar } from '@/contexts/CalendarContext'
-import { format, isSameDay, getHours, getMinutes } from 'date-fns'
-import { ko } from 'date-fns/locale'
-import { CalendarEvent } from '@/services/api'
-import DiaryBookModal from '@/components/DiaryBookModal'
-import TaskSelectionModal from '@/components/TaskSelectionModal'
-import { useDiaryData } from '@/hooks/useDiaryData'
+import { useMemo, useState } from 'react';
+import { useCalendar } from '@/contexts/CalendarContext';
+import { format, isSameDay, getHours, getMinutes } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { CalendarEvent } from '@/services/api';
+import DiaryBookModal from '@/components/DiaryBookModal';
+import TaskSelectionModal from '@/components/TaskSelectionModal';
+import { useDiaryData } from '@/hooks/useDiaryData';
 
-const HOURS = Array.from({ length: 10 }, (_, i) => i + 9) // 9시-18시
+const HOURS = Array.from({ length: 10 }, (_, i) => i + 9); // 9시-18시
 
 interface DayViewProps {
   events: CalendarEvent[]
@@ -16,12 +16,12 @@ interface DayViewProps {
 }
 
 export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewProps) {
-  const { currentDate } = useCalendar()
-  const [isDiaryOpen, setIsDiaryOpen] = useState(false)
-  const [showTaskSelection, setShowTaskSelection] = useState(false)
-  const [taskSelectionPosition, setTaskSelectionPosition] = useState({ x: 0, y: 0 })
-  const [selectedDateTime, setSelectedDateTime] = useState<Date>(new Date())
-  const { diaryDates, loading, error } = useDiaryData({ viewMode: 'day', currentDate })
+  const { currentDate } = useCalendar();
+  const [isDiaryOpen, setIsDiaryOpen] = useState(false);
+  const [showTaskSelection, setShowTaskSelection] = useState(false);
+  const [taskSelectionPosition, setTaskSelectionPosition] = useState({ x: 0, y: 0 });
+  const [selectedDateTime, setSelectedDateTime] = useState<Date>(new Date());
+  const { diaryDates, loading, error } = useDiaryData({ viewMode: 'day', currentDate });
   
   // 디버깅: useDiaryData 상태 로그
   console.log('📊 DayView useDiaryData 상태:', {
@@ -31,46 +31,46 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
     error,
     currentDateStr: format(currentDate, 'yyyy-MM-dd'),
     hasTodayDiary: diaryDates.has(format(currentDate, 'yyyy-MM-dd')),
-    viewMode: 'day'
-  })
+    viewMode: 'day',
+  });
   
   // 일기 아이콘 조건부 렌더링 디버깅
-  const hasCurrentDateDiary = diaryDates.has(format(currentDate, 'yyyy-MM-dd'))
+  const hasCurrentDateDiary = diaryDates.has(format(currentDate, 'yyyy-MM-dd'));
   console.log('🖼️ DayView 일기 아이콘 상태:', {
     currentDateStr: format(currentDate, 'yyyy-MM-dd'),
     hasCurrentDateDiary,
-    shouldShowIcon: hasCurrentDateDiary
-  })
+    shouldShowIcon: hasCurrentDateDiary,
+  });
 
   const dayEvents = useMemo(() => {
     return events.filter(event => {
-      const eventDate = new Date(event.start_time)
-      return isSameDay(eventDate, currentDate)
-    }).sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
-  }, [events, currentDate])
+      const eventDate = new Date(event.start_time);
+      return isSameDay(eventDate, currentDate);
+    }).sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
+  }, [events, currentDate]);
 
-  const allDayEvents = dayEvents.filter(event => event.all_day)
-  const timedEvents = dayEvents.filter(event => !event.all_day)
+  const allDayEvents = dayEvents.filter(event => event.all_day);
+  const timedEvents = dayEvents.filter(event => !event.all_day);
 
-  const currentHour = new Date().getHours()
-  const currentMinute = new Date().getMinutes()
+  const currentHour = new Date().getHours();
+  const currentMinute = new Date().getMinutes();
   // 9시-18시 범위 내에서만 현재 시간 표시
-  const isWithinRange = currentHour >= 9 && currentHour <= 18
-  const currentTimePosition = isWithinRange ? ((currentHour - 9) * 60 + currentMinute) / (10 * 60) * 100 : -1
+  const isWithinRange = currentHour >= 9 && currentHour <= 18;
+  const currentTimePosition = isWithinRange ? ((currentHour - 9) * 60 + currentMinute) / (10 * 60) * 100 : -1;
 
   const getEventPosition = (event: CalendarEvent) => {
-    const start = new Date(event.start_time)
-    const end = new Date(event.end_time)
-    const startHour = getHours(start)
-    const endHour = getHours(end)
-    const startMinutes = Math.max((startHour - 9) * 60 + getMinutes(start), 0)
-    const endMinutes = Math.min((endHour - 9) * 60 + getMinutes(end), 10 * 60)
+    const start = new Date(event.start_time);
+    const end = new Date(event.end_time);
+    const startHour = getHours(start);
+    const endHour = getHours(end);
+    const startMinutes = Math.max((startHour - 9) * 60 + getMinutes(start), 0);
+    const endMinutes = Math.min((endHour - 9) * 60 + getMinutes(end), 10 * 60);
     
-    const top = (startMinutes / (10 * 60)) * 100
-    const height = ((endMinutes - startMinutes) / (10 * 60)) * 100
+    const top = (startMinutes / (10 * 60)) * 100;
+    const height = ((endMinutes - startMinutes) / (10 * 60)) * 100;
     
-    return { top: `${top}%`, height: `${Math.max(height, 2)}%` }
-  }
+    return { top: `${top}%`, height: `${Math.max(height, 2)}%` };
+  };
 
   return (
     <div className="h-full flex bg-background">
@@ -89,8 +89,8 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
             {/* 일기 아이콘 - 항상 표시 */}
             <button
               onClick={() => {
-                setSelectedDateTime(currentDate)
-                setIsDiaryOpen(true)
+                setSelectedDateTime(currentDate);
+                setIsDiaryOpen(true);
               }}
               className={`p-1 rounded-full text-xs transition-all hover:scale-110 ${
                 hasCurrentDateDiary
@@ -115,7 +115,7 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
                   className="p-3 rounded-lg border cursor-pointer hover:shadow-md transition-shadow"
                   style={{ 
                     backgroundColor: `${event.color || '#3b82f6'}10`,
-                    borderColor: event.color || '#3b82f6'
+                    borderColor: event.color || '#3b82f6',
                   }}
                   onClick={() => onEditEvent(event)}
                 >
@@ -158,13 +158,13 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
         <div className="mt-6">
           <button 
             onClick={(e) => {
-              setSelectedDateTime(currentDate)
-              const rect = e.currentTarget.getBoundingClientRect()
+              setSelectedDateTime(currentDate);
+              const rect = e.currentTarget.getBoundingClientRect();
               setTaskSelectionPosition({
                 x: rect.left + rect.width / 2,
-                y: rect.top
-              })
-              setShowTaskSelection(true)
+                y: rect.top,
+              });
+              setShowTaskSelection(true);
             }}
             className="w-full py-2 px-4 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors">
             새 작업 추가
@@ -199,17 +199,17 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
                 <div 
                   className="flex-1 relative cursor-pointer hover:bg-muted/30"
                   onClick={(e) => {
-                    const selectedDateTime = new Date(currentDate)
-                    selectedDateTime.setHours(hour, 0, 0, 0)
-                    setSelectedDateTime(selectedDateTime)
+                    const selectedDateTime = new Date(currentDate);
+                    selectedDateTime.setHours(hour, 0, 0, 0);
+                    setSelectedDateTime(selectedDateTime);
                     
                     // 클릭 위치 계산
-                    const rect = e.currentTarget.getBoundingClientRect()
+                    const rect = e.currentTarget.getBoundingClientRect();
                     setTaskSelectionPosition({
                       x: rect.left + rect.width / 2,
-                      y: rect.top + rect.height / 2
-                    })
-                    setShowTaskSelection(true)
+                      y: rect.top + rect.height / 2,
+                    });
+                    setShowTaskSelection(true);
                   }}
                 >
                   {/* Half-hour line */}
@@ -221,7 +221,7 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
             {/* Timed events overlay */}
             <div className="absolute top-0 left-20 right-0 bottom-0">
               {timedEvents.map(event => {
-                const position = getEventPosition(event)
+                const position = getEventPosition(event);
                 return (
                   <div
                     key={event.id}
@@ -229,7 +229,7 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
                     style={{ 
                       ...position,
                       backgroundColor: `${event.color || '#3b82f6'}20`,
-                      borderLeft: `3px solid ${event.color || '#3b82f6'}`
+                      borderLeft: `3px solid ${event.color || '#3b82f6'}`,
                     }}
                     onClick={() => onEditEvent(event)}
                   >
@@ -241,7 +241,7 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
                       <div className="text-sm text-muted-foreground mt-1">📍 {event.location}</div>
                     )}
                   </div>
-                )
+                );
               })}
             </div>
           </div>
@@ -257,12 +257,12 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
         onSelectEvent={() => onCreateEvent(selectedDateTime)}
         onSelectTodo={() => {
           // TODO: 할일 추가 기능 구현
-          console.log('할일 추가:', selectedDateTime)
+          console.log('할일 추가:', selectedDateTime);
         }}
         onSelectDiary={() => {
-          setSelectedDateTime(selectedDateTime)
-          setShowTaskSelection(false)
-          setIsDiaryOpen(true)
+          setSelectedDateTime(selectedDateTime);
+          setShowTaskSelection(false);
+          setIsDiaryOpen(true);
         }}
       />
 
@@ -272,11 +272,11 @@ export default function DayView({ events, onCreateEvent, onEditEvent }: DayViewP
         onClose={() => setIsDiaryOpen(false)}
         date={selectedDateTime}
         onSave={() => {
-          setIsDiaryOpen(false)
+          setIsDiaryOpen(false);
           // 일기 저장 후 일기 데이터 새로고침
           // useDiaryData hook이 자동으로 다시 로드됩니다
         }}
       />
     </div>
-  )
+  );
 }

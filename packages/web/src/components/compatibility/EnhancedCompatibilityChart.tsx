@@ -7,7 +7,7 @@ import {
   Filler,
   Tooltip,
   Legend,
-  ChartOptions
+  ChartOptions,
 } from 'chart.js';
 import { Radar } from 'react-chartjs-2';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -18,7 +18,7 @@ ChartJS.register(
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 );
 
 interface ChartData {
@@ -48,7 +48,7 @@ export const EnhancedCompatibilityChart: React.FC<EnhancedCompatibilityChartProp
     { key: 'lifePattern', label: '생활패턴' },
     { key: 'conflictResolution', label: '갈등해결' },
     { key: 'emotional', label: '정서적' },
-    { key: 'trust', label: '신뢰도' }
+    { key: 'trust', label: '신뢰도' },
   ];
 
   // 현실적 분석 (5개)
@@ -57,7 +57,7 @@ export const EnhancedCompatibilityChart: React.FC<EnhancedCompatibilityChartProp
     { key: 'career', label: '직업운' },
     { key: 'residence', label: '주거환경' },
     { key: 'children', label: '자녀운' },
-    { key: 'inLaw', label: '시댁/처가' }
+    { key: 'inLaw', label: '시댁/처가' },
   ];
 
   // 심층 분석 (4개)
@@ -65,7 +65,7 @@ export const EnhancedCompatibilityChart: React.FC<EnhancedCompatibilityChartProp
     { key: 'sexual', label: '성적' },
     { key: 'spiritual', label: '정신적' },
     { key: 'hobby', label: '취미' },
-    { key: 'retirement', label: '노후' }
+    { key: 'retirement', label: '노후' },
   ];
 
   // 특수 분석 (4개)
@@ -73,7 +73,7 @@ export const EnhancedCompatibilityChart: React.FC<EnhancedCompatibilityChartProp
     { key: 'noblePerson', label: '귀인운' },
     { key: 'peachBlossom', label: '도화운' },
     { key: 'emptiness', label: '공망' },
-    { key: 'sinsal', label: '신살' }
+    { key: 'sinsal', label: '신살' },
   ];
 
   // 데이터 수집
@@ -131,9 +131,9 @@ export const EnhancedCompatibilityChart: React.FC<EnhancedCompatibilityChartProp
         pointHoverBackgroundColor: '#fff',
         pointHoverBorderColor: 'rgba(147, 51, 234, 1)',
         pointRadius: 4,
-        pointHoverRadius: 6
-      }
-    ]
+        pointHoverRadius: 6,
+      },
+    ],
   };
 
   const options: ChartOptions<'radar'> = {
@@ -149,25 +149,25 @@ export const EnhancedCompatibilityChart: React.FC<EnhancedCompatibilityChartProp
           color: isDark ? '#9CA3AF' : '#4B5563',
           backdropColor: 'transparent',
           font: {
-            size: 10
-          }
+            size: 10,
+          },
         },
         grid: {
           color: isDark ? 'rgba(156, 163, 175, 0.2)' : 'rgba(107, 114, 128, 0.2)',
-          circular: true
+          circular: true,
         },
         angleLines: {
-          color: isDark ? 'rgba(156, 163, 175, 0.2)' : 'rgba(107, 114, 128, 0.2)'
+          color: isDark ? 'rgba(156, 163, 175, 0.2)' : 'rgba(107, 114, 128, 0.2)',
         },
         pointLabels: {
           color: isDark ? '#D1D5DB' : '#374151',
           font: {
             size: 11,
-            weight: 500
+            weight: 500,
           },
-          padding: 15
-        }
-      }
+          padding: 15,
+        },
+      },
     },
     plugins: {
       legend: {
@@ -176,10 +176,10 @@ export const EnhancedCompatibilityChart: React.FC<EnhancedCompatibilityChartProp
         labels: {
           color: isDark ? '#D1D5DB' : '#374151',
           font: {
-            size: 12
+            size: 12,
           },
-          padding: 20
-        }
+          padding: 20,
+        },
       },
       tooltip: {
         enabled: true,
@@ -200,14 +200,14 @@ export const EnhancedCompatibilityChart: React.FC<EnhancedCompatibilityChartProp
             else if (score < 85) level = '좋음';
             
             return `${context.label}: ${score}점 (${level})`;
-          }
-        }
-      }
+          },
+        },
+      },
     },
     interaction: {
       intersect: false,
-      mode: 'point'
-    }
+      mode: 'point',
+    },
   };
 
   return (

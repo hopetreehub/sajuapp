@@ -268,7 +268,7 @@ export const diaryService = {
   }): Promise<DiaryEntry[]> => {
     const response = await axios.get('http://localhost:4004/api/diaries', { 
       params,
-      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
     return response.data;
   },
@@ -278,7 +278,7 @@ export const diaryService = {
     // Use searchDiaries endpoint which supports date range
     const response = await axios.get('http://localhost:4004/api/diaries/search', {
       params: { startDate, endDate },
-      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
     return response.data;
   },
@@ -286,7 +286,7 @@ export const diaryService = {
   // Get diary entry by date
   getDiaryByDate: async (date: string): Promise<DiaryEntry> => {
     const response = await axios.get(`http://localhost:4004/api/diaries/${date}`, {
-      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
     return response.data;
   },
@@ -294,7 +294,7 @@ export const diaryService = {
   // Create diary entry
   createDiary: async (diary: Omit<DiaryEntry, 'id' | 'created_at' | 'updated_at' | 'user_id'>): Promise<DiaryEntry> => {
     const response = await axios.post('http://localhost:4004/api/diaries', diary, {
-      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
     return response.data;
   },
@@ -302,7 +302,7 @@ export const diaryService = {
   // Update diary entry
   updateDiary: async (id: string, diary: Partial<DiaryEntry>): Promise<DiaryEntry> => {
     const response = await axios.put(`http://localhost:4004/api/diaries/${id}`, diary, {
-      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
     return response.data;
   },
@@ -310,7 +310,7 @@ export const diaryService = {
   // Delete diary entry
   deleteDiary: async (id: string): Promise<void> => {
     await axios.delete(`http://localhost:4004/api/diaries/${id}`, {
-      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
   },
 
@@ -323,7 +323,7 @@ export const diaryService = {
   }): Promise<DiaryEntry[]> => {
     const response = await axios.get('http://localhost:4004/api/diaries/search', {
       params,
-      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' }
+      headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
     return response.data;
   },

@@ -14,7 +14,7 @@ const ChartNavigation: React.FC<ChartNavigationProps> = ({
   showCenter = true,
   customPrevious,
   customNext,
-  className = ''
+  className = '',
 }) => {
   const navigate = useNavigate();
   const location = useLocation();

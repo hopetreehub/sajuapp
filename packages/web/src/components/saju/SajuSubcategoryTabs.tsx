@@ -10,7 +10,7 @@ interface SajuSubcategoryTabsProps {
 export default function SajuSubcategoryTabs({
   subcategories,
   selectedSubcategory,
-  onSubcategoryChange
+  onSubcategoryChange,
 }: SajuSubcategoryTabsProps) {
   return (
     <div className="mb-6">
@@ -33,5 +33,5 @@ export default function SajuSubcategoryTabs({
         ))}
       </div>
     </div>
-  )
+  );
 }

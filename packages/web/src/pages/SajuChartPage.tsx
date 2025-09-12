@@ -1,31 +1,31 @@
-import React, { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useSajuSettingsStore } from '@/stores/sajuSettingsStore'
-import { calculateSajuData } from '@/utils/sajuDataCalculator'
-import { FiveElementsBalanceChart } from '@/components/saju/charts/FiveElementsBalanceChart'
-import { TenGodsDistributionChart } from '@/components/saju/charts/TenGodsDistributionChart'
-import { TwelveEarthlyBranchesChart } from '@/components/saju/charts/TwelveEarthlyBranchesChart'
-import { BirthInfoHeader } from '@/components/saju/BirthInfoHeader'
-import { SajuData } from '@/types/saju'
+import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSajuSettingsStore } from '@/stores/sajuSettingsStore';
+import { calculateSajuData } from '@/utils/sajuDataCalculator';
+import { FiveElementsBalanceChart } from '@/components/saju/charts/FiveElementsBalanceChart';
+import { TenGodsDistributionChart } from '@/components/saju/charts/TenGodsDistributionChart';
+import { TwelveEarthlyBranchesChart } from '@/components/saju/charts/TwelveEarthlyBranchesChart';
+import { BirthInfoHeader } from '@/components/saju/BirthInfoHeader';
+import { SajuData } from '@/types/saju';
 
 const SajuChartPage: React.FC = () => {
-  const navigate = useNavigate()
-  const { birthInfo } = useSajuSettingsStore()
-  const [activeChart, setActiveChart] = useState<'fiveElements' | 'tenGods' | 'twelveEarthly'>('fiveElements')
-  const [chartType, setChartType] = useState<'bar' | 'doughnut'>('bar')
+  const navigate = useNavigate();
+  const { birthInfo } = useSajuSettingsStore();
+  const [activeChart, setActiveChart] = useState<'fiveElements' | 'tenGods' | 'twelveEarthly'>('fiveElements');
+  const [chartType, setChartType] = useState<'bar' | 'doughnut'>('bar');
 
   // 사주 데이터 계산
   const sajuData = useMemo((): SajuData | null => {
-    if (!birthInfo) return null
+    if (!birthInfo) return null;
     
     try {
       // 실제 사주 데이터 계산
-      return calculateSajuData(birthInfo)
+      return calculateSajuData(birthInfo);
     } catch (error) {
-      console.error('사주 계산 오류:', error)
-      return null
+      console.error('사주 계산 오류:', error);
+      return null;
     }
-  }, [birthInfo])
+  }, [birthInfo]);
 
   // 생년월일 정보가 없는 경우
   if (!birthInfo || !sajuData) {
@@ -49,7 +49,7 @@ const SajuChartPage: React.FC = () => {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -63,7 +63,7 @@ const SajuChartPage: React.FC = () => {
               year: { heavenly: sajuData.fourPillars.year.heavenly, earthly: sajuData.fourPillars.year.earthly, combined: `${sajuData.fourPillars.year.heavenly}${sajuData.fourPillars.year.earthly}` },
               month: { heavenly: sajuData.fourPillars.month.heavenly, earthly: sajuData.fourPillars.month.earthly, combined: `${sajuData.fourPillars.month.heavenly}${sajuData.fourPillars.month.earthly}` },
               day: { heavenly: sajuData.fourPillars.day.heavenly, earthly: sajuData.fourPillars.day.earthly, combined: `${sajuData.fourPillars.day.heavenly}${sajuData.fourPillars.day.earthly}` },
-              hour: { heavenly: sajuData.fourPillars.hour.heavenly, earthly: sajuData.fourPillars.hour.earthly, combined: `${sajuData.fourPillars.hour.heavenly}${sajuData.fourPillars.hour.earthly}` }
+              hour: { heavenly: sajuData.fourPillars.hour.heavenly, earthly: sajuData.fourPillars.hour.earthly, combined: `${sajuData.fourPillars.hour.heavenly}${sajuData.fourPillars.hour.earthly}` },
             }}
             userName={birthInfo.name}
             showEditButton
@@ -226,7 +226,7 @@ const SajuChartPage: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SajuChartPage
+export default SajuChartPage;

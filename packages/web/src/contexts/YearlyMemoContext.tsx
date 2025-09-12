@@ -42,7 +42,7 @@ export const YearlyMemoProvider: React.FC<YearlyMemoProviderProps> = ({ children
         const memosWithDates = parsed.map((memo: any) => ({
           ...memo,
           createdAt: new Date(memo.createdAt),
-          updatedAt: new Date(memo.updatedAt)
+          updatedAt: new Date(memo.updatedAt),
         }));
         setMemos(memosWithDates);
       } catch (error) {
@@ -63,7 +63,7 @@ export const YearlyMemoProvider: React.FC<YearlyMemoProviderProps> = ({ children
       ...memo,
       id: `memo-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
     setMemos(prev => [...prev, newMemo]);
   };
@@ -72,7 +72,7 @@ export const YearlyMemoProvider: React.FC<YearlyMemoProviderProps> = ({ children
     setMemos(prev => prev.map(memo => 
       memo.id === id 
         ? { ...memo, ...updates, updatedAt: new Date() }
-        : memo
+        : memo,
     ));
   };
 
@@ -84,7 +84,7 @@ export const YearlyMemoProvider: React.FC<YearlyMemoProviderProps> = ({ children
     setMemos(prev => prev.map(memo => 
       memo.id === id 
         ? { ...memo, completed: !memo.completed, updatedAt: new Date() }
-        : memo
+        : memo,
     ));
   };
 
@@ -103,7 +103,7 @@ export const YearlyMemoProvider: React.FC<YearlyMemoProviderProps> = ({ children
     return {
       total: monthMemos.length,
       byType,
-      completed: monthMemos.filter(m => m.completed).length
+      completed: monthMemos.filter(m => m.completed).length,
     };
   };
 
@@ -114,7 +114,7 @@ export const YearlyMemoProvider: React.FC<YearlyMemoProviderProps> = ({ children
     deleteMemo,
     toggleComplete,
     getMemosByMonth,
-    getMonthStatistics
+    getMonthStatistics,
   };
 
   return (

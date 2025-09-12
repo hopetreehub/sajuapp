@@ -30,7 +30,7 @@ export function convertPersonalInfoToSaju(personalInfo: PersonalInfo): SajuData 
       day,
       hour,
       minute,
-      isLunar: personalInfo.calendarType === 'lunar'
+      isLunar: personalInfo.calendarType === 'lunar',
     });
     
     console.log('사주 계산 결과:', {
@@ -38,7 +38,7 @@ export function convertPersonalInfoToSaju(personalInfo: PersonalInfo): SajuData 
       년주: fourPillars.year.combined,
       월주: fourPillars.month.combined,
       일주: fourPillars.day.combined,
-      시주: fourPillars.hour.combined
+      시주: fourPillars.hour.combined,
     });
 
     // 오행 균형 계산
@@ -47,7 +47,7 @@ export function convertPersonalInfoToSaju(personalInfo: PersonalInfo): SajuData 
       화: 0,
       토: 0,
       금: 0,
-      수: 0
+      수: 0,
     };
 
     // 천간의 오행 계산
@@ -76,22 +76,22 @@ export function convertPersonalInfoToSaju(personalInfo: PersonalInfo): SajuData 
     const sajuData: SajuData = {
       year: { 
         gan: fourPillars.year.heavenly as CheonGan, 
-        ji: fourPillars.year.earthly as JiJi 
+        ji: fourPillars.year.earthly as JiJi, 
       },
       month: { 
         gan: fourPillars.month.heavenly as CheonGan, 
-        ji: fourPillars.month.earthly as JiJi 
+        ji: fourPillars.month.earthly as JiJi, 
       },
       day: { 
         gan: fourPillars.day.heavenly as CheonGan, 
-        ji: fourPillars.day.earthly as JiJi 
+        ji: fourPillars.day.earthly as JiJi, 
       },
       time: { 
         gan: fourPillars.hour.heavenly as CheonGan, 
-        ji: fourPillars.hour.earthly as JiJi 
+        ji: fourPillars.hour.earthly as JiJi, 
       },
       ohHaengBalance,
-      fullSaju: `${fourPillars.year.combined} ${fourPillars.month.combined} ${fourPillars.day.combined} ${fourPillars.hour.combined}`
+      fullSaju: `${fourPillars.year.combined} ${fourPillars.month.combined} ${fourPillars.day.combined} ${fourPillars.hour.combined}`,
     };
     
     console.log('최종 SajuData:', sajuData);
@@ -136,7 +136,7 @@ export function testSajuCalculation(): void {
     birthTime: '04:00',
     calendarType: 'solar',
     gender: 'male',
-    birthPlace: '서울'
+    birthPlace: '서울',
   };
   
   const result = convertPersonalInfoToSaju(testInfo);

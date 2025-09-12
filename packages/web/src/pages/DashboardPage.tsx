@@ -1,66 +1,66 @@
-import { useState, useEffect } from 'react'
-import { useCalendar } from '@/contexts/CalendarContext'
+import { useState, useEffect } from 'react';
+import { useCalendar } from '@/contexts/CalendarContext';
 import { 
   getDashboardData, 
   getQuickActions, 
-  DashboardStats 
-} from '@/services/dashboardService'
-import TodaySummary from '@/components/Dashboard/TodaySummary'
-import WeeklyStats from '@/components/Dashboard/WeeklyStats'
-import MonthlyHeatmap from '@/components/Dashboard/MonthlyHeatmap'
-import QuickActions from '@/components/Dashboard/QuickActions'
-import EventModal from '@/components/EventModal'
-import DiaryModal from '@/components/DiaryModal'
-import ProgressTracker from '@/components/Learning/ProgressTracker'
-import CourseCard from '@/components/Learning/CourseCard'
-import { ArrowPathIcon } from '@heroicons/react/24/outline'
+  DashboardStats, 
+} from '@/services/dashboardService';
+import TodaySummary from '@/components/Dashboard/TodaySummary';
+import WeeklyStats from '@/components/Dashboard/WeeklyStats';
+import MonthlyHeatmap from '@/components/Dashboard/MonthlyHeatmap';
+import QuickActions from '@/components/Dashboard/QuickActions';
+import EventModal from '@/components/EventModal';
+import DiaryModal from '@/components/DiaryModal';
+import ProgressTracker from '@/components/Learning/ProgressTracker';
+import CourseCard from '@/components/Learning/CourseCard';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 
 export default function DashboardPage() {
-  const { todos, addTodo } = useCalendar()
-  const [dashboardData, setDashboardData] = useState<DashboardStats | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [refreshing, setRefreshing] = useState(false)
-  const [activeTab, setActiveTab] = useState<'overview' | 'learning'>('overview')
-  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([])
+  const { todos, addTodo } = useCalendar();
+  const [dashboardData, setDashboardData] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [activeTab, setActiveTab] = useState<'overview' | 'learning'>('overview');
+  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
   
   // 모달 상태 관리
-  const [showEventModal, setShowEventModal] = useState(false)
-  const [showDiaryModal, setShowDiaryModal] = useState(false)
-  const [showTodoModal, setShowTodoModal] = useState(false)
+  const [showEventModal, setShowEventModal] = useState(false);
+  const [showDiaryModal, setShowDiaryModal] = useState(false);
+  const [showTodoModal, setShowTodoModal] = useState(false);
   
   const quickActions = getQuickActions({
     onAddEvent: () => setShowEventModal(true),
     onAddTodo: () => setShowTodoModal(true),
-    onWriteDiary: () => setShowDiaryModal(true)
-  })
+    onWriteDiary: () => setShowDiaryModal(true),
+  });
   
   // 대시보드 데이터 로드
   const loadDashboardData = async (showRefreshing = false) => {
     if (showRefreshing) {
-      setRefreshing(true)
+      setRefreshing(true);
     } else {
-      setLoading(true)
+      setLoading(true);
     }
-    setError(null)
+    setError(null);
     
     try {
-      const data = await getDashboardData(todos)
-      setDashboardData(data)
+      const data = await getDashboardData(todos);
+      setDashboardData(data);
     } catch (err) {
-      console.error('Failed to load dashboard data:', err)
-      setError('대시보드 데이터를 불러오는데 실패했습니다.')
+      console.error('Failed to load dashboard data:', err);
+      setError('대시보드 데이터를 불러오는데 실패했습니다.');
     } finally {
-      setLoading(false)
-      setRefreshing(false)
+      setLoading(false);
+      setRefreshing(false);
     }
-  }
+  };
   
   // 초기 로드
   useEffect(() => {
-    loadDashboardData()
-    loadEnrolledCourses()
-  }, [todos])
+    loadDashboardData();
+    loadEnrolledCourses();
+  }, [todos]);
   
   // 수강 중인 강좌 로드
   const loadEnrolledCourses = async () => {
@@ -81,7 +81,7 @@ export default function DashboardPage() {
           enrollment_count: 1234,
           duration: 240,
           lessons_count: 12,
-          created_at: '2024-01-01'
+          created_at: '2024-01-01',
         },
         {
           id: '2',
@@ -97,19 +97,19 @@ export default function DashboardPage() {
           enrollment_count: 567,
           duration: 480,
           lessons_count: 24,
-          created_at: '2024-02-01'
-        }
-      ]
-      setEnrolledCourses(mockCourses)
+          created_at: '2024-02-01',
+        },
+      ];
+      setEnrolledCourses(mockCourses);
     } catch (error) {
-      console.error('수강 강좌 로딩 실패:', error)
+      console.error('수강 강좌 로딩 실패:', error);
     }
-  }
+  };
   
   // 새로고침 핸들러
   const handleRefresh = () => {
-    loadDashboardData(true)
-  }
+    loadDashboardData(true);
+  };
   
   if (loading && !dashboardData) {
     return (
@@ -139,7 +139,7 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
   
   if (error) {
@@ -161,7 +161,7 @@ export default function DashboardPage() {
           </button>
         </div>
       </div>
-    )
+    );
   }
   
   return (
@@ -296,7 +296,7 @@ export default function DashboardPage() {
                         completedLessons: course.id === '1' ? 3 : 14,
                         totalLessons: course.lessons_count,
                         isEnrolled: true,
-                        status: course.id === '1' ? 'enrolled' : 'enrolled'
+                        status: course.id === '1' ? 'enrolled' : 'enrolled',
                       }}
                       showEnrollButton={false}
                     />  
@@ -344,9 +344,9 @@ export default function DashboardPage() {
         <EventModal
           onClose={() => setShowEventModal(false)}
           onSave={(event) => {
-            console.log('새 이벤트 생성:', event)
-            setShowEventModal(false)
-            loadDashboardData(true) // 데이터 새로고침
+            console.log('새 이벤트 생성:', event);
+            setShowEventModal(false);
+            loadDashboardData(true); // 데이터 새로고침
           }}
         />
       )}
@@ -356,27 +356,27 @@ export default function DashboardPage() {
           date={new Date()}
           onClose={() => setShowDiaryModal(false)}
           onSave={() => {
-            setShowDiaryModal(false)
-            loadDashboardData(true) // 데이터 새로고침
+            setShowDiaryModal(false);
+            loadDashboardData(true); // 데이터 새로고침
           }}
         />
       )}
       
       {/* Todo 모달은 간단한 prompt로 대체 */}
       {showTodoModal && (() => {
-        const todoText = prompt('새로운 할일을 입력하세요:')
+        const todoText = prompt('새로운 할일을 입력하세요:');
         if (todoText) {
           addTodo({
             text: todoText,
             completed: false,
             priority: 'medium',
-            date: new Date().toISOString().split('T')[0]
-          })
-          loadDashboardData(true)
+            date: new Date().toISOString().split('T')[0],
+          });
+          loadDashboardData(true);
         }
-        setShowTodoModal(false)
-        return null
+        setShowTodoModal(false);
+        return null;
       })()}
     </div>
-  )
+  );
 }

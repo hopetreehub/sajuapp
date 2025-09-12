@@ -5,12 +5,12 @@
 
 // 천간(天干) - 10개
 export const HEAVENLY_STEMS = [
-  '갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'
+  '갑', '을', '병', '정', '무', '기', '경', '신', '임', '계',
 ] as const;
 
 // 지지(地支) - 12개  
 export const EARTHLY_BRANCHES = [
-  '자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'
+  '자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해',
 ] as const;
 
 // 60갑자 순환표
@@ -20,7 +20,7 @@ export const SIXTY_CYCLE = [
   '갑신', '을유', '병술', '정해', '무자', '기축', '경인', '신묘', '임진', '계사',
   '갑오', '을미', '병신', '정유', '무술', '기해', '경자', '신축', '임인', '계묘',
   '갑진', '을사', '병오', '정미', '무신', '기유', '경술', '신해', '임자', '계축',
-  '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해'
+  '갑인', '을묘', '병진', '정사', '무오', '기미', '경신', '신유', '임술', '계해',
 ] as const;
 
 // 24절기 날짜 (평균값 기준, 실제로는 매년 약간씩 다름)
@@ -36,7 +36,7 @@ const SOLAR_TERMS = {
   '백로': { month: 9, day: 8 },    // 유월 시작
   '한로': { month: 10, day: 8 },   // 술월 시작
   '입동': { month: 11, day: 7 },   // 해월 시작
-  '대설': { month: 12, day: 7 }    // 자월 시작
+  '대설': { month: 12, day: 7 },    // 자월 시작
 };
 
 // 절기월 계산 (양력 기준)
@@ -88,7 +88,7 @@ export function calculateYearPillar(year: number, month: number, day: number): {
   // 1971년 = 신해년이므로 이를 기준으로 계산
   // 1984 - 1971 = 13년 차이, 신해(47) + 13 = 60 = 0(갑자)
   const baseYear = 1984;
-  let yearDiff = adjustedYear - baseYear;
+  const yearDiff = adjustedYear - baseYear;
   let cycleIndex = yearDiff % 60;
   
   // 음수 처리
@@ -101,7 +101,7 @@ export function calculateYearPillar(year: number, month: number, day: number): {
   return {
     gan: combined[0],
     ji: combined[1],
-    combined
+    combined,
   };
 }
 
@@ -136,7 +136,7 @@ export function calculateMonthPillar(year: number, month: number, day: number): 
   return {
     gan: monthGan,
     ji: monthJi,
-    combined: monthGan + monthJi
+    combined: monthGan + monthJi,
   };
 }
 
@@ -166,7 +166,7 @@ export function calculateDayPillar(year: number, month: number, day: number): {
   return {
     gan: combined[0],
     ji: combined[1],
-    combined
+    combined,
   };
 }
 
@@ -176,7 +176,7 @@ export function calculateHourPillar(
   month: number,
   day: number,
   hour: number,
-  minute: number = 0
+  minute: number = 0,
 ): {
   gan: string;
   ji: string;
@@ -233,7 +233,7 @@ export function calculateHourPillar(
   return {
     gan: hourGan,
     ji: hourJi,
-    combined: hourGan + hourJi
+    combined: hourGan + hourJi,
   };
 }
 
@@ -244,7 +244,7 @@ export function calculateCompleteSaju(
   day: number,
   hour: number,
   minute: number = 0,
-  isLunar: boolean = false
+  isLunar: boolean = false,
 ) {
   // TODO: 음력 변환 로직 추가 필요
   if (isLunar) {
@@ -262,18 +262,18 @@ export function calculateCompleteSaju(
     '병': '화', '정': '화',
     '무': '토', '기': '토',
     '경': '금', '신': '금',
-    '임': '수', '계': '수'
+    '임': '수', '계': '수',
   };
   
   const jiOhHaeng: Record<string, string> = {
     '자': '수', '축': '토', '인': '목', '묘': '목',
     '진': '토', '사': '화', '오': '화', '미': '토',
-    '신': '금', '유': '금', '술': '토', '해': '수'
+    '신': '금', '유': '금', '술': '토', '해': '수',
   };
   
   // 오행 통계
   const ohHaengCount: Record<string, number> = {
-    '목': 0, '화': 0, '토': 0, '금': 0, '수': 0
+    '목': 0, '화': 0, '토': 0, '금': 0, '수': 0,
   };
   
   // 천간 오행
@@ -295,7 +295,7 @@ export function calculateCompleteSaju(
     화: Math.round((ohHaengCount['화'] / total) * 100),
     토: Math.round((ohHaengCount['토'] / total) * 100),
     금: Math.round((ohHaengCount['금'] / total) * 100),
-    수: Math.round((ohHaengCount['수'] / total) * 100)
+    수: Math.round((ohHaengCount['수'] / total) * 100),
   };
   
   return {
@@ -305,7 +305,7 @@ export function calculateCompleteSaju(
     time: hourPillar,
     fullSaju: `${yearPillar.combined} ${monthPillar.combined} ${dayPillar.combined} ${hourPillar.combined}`,
     ohHaengBalance,
-    ohHaengCount
+    ohHaengCount,
   };
 }
 
@@ -327,7 +327,7 @@ export function testSajuCalculation() {
   const testCases = [
     { year: 1984, month: 2, day: 4, hour: 12, desc: '1984년 갑자년 입춘일' },
     { year: 2000, month: 1, day: 1, hour: 0, desc: '2000년 1월 1일 (기준일)' },
-    { year: 1976, month: 9, day: 16, hour: 10, desc: '1976년 9월 16일' }
+    { year: 1976, month: 9, day: 16, hour: 10, desc: '1976년 9월 16일' },
   ];
   
   testCases.forEach(tc => {
