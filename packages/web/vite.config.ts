@@ -11,38 +11,20 @@ export default defineConfig(({ mode }) => {
     server: {
       port: parseInt(env.VITE_PORT) || 4000,
       host: true,
-      strictPort: true, // 포트 4000번 강제
+      strictPort: true, // 포트 4000번 절대 강제 - CLAUDE.md 정책 준수
       proxy: {
-        '/api/saju': {
-          target: 'http://localhost:4015',
-          changeOrigin: true,
-          secure: false,
-        },
-        '/api/diaries': {
-          target: 'http://localhost:4004',
-          changeOrigin: true,
-          secure: false,
-        },
-        '/api/calendar': {
-          target: env.VITE_API_URL || 'http://localhost:4003',
-          changeOrigin: true,
-          secure: false,
-        },
-        '/api/referral': {
-          target: 'http://localhost:4013',
-          changeOrigin: true,
-          secure: false,
-        },
-        '/api/academy': {
-          target: 'http://localhost:4014',
-          changeOrigin: true,
-          secure: false,
-          rewrite: (path) => path.replace(/^\/api\/academy/, '/api'),
-        },
+        // 모든 API 요청을 내장된 API Gateway로 프록시 (포트 4000 정책)
         '/api': {
-          target: env.VITE_API_URL || 'http://localhost:4003',
+          target: 'http://localhost:5000', // API Gateway 내부 포트
           changeOrigin: true,
           secure: false,
+          ws: true, // WebSocket 지원
+          configure: (proxy, _options) => {
+            // 프록시 에러 처리 개선
+            proxy.on('error', (err, _req, _res) => {
+              console.error('Proxy error:', err);
+            },);
+          },
         },
       },
     },

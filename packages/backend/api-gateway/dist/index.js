@@ -10,7 +10,8 @@ const http_proxy_middleware_1 = require("http-proxy-middleware");
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const PORT = process.env.API_GATEWAY_PORT || 4002;
+// 포트 4000 절대 정책 - 내부 전용 포트 5000 사용
+const PORT = process.env.API_GATEWAY_PORT || 5000;
 // Rate limiting
 const limiter = (0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -19,7 +20,7 @@ const limiter = (0, express_rate_limit_1.default)({
 });
 // Middleware
 app.use((0, cors_1.default)({
-    origin: process.env.FRONTEND_URL || 'http://localhost:4010',
+    origin: process.env.FRONTEND_URL || 'http://localhost:4000',
     credentials: true
 }));
 app.use(express_1.default.json());
@@ -30,13 +31,15 @@ app.get('/health', (req, res) => {
         status: 'healthy',
         service: 'api-gateway',
         timestamp: new Date().toISOString(),
-        uptime: process.uptime()
+        uptime: process.uptime(),
+        port: PORT,
+        policy: 'PORT_4000_ABSOLUTE_POLICY - Internal Gateway'
     });
 });
-// Service routes
+// Service routes - 내부 포트 5001-5010 사용
 const services = {
     '/api/calendar': {
-        target: process.env.CALENDAR_SERVICE_URL || 'http://localhost:4001',
+        target: process.env.CALENDAR_SERVICE_URL || 'http://localhost:5001',
         changeOrigin: true,
         pathRewrite: {
             '^/api/calendar': '/api/calendar'
@@ -45,49 +48,89 @@ const services = {
             console.error('Calendar service error:', err);
             res.status(503).json({
                 error: 'Calendar service unavailable',
-                message: 'Please try again later'
-            });
-        }
-    },
-    '/api/auth': {
-        target: process.env.AUTH_SERVICE_URL || 'http://localhost:4004',
-        changeOrigin: true,
-        pathRewrite: {
-            '^/api/auth': '/api/auth'
-        },
-        onError: (err, req, res) => {
-            console.error('Auth service error:', err);
-            res.status(503).json({
-                error: 'Auth service unavailable',
-                message: 'Please try again later'
+                message: 'Please try again later',
+                service: 'calendar',
+                target: process.env.CALENDAR_SERVICE_URL || 'http://localhost:5001'
             });
         }
     },
     '/api/diary': {
-        target: process.env.DIARY_SERVICE_URL || 'http://localhost:4005',
+        target: process.env.DIARY_SERVICE_URL || 'http://localhost:5002',
         changeOrigin: true,
         pathRewrite: {
-            '^/api/diary': '/api/diary'
+            '^/api/diary': '/api'
         },
         onError: (err, req, res) => {
             console.error('Diary service error:', err);
             res.status(503).json({
                 error: 'Diary service unavailable',
-                message: 'Please try again later'
+                message: 'Please try again later',
+                service: 'diary',
+                target: process.env.DIARY_SERVICE_URL || 'http://localhost:5002'
             });
         }
     },
-    '/api/interpretation': {
-        target: process.env.SAJU_SERVICE_URL || 'http://localhost:4002',
+    '/api/diaries': {
+        target: process.env.DIARY_SERVICE_URL || 'http://localhost:5002',
         changeOrigin: true,
         pathRewrite: {
-            '^/api/interpretation': '/api/interpretation'
+            '^/api/diaries': '/api/diaries'
         },
         onError: (err, req, res) => {
-            console.error('Saju interpretation service error:', err);
+            console.error('Diary service error (diaries):', err);
             res.status(503).json({
-                error: 'Saju interpretation service unavailable',
-                message: 'Please try again later'
+                error: 'Diary service unavailable',
+                message: 'Please try again later',
+                service: 'diary-diaries',
+                target: process.env.DIARY_SERVICE_URL || 'http://localhost:5002'
+            });
+        }
+    },
+    '/api/saju': {
+        target: process.env.SAJU_SERVICE_URL || 'http://localhost:5003',
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api/saju': '/api/saju'
+        },
+        onError: (err, req, res) => {
+            console.error('Saju analysis service error:', err);
+            res.status(503).json({
+                error: 'Saju analysis service unavailable',
+                message: 'Please try again later',
+                service: 'saju-analysis',
+                target: process.env.SAJU_SERVICE_URL || 'http://localhost:5003'
+            });
+        }
+    },
+    '/api/referral': {
+        target: process.env.REFERRAL_SERVICE_URL || 'http://localhost:5005',
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api/referral': '/api'
+        },
+        onError: (err, req, res) => {
+            console.error('Referral service error:', err);
+            res.status(503).json({
+                error: 'Referral service unavailable',
+                message: 'Please try again later',
+                service: 'referral',
+                target: process.env.REFERRAL_SERVICE_URL || 'http://localhost:5005'
+            });
+        }
+    },
+    '/api/academy': {
+        target: process.env.ACADEMY_SERVICE_URL || 'http://localhost:5006',
+        changeOrigin: true,
+        pathRewrite: {
+            '^/api/academy': '/api'
+        },
+        onError: (err, req, res) => {
+            console.error('Academy service error:', err);
+            res.status(503).json({
+                error: 'Academy service unavailable',
+                message: 'Please try again later',
+                service: 'academy',
+                target: process.env.ACADEMY_SERVICE_URL || 'http://localhost:5006'
             });
         }
     }
@@ -101,7 +144,8 @@ app.use((req, res) => {
     res.status(404).json({
         error: 'Not Found',
         message: `Cannot ${req.method} ${req.url}`,
-        availableEndpoints: Object.keys(services)
+        availableEndpoints: Object.keys(services),
+        policy: 'PORT_4000_ABSOLUTE_POLICY'
     });
 });
 // Error handler
@@ -109,15 +153,18 @@ app.use((err, req, res, next) => {
     console.error('Gateway error:', err);
     res.status(err.status || 500).json({
         error: err.message || 'Internal server error',
-        ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+        service: 'api-gateway',
+        port: PORT
     });
 });
 app.listen(PORT, () => {
-    console.log(`API Gateway is running on port ${PORT}`);
-    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log('Routing configuration:');
+    console.log(`🚀 API Gateway running on INTERNAL port ${PORT}`);
+    console.log(`📋 CLAUDE.md Policy: PORT_4000_ABSOLUTE_POLICY compliance`);
+    console.log(`🌐 External access: http://localhost:4000/api/*`);
+    console.log(`🔧 Internal access: http://localhost:${PORT}/*`);
+    console.log('🔀 Service routing configuration:');
     Object.entries(services).forEach(([path, config]) => {
-        console.log(`  ${path} -> ${config.target}`);
+        console.log(`   ${path} -> ${config.target}`);
     });
 });
 // Graceful shutdown

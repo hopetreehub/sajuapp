@@ -7,7 +7,7 @@ import { createCoursesRouter } from './routes/courses'
 import { createEnrollmentsRouter } from './routes/enrollments'
 
 const app = express()
-const PORT = process.env.ACADEMY_SERVICE_PORT || 4014
+const PORT = process.env.ACADEMY_SERVICE_PORT || 5006
 
 // 미들웨어 설정
 app.use(helmet({
