@@ -24,6 +24,7 @@ export const SIXTY_CYCLE = [
 ] as const;
 
 // 24절기 날짜 (평균값 기준, 실제로는 매년 약간씩 다름)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const SOLAR_TERMS = {
   '소한': { month: 1, day: 5 },    // 축월 시작
   '입춘': { month: 2, day: 4 },    // 인월 시작
@@ -40,7 +41,7 @@ const SOLAR_TERMS = {
 };
 
 // 절기월 계산 (양력 기준)
-function getSolarMonth(year: number, month: number, day: number): number {
+function getSolarMonth(_year: number, month: number, day: number): number {
   // 절기 경계를 확인하여 정확한 월지 반환
   // 인월=1, 묘월=2, ..., 자월=11, 축월=12
   
@@ -114,7 +115,7 @@ export function calculateMonthPillar(year: number, month: number, day: number): 
   // 년주 구하기
   const yearPillar = calculateYearPillar(year, month, day);
   const yearGan = yearPillar.gan;
-  const yearGanIndex = HEAVENLY_STEMS.indexOf(yearGan);
+  const yearGanIndex = HEAVENLY_STEMS.indexOf(yearGan as typeof HEAVENLY_STEMS[number]);
   
   // 절기월 구하기 (인월=1, 묘월=2, ..., 자월=11, 축월=12)
   const solarMonth = getSolarMonth(year, month, day);
@@ -185,7 +186,7 @@ export function calculateHourPillar(
   // 일주 구하기
   const dayPillar = calculateDayPillar(year, month, day);
   const dayGan = dayPillar.gan;
-  const dayGanIndex = HEAVENLY_STEMS.indexOf(dayGan);
+  const dayGanIndex = HEAVENLY_STEMS.indexOf(dayGan as typeof HEAVENLY_STEMS[number]);
   
   // 시지 결정 (2시간 단위)
   let hourIndex: number;

@@ -75,7 +75,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
 
     setShareStatus('sharing');
     try {
-      if (navigator.share) {
+      if (typeof navigator.share === 'function') {
         await QRCodeUtil.shareReferralQRCode(referralCode, {
           width: 400,
           color: {
@@ -201,7 +201,7 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({
             ) : (
               <>
                 <span className="mr-2">🔗</span>
-                {navigator.share ? 'QR 공유하기' : '링크 복사'}
+                {typeof navigator.share === 'function' ? 'QR 공유하기' : '링크 복사'}
               </>
             )}
           </button>

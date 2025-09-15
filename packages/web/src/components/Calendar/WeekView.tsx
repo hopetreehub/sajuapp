@@ -26,11 +26,11 @@ interface WeekViewProps {
   onDateClick?: (date: Date, event: React.MouseEvent) => void
   onEditEvent: (event: CalendarEvent) => void
   onDeleteEvent?: (eventId: string) => void
-  _highlightedEventId?: string | null
+  highlightedEventId?: string | null
   onDiaryClick?: (date: Date) => void
 }
 
-export default function WeekView({ events, onCreateEvent, onDateClick, onEditEvent, onDeleteEvent, highlightedEventId }: WeekViewProps) {
+export default function WeekView({ events, onCreateEvent, onDateClick, onEditEvent, onDeleteEvent, highlightedEventId: _highlightedEventId }: WeekViewProps) {
   const { currentDate, getTodosForDate, addTodo, deleteTodo, toggleTodo } = useCalendar();
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -239,7 +239,7 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       if (confirm(`"${event.title}" 일정을 삭제하시겠습니까?`)) {
-                                        onDeleteEvent(event.id);
+                                        onDeleteEvent(event.id!);
                                       }
                                     }}
                                     className="opacity-60 hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-1 flex-shrink-0 text-sm font-bold"

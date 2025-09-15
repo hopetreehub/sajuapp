@@ -271,7 +271,7 @@ export class TenGodsAnalyzer {
 
   private static getDevelopmentSuggestions(data: TenGodsData) {
     const suggestions = [];
-    const total = Object.values(data).reduce((sum, val) => sum + val, 0);
+    // const total = Object.values(data).reduce((sum, val) => sum + val, 0);
 
     // 가장 약한 십성 찾기
     const weakest = Object.entries(data)

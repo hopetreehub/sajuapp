@@ -250,14 +250,15 @@ export const scheduleTodoDeadlineReminder = (todo: any): number | null => {
   const dueTime = new Date(todo.dueDate);
   const reminderTime = new Date(dueTime.getTime() - settings.reminderMinutes * 60 * 1000);
   
-  const priorityEmoji = {
+  const priorityEmoji: Record<string, string> = {
     high: '🔴',
     medium: '🟡',
     low: '🟢',
-  }[todo.priority as keyof typeof priorityEmoji] || '📋';
+  };
+  const emoji = priorityEmoji[todo.priority] || '📋';
   
   return scheduleNotification(
-    `${priorityEmoji} ${todo.title}`,
+    `${emoji} ${todo.title}`,
     `${settings.reminderMinutes}분 후 마감됩니다`,
     reminderTime,
     {

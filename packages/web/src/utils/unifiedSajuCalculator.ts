@@ -150,7 +150,7 @@ function getSolarTermDate(year: number, termName: string): Date {
  * 입춘을 1월(인월)로 시작하는 절기 기준 월
  * 정확한 계산을 위한 간소화된 버전
  */
-function getSolarMonth(year: number, month: number, day: number): number {
+function getSolarMonth(_year: number, month: number, day: number): number {
   // 절기월 계산 (더 정확한 버전 - verifyAndFixSaju.js 기반)
   // 2월 4일 입춘, 3월 6일 경칩, 4월 5일 청명, 5월 6일 입하
   // 6월 6일 망종, 7월 7일 소서, 8월 8일 입추, 9월 8일 백로
@@ -473,7 +473,7 @@ export function validateSaju(result: SajuCalculationResult): boolean {
   // 모든 기둥이 60갑자에 포함되는지 확인
   const pillars = [fourPillars.year, fourPillars.month, fourPillars.day, fourPillars.hour];
   for (const pillar of pillars) {
-    if (!SIXTY_CYCLE.includes(pillar as string)) {
+    if (!SIXTY_CYCLE.includes(pillar as typeof SIXTY_CYCLE[number])) {
       console.error(`Invalid pillar: ${pillar}`);
       return false;
     }
@@ -484,12 +484,12 @@ export function validateSaju(result: SajuCalculationResult): boolean {
     const stem = pillar[0];
     const branch = pillar[1];
     
-    if (!HEAVENLY_STEMS.includes(stem as string)) {
+    if (!HEAVENLY_STEMS.includes(stem as typeof HEAVENLY_STEMS[number])) {
       console.error(`Invalid stem: ${stem}`);
       return false;
     }
     
-    if (!EARTHLY_BRANCHES.includes(branch as string)) {
+    if (!EARTHLY_BRANCHES.includes(branch as typeof EARTHLY_BRANCHES[number])) {
       console.error(`Invalid branch: ${branch}`);
       return false;
     }

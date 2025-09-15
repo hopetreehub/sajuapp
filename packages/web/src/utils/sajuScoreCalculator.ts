@@ -432,7 +432,7 @@ function calculateOhhaengRelation(
 
 // 계절 보정 계산
 function calculateSeasonalBonus(itemOhhaeng: OhHaeng[], month: number): number {
-  const seasonalStrength = SEASONAL_OHHAENG_STRENGTH[month] || {};
+  const seasonalStrength = (SEASONAL_OHHAENG_STRENGTH as any)[month] || {};
   let bonus = 0;
   
   itemOhhaeng.forEach(oh => {
@@ -445,7 +445,7 @@ function calculateSeasonalBonus(itemOhhaeng: OhHaeng[], month: number): number {
 
 // 시간 보정 계산
 function calculateHourlyBonus(itemOhhaeng: OhHaeng[], hour: number): number {
-  const hourlyStrength = HOURLY_OHHAENG_STRENGTH[hour] || {};
+  const hourlyStrength = (HOURLY_OHHAENG_STRENGTH as any)[hour] || {};
   let bonus = 0;
   
   itemOhhaeng.forEach(oh => {
@@ -460,12 +460,12 @@ function calculateHourlyBonus(itemOhhaeng: OhHaeng[], hour: number): number {
 export function calculateTimeBasedScore(
   itemName: string,
   sajuData: SajuData,
-  timeFrame: 'base' | 'today' | 'month' | 'year',
+  timeFrame: 'today' | 'month' | 'year',
   targetDate?: Date,
 ): number {
   const baseScore = calculateSajuScore(itemName, sajuData);
   
-  if (timeFrame === 'base') return baseScore;
+  // 기본 점수에서 시작
   
   // 현재 날짜/시간 정보 (타겟 날짜가 있으면 해당 날짜 사용)
   const now = targetDate || new Date();
@@ -487,10 +487,6 @@ export function calculateTimeBasedScore(
   
   // 2. 시간대별 천간지지 계산
   switch (timeFrame) {
-    case 'base':
-      // 기본 점수는 사주 기반 점수 계산 함수 사용
-      return calculateSajuScore(itemName, sajuData);
-      
     case 'today':
       // 오늘의 일진
       currentGan = CHEONGAN[Math.abs((currentDay - 1) % 10)];

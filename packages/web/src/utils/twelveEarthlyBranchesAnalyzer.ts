@@ -37,7 +37,7 @@ export class TwelveEarthlyBranchesAnalyzer {
     };
     
     // 생년지지, 월지, 일지, 시지에 따라 가중치 부여
-    const yearBranch = this.getYearBranch(sajuData.birthDate.year);
+    const yearBranch = this.getYearBranch(sajuData.birthInfo.year);
     if (yearBranch) {
       branches[yearBranch] += 30;
     }

@@ -6,6 +6,7 @@ export interface SajuBirthInfo {
   hour: number;
   minute: number;
   isLunar: boolean;
+  isLeapMonth?: boolean; // 윤달 여부 (음력일 때만 사용)
   name?: string;
   gender?: 'male' | 'female';
 }

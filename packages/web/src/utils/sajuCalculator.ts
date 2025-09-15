@@ -93,7 +93,7 @@ export class SajuCalculator {
    * 절기 기준 월 계산 (간단한 근사값)
    * 실제로는 정확한 절입 시간을 확인해야 하지만, 근사적으로 계산
    */
-  private static getSolarMonth(year: number, month: number, day: number): number {
+  private static getSolarMonth(_year: number, month: number, day: number): number {
     // 절기월 근사 계산 (양력 기준)
     // 인월(1): 2/4~3/5, 묘월(2): 3/6~4/4, 진월(3): 4/5~5/5
     // 사월(4): 5/6~6/5, 오월(5): 6/6~7/6, 미월(6): 7/7~8/7
@@ -262,7 +262,7 @@ export class SajuCalculator {
     // 음력 변환 처리
     if (birthInfo.isLunar) {
       try {
-        const solarDate = lunarToSolar(year, month, day, birthInfo.isLeapMonth);
+        const solarDate = lunarToSolar(year, month, day, birthInfo.isLeapMonth || false);
         year = solarDate.getFullYear();
         month = solarDate.getMonth() + 1; // 0-indexed를 1-indexed로 변환
         day = solarDate.getDate();

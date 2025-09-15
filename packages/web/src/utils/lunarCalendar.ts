@@ -22,8 +22,8 @@ export const solarToLunar = (date: Date): LunarDate => {
       date.getDate(),
     );
     
-    // getLunarCalendar() 메서드로 음력 정보 가져오기
-    const lunarData = calendar.getLunarCalendar();
+    // getLunarYear() 메서드로 음력 정보 가져오기
+    const lunarData = calendar.getLunarYear();
     
     return {
       year: lunarData.year || date.getFullYear(),
@@ -56,8 +56,8 @@ export const lunarToSolar = (year: number, month: number, day: number, isLeapMon
     
     calendar.setLunarDate(year, month, day, isLeapMonth);
     
-    // getSolarCalendar() 메서드로 양력 정보 가져오기
-    const solarData = calendar.getSolarCalendar();
+    // getSolarYear() 메서드로 양력 정보 가져오기
+    const solarData = calendar.getSolarYear();
     
     return new Date(
       solarData.year || year,

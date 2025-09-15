@@ -4,6 +4,9 @@ import { Todo } from '@/types/todo';
 import { CalendarEvent } from '@/services/api';
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, format } from 'date-fns';
 
+// Todo 타입을 다시 export 하여 다른 컴포넌트에서 사용할 수 있도록 함
+export type { Todo };
+
 interface CalendarContextType {
   currentDate: Date
   viewMode: ViewMode

@@ -159,7 +159,7 @@ export default function DayView({
                       onClick={(e) => {
                         e.stopPropagation();
                         if (confirm(`"${event.title}" 일정을 삭제하시겠습니까?`)) {
-                          onDeleteEvent(event.id);
+                          onDeleteEvent(event.id!);
                         }
                       }}
                       className="opacity-0 group-hover:opacity-100 ml-2 hover:text-red-200 transition-opacity"
@@ -256,7 +256,7 @@ export default function DayView({
                           onClick={(e) => {
                             e.stopPropagation();
                             if (confirm(`"${event.title}" 일정을 삭제하시겠습니까?`)) {
-                              onDeleteEvent(event.id);
+                              onDeleteEvent(event.id!);
                             }
                           }}
                           className="opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-2 text-lg"

@@ -51,8 +51,8 @@ const ReferralSection: React.FC<ReferralSectionProps> = ({
 
   // 통계 토글 및 로드
   const handleToggleStats = async () => {
-    if (!showStats && (!referralStats || Object.keys(referralStats).length === 0)) {
-      await loadReferralStats();
+    if (!showStats && (!referralStats || Object.keys(referralStats).length === 0) && user?.id) {
+      await loadReferralStats(user.id);
     }
     setShowStats(!showStats);
   };
@@ -268,7 +268,7 @@ const ReferralSection: React.FC<ReferralSectionProps> = ({
                 <div>
                   <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-3">추천한 친구들</h4>
                   <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {referralStats.referredUsers.map((user) => (
+                    {referralStats.referredUsers.map((user: any) => (
                       <div
                         key={user.id}
                         className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
@@ -317,7 +317,7 @@ const ReferralSection: React.FC<ReferralSectionProps> = ({
             <div className="text-center py-8">
               <p className="text-gray-600 dark:text-gray-400 mb-3">실적 정보를 불러올 수 없습니다.</p>
               <button
-                onClick={loadReferralStats}
+                onClick={() => user?.id && loadReferralStats(user.id)}
                 className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
               >
                 다시 시도
