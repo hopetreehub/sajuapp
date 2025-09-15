@@ -4,7 +4,6 @@ import { format, isSameDay, getHours, getMinutes } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { CalendarEvent } from '@/services/api';
 import DiaryBookModal from '@/components/DiaryBookModal';
-import { useDiaryData } from '@/hooks/useDiaryData';
 import TodayFortuneSection from '@/components/TodayFortuneSection';
 import EditTodoModal from '@/components/EditTodoModal';
 import { Todo } from '@/contexts/CalendarContext';
