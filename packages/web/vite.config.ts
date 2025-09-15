@@ -13,18 +13,29 @@ export default defineConfig(({ mode }) => {
       host: true,
       strictPort: true, // 포트 4000번 절대 강제 - CLAUDE.md 정책 준수
       proxy: {
-        // 모든 API 요청을 내장된 API Gateway로 프록시 (포트 4000 정책)
-        '/api': {
-          target: 'http://localhost:5000', // API Gateway 내부 포트
+        // 캘린더 서비스 (고객 관리 포함)
+        '/api/calendar': {
+          target: 'http://localhost:4012',
           changeOrigin: true,
           secure: false,
-          ws: true, // WebSocket 지원
-          configure: (proxy, _options) => {
-            // 프록시 에러 처리 개선
-            proxy.on('error', (err, _req, _res) => {
-              console.error('Proxy error:', err);
-            },);
-          },
+        },
+        // 사주 분석 서비스
+        '/api/saju': {
+          target: 'http://localhost:4015',
+          changeOrigin: true,
+          secure: false,
+        },
+        // 인생 운세 차트 서비스
+        '/api/lifetime-fortune': {
+          target: 'http://localhost:4015',
+          changeOrigin: true,
+          secure: false,
+        },
+        // 일기 서비스
+        '/api/diaries': {
+          target: 'http://localhost:4004',
+          changeOrigin: true,
+          secure: false,
         },
       },
     },

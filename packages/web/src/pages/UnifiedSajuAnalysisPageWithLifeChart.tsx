@@ -1,13 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
-import { SAJU_RADAR_CATEGORIES, setGlobalSajuData, loadDynamicSajuCategories } from '@/data/sajuRadarData';
-import { SajuRadarData } from '@/types/sajuRadar';
+import { SAJU_RADAR_CATEGORIES, setGlobalSajuData, loadDynamicSajuCategories, getSajuRadarCategories } from '@/data/sajuRadarData';
+import { SajuRadarData, SajuRadarCategory } from '@/types/sajuRadar';
 import SajuCategoryNavigation from '@/components/saju/SajuCategoryNavigation';
 import SajuSubcategoryTabs from '@/components/saju/SajuSubcategoryTabs';
 import UnifiedSajuRadarChart from '@/components/saju/charts/UnifiedSajuRadarChart';
 import CustomerSelector from '@/components/saju/CustomerSelector';
 import { Customer, getCustomerById } from '@/services/customerApi';
 import LifeChartButton from '@/components/saju/LifeChartButton';
-import HundredYearChart from '@/components/Charts/HundredYearChartFixed';
+import HundredYearChart from '@/components/charts/HundredYearChartFixed';
 import { fetchLifetimeFortune, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
 import { convertCustomerToLifetimeRequest, getCacheKey } from '@/utils/customerDataConverter';
 
@@ -21,6 +21,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
   const [lifetimeFortune, setLifetimeFortune] = useState<LifetimeFortuneResponse | null>(null);
   const [lifeChartLoading, setLifeChartLoading] = useState(false);
   const [lifeChartError, setLifeChartError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<SajuRadarCategory[]>(SAJU_RADAR_CATEGORIES);
 
   // 정확한 나이 계산 함수
   const calculateCurrentAge = (birthDate: string): number => {
@@ -37,7 +38,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
     return age + 1; // 한국 나이 계산 (태어나면 1살)
   };
 
-  const currentCategory = SAJU_RADAR_CATEGORIES.find(cat => cat.id === selectedCategory);
+  const currentCategory = categories.find(cat => cat.id === selectedCategory);
 
   // 카테고리 변경 시 첫 번째 중항목 자동 선택
   useEffect(() => {
@@ -63,6 +64,9 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
         setIsLoadingCategories(true);
         try {
           await loadDynamicSajuCategories();
+          // 업데이트된 카테고리 가져오기
+          const updatedCategories = getSajuRadarCategories();
+          setCategories([...updatedCategories]); // 새 배열로 상태 업데이트
           setCategoriesLoaded(true);
         } catch (error) {
           console.error('카테고리 로드 실패:', error);
@@ -228,7 +232,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
 
         {/* 대항목 네비게이션 */}
         <SajuCategoryNavigation
-          categories={SAJU_RADAR_CATEGORIES}
+          categories={categories}
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
         />
@@ -294,13 +298,13 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
           </div>
           <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl p-4 text-center">
             <div className="text-2xl font-bold">
-              {SAJU_RADAR_CATEGORIES.reduce((sum, cat) => sum + cat.subcategories.length, 0)}
+              {categories.reduce((sum, cat) => sum + cat.subcategories.length, 0)}
             </div>
             <div className="text-sm">중항목</div>
           </div>
           <div className="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl p-4 text-center">
             <div className="text-2xl font-bold">
-              {SAJU_RADAR_CATEGORIES.reduce((sum, cat) => 
+              {categories.reduce((sum, cat) => 
                 sum + cat.subcategories.reduce((subSum, sub) => subSum + sub.items.length, 0), 0,
               )}
             </div>
