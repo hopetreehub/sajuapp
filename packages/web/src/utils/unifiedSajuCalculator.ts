@@ -473,7 +473,7 @@ export function validateSaju(result: SajuCalculationResult): boolean {
   // 모든 기둥이 60갑자에 포함되는지 확인
   const pillars = [fourPillars.year, fourPillars.month, fourPillars.day, fourPillars.hour];
   for (const pillar of pillars) {
-    if (!SIXTY_CYCLE.includes(pillar as any)) {
+    if (!SIXTY_CYCLE.includes(pillar as string)) {
       console.error(`Invalid pillar: ${pillar}`);
       return false;
     }
@@ -484,12 +484,12 @@ export function validateSaju(result: SajuCalculationResult): boolean {
     const stem = pillar[0];
     const branch = pillar[1];
     
-    if (!HEAVENLY_STEMS.includes(stem as any)) {
+    if (!HEAVENLY_STEMS.includes(stem as string)) {
       console.error(`Invalid stem: ${stem}`);
       return false;
     }
     
-    if (!EARTHLY_BRANCHES.includes(branch as any)) {
+    if (!EARTHLY_BRANCHES.includes(branch as string)) {
       console.error(`Invalid branch: ${branch}`);
       return false;
     }
@@ -502,7 +502,6 @@ export function validateSaju(result: SajuCalculationResult): boolean {
  * 테스트 케이스 실행
  */
 export function runTestCases(): void {
-  console.log('=== 통합 사주 계산 시스템 테스트 ===\n');
   
   const testCases = [
     {
@@ -541,20 +540,10 @@ export function runTestCases(): void {
   ];
   
   for (const testCase of testCases) {
-    console.log(`\n테스트: ${testCase.name}`);
-    console.log(`입력: ${JSON.stringify(testCase.birthInfo)}`);
     
     const result = calculateSaju(testCase.birthInfo);
     const isValid = validateSaju(result);
     
-    console.log('결과:');
-    console.log(`  년주: ${result.fourPillars.year} (${result.elements.year.heavenly}${result.elements.year.earthly})`);
-    console.log(`  월주: ${result.fourPillars.month} (${result.elements.month.heavenly}${result.elements.month.earthly})`);
-    console.log(`  일주: ${result.fourPillars.day} (${result.elements.day.heavenly}${result.elements.day.earthly})`);
-    console.log(`  시주: ${result.fourPillars.hour} (${result.elements.hour.heavenly}${result.elements.hour.earthly})`);
-    console.log(`  절기월: ${result.solarMonth}월`);
-    console.log(`  서머타임: ${result.summerTimeApplied ? '적용' : '미적용'}`);
-    console.log(`  검증: ${isValid ? '✅ 통과' : '❌ 실패'}`);
   }
 }
 

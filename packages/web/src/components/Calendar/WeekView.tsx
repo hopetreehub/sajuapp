@@ -26,7 +26,7 @@ interface WeekViewProps {
   onDateClick?: (date: Date, event: React.MouseEvent) => void
   onEditEvent: (event: CalendarEvent) => void
   onDeleteEvent?: (eventId: string) => void
-  highlightedEventId?: string | null
+  _highlightedEventId?: string | null
   onDiaryClick?: (date: Date) => void
 }
 

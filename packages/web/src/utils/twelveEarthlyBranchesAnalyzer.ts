@@ -132,7 +132,7 @@ export class TwelveEarthlyBranchesAnalyzer {
     recommendations: string[]
   } {
     const info1 = EARTHLY_BRANCHES_INFO[branch1];
-    const info2 = EARTHLY_BRANCHES_INFO[branch2];
+    // info2 변수 제거됨
     
     // 합(合) 관계 체크
     if (info1.compatibility.includes(branch2)) {
@@ -266,7 +266,7 @@ export class TwelveEarthlyBranchesAnalyzer {
   private static generateRecommendations(
     data: TwelveEarthlyBranchesData,
     dominant: EarthlyBranchType[],
-    missing: EarthlyBranchType[],
+    _missing: EarthlyBranchType[],
   ): BranchRecommendations {
     const colors: BranchRecommendations['colors'] = [];
     const directions: BranchRecommendations['directions'] = [];

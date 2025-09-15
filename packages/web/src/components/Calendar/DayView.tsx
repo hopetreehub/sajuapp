@@ -24,18 +24,17 @@ export default function DayView({
   onEditEvent,
   onDeleteEvent,
 }: DayViewProps) {
-  const { currentDate, todos, getTodosForDate, deleteTodo, toggleTodo } = useCalendar();
+  const { currentDate, getTodosForDate, deleteTodo, toggleTodo } = useCalendar();
   const [isDiaryOpen, setIsDiaryOpen] = useState(false);
-  const { diaryDates } = useDiaryData({ viewMode: 'day', currentDate });
+  // const { diaryDates } = useDiaryData({ viewMode: 'day', currentDate });
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   
   // 현재 날짜에 일기가 있는지 확인
-  const hasCurrentDateDiary = diaryDates.has(format(currentDate, 'yyyy-MM-dd'));
 
   // 현재 날짜의 할일 가져오기
   const dayTodos = useMemo(() => {
     return getTodosForDate(currentDate);
-  }, [todos, currentDate, getTodosForDate]);
+  }, [currentDate, getTodosForDate]);
 
   // 우선순위별 아이콘 가져오기
   const getPriorityIcon = (priority: string) => {

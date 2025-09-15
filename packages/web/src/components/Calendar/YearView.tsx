@@ -22,8 +22,8 @@ const WEEKDAYS_SHORT = ['일', '월', '화', '수', '목', '금', '토'];
 
 interface YearViewProps {
   events: CalendarEvent[]
-  onCreateEvent: (date: Date) => void
-  onEditEvent: (event: CalendarEvent) => void
+  _onCreateEvent: (date: Date) => void
+  _onEditEvent: (event: CalendarEvent) => void
 }
 
 export default function YearView({ events, onCreateEvent, onEditEvent }: YearViewProps) {

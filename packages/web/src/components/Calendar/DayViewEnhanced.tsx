@@ -1,7 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useCalendar } from '@/contexts/CalendarContext';
 import { format, isSameDay } from 'date-fns';
-import { ko } from 'date-fns/locale';
 import { CalendarEvent } from '@/services/api';
 import TodayFortuneWidget from '@/components/Fortune/TodayFortuneWidget';
 import DiaryBookModal from '@/components/DiaryBookModal';
@@ -12,16 +11,16 @@ import { getPersonalInfoFromStorage, convertPersonalInfoToSaju, isPersonalInfoVa
 interface DayViewEnhancedProps {
   events: CalendarEvent[]
   onCreateEvent: (date: Date) => void
-  onDateClick?: (date: Date, event: React.MouseEvent) => void
+  
   onEditEvent: (event: CalendarEvent) => void
-  highlightedEventId?: string | null
+  
 }
 
-export default function DayViewEnhanced({ events, onCreateEvent, onDateClick, onEditEvent, highlightedEventId }: DayViewEnhancedProps) {
-  const { currentDate, getTodosForDate, addTodo, updateTodo, deleteTodo, toggleTodo } = useCalendar();
+export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: DayViewEnhancedProps) {
+  const { currentDate, getTodosForDate, addTodo, deleteTodo, toggleTodo } = useCalendar();
   const [newTodo, setNewTodo] = useState('');
   const [isDiaryModalOpen, setIsDiaryModalOpen] = useState(false);
-  const [diaryEntry, setDiaryEntry] = useState<any>(null);
+  const [diaryEntry, setDiaryEntry] = useState<Record<string, any> | null>(null);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [customerSajuData, setCustomerSajuData] = useState<SajuData | null>(null);
   const [personalSajuData, setPersonalSajuData] = useState<SajuData | null>(null);
@@ -56,7 +55,6 @@ export default function DayViewEnhanced({ events, onCreateEvent, onDateClick, on
       if (sajuData) {
         setPersonalSajuData(sajuData);
         setDataSource('personal');
-        console.log('설정 페이지 사주 데이터 로드:', sajuData);
       }
     }
   };
@@ -104,7 +102,6 @@ export default function DayViewEnhanced({ events, onCreateEvent, onDateClick, on
   const handleDiarySave = (entry: any) => {
     setDiaryEntry(entry);
     // 실제로는 여기서 API 호출하여 저장
-    console.log('Saving diary entry:', entry);
   };
 
   const hasDiaryEntry = !!diaryEntry;

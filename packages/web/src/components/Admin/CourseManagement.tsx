@@ -6,10 +6,8 @@ import {
   EyeIcon,
   PlusIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
   StarIcon,
   UserGroupIcon,
-  CalendarIcon,
 } from '@heroicons/react/24/outline';
 
 interface Course {
@@ -27,10 +25,10 @@ interface Course {
 
 interface CourseManagementProps {
   courses: Course[]
-  onRefresh: () => void
+  
 }
 
-export default function CourseManagement({ courses, onRefresh }: CourseManagementProps) {
+export default function CourseManagement({ courses }: CourseManagementProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');
