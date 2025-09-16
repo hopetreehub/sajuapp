@@ -46,6 +46,13 @@ export default function CustomerAddModal({
     text: string;
   } | null>(null);
 
+  // 모달 닫기
+  const handleClose = useCallback(() => {
+    if (isSubmitting) return; // 제출 중에는 닫기 방지
+    resetForm();
+    onClose();
+  }, [isSubmitting, onClose]);
+
   // 모달이 열릴 때마다 폼 초기화
   useEffect(() => {
     if (isOpen) {
@@ -202,13 +209,6 @@ export default function CustomerAddModal({
       setIsSubmitting(false);
     }
   };
-
-  // 모달 닫기
-  const handleClose = useCallback(() => {
-    if (isSubmitting) return; // 제출 중에는 닫기 방지
-    resetForm();
-    onClose();
-  }, [isSubmitting, onClose]);
 
   // 모달 배경 클릭 시 닫기
   const handleBackdropClick = (e: React.MouseEvent) => {
