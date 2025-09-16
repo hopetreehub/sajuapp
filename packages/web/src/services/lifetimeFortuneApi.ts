@@ -2,7 +2,9 @@
  * 100년 인생운세 API 서비스
  */
 
-const API_BASE_URL = 'http://localhost:4015';
+// 임시로 프론트엔드 프록시를 사용하지 않고 직접 호출
+// 실제 서비스가 구현되면 프록시를 통해 호출하도록 변경 필요
+const API_BASE_URL = '';
 
 export interface YearlyFortune {
   year: number
@@ -63,32 +65,68 @@ export interface LifetimeFortuneRequest {
 export async function fetchLifetimeFortune(request: LifetimeFortuneRequest): Promise<LifetimeFortuneResponse> {
   try {
     console.log('🎯 100년 인생운세 API 호출:', request);
-    
-    const response = await fetch(`${API_BASE_URL}/api/saju/lifetime-fortune`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(request),
-    });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    // 임시로 모의 데이터를 반환 (실제 API가 구현되면 교체)
+    // 실제 API 엔드포인트가 없으므로 클라이언트 사이드에서 계산
+    const mockData = generateMockLifetimeFortune(request);
 
-    const data = await response.json();
-    
-    if (!data.success) {
-      throw new Error(data.error || '100년 인생운세 계산 실패');
-    }
-
-    console.log('✅ 100년 인생운세 데이터 수신 완료');
-    return data;
+    console.log('✅ 100년 인생운세 데이터 생성 완료 (임시)');
+    return mockData;
 
   } catch (error) {
     console.error('❌ 100년 인생운세 API 오류:', error);
     throw error;
   }
+}
+
+// 임시 모의 데이터 생성 함수
+function generateMockLifetimeFortune(request: LifetimeFortuneRequest): LifetimeFortuneResponse {
+  const currentYear = new Date().getFullYear();
+  const birthYear = request.year;
+  const lifetimeFortune: YearlyFortune[] = [];
+
+  // 0세부터 100세까지의 운세 데이터 생성
+  for (let age = 0; age <= 100; age++) {
+    const year = birthYear + age;
+
+    // 간단한 사인파 패턴으로 운세 변화 시뮬레이션
+    const baseScore = 50 + 30 * Math.sin((age / 12) * Math.PI);
+
+    lifetimeFortune.push({
+      year,
+      age,
+      totalScore: Math.round(baseScore),
+      fortune: Math.round(baseScore + Math.random() * 20 - 10),
+      willpower: Math.round(baseScore + Math.random() * 20 - 10),
+      environment: Math.round(baseScore + Math.random() * 20 - 10),
+      change: Math.round(baseScore + Math.random() * 20 - 10),
+      대운: {
+        천간: ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'][Math.floor(age / 10) % 10],
+        지지: ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'][Math.floor(age / 10) % 12],
+        오행: ['목', '화', '토', '금', '수'][Math.floor(age / 10) % 5],
+        score: Math.round(baseScore),
+      },
+      세운: {
+        천간: ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'][year % 10],
+        지지: ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'][year % 12],
+        오행: ['목', '화', '토', '금', '수'][year % 5],
+        score: Math.round(50 + Math.random() * 50),
+      },
+      description: `${age}세 운세`,
+    });
+  }
+
+  return {
+    success: true,
+    data: {
+      lifetimeFortune,
+      summary: {
+        bestYears: [25, 35, 45, 55, 65],
+        worstYears: [20, 30, 40, 50, 60],
+        currentYearRank: 50,
+      },
+    },
+  };
 }
 
 /**
