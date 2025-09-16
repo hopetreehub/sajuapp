@@ -111,10 +111,36 @@ const LifeChartButton: React.FC<LifeChartButtonProps> = ({
   
   // 차트 로드 완료
   if (isChartLoaded) {
-    const analysis = lifetimeFortune.data.analysis;
-    
+    // 분석 데이터 추출 (analysis가 없을 경우 대체 계산)
+    const hasAnalysis = lifetimeFortune?.data?.analysis;
+    const hasLifetimeFortune = lifetimeFortune?.data?.lifetimeFortune;
+
+    // 최고점/평균 계산
+    let bestYear = { age: 0, score: 0 };
+    let averageScore = 0;
+
+    if (hasAnalysis) {
+      // analysis 객체가 있는 경우
+      const analysis = lifetimeFortune.data.analysis;
+      bestYear = analysis.bestYear;
+      averageScore = analysis.averageScore;
+    } else if (hasLifetimeFortune) {
+      // lifetimeFortune 데이터에서 직접 계산
+      const fortunes = lifetimeFortune.data.lifetimeFortune;
+      if (fortunes && fortunes.length > 0) {
+        // 최고점 찾기
+        const maxFortune = fortunes.reduce((max, current) =>
+          current.totalScore > max.totalScore ? current : max, fortunes[0]);
+        bestYear = { age: maxFortune.age, score: maxFortune.totalScore };
+
+        // 평균 계산
+        const sum = fortunes.reduce((acc, f) => acc + f.totalScore, 0);
+        averageScore = sum / fortunes.length;
+      }
+    }
+
     return (
-      <div 
+      <div
         className="bg-gradient-to-r from-green-500 to-blue-500 rounded-xl p-6 text-white shadow-lg cursor-pointer hover:shadow-xl transition-all transform hover:scale-[1.02]"
         onClick={handleClick}
       >
@@ -127,10 +153,10 @@ const LifeChartButton: React.FC<LifeChartButtonProps> = ({
                 <p className="text-sm opacity-90 mt-1">{birthDateString}</p>
                 <div className="flex gap-4 mt-3 text-xs">
                   <span className="bg-white/20 px-2 py-1 rounded">
-                    최고운세: {analysis.bestYear.age}세 ({analysis.bestYear.score}점)
+                    최고운세: {bestYear.age}세 ({bestYear.score}점)
                   </span>
                   <span className="bg-white/20 px-2 py-1 rounded">
-                    평균: {analysis.averageScore.toFixed(1)}점
+                    평균: {averageScore.toFixed(1)}점
                   </span>
                 </div>
               </div>
