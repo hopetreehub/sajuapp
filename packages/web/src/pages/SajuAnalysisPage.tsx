@@ -44,7 +44,9 @@ const SajuAnalysisPage: React.FC = () => {
       setBirthInfo(sajuBirthInfo);
       setShowCustomerPanel(false);
       analyzeSaju(sajuBirthInfo);
-      loadUniversalChart(customer.id);
+      if (customer.id) {
+        loadUniversalChart(customer.id);
+      }
       // console.log('고객 선택됨:', customer.name, sajuBirthInfo);
     } else {
       setBirthInfo(null);
@@ -58,16 +60,20 @@ const SajuAnalysisPage: React.FC = () => {
 
   // 인생차트 로드 함수
   const loadUniversalChart = async (customerId: number) => {
+    console.log('📊 인생차트 로드 시작:', customerId);
     try {
       // 캐시된 차트 확인
       const cached = getCachedChart(customerId);
       if (cached) {
+        console.log('✅ 캐시된 차트 사용');
         setUniversalChart(cached);
         return;
       }
 
       // 새 차트 생성
+      console.log('🔄 새 차트 생성 중...');
       const chartData = await generateUniversalLifeChart(customerId);
+      console.log('✅ 차트 생성 완료:', chartData);
       setUniversalChart(chartData);
       setCachedChart(customerId, chartData);
     } catch (error) {

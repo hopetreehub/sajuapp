@@ -11,7 +11,7 @@ import {
 } from '@/types/universalLifeChart';
 
 import { UniversalSajuEngine } from '@/utils/universalSajuEngine';
-import { getCustomer } from '@/services/customerApi';
+import { getCustomerById } from '@/services/customerApi';
 
 /**
  * 고객 ID로부터 인생차트 생성
@@ -21,16 +21,25 @@ export const generateUniversalLifeChart = async (
   options: Partial<LifeChartRequest> = {}
 ): Promise<UniversalLifeChartData> => {
   try {
+    console.log('🔍 고객 정보 조회 중...', customerId);
     // 1. 고객 정보 조회
-    const customer = await getCustomer(customerId);
-    if (!customer) {
+    const response = await getCustomerById(customerId);
+    console.log('📋 API 응답:', response);
+
+    if (!response.success || !response.data) {
       throw new Error('고객 정보를 찾을 수 없습니다');
     }
+    const customer = response.data;
+    console.log('👤 고객 정보:', customer);
 
     // 2. 사주 데이터 파싱
     let sajuData: SajuComponents;
     try {
-      const parsedSaju = JSON.parse(customer.saju_data);
+      // saju_data가 문자열인지 객체인지 체크
+      const parsedSaju = typeof customer.saju_data === 'string'
+        ? JSON.parse(customer.saju_data)
+        : customer.saju_data;
+
       sajuData = {
         year: { gan: parsedSaju.year.gan, ji: parsedSaju.year.ji },
         month: { gan: parsedSaju.month.gan, ji: parsedSaju.month.ji },
@@ -38,15 +47,20 @@ export const generateUniversalLifeChart = async (
         time: { gan: parsedSaju.time.gan, ji: parsedSaju.time.ji },
       };
     } catch (error) {
+      console.error('사주 데이터 파싱 오류:', error, customer.saju_data);
       throw new Error('사주 데이터 파싱에 실패했습니다');
     }
 
     // 3. 개인 정보 구성
+    const parsedSajuForText = typeof customer.saju_data === 'string'
+      ? JSON.parse(customer.saju_data)
+      : customer.saju_data;
+
     const personalInfo: PersonalInfo = {
       name: customer.name,
       birthDate: customer.birth_date,
       birthTime: customer.birth_time,
-      sajuText: JSON.parse(customer.saju_data).fullSaju || `${sajuData.year.gan}${sajuData.year.ji} ${sajuData.month.gan}${sajuData.month.ji} ${sajuData.day.gan}${sajuData.day.ji} ${sajuData.time.gan}${sajuData.time.ji}`,
+      sajuText: parsedSajuForText.fullSaju || `${sajuData.year.gan}${sajuData.year.ji} ${sajuData.month.gan}${sajuData.month.ji} ${sajuData.day.gan}${sajuData.day.ji} ${sajuData.time.gan}${sajuData.time.ji}`,
       gender: customer.gender as 'male' | 'female',
       lunarSolar: customer.lunar_solar as 'lunar' | 'solar',
     };
