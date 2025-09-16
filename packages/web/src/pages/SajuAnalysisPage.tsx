@@ -7,6 +7,7 @@ import { TenGodsDistributionChart } from '@/components/saju/charts/TenGodsDistri
 import HundredYearChart from '@/components/Charts/HundredYearChart';
 import ChartNavigation from '@/components/Common/ChartNavigation';
 import CustomerSelector from '@/components/saju/CustomerSelector';
+import UniversalLifeChart from '@/components/charts/UniversalLifeChart';
 import { SajuBirthInfo, SajuAnalysisResult, SajuData } from '@/types/saju';
 import { Customer } from '@/services/customerApi';
 import { customerToSajuBirthInfo, formatCustomerBirthDate } from '@/utils/customerConverter';
@@ -14,6 +15,8 @@ import { SajuCalculator, formatFourPillarsDetailed, FourPillarsResult } from '@/
 import { calculateSajuData } from '@/utils/sajuDataCalculator';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 import { fetchLifetimeFortune, calculateCurrentAge, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
+import { generateUniversalLifeChart, getCachedChart, setCachedChart } from '@/services/universalLifeChartApi';
+import { UniversalLifeChartData } from '@/types/universalLifeChart';
 
 const SajuAnalysisPage: React.FC = () => {
   const navigate = useNavigate();
@@ -22,8 +25,10 @@ const SajuAnalysisPage: React.FC = () => {
   const [analysisResult, setAnalysisResult] = useState<SajuAnalysisResult | null>(null);
   const [fourPillars, setFourPillars] = useState<FourPillarsResult | null>(null);
   const [lifetimeFortune, setLifetimeFortune] = useState<LifetimeFortuneResponse | null>(null);
+  const [universalChart, setUniversalChart] = useState<UniversalLifeChartData | null>(null);
   const [loading, setLoading] = useState(false);
   const [showCustomerPanel, setShowCustomerPanel] = useState(true);
+  const [activeTab, setActiveTab] = useState<'analysis' | 'chart' | 'hundred-year'>('analysis');
 
   // 초기 로드 (고객 선택 패널 표시)
   useEffect(() => {
@@ -39,13 +44,35 @@ const SajuAnalysisPage: React.FC = () => {
       setBirthInfo(sajuBirthInfo);
       setShowCustomerPanel(false);
       analyzeSaju(sajuBirthInfo);
+      loadUniversalChart(customer.id);
       // console.log('고객 선택됨:', customer.name, sajuBirthInfo);
     } else {
       setBirthInfo(null);
       setAnalysisResult(null);
       setFourPillars(null);
       setLifetimeFortune(null);
+      setUniversalChart(null);
       setShowCustomerPanel(true);
+    }
+  };
+
+  // 인생차트 로드 함수
+  const loadUniversalChart = async (customerId: number) => {
+    try {
+      // 캐시된 차트 확인
+      const cached = getCachedChart(customerId);
+      if (cached) {
+        setUniversalChart(cached);
+        return;
+      }
+
+      // 새 차트 생성
+      const chartData = await generateUniversalLifeChart(customerId);
+      setUniversalChart(chartData);
+      setCachedChart(customerId, chartData);
+    } catch (error) {
+      console.error('❌ 인생차트 로드 실패:', error);
+      setUniversalChart(null);
     }
   };
 
@@ -347,34 +374,116 @@ const SajuAnalysisPage: React.FC = () => {
               </div>
             ) : analysisResult ? (
               <div className="space-y-8">
-                {/* 100년 인생운세 차트 - 최상단 배치 */}
-                {lifetimeFortune && (
-                  <div className="mb-12">
-                    <HundredYearChart
-                      data={lifetimeFortune.data.lifetimeFortune}
-                      currentAge={birthInfo ? calculateCurrentAge(birthInfo.year) : undefined}
-                    />
+                {/* 탭 네비게이션 */}
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600">
+                  <div className="border-b border-gray-200 dark:border-gray-600">
+                    <nav className="flex space-x-1" aria-label="Tabs">
+                      <button
+                        onClick={() => setActiveTab('analysis')}
+                        className={`py-3 px-6 text-sm font-medium rounded-t-lg transition-colors ${
+                          activeTab === 'analysis'
+                            ? 'bg-blue-500 text-white border-b-2 border-blue-500'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        }`}
+                      >
+                        📊 기본 분석
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('chart')}
+                        className={`py-3 px-6 text-sm font-medium rounded-t-lg transition-colors ${
+                          activeTab === 'chart'
+                            ? 'bg-blue-500 text-white border-b-2 border-blue-500'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        }`}
+                      >
+                        📈 인생차트
+                      </button>
+                      <button
+                        onClick={() => setActiveTab('hundred-year')}
+                        className={`py-3 px-6 text-sm font-medium rounded-t-lg transition-colors ${
+                          activeTab === 'hundred-year'
+                            ? 'bg-blue-500 text-white border-b-2 border-blue-500'
+                            : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
+                        }`}
+                      >
+                        🍀 100년 운세
+                      </button>
+                    </nav>
                   </div>
-                )}
 
-                {/* 오행균형도 */}
-                <FiveElementsBalanceChart
-                  sajuData={convertToSajuData(analysisResult)}
-                  height={400}
-                  showLegend={true}
-                  showTooltips={true}
-                />
+                  {/* 탭 컨텐츠 */}
+                  <div className="p-6">
+                    {activeTab === 'analysis' && (
+                      <div className="space-y-8">
+                        {/* 오행균형도 */}
+                        <FiveElementsBalanceChart
+                          sajuData={convertToSajuData(analysisResult)}
+                          height={400}
+                          showLegend={true}
+                          showTooltips={true}
+                        />
 
-                {/* 십성분포도 */}
-                <TenGodsDistributionChart
-                  sajuData={convertToSajuData(analysisResult)}
-                  height={400}
-                  chartType="bar"
-                  showCategory={false}
-                />
+                        {/* 십성분포도 */}
+                        <TenGodsDistributionChart
+                          sajuData={convertToSajuData(analysisResult)}
+                          height={400}
+                          chartType="bar"
+                          showCategory={false}
+                        />
 
-                {/* 차트 네비게이션 */}
-                <ChartNavigation showCenter={false} />
+                        {/* 차트 네비게이션 */}
+                        <ChartNavigation showCenter={false} />
+                      </div>
+                    )}
+
+                    {activeTab === 'chart' && (
+                      <div>
+                        {universalChart ? (
+                          <UniversalLifeChart
+                            data={universalChart}
+                            height={500}
+                            showControls={true}
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-96">
+                            <div className="text-center">
+                              <div className="text-4xl mb-4">📈</div>
+                              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+                                인생차트 생성 중...
+                              </h3>
+                              <p className="text-gray-600 dark:text-gray-400">
+                                개인 맞춤형 95년 인생차트를 생성하고 있습니다
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {activeTab === 'hundred-year' && (
+                      <div>
+                        {lifetimeFortune ? (
+                          <HundredYearChart
+                            data={lifetimeFortune.data.lifetimeFortune}
+                            currentAge={birthInfo ? calculateCurrentAge(birthInfo.year) : undefined}
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-96">
+                            <div className="text-center">
+                              <div className="text-4xl mb-4">🍀</div>
+                              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+                                100년 운세 계산 중...
+                              </h3>
+                              <p className="text-gray-600 dark:text-gray-400">
+                                평생 운세 패턴을 분석하고 있습니다
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             ) : (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12">
