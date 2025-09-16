@@ -3,6 +3,7 @@ import { format, addDays, subDays } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { diaryService, DiaryEntry } from '@/services/api';
 import { generateDiaryAdvice, getCategoryIcon, getCategoryColor } from '@/utils/diaryAdvice';
+import Modal from './Modal';
 
 interface DiaryModalProps {
   isOpen: boolean

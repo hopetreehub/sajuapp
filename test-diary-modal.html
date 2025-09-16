@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diary Modal Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-button {
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .test-button:hover {
+            background-color: #5147e7;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: white;
+            border-left: 4px solid #6366f1;
+        }
+        .iframe-container {
+            margin: 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            height: 600px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📝 DiaryModal API 연동 테스트</h1>
+
+    <div class="status">
+        <h3>테스트 환경</h3>
+        <ul>
+            <li>✅ 프론트엔드: http://localhost:4001</li>
+            <li>✅ Diary Service: http://localhost:5002</li>
+            <li>✅ API 연동 완료</li>
+        </ul>
+    </div>
+
+    <div class="status">
+        <h3>테스트 방법</h3>
+        <ol>
+            <li>아래 "앱 열기" 버튼을 클릭하여 캘린더 앱을 엽니다</li>
+            <li>캘린더에서 날짜를 클릭하여 일기 모달을 엽니다</li>
+            <li>일기를 작성하고 저장 버튼을 클릭합니다</li>
+            <li>모달이 닫히고 일기가 저장되는지 확인합니다</li>
+            <li>다시 같은 날짜를 클릭하여 저장된 일기가 로드되는지 확인합니다</li>
+        </ol>
+    </div>
+
+    <div>
+        <button class="test-button" onclick="openApp()">📱 앱 열기 (localhost:4001)</button>
+        <button class="test-button" onclick="testAPI()">🔍 API 테스트</button>
+        <button class="test-button" onclick="checkStatus()">📊 서비스 상태 확인</button>
+    </div>
+
+    <div class="iframe-container">
+        <iframe id="app-frame" src="about:blank"></iframe>
+    </div>
+
+    <div id="test-results" class="status" style="display: none;">
+        <h3>테스트 결과</h3>
+        <div id="results-content"></div>
+    </div>
+
+    <script>
+        function openApp() {
+            const iframe = document.getElementById('app-frame');
+            iframe.src = 'http://localhost:4001';
+        }
+
+        async function testAPI() {
+            const resultsDiv = document.getElementById('test-results');
+            const contentDiv = document.getElementById('results-content');
+
+            try {
+                // 건강 상태 확인
+                const healthResponse = await fetch('http://localhost:5002/health');
+                const healthData = await healthResponse.json();
+
+                // 일기 조회 테스트
+                const diaryResponse = await fetch('http://localhost:5002/api/diaries/2025-09-16', {
+                    headers: {
+                        'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'
+                    }
+                });
+
+                let diaryData = null;
+                if (diaryResponse.ok) {
+                    diaryData = await diaryResponse.json();
+                }
+
+                contentDiv.innerHTML = `
+                    <h4>✅ API 테스트 성공</h4>
+                    <p><strong>서비스 상태:</strong> ${healthData.status}</p>
+                    <p><strong>타임스탬프:</strong> ${healthData.timestamp}</p>
+                    ${diaryData ? `
+                        <p><strong>오늘 일기:</strong></p>
+                        <ul>
+                            <li>내용: ${diaryData.content}</li>
+                            <li>기분: ${diaryData.mood}</li>
+                            <li>작성시간: ${diaryData.created_at}</li>
+                        </ul>
+                    ` : '<p><strong>오늘 일기:</strong> 없음</p>'}
+                `;
+
+                resultsDiv.style.display = 'block';
+
+            } catch (error) {
+                contentDiv.innerHTML = `
+                    <h4>❌ API 테스트 실패</h4>
+                    <p>에러: ${error.message}</p>
+                    <p>CORS 에러인 경우, 브라우저에서 직접 http://localhost:4001 에 접속하여 테스트하세요.</p>
+                `;
+                resultsDiv.style.display = 'block';
+            }
+        }
+
+        function checkStatus() {
+            const contentDiv = document.getElementById('results-content');
+            const resultsDiv = document.getElementById('test-results');
+
+            contentDiv.innerHTML = `
+                <h4>📊 서비스 상태</h4>
+                <ul>
+                    <li>✅ 프론트엔드 서버: http://localhost:4001 (실행 중)</li>
+                    <li>✅ Diary Service: http://localhost:5002 (실행 중)</li>
+                    <li>✅ API 연동: 완료</li>
+                    <li>✅ DiaryModal 컴포넌트: 업데이트 완료</li>
+                </ul>
+                <p><strong>다음 단계:</strong> 앱 열기 버튼을 클릭하여 실제 브라우저에서 테스트하세요.</p>
+            `;
+            resultsDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

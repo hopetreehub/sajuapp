@@ -266,17 +266,17 @@ export const diaryService = {
     startDate?: string;
     endDate?: string;
   }): Promise<DiaryEntry[]> => {
-    const response = await axios.get('http://localhost:4004/api/diaries', { 
+    const response = await axios.get('http://localhost:5002/api/diaries', {
       params,
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
     return response.data;
   },
-  
+
   // Get diaries for date range (for calendar views)
   getDiariesForDateRange: async (startDate: string, endDate: string): Promise<DiaryEntry[]> => {
     // Use searchDiaries endpoint which supports date range
-    const response = await axios.get('http://localhost:4004/api/diaries/search', {
+    const response = await axios.get('http://localhost:5002/api/diaries/search', {
       params: { startDate, endDate },
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
@@ -285,7 +285,7 @@ export const diaryService = {
 
   // Get diary entry by date
   getDiaryByDate: async (date: string): Promise<DiaryEntry> => {
-    const response = await axios.get(`http://localhost:4004/api/diaries/${date}`, {
+    const response = await axios.get(`http://localhost:5002/api/diaries/${date}`, {
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
     return response.data;
@@ -293,7 +293,7 @@ export const diaryService = {
 
   // Create diary entry
   createDiary: async (diary: Omit<DiaryEntry, 'id' | 'created_at' | 'updated_at' | 'user_id'>): Promise<DiaryEntry> => {
-    const response = await axios.post('http://localhost:4004/api/diaries', diary, {
+    const response = await axios.post('http://localhost:5002/api/diaries', diary, {
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
     return response.data;
@@ -301,7 +301,7 @@ export const diaryService = {
 
   // Update diary entry
   updateDiary: async (id: string, diary: Partial<DiaryEntry>): Promise<DiaryEntry> => {
-    const response = await axios.put(`http://localhost:4004/api/diaries/${id}`, diary, {
+    const response = await axios.put(`http://localhost:5002/api/diaries/${id}`, diary, {
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
     return response.data;
@@ -309,7 +309,7 @@ export const diaryService = {
 
   // Delete diary entry
   deleteDiary: async (id: string): Promise<void> => {
-    await axios.delete(`http://localhost:4004/api/diaries/${id}`, {
+    await axios.delete(`http://localhost:5002/api/diaries/${id}`, {
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
   },
@@ -321,7 +321,7 @@ export const diaryService = {
     startDate?: string;
     endDate?: string;
   }): Promise<DiaryEntry[]> => {
-    const response = await axios.get('http://localhost:4004/api/diaries/search', {
+    const response = await axios.get('http://localhost:5002/api/diaries/search', {
       params,
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
