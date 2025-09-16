@@ -16,6 +16,44 @@
     --accent-foreground: 222.2 47.4% 11.2%;
     --border: 214.3 31.8% 91.4%;
     --radius: 0.5rem;
+
+    /* 한국 전통 오행 색상 시스템 */
+    --wood: 120 60% 40%;      /* 목(木) - 청색계열 */
+    --wood-light: 120 45% 55%;
+    --wood-dark: 120 75% 25%;
+
+    --fire: 0 85% 55%;        /* 화(火) - 적색계열 */
+    --fire-light: 0 70% 70%;
+    --fire-dark: 0 100% 40%;
+
+    --earth: 35 45% 45%;      /* 토(土) - 황색계열 */
+    --earth-light: 35 35% 60%;
+    --earth-dark: 35 60% 30%;
+
+    --metal: 0 0% 75%;        /* 금(金) - 백색계열 */
+    --metal-light: 0 0% 85%;
+    --metal-dark: 0 0% 55%;
+
+    --water: 220 100% 25%;    /* 수(水) - 흑색계열 */
+    --water-light: 220 60% 40%;
+    --water-dark: 220 100% 15%;
+
+    /* 음양 색상 */
+    --yang: 45 100% 50%;      /* 양(陽) - 황금색 */
+    --yin: 240 100% 15%;      /* 음(陰) - 짙은 남색 */
+
+    /* 전통 보색 조합 */
+    --hanbok-red: 355 85% 45%;     /* 한복 빨강 */
+    --hanbok-blue: 220 85% 45%;    /* 한복 파랑 */
+    --hanbok-yellow: 50 90% 55%;   /* 한복 노랑 */
+    --hanbok-green: 150 70% 35%;   /* 한복 초록 */
+    --hanbok-white: 0 0% 95%;      /* 한복 흰색 */
+
+    /* 계절별 색상 (24절기 기반) */
+    --spring: 100 45% 50%;    /* 봄 - 연한 녹색 */
+    --summer: 0 70% 60%;      /* 여름 - 밝은 빨강 */
+    --autumn: 25 75% 50%;     /* 가을 - 주황색 */
+    --winter: 210 50% 30%;    /* 겨울 - 짙은 파랑 */
   }
 
   .dark {
@@ -52,18 +90,122 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
   }
-  
+
   /* Custom scrollbar styles */
   .custom-scrollbar::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
-  
+
   .custom-scrollbar::-webkit-scrollbar-track {
     @apply bg-gray-100 rounded-full;
   }
-  
+
   .custom-scrollbar::-webkit-scrollbar-thumb {
     @apply bg-gray-400 rounded-full hover:bg-gray-500;
+  }
+
+  /* 한국적 모바일 최적화 */
+  .korean-mobile-optimized {
+    /* 한글 가독성 향상 */
+    font-size: clamp(14px, 4vw, 18px);
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+  }
+
+  .korean-touch-target {
+    /* 한국인 평균 손가락 크기 고려 (44px 이상) */
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px;
+  }
+
+  /* 접근성 향상 - 고대비 모드 */
+  @media (prefers-contrast: high) {
+    .wuxing-accessible {
+      border: 2px solid currentColor !important;
+      filter: contrast(1.5);
+    }
+  }
+
+  /* 모션 감소 설정 고려 */
+  @media (prefers-reduced-motion: reduce) {
+    .motion-safe-only {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* 다크모드 시 색상 대비 향상 */
+  @media (prefers-color-scheme: dark) {
+    .dark-mode-enhanced {
+      --wood: 120 50% 60%;
+      --fire: 0 80% 65%;
+      --earth: 35 40% 65%;
+      --metal: 0 0% 85%;
+      --water: 220 90% 65%;
+    }
+  }
+
+  /* 사주 앱 특화 반응형 그리드 */
+  .saju-responsive-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  }
+
+  /* 전통 요소 호버 효과 */
+  .traditional-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .traditional-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 한국 전통 그라데이션 */
+  .hanbok-gradient {
+    background: linear-gradient(135deg,
+      hsl(var(--hanbok-red)) 0%,
+      hsl(var(--hanbok-yellow)) 25%,
+      hsl(var(--hanbok-blue)) 50%,
+      hsl(var(--hanbok-green)) 75%,
+      hsl(var(--hanbok-white)) 100%);
+  }
+
+  /* 오행 순환 애니메이션 */
+  .wuxing-cycle-animation {
+    animation: wuxingRotate 20s linear infinite;
+  }
+
+  @keyframes wuxingRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* 음양 회전 애니메이션 */
+  .yinyang-spin {
+    animation: yinyangSpin 8s ease-in-out infinite;
+  }
+
+  @keyframes yinyangSpin {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+  }
+
+  /* 포커스 스타일 개선 (접근성) */
+  .focus-visible:focus-visible {
+    outline: 3px solid hsl(var(--hanbok-blue));
+    outline-offset: 2px;
+    border-radius: 8px;
+  }
+
+  /* 터치 디바이스 전용 스타일 */
+  @media (hover: none) and (pointer: coarse) {
+    .touch-device-optimized {
+      padding: 16px;
+      font-size: 16px; /* iOS zoom 방지 */
+    }
   }
 }

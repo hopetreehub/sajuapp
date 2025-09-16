@@ -4,6 +4,7 @@ import { useDiaryData } from '@/hooks/useDiaryData';
 import DiaryBookModal from '@/components/DiaryBookModal';
 import EditTodoModal from '@/components/EditTodoModal';
 import { Todo } from '@/contexts/CalendarContext';
+import { TraditionalPattern } from '@/components/WuxingElements';
 import { 
   startOfMonth, 
   endOfMonth, 
@@ -105,17 +106,24 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
 
   return (
     <div className="h-full flex flex-col bg-background">
-      {/* Weekday Headers */}
-      <div className="grid grid-cols-7 border-b border-border bg-muted">
+      {/* Traditional Korean Weekday Headers */}
+      <div className="relative grid grid-cols-7 border-b border-border bg-gradient-to-r from-hanbok-white via-white to-hanbok-white">
+        <TraditionalPattern pattern="clouds" opacity={0.05} />
         {WEEKDAYS.map((day, index) => (
-          <div 
-            key={day} 
+          <div
+            key={day}
             className={`
-              px-2 py-3 text-center text-sm font-semibold
-              ${index === 0 ? 'text-red-600' : index === 6 ? 'text-blue-600' : 'text-foreground'}
+              relative px-2 py-4 text-center font-bold tracking-wider
+              ${index === 0 ? 'text-hanbok-red' : index === 6 ? 'text-hanbok-blue' : 'text-gray-700 dark:text-gray-300'}
+              ${index === 0 || index === 6 ? 'text-base' : 'text-sm'}
+              transition-colors duration-200 hover:bg-white/50
             `}
           >
-            {day}
+            <span className="relative z-10">{day}</span>
+            {/* 주말 강조 */}
+            {(index === 0 || index === 6) && (
+              <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-6 h-0.5 bg-current opacity-30 rounded"></div>
+            )}
           </div>
         ))}
       </div>
@@ -139,39 +147,53 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
               onMouseEnter={() => setHoveredDate(day)}
               onMouseLeave={() => setHoveredDate(null)}
               className={`
-                bg-background p-2 cursor-pointer transition-colors relative
-                hover:bg-muted/50
+                relative p-2 cursor-pointer transition-all duration-200 group
+                bg-background hover:bg-gradient-to-br hover:from-hanbok-white hover:to-white
                 ${!isCurrentMonth ? 'bg-muted/30' : ''}
-                ${isCurrentDay ? 'bg-primary/10' : ''}
+                ${isCurrentDay ? 'bg-gradient-to-br from-hanbok-yellow/20 to-yinyang-yang/10 shadow-inner border-2 border-yinyang-yang/30' : ''}
+                ${dayOfWeek === 0 ? 'hover:from-hanbok-red/5 hover:to-red-50' : ''}
+                ${dayOfWeek === 6 ? 'hover:from-hanbok-blue/5 hover:to-blue-50' : ''}
+                min-h-[120px] border border-gray-100 dark:border-gray-800
               `}
             >
-              {/* Date Number */}
+              {/* Traditional Korean Date Display */}
               <div className="flex items-start justify-between mb-1">
-                <div className="flex flex-col">
-                  <span 
-                    className={`
-                      text-sm font-medium
-                      ${isCurrentDay 
-                        ? 'bg-primary-500 text-white rounded-full w-7 h-7 flex items-center justify-center' 
-                        : ''
-                      }
-                      ${!isCurrentMonth ? 'text-muted-foreground' : ''}
-                      ${dayOfWeek === 0 ? 'text-red-600' : ''}
-                      ${dayOfWeek === 6 ? 'text-blue-600' : ''}
-                    `}
-                  >
-                    {format(day, 'd')}
-                  </span>
-                  {/* 음력 날짜 표시 */}
-                  <span className="text-[10px] text-gray-500 dark:text-gray-400 mt-0.5">
-                    {formatLunarDate(day, false)}
-                  </span>
-                  {/* 특별한 음력 날짜 표시 */}
-                  {getSpecialLunarDay(day) && (
-                    <span className="text-[10px] text-red-500 font-semibold">
-                      {getSpecialLunarDay(day)}
+                <div className="flex flex-col space-y-1">
+                  {/* 양력 날짜 */}
+                  <div className="flex items-center space-x-1">
+                    <span
+                      className={`
+                        font-bold transition-all duration-200
+                        ${isCurrentDay
+                          ? 'bg-gradient-to-br from-yinyang-yang to-hanbok-yellow text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg text-sm'
+                          : 'text-base'
+                        }
+                        ${!isCurrentMonth ? 'text-muted-foreground opacity-50' : ''}
+                        ${dayOfWeek === 0 ? 'text-hanbok-red' : ''}
+                        ${dayOfWeek === 6 ? 'text-hanbok-blue' : ''}
+                        group-hover:scale-110
+                      `}
+                    >
+                      {format(day, 'd')}
                     </span>
-                  )}
+                    {/* 오늘 표시 아이콘 */}
+                    {isCurrentDay && (
+                      <span className="text-xs animate-pulse">✨</span>
+                    )}
+                  </div>
+
+                  {/* 음력 날짜 표시 */}
+                  <div className="flex flex-col">
+                    <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                      음 {formatLunarDate(day, false)}
+                    </span>
+                    {/* 특별한 음력 날짜 표시 (절기, 명절) */}
+                    {getSpecialLunarDay(day) && (
+                      <span className="text-[9px] text-hanbok-red font-bold bg-hanbok-red/10 px-1 py-0.5 rounded mt-0.5 truncate">
+                        {getSpecialLunarDay(day)}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 
                 {/* 할일 및 일기 표시 */}

@@ -13,14 +13,14 @@ interface DiaryModalProps {
 }
 
 const MOODS = [
-  { emoji: '😊', label: '기분 좋음' },
-  { emoji: '😐', label: '보통' },
-  { emoji: '😢', label: '슬픔' },
-  { emoji: '😠', label: '화남' },
-  { emoji: '😴', label: '피곤함' },
-  { emoji: '🤔', label: '고민' },
-  { emoji: '😍', label: '설렘' },
-  { emoji: '😱', label: '놀람' },
+  { emoji: '😊', label: '기쁨', traditional: '희(喜)', color: 'wuxing-fire', element: '화(火)' },
+  { emoji: '😢', label: '슬픔', traditional: '애(哀)', color: 'wuxing-metal', element: '금(金)' },
+  { emoji: '😠', label: '분노', traditional: '노(怒)', color: 'wuxing-wood', element: '목(木)' },
+  { emoji: '😰', label: '두려움', traditional: '공(恐)', color: 'wuxing-water', element: '수(水)' },
+  { emoji: '🤔', label: '생각', traditional: '사(思)', color: 'wuxing-earth', element: '토(土)' },
+  { emoji: '😌', label: '평온', traditional: '정(靜)', color: 'yinyang-yin', element: '음(陰)' },
+  { emoji: '🌟', label: '활기', traditional: '양(陽)', color: 'yinyang-yang', element: '양(陽)' },
+  { emoji: '😐', label: '담담', traditional: '무(無)', color: 'wuxing-metal-light', element: '중용' },
 ];
 
 export default function DiaryModal({ isOpen, onClose, date, onSave }: DiaryModalProps) {
@@ -150,29 +150,83 @@ export default function DiaryModal({ isOpen, onClose, date, onSave }: DiaryModal
           </div>
         )}
 
-        {/* Mood Selector */}
+        {/* Traditional Korean Mood Selector */}
         <div className="mb-6">
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-            오늘의 기분을 선택해주세요
+          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+            <span className="mr-2">🎭</span>
+            오늘의 마음을 선택해주세요
+            <span className="ml-2 text-xs text-gray-500">(오행 감정론 기반)</span>
           </h3>
-          <div className="flex flex-wrap gap-3">
-            {MOODS.map(({ emoji, label }) => (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {MOODS.map(({ emoji, label, traditional, color, element }) => (
               <button
                 key={emoji}
                 onClick={() => setSelectedMood(emoji)}
                 className={`
-                  flex items-center space-x-2 px-3 py-2 rounded-lg border-2 transition-all
+                  group relative flex flex-col items-center p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105
                   ${selectedMood === emoji
-                    ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/30'
-                    : 'border-gray-200 dark:border-gray-600 hover:border-purple-300'
+                    ? `border-${color} bg-gradient-to-br from-${color}/10 to-${color}/20 shadow-lg`
+                    : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 bg-white dark:bg-gray-800'
                   }
                 `}
+                style={{
+                  borderColor: selectedMood === emoji ? `hsl(var(--${color.replace('wuxing-', '').replace('yinyang-', '')}))` : undefined,
+                }}
               >
-                <span className="text-xl">{emoji}</span>
-                <span className="text-sm text-gray-700 dark:text-gray-300">{label}</span>
+                {/* 이모지와 선택 효과 */}
+                <div className="relative mb-2">
+                  <span className="text-2xl transition-transform group-hover:scale-110">{emoji}</span>
+                  {selectedMood === emoji && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-orange-400 to-pink-500 rounded-full flex items-center justify-center">
+                      <span className="text-xs text-white">✓</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* 한국어 감정명 */}
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {label}
+                </span>
+
+                {/* 한자 전통 감정명 */}
+                <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                  {traditional}
+                </span>
+
+                {/* 오행 원소 표시 */}
+                <span className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                  {element}
+                </span>
+
+                {/* 선택시 그라데이션 효과 */}
+                {selectedMood === emoji && (
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-transparent via-white/20 to-transparent opacity-50 pointer-events-none"></div>
+                )}
               </button>
             ))}
           </div>
+
+          {/* 선택된 감정에 대한 설명 */}
+          {selectedMood && (
+            <div className="mt-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              {(() => {
+                const selectedMoodData = MOODS.find(m => m.emoji === selectedMood);
+                return (
+                  <p className="text-xs text-blue-700 dark:text-blue-300">
+                    <span className="font-semibold">{selectedMoodData?.traditional}</span> - {selectedMoodData?.element} 기운의 감정입니다.
+                    {selectedMoodData?.element === '화(火)' && ' 밝고 활발한 에너지를 나타냅니다.'}
+                    {selectedMoodData?.element === '금(金)' && ' 차분하고 정제된 에너지를 나타냅니다.'}
+                    {selectedMoodData?.element === '목(木)' && ' 성장하고 발전하려는 에너지를 나타냅니다.'}
+                    {selectedMoodData?.element === '수(水)' && ' 유연하고 깊이 있는 에너지를 나타냅니다.'}
+                    {selectedMoodData?.element === '토(土)' && ' 안정되고 신중한 에너지를 나타냅니다.'}
+                    {selectedMoodData?.element === '음(陰)' && ' 고요하고 내향적인 에너지를 나타냅니다.'}
+                    {selectedMoodData?.element === '양(陽)' && ' 활발하고 외향적인 에너지를 나타냅니다.'}
+                    {selectedMoodData?.element === '중용' && ' 균형잡힌 중도의 마음을 나타냅니다.'}
+                  </p>
+                );
+              })()}
+            </div>
+          )}
         </div>
 
         {/* Content Editor */}

@@ -53,6 +53,54 @@ export default {
           normal: '#3B82F6',  // Blue
           caution: '#F59E0B', // Amber
           danger: '#EF4444',  // Red
+        },
+        // 한국 전통 오행 색상 시스템
+        wuxing: {
+          wood: {
+            DEFAULT: 'hsl(var(--wood))',
+            light: 'hsl(var(--wood-light))',
+            dark: 'hsl(var(--wood-dark))',
+          },
+          fire: {
+            DEFAULT: 'hsl(var(--fire))',
+            light: 'hsl(var(--fire-light))',
+            dark: 'hsl(var(--fire-dark))',
+          },
+          earth: {
+            DEFAULT: 'hsl(var(--earth))',
+            light: 'hsl(var(--earth-light))',
+            dark: 'hsl(var(--earth-dark))',
+          },
+          metal: {
+            DEFAULT: 'hsl(var(--metal))',
+            light: 'hsl(var(--metal-light))',
+            dark: 'hsl(var(--metal-dark))',
+          },
+          water: {
+            DEFAULT: 'hsl(var(--water))',
+            light: 'hsl(var(--water-light))',
+            dark: 'hsl(var(--water-dark))',
+          },
+        },
+        // 음양 색상
+        yinyang: {
+          yang: 'hsl(var(--yang))',
+          yin: 'hsl(var(--yin))',
+        },
+        // 한복 전통 색상
+        hanbok: {
+          red: 'hsl(var(--hanbok-red))',
+          blue: 'hsl(var(--hanbok-blue))',
+          yellow: 'hsl(var(--hanbok-yellow))',
+          green: 'hsl(var(--hanbok-green))',
+          white: 'hsl(var(--hanbok-white))',
+        },
+        // 계절별 색상 (24절기)
+        season: {
+          spring: 'hsl(var(--spring))',
+          summer: 'hsl(var(--summer))',
+          autumn: 'hsl(var(--autumn))',
+          winter: 'hsl(var(--winter))',
         }
       },
       borderRadius: {
