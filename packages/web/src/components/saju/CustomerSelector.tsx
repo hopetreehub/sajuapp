@@ -1,22 +1,25 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getCustomers, Customer } from '@/services/customerApi';
+import CustomerAddModal from './CustomerAddModal';
 
 interface CustomerSelectorProps {
   onSelect: (customer: Customer | null) => void;
   selectedCustomer: Customer | null;
+  showAddButton?: boolean;
 }
 
-export default function CustomerSelector({ onSelect, selectedCustomer }: CustomerSelectorProps) {
+export default function CustomerSelector({
+  onSelect,
+  selectedCustomer,
+  showAddButton = true,
+}: CustomerSelectorProps) {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
 
-  useEffect(() => {
-    loadCustomers();
-  }, [searchQuery]);
-
-  const loadCustomers = async () => {
+  const loadCustomers = useCallback(async () => {
     try {
       setLoading(true);
       const response = await getCustomers(1, 100, searchQuery);
@@ -26,10 +29,14 @@ export default function CustomerSelector({ onSelect, selectedCustomer }: Custome
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery]);
+
+  useEffect(() => {
+    loadCustomers();
+  }, [loadCustomers]);
 
   const handleSelect = (customer: Customer) => {
-    console.log('[CustomerSelector] 고객 선택됨:', customer);
+    // console.log('[CustomerSelector] 고객 선택됨:', customer);
     onSelect(customer);
     setIsOpen(false);
     setSearchQuery('');
@@ -38,6 +45,21 @@ export default function CustomerSelector({ onSelect, selectedCustomer }: Custome
   const handleClear = () => {
     onSelect(null);
     setSearchQuery('');
+  };
+
+  const handleCustomerAdded = (newCustomer: Customer) => {
+    // console.log('[CustomerSelector] 새 고객 등록됨:', newCustomer);
+    // 고객 목록 새로고침
+    loadCustomers();
+    // 새로 등록된 고객 자동 선택
+    onSelect(newCustomer);
+    // 모달 닫기
+    setShowAddModal(false);
+  };
+
+  const handleAddButtonClick = () => {
+    setShowAddModal(true);
+    setIsOpen(false); // 드롭다운 닫기
   };
 
   return (
@@ -74,7 +96,23 @@ export default function CustomerSelector({ onSelect, selectedCustomer }: Custome
       {isOpen && (
         <div className="absolute top-full mt-2 w-96 bg-white dark:bg-gray-800 rounded-lg shadow-xl 
                       border border-gray-200 dark:border-gray-700 z-50">
-          <div className="p-4">
+          <div className="p-4 space-y-3">
+            {/* 새고객 등록 버튼 */}
+            {showAddButton && (
+              <button
+                onClick={handleAddButtonClick}
+                className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg
+                         flex items-center justify-center gap-2 transition-colors"
+              >
+                ➕ 새 고객 등록
+              </button>
+            )}
+
+            {/* 구분선 */}
+            {showAddButton && (
+              <div className="border-t border-gray-200 dark:border-gray-600"></div>
+            )}
+
             <input
               type="text"
               placeholder="이름 또는 전화번호로 검색..."
@@ -134,6 +172,13 @@ export default function CustomerSelector({ onSelect, selectedCustomer }: Custome
           </div>
         </div>
       )}
+
+      {/* 새고객 등록 모달 */}
+      <CustomerAddModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onCustomerAdded={handleCustomerAdded}
+      />
     </div>
   );
 }
