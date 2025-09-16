@@ -191,20 +191,56 @@ export class UniversalSajuEngine {
       // 연령대별 가중치
       const ageWeight = this.getAgeWeight(age);
 
-      // 1. 근본 (기질/성격) - 상대적으로 안정적
+      // 1. 근본 (기질/성격) - 대운 전환 시 급변, 평소 안정적
       const geunbonBase = this.calculateGeunbon(sajuData, dayGanOhang);
+      let geunbonValue = geunbonBase;
+
+      // 대운 전환 시 급격한 변화
+      if (currentDaeun.startAge === age) {
+        geunbonValue += daeunRelation > 0 ? 0.5 : -0.5;
+      }
+
+      // 특정 나이대 보정 (사회 진출, 은퇴 등)
+      if (age === 23 || age === 30) geunbonValue += 0.3;
+      if (age === 60 || age === 65) geunbonValue -= 0.2;
+
       geunbon.push({
         year,
         age,
-        value: geunbonBase + (Math.sin(age / 30) * 0.3), // 미세한 변화만
-        intensity: Math.abs(geunbonBase),
+        value: Math.max(-2, Math.min(2, geunbonValue)),
+        intensity: Math.abs(geunbonValue),
         phase: this.getLifePhase(age),
         description: `${age}세 기질`
       });
 
-      // 2. 운 (행운/기회) - 대운의 영향이 크게 반영
-      const woonValue = daeunRelation * 1.2 + saeunRelation * 0.3 +
-                       Math.sin((age - currentDaeun.startAge) / 5) * 0.5;
+      // 2. 운 (행운/기회) - 대운과 세운의 복잡한 상호작용
+      let woonValue = daeunRelation * 1.0;
+
+      // 세운과 대운의 충합 관계로 급변
+      const daeunSaeunInteraction = this.checkChungHap(currentDaeun.ji, saeunJi);
+      woonValue += daeunSaeunInteraction * 0.6;
+
+      // 대운 시작 시 큰 변화 (10년마다 급변)
+      if (currentDaeun.startAge === age) {
+        woonValue = daeunRelation > 0 ? 1.5 : -1.5;
+      }
+
+      // 대운 중반 안정화 패턴
+      const daeunProgress = (age - currentDaeun.startAge) / 10;
+      if (daeunProgress > 0.3 && daeunProgress < 0.7) {
+        woonValue *= 0.85;
+      } else if (daeunProgress > 0.8) {
+        woonValue *= 1.1; // 대운 말기 변동성 증가
+      }
+
+      // 특수 나이 이벤트 (20, 30, 40, 50, 60세)
+      if (age % 10 === 0 && age >= 20 && age <= 60) {
+        woonValue += daeunRelation > 0 ? 0.4 : -0.3;
+      }
+
+      // 세운 특수 패턴 (띠 해와 사주의 충합)
+      if (saeunJi === sajuData.year.ji) woonValue += 0.3; // 본명년
+
       woon.push({
         year,
         age,
@@ -249,6 +285,80 @@ export class UniversalSajuEngine {
     }
 
     return { geunbon, woon, haeng, hyeong, byeon };
+  }
+
+  /**
+   * 지지 충합형파 관계 체크 - 급격한 변화를 만드는 핵심
+   */
+  private static checkChungHap(ji1: string, ji2: string): number {
+    // 충 - 매우 강한 부정적 변화
+    const chung: Array<[string, string]> = [
+      ['자', '오'], ['축', '미'], ['인', '신'],
+      ['묘', '유'], ['진', '술'], ['사', '해']
+    ];
+
+    for (const [a, b] of chung) {
+      if ((ji1 === a && ji2 === b) || (ji1 === b && ji2 === a)) {
+        return -1.8; // 충은 강한 부정적 급변
+      }
+    }
+
+    // 합 - 강한 긍정적 변화
+    const hap: Array<[string, string]> = [
+      ['자', '축'], ['인', '해'], ['묘', '술'],
+      ['진', '유'], ['사', '신'], ['오', '미']
+    ];
+
+    for (const [a, b] of hap) {
+      if ((ji1 === a && ji2 === b) || (ji1 === b && ji2 === a)) {
+        return 1.5; // 합은 강한 긍정적 변화
+      }
+    }
+
+    // 형 - 중간 수준 부정적 영향
+    const hyeongPatterns = [
+      ['인', '사', '신'], // 삼형
+      ['유', '축', '술'], // 삼형
+      ['자', '묘']        // 자묘형
+    ];
+
+    for (const pattern of hyeongPatterns) {
+      if (pattern.includes(ji1) && pattern.includes(ji2)) {
+        return -0.9; // 형은 중간 부정적
+      }
+    }
+
+    // 파 - 파괴적 변화
+    const paPatterns: Array<[string, string]> = [
+      ['자', '미'], ['축', '술'], ['인', '유'],
+      ['묘', '신'], ['진', '해'], ['사', '오']
+    ];
+
+    for (const [a, b] of paPatterns) {
+      if ((ji1 === a && ji2 === b) || (ji1 === b && ji2 === a)) {
+        return -1.3; // 파는 파괴적
+      }
+    }
+
+    // 반합 - 약한 긍정적 영향
+    const banhap: Array<[string, string]> = [
+      ['자', '축'], ['인', '해'], ['묘', '술'],
+      ['진', '유'], ['사', '신'], ['오', '미']
+    ];
+
+    for (const [a, b] of banhap) {
+      // 이미 처리된 육합과 중복 체크 방지
+      if (hap.some(([h1, h2]) =>
+          (h1 === a && h2 === b) || (h1 === b && h2 === a))) {
+        continue;
+      }
+      if ((ji1 === a && ji2 === b) || (ji1 === b && ji2 === a)) {
+        return 0.6; // 반합은 약한 긍정
+      }
+    }
+
+    // 관계없음
+    return 0;
   }
 
   /**
@@ -375,9 +485,19 @@ export class UniversalSajuEngine {
       }
     });
 
-    // 대운 전환기 (10년 주기)
+    // 대운 전환기 급격한 변화
     if (age % 10 === 0 && age > 0) {
-      changeScore += Math.abs(Math.sin(age / 10)) * 1.5;
+      changeScore += 1.5; // 대운 전환은 항상 큰 변화
+    }
+
+    // 인생 주요 전환점
+    if (age === 23 || age === 33 || age === 43 || age === 53 || age === 63) {
+      changeScore += 0.8;
+    }
+
+    // 세운과 원국의 충합
+    if (saeun === sajuData.year.ji || saeun === sajuData.day.ji) {
+      changeScore += 0.5;
     }
 
     return Math.max(-2, Math.min(2, changeScore));
