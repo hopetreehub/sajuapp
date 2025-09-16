@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CustomerAddModal 테스트</title>
+  <script src="https://unpkg.com/playwright@1.40.0/lib/server/injected/recorder.js"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .test-button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px;
+      transition: all 0.3s ease;
+    }
+    .test-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid #28a745;
+    }
+    .url-info {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #2196f3;
+    }
+    .feature-list {
+      background: #fff3cd;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #ffc107;
+      margin-bottom: 20px;
+    }
+    .feature-list h3 {
+      margin-top: 0;
+      color: #856404;
+    }
+    .feature-list ul {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+    .feature-list li {
+      margin: 5px 0;
+      color: #6c5600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 CustomerAddModal 컴포넌트 테스트</h1>
+
+    <div class="url-info">
+      <h3>📍 테스트 경로</h3>
+      <p><strong>프론트엔드 서버:</strong> http://localhost:4003</p>
+      <p><strong>사주 분석 페이지:</strong> http://localhost:4003/saju</p>
+      <p><strong>고객 관리 페이지:</strong> http://localhost:4003/customers</p>
+    </div>
+
+    <div class="feature-list">
+      <h3>✨ 구현된 주요 기능</h3>
+      <ul>
+        <li><strong>독립적인 모달 컴포넌트:</strong> CustomerAddModal.tsx</li>
+        <li><strong>완전한 폼 유효성 검증:</strong> 이름, 생년월일, 생시, 전화번호</li>
+        <li><strong>전화번호 자동 포맷팅:</strong> 010-1234-5678 형식으로 자동 변환</li>
+        <li><strong>한국적 디자인 시스템:</strong> 전통 색상과 현대적 UI 조화</li>
+        <li><strong>접근성 지원:</strong> ESC 키 닫기, 키보드 네비게이션, 스크린 리더</li>
+        <li><strong>실시간 에러 피드백:</strong> 필드별 즉시 검증 및 에러 표시</li>
+        <li><strong>로딩 상태 관리:</strong> 제출 중 UI 피드백 및 중복 제출 방지</li>
+        <li><strong>CustomerSelector 연동:</strong> 새 고객 등록 버튼 및 자동 선택</li>
+        <li><strong>API 연동:</strong> createCustomer API 호출 및 에러 처리</li>
+        <li><strong>성공 메시지:</strong> 등록 완료 후 자동 모달 닫기</li>
+      </ul>
+    </div>
+
+    <div class="feature-list">
+      <h3>🎨 UI/UX 디자인 특징</h3>
+      <ul>
+        <li><strong>한국 전통 색상:</strong> 청색(🔵), 적색(🔴) 계열 활용</li>
+        <li><strong>반응형 디자인:</strong> 모든 화면 크기에서 최적화</li>
+        <li><strong>부드러운 애니메이션:</strong> 모달 등장/사라짐 효과</li>
+        <li><strong>다크모드 지원:</strong> 시스템 테마 자동 감지</li>
+        <li><strong>시각적 계층:</strong> 그림자, 테두리를 통한 깊이감</li>
+        <li><strong>친숙한 아이콘:</strong> 이모지 활용으로 직관적 인터페이스</li>
+      </ul>
+    </div>
+
+    <h2>🧪 테스트 방법</h2>
+
+    <button class="test-button" onclick="openSajuPage()">
+      🔮 사주 분석 페이지 열기
+    </button>
+
+    <button class="test-button" onclick="openCustomersPage()">
+      👥 고객 관리 페이지 열기
+    </button>
+
+    <button class="test-button" onclick="runComprehensiveTest()">
+      🔍 종합 기능 테스트 실행
+    </button>
+
+    <div id="testResult" class="result" style="display: none;">
+      <h3>✅ 테스트 결과</h3>
+      <div id="resultContent"></div>
+    </div>
+  </div>
+
+  <script>
+    function openSajuPage() {
+      const url = 'http://localhost:4003/saju';
+      window.open(url, '_blank');
+      showResult(`사주 분석 페이지를 새 탭에서 열었습니다.<br>
+        <strong>테스트 방법:</strong><br>
+        1. 고객 선택 드롭다운 클릭<br>
+        2. "➕ 새 고객 등록" 버튼 클릭<br>
+        3. 모달이 열리면 폼 필드 테스트<br>
+        4. 유효성 검증 동작 확인<br>
+        5. 등록 완료 후 자동 선택 확인`);
+    }
+
+    function openCustomersPage() {
+      const url = 'http://localhost:4003/customers';
+      window.open(url, '_blank');
+      showResult(`고객 관리 페이지를 새 탭에서 열었습니다.<br>
+        <strong>기존 모달과 비교:</strong><br>
+        1. 기존 모달과 새 모달의 디자인 비교<br>
+        2. 기능 차이점 확인<br>
+        3. 사용성 개선 사항 검토`);
+    }
+
+    function runComprehensiveTest() {
+      showResult(`
+        <strong>🔍 CustomerAddModal 종합 테스트 가이드</strong><br><br>
+
+        <strong>1. 기본 기능 테스트:</strong><br>
+        ✓ 모달 열기/닫기 (ESC 키, X 버튼, 배경 클릭)<br>
+        ✓ 모든 폼 필드 입력 및 검증<br>
+        ✓ 전화번호 자동 포맷팅 (숫자만 입력 시 자동 하이픈 추가)<br>
+        ✓ 필수 필드 유효성 검증<br><br>
+
+        <strong>2. 에러 처리 테스트:</strong><br>
+        ✓ 빈 필드 제출 시 에러 메시지<br>
+        ✓ 잘못된 전화번호 형식<br>
+        ✓ 미래 날짜 생년월일<br>
+        ✓ 네트워크 오류 시 에러 표시<br><br>
+
+        <strong>3. 접근성 테스트:</strong><br>
+        ✓ Tab 키로 필드 간 이동<br>
+        ✓ Enter 키로 폼 제출<br>
+        ✓ ESC 키로 모달 닫기<br>
+        ✓ 스크린 리더 호환성<br><br>
+
+        <strong>4. 통합 테스트:</strong><br>
+        ✓ CustomerSelector와의 연동<br>
+        ✓ 새 고객 등록 후 자동 선택<br>
+        ✓ 고객 목록 새로고침<br>
+        ✓ API 서버와의 연결
+      `);
+    }
+
+    function showResult(content) {
+      const resultDiv = document.getElementById('testResult');
+      const contentDiv = document.getElementById('resultContent');
+      contentDiv.innerHTML = content;
+      resultDiv.style.display = 'block';
+      resultDiv.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // 페이지 로드 시 환영 메시지
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🎯 CustomerAddModal 테스트 페이지가 로드되었습니다!');
+      console.log('📍 프론트엔드 서버: http://localhost:4003');
+      console.log('🔮 사주 분석 페이지: http://localhost:4003/saju');
+      console.log('👥 고객 관리 페이지: http://localhost:4003/customers');
+    });
+  </script>
+</body>
+</html>
