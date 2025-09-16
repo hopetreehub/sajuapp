@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useCalendar } from '@/contexts/CalendarContext';
 import NotificationSettings from '@/components/NotificationSettings';
 import ReferralSection from '@/components/Auth/ReferralSection';
+import CustomerManagementPage from './CustomerManagementPage';
 
 interface PersonalInfo {
   birthDate: string
@@ -455,57 +456,18 @@ export default function SettingsPage() {
               {/* Customer Management Settings */}
               {activeTab === 'customers' && (
                 <div className="space-y-6">
-                  <h2 className="text-lg font-semibold text-foreground mb-4">고객관리 설정</h2>
-                  
-                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
-                    <div className="flex items-start space-x-3 mb-4">
-                      <span className="text-2xl">👥</span>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
-                          고객 정보 관리
-                        </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                          고객의 사주 정보를 저장하고 관리할 수 있습니다.
-                        </p>
-                        
-                        <div className="space-y-3">
-                          <div className="flex flex-col sm:flex-row gap-3">
-                            <a 
-                              href="/customers" 
-                              className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                            >
-                              <span className="mr-2">📋</span>
-                              고객 목록 보기
-                            </a>
-                            <a 
-                              href="/customers/new" 
-                              className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
-                            >
-                              <span className="mr-2">➕</span>
-                              새 고객 등록
-                            </a>
-                          </div>
-                          
-                          <div className="pt-3 border-t border-blue-200 dark:border-blue-700">
-                            <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">관리 기능</h4>
-                            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                              <li>• 고객 정보 등록 및 수정</li>
-                              <li>• 사주 분석 이력 관리</li>
-                              <li>• 궁합 분석 이력 관리</li>
-                              <li>• 메모 및 상담 기록</li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <h2 className="text-lg font-semibold text-foreground mb-4">고객관리</h2>
 
+                  {/* 임베드된 고객관리 페이지 */}
+                  <CustomerManagementPage embedded={true} />
+
+                  {/* 추가 설정 섹션 */}
                   <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-700">
                     <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-3">
                       <span className="mr-2">⚙️</span>
                       고객 데이터 설정
                     </h4>
-                    
+
                     <div className="space-y-3">
                       <label className="flex items-center space-x-3">
                         <input
@@ -515,7 +477,7 @@ export default function SettingsPage() {
                         />
                         <span className="text-sm font-medium text-foreground">고객 정보 자동 백업</span>
                       </label>
-                      
+
                       <label className="flex items-center space-x-3">
                         <input
                           type="checkbox"
@@ -524,7 +486,7 @@ export default function SettingsPage() {
                         />
                         <span className="text-sm font-medium text-foreground">상담 알림 활성화</span>
                       </label>
-                      
+
                       <label className="flex items-center space-x-3">
                         <input
                           type="checkbox"

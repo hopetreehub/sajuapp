@@ -7,7 +7,11 @@ import {
   Customer, 
 } from '@/services/customerApi';
 
-export default function CustomerManagementPage() {
+interface CustomerManagementPageProps {
+  embedded?: boolean; // 다른 페이지에 임베드될 때 true
+}
+
+export default function CustomerManagementPage({ embedded = false }: CustomerManagementPageProps) {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -112,12 +116,12 @@ export default function CustomerManagementPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+    <div className={embedded ? "w-full" : "min-h-screen bg-gray-50 dark:bg-gray-900 p-6"}>
+      <div className={embedded ? "w-full" : "max-w-7xl mx-auto"}>
+        <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 ${embedded ? "border border-gray-200 dark:border-gray-600" : ""}`}>
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className={`${embedded ? "text-lg" : "text-2xl"} font-bold text-gray-900 dark:text-white`}>
               🗂️ 고객 관리
             </h1>
             <button

@@ -3,54 +3,50 @@ import { useNavigate } from 'react-router-dom';
 import SajuInputForm from '@/components/saju/SajuInputForm';
 import { FiveElementsBalanceChart } from '@/components/saju/charts/FiveElementsBalanceChart';
 import { TenGodsDistributionChart } from '@/components/saju/charts/TenGodsDistributionChart';
-import SixAreaChart from '@/components/saju/charts/SixAreaChart';
+// import SixAreaChart from '@/components/saju/charts/SixAreaChart'; // 현재 사용하지 않음
 import HundredYearChart from '@/components/Charts/HundredYearChart';
 import ChartNavigation from '@/components/Common/ChartNavigation';
-import UserSelectionPanel from '@/components/User/UserSelectionPanel';
+import CustomerSelector from '@/components/saju/CustomerSelector';
 import { SajuBirthInfo, SajuAnalysisResult, SajuData } from '@/types/saju';
-import { UserProfile, AnalysisType } from '@/types/user';
-import { getCurrentUser, addAnalysisHistory } from '@/utils/userStorage';
-import { SajuCalculator, formatFourPillars, formatFourPillarsDetailed, FourPillarsResult } from '@/utils/sajuCalculator';
+import { Customer } from '@/services/customerApi';
+import { customerToSajuBirthInfo, formatCustomerBirthDate } from '@/utils/customerConverter';
+import { SajuCalculator, formatFourPillarsDetailed, FourPillarsResult } from '@/utils/sajuCalculator';
 import { calculateSajuData } from '@/utils/sajuDataCalculator';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
-import { fetchLifetimeFortune, calculateCurrentAge, YearlyFortune, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
+import { fetchLifetimeFortune, calculateCurrentAge, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
 
 const SajuAnalysisPage: React.FC = () => {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [birthInfo, setBirthInfo] = useState<SajuBirthInfo | null>(null);
   const [analysisResult, setAnalysisResult] = useState<SajuAnalysisResult | null>(null);
   const [fourPillars, setFourPillars] = useState<FourPillarsResult | null>(null);
   const [lifetimeFortune, setLifetimeFortune] = useState<LifetimeFortuneResponse | null>(null);
   const [loading, setLoading] = useState(false);
-  const [showUserPanel, setShowUserPanel] = useState(true);
+  const [showCustomerPanel, setShowCustomerPanel] = useState(true);
 
-  // 현재 사용자 로드
+  // 초기 로드 (고객 선택 패널 표시)
   useEffect(() => {
-    const user = getCurrentUser();
-    if (user) {
-      setCurrentUser(user);
-      setBirthInfo(user.birthInfo);
-      setShowUserPanel(false);
-      // 자동으로 분석 시작
-      analyzeSaju(user.birthInfo);
-    }
+    // 고객관리 시스템으로 전환했으므로 초기에는 고객 선택 패널 표시
+    setShowCustomerPanel(true);
   }, []);
 
-  // 사용자 선택 핸들러
-  const handleUserSelect = (user: UserProfile) => {
-    setCurrentUser(user);
-    if (user) {
-      setBirthInfo(user.birthInfo);
-      setShowUserPanel(false);
-      analyzeSaju(user.birthInfo);
-      // 분석 히스토리 추가
-      addAnalysisHistory(user.id, AnalysisType.SIX_AREA);
+  // 고객 선택 핸들러
+  const handleCustomerSelect = (customer: Customer | null) => {
+    setSelectedCustomer(customer);
+    if (customer) {
+      const sajuBirthInfo = customerToSajuBirthInfo(customer);
+      setBirthInfo(sajuBirthInfo);
+      setShowCustomerPanel(false);
+      analyzeSaju(sajuBirthInfo);
+      // console.log('고객 선택됨:', customer.name, sajuBirthInfo);
+    } else {
+      setBirthInfo(null);
+      setAnalysisResult(null);
+      setFourPillars(null);
+      setLifetimeFortune(null);
+      setShowCustomerPanel(true);
     }
-  };
-
-  const handleUserChange = () => {
-    // 사용자 변경 시 필요한 업데이트
   };
 
   // 정확한 사주 분석 함수 
@@ -62,9 +58,9 @@ const SajuAnalysisPage: React.FC = () => {
     const calculatedPillars = SajuCalculator.calculateFourPillars(info);
     setFourPillars(calculatedPillars);
     
-    console.log('=== 사주 계산 결과 ===');
-    console.log('입력:', info);
-    console.log('사주:', formatFourPillarsDetailed(calculatedPillars));
+    // console.log('=== 사주 계산 결과 ===');
+    // console.log('입력:', info);
+    // console.log('사주:', formatFourPillarsDetailed(calculatedPillars));
 
     // 100년 인생운세 계산 추가
     fetchLifetimeFortune({
@@ -76,7 +72,7 @@ const SajuAnalysisPage: React.FC = () => {
       gender: info.gender || 'male',
     }).then(fortuneData => {
       setLifetimeFortune(fortuneData);
-      console.log('✅ 100년 인생운세 계산 완료:', fortuneData);
+      // console.log('✅ 100년 인생운세 계산 완료:', fortuneData);
     }).catch(error => {
       console.error('❌ 100년 인생운세 계산 실패:', error);
     });
@@ -110,9 +106,13 @@ const SajuAnalysisPage: React.FC = () => {
     return `${info.year}년 ${info.month}월 ${info.day}일 ${info.hour}시 ${info.minute || 0}분 (${weekday}요일) ${info.isLunar ? '음력' : '양력'}`;
   };
 
-  const formatFourPillars = (pillars: any) => {
-    return `${pillars.year.heavenly}${pillars.year.earthly}년 ${pillars.month.heavenly}${pillars.month.earthly}월 ${pillars.day.heavenly}${pillars.day.earthly}일 ${pillars.hour.heavenly}${pillars.hour.earthly}시`;
-  };
+  // formatFourPillars는 현재 사용하지 않으므로 주석 처리
+  // const formatFourPillars = (pillars: any) => {
+  //   return `${pillars.year.heavenly}${pillars.year.earthly}년 ` +
+  //     `${pillars.month.heavenly}${pillars.month.earthly}월 ` +
+  //     `${pillars.day.heavenly}${pillars.day.earthly}일 ` +
+  //     `${pillars.hour.heavenly}${pillars.hour.earthly}시`;
+  // };
 
   // SajuAnalysisResult를 SajuData로 변환
   const convertToSajuData = (result: SajuAnalysisResult): SajuData => {
@@ -134,17 +134,27 @@ const SajuAnalysisPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* 왼쪽: 사용자 선택 또는 입력 폼 */}
+          {/* 왼쪽: 고객 선택 또는 입력 폼 */}
           <div className="lg:col-span-1">
-            {showUserPanel || !currentUser ? (
+            {showCustomerPanel || !selectedCustomer ? (
               <div className="space-y-4">
-                <UserSelectionPanel
-                  currentUser={currentUser}
-                  onUserSelect={handleUserSelect}
-                  onUserChange={handleUserChange}
-                  alwaysShowAddButton={true}
-                  maxUsers={Infinity}
-                />
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600">
+                  <div className="p-4 border-b border-gray-200 dark:border-gray-600">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                      👥 고객 선택
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      등록된 고객을 선택하거나 새로 등록하세요
+                    </p>
+                  </div>
+                  <div className="p-4">
+                    <CustomerSelector
+                      onSelect={handleCustomerSelect}
+                      selectedCustomer={selectedCustomer}
+                      showAddButton={true}
+                    />
+                  </div>
+                </div>
                 
                 {/* 직접 입력 옵션 */}
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600">
@@ -160,23 +170,26 @@ const SajuAnalysisPage: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {/* 현재 사용자 정보 표시 */}
+                {/* 현재 선택된 고객 정보 표시 */}
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 p-4">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
                       👤 현재 분석 대상
                     </h3>
                     <button
-                      onClick={() => setShowUserPanel(true)}
+                      onClick={() => setShowCustomerPanel(true)}
                       className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-md transition-colors"
                     >
                       변경
                     </button>
                   </div>
                   <div className="space-y-2">
-                    <p className="font-medium text-gray-900 dark:text-white">{currentUser.name}</p>
+                    <p className="font-medium text-gray-900 dark:text-white">{selectedCustomer.name}</p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {formatBirthDate(currentUser.birthInfo)}
+                      {formatCustomerBirthDate(selectedCustomer)}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-500">
+                      📞 {selectedCustomer.phone}
                     </p>
                   </div>
                 </div>
@@ -191,13 +204,13 @@ const SajuAnalysisPage: React.FC = () => {
                       <div>
                         <span className="text-gray-600 dark:text-gray-400">이름:</span>
                         <span className="ml-2 text-gray-800 dark:text-gray-200 font-medium">
-                          {currentUser?.name || birthInfo.name || '미입력'}
+                          {selectedCustomer?.name || birthInfo.name || '미입력'}
                         </span>
                       </div>
                       <div>
                         <span className="text-gray-600 dark:text-gray-400">출생:</span>
                         <span className="ml-2 text-gray-800 dark:text-gray-200 font-medium">
-                          {formatBirthDate(birthInfo)}
+                          {selectedCustomer ? formatCustomerBirthDate(selectedCustomer) : (birthInfo ? formatBirthDate(birthInfo) : '미입력')}
                         </span>
                       </div>
                       
