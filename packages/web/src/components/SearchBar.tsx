@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { searchService, SearchResult, SearchOptions } from '@/services/searchService';
 import { useCalendar } from '@/contexts/CalendarContext';
 import { useDebounce, getCategoryLabel, groupResultsByType } from '@/utils/searchUtils';
 import SearchResultItem from './SearchResultItem';
 import { parseISO } from 'date-fns';
+import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 
 interface SearchBarProps {
   onSearch?: (results: SearchResult[]) => void
@@ -13,12 +14,17 @@ interface SearchBarProps {
   showCategories?: boolean
 }
 
-export default function SearchBar({ 
-  onSearch, 
-  placeholder = '일정, 할일, 일기 검색...', 
+export interface SearchBarRef {
+  focus: () => void;
+  clear: () => void;
+}
+
+const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(({
+  onSearch,
+  placeholder = '일정, 할일, 일기 검색...',
   className = '',
-  showCategories = true, 
-}: SearchBarProps) {
+  showCategories = true,
+}, ref) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +35,28 @@ export default function SearchBar({
   const { todos, setCurrentDate, setViewMode, setSelectedDate } = useCalendar();
   const debouncedQuery = useDebounce(query, 300);
   const searchRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // 키보드 단축키 설정
+  useKeyboardShortcuts({
+    onSearchFocus: () => {
+      inputRef.current?.focus();
+      setShowDropdown(true);
+    }
+  });
+
+  // ref 메서드 노출
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      inputRef.current?.focus();
+      setShowDropdown(true);
+    },
+    clear: () => {
+      setQuery('');
+      setResults([]);
+      setShowDropdown(false);
+    }
+  }));
   
   // 검색 실행
   const performSearch = async () => {
@@ -151,6 +179,7 @@ export default function SearchBar({
       {/* 검색 입력 */}
       <div className="relative">
         <input
+          ref={inputRef}
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -244,4 +273,8 @@ export default function SearchBar({
       )}
     </div>
   );
-}
+});
+
+SearchBar.displayName = 'SearchBar';
+
+export default SearchBar;

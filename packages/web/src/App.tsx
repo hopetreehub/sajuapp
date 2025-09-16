@@ -17,6 +17,7 @@ import SajuTestPage from '@/pages/SajuTestPage';
 import { CompatibilityPage } from '@/pages/CompatibilityPage';
 import LearningPage from '@/pages/LearningPage';
 import TestComprehensiveScoresPage from '@/pages/TestComprehensiveScoresPage';
+import SearchPage from '@/pages/SearchPage';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import { CalendarProvider } from '@/contexts/CalendarContext';
@@ -59,6 +60,7 @@ function App() {
                 <Route path="/diary" element={<DiaryPage />} />
                 <Route path="/diary/:date" element={<DiaryPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
+                <Route path="/search" element={<SearchPage />} />
                 {/* 추가 예정 페이지 */}
                 <Route path="/compatibility" element={<CompatibilityPage />} />
                 <Route path="/learning/:courseId" element={<LearningPage />} />
