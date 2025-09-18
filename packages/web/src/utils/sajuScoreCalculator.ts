@@ -1,4 +1,7 @@
-// 사주 기반 점수 계산 시스템
+/**
+ * Saju Score Calculator - 실제 사주 이론 기반 점수 계산
+ * 개인별 고유한 운세 곡선을 생성하기 위한 정밀 계산 모듈
+ */
 
 // 오행 타입 정의
 export type OhHaeng = '목' | '화' | '토' | '금' | '수';
@@ -670,5 +673,530 @@ export function generateSampleSajuData(): SajuData {
       수: 10,
     },
     fullSaju: '갑자 병인 무진 경신',
+  };
+}
+
+// ====================
+// 100년 인생운세 차트용 추가 기능
+// ====================
+
+// 십신 강도 점수
+const SIBSIN_STRENGTH: Record<string, number> = {
+  비견: 80, 겁재: 75, 식신: 85, 상관: 70,
+  편재: 80, 정재: 85, 편관: 75, 정관: 90,
+  편인: 80, 정인: 85,
+};
+
+// 천간 합
+const CHEONGAN_HARMONY: Record<string, string> = {
+  갑: '기', 을: '경', 병: '신', 정: '임', 무: '계',
+  기: '갑', 경: '을', 신: '병', 임: '정', 계: '무',
+};
+
+// 지지 삼합
+const JIJI_TRIPLE_HARMONY: Record<string, string[]> = {
+  인: ['오', '술'], 오: ['인', '술'], 술: ['인', '오'], // 화국
+  신: ['자', '진'], 자: ['신', '진'], 진: ['신', '자'], // 수국
+  해: ['묘', '미'], 묘: ['해', '미'], 미: ['해', '묘'], // 목국
+  사: ['유', '축'], 유: ['사', '축'], 축: ['사', '유'], // 금국
+};
+
+// 지지 육합
+const JIJI_SIX_HARMONY: Record<string, string> = {
+  자: '축', 축: '자', 인: '해', 해: '인',
+  묘: '술', 술: '묘', 진: '유', 유: '진',
+  사: '신', 신: '사', 오: '미', 미: '오',
+};
+
+// 지지 충
+const JIJI_CONFLICT: Record<string, string> = {
+  자: '오', 오: '자', 축: '미', 미: '축',
+  인: '신', 신: '인', 묘: '유', 유: '묘',
+  진: '술', 술: '진', 사: '해', 해: '사',
+};
+
+// 오행 상생 관계
+const ELEMENT_GENERATION: Record<string, string> = {
+  목: '화', 화: '토', 토: '금', 금: '수', 수: '목',
+};
+
+// 오행 상극 관계
+const ELEMENT_CONFLICT: Record<string, string> = {
+  목: '토', 화: '금', 토: '수', 금: '목', 수: '화',
+};
+
+export interface LifeChartScoreResult {
+  baseScore: number;           // 기본 점수 (0-100)
+  yearlyScores: number[];      // 연도별 점수 배열 (96개)
+  pattern: {
+    type: string;              // 패턴 유형
+    volatility: number;        // 변동성 (0-1)
+    trend: 'ascending' | 'descending' | 'stable' | 'cyclic';
+  };
+  keyCharacteristics: {
+    elementBalance: number;    // 오행 균형도
+    dayMasterStrength: number; // 일간 강도
+    harmonyLevel: number;      // 조화 수준
+    conflictLevel: number;     // 충돌 수준
+  };
+}
+
+/**
+ * 100년 인생운세용 사주 점수 계산
+ */
+export function calculateLifeChartScore(
+  saju: {
+    year: { gan: string; ji: string };
+    month: { gan: string; ji: string };
+    day: { gan: string; ji: string };
+    time: { gan: string; ji: string };
+  },
+  birthYear: number,
+): LifeChartScoreResult {
+
+  // 1. 기본 특성 분석
+  const elementBalance = calculateElementBalanceForLifeChart(saju);
+  const dayMasterStrength = calculateDayMasterStrength(saju);
+  const harmonyLevel = calculateHarmonyLevel(saju);
+  const conflictLevel = calculateConflictLevel(saju);
+
+  // 2. 기본 점수 계산 (출생 시점)
+  const baseScore = calculateBaseLifeScore(
+    elementBalance,
+    dayMasterStrength,
+    harmonyLevel,
+    conflictLevel,
+  );
+
+  // 3. 96년간 연도별 점수 계산
+  const yearlyScores: number[] = [];
+  const currentYear = new Date().getFullYear();
+
+  for (let age = 0; age <= 95; age++) {
+    const year = birthYear + age;
+
+    // 대운 계산 (10년 주기)
+    const daeunCycle = Math.floor(age / 10);
+    const daeunScore = calculateDaeunScore(saju, daeunCycle);
+
+    // 세운 계산 (연도별)
+    const seunScore = calculateSeunScore(saju, year);
+
+    // 개인 리듬 계산
+    const personalRhythm = calculatePersonalRhythm(saju, age);
+
+    // 종합 점수 계산
+    let yearScore = baseScore * 0.4 + daeunScore * 0.3 + seunScore * 0.2 + personalRhythm * 0.1;
+
+    // 특정 나이대별 보정
+    yearScore = applyAgeCorrection(yearScore, age);
+
+    // 변동성 추가 (개인별 고유 패턴)
+    const volatility = calculateVolatility(saju, age);
+    yearScore += volatility;
+
+    // 0-100 범위로 정규화
+    yearScore = Math.max(0, Math.min(100, yearScore));
+
+    yearlyScores.push(yearScore);
+  }
+
+  // 4. 패턴 분석
+  const pattern = analyzeLifePattern(yearlyScores);
+
+  return {
+    baseScore,
+    yearlyScores,
+    pattern,
+    keyCharacteristics: {
+      elementBalance,
+      dayMasterStrength,
+      harmonyLevel,
+      conflictLevel,
+    },
+  };
+}
+
+/**
+ * 오행 균형도 계산 (인생차트용)
+ */
+function calculateElementBalanceForLifeChart(saju: any): number {
+  const elements: Record<string, number> = {
+    목: 0, 화: 0, 토: 0, 금: 0, 수: 0,
+  };
+
+  // 천간 오행
+  elements[CHEONGAN_OHHAENG[saju.year.gan as CheonGan]]++;
+  elements[CHEONGAN_OHHAENG[saju.month.gan as CheonGan]]++;
+  elements[CHEONGAN_OHHAENG[saju.day.gan as CheonGan]]++;
+  elements[CHEONGAN_OHHAENG[saju.time.gan as CheonGan]]++;
+
+  // 지지 오행
+  elements[JIJI_OHHAENG[saju.year.ji as JiJi]]++;
+  elements[JIJI_OHHAENG[saju.month.ji as JiJi]]++;
+  elements[JIJI_OHHAENG[saju.day.ji as JiJi]]++;
+  elements[JIJI_OHHAENG[saju.time.ji as JiJi]]++;
+
+  // 균형도 계산
+  const values = Object.values(elements);
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+  const avg = values.reduce((a, b) => a + b) / values.length;
+  const variance = values.reduce((sum, v) => sum + Math.pow(v - avg, 2), 0) / values.length;
+
+  // 균형도 점수 (0-100)
+  const balance = Math.max(0, 100 - (Math.sqrt(variance) * 25) - ((max - min) * 10));
+
+  return balance;
+}
+
+/**
+ * 일간 강도 계산
+ */
+function calculateDayMasterStrength(saju: any): number {
+  const dayMaster = saju.day.gan;
+  const dayElement = CHEONGAN_OHHAENG[dayMaster as CheonGan];
+  let strength = 50; // 기본값
+
+  // 같은 오행이 많으면 강함
+  const sameElementCount = [
+    saju.year.gan, saju.month.gan, saju.time.gan,
+    saju.year.ji, saju.month.ji, saju.day.ji, saju.time.ji,
+  ].filter(char =>
+    CHEONGAN_OHHAENG[char as CheonGan] === dayElement ||
+    JIJI_OHHAENG[char as JiJi] === dayElement,
+  ).length;
+
+  strength += sameElementCount * 5;
+
+  // 상생 오행이 있으면 강화
+  const generatingElement = Object.entries(ELEMENT_GENERATION)
+    .find(([_, target]) => target === dayElement)?.[0];
+
+  if (generatingElement) {
+    const generatingCount = [
+      saju.year.gan, saju.month.gan, saju.time.gan,
+      saju.year.ji, saju.month.ji, saju.day.ji, saju.time.ji,
+    ].filter(char =>
+      CHEONGAN_OHHAENG[char as CheonGan] === generatingElement ||
+      JIJI_OHHAENG[char as JiJi] === generatingElement,
+    ).length;
+
+    strength += generatingCount * 3;
+  }
+
+  // 상극 오행이 있으면 약화
+  const conflictingElement = ELEMENT_CONFLICT[dayElement];
+  const conflictCount = [
+    saju.year.gan, saju.month.gan, saju.time.gan,
+    saju.year.ji, saju.month.ji, saju.day.ji, saju.time.ji,
+  ].filter(char =>
+    CHEONGAN_OHHAENG[char as CheonGan] === conflictingElement ||
+    JIJI_OHHAENG[char as JiJi] === conflictingElement,
+  ).length;
+
+  strength -= conflictCount * 4;
+
+  return Math.max(0, Math.min(100, strength));
+}
+
+/**
+ * 조화 수준 계산
+ */
+function calculateHarmonyLevel(saju: any): number {
+  let harmony = 50;
+
+  // 천간 합 체크
+  const gans = [saju.year.gan, saju.month.gan, saju.day.gan, saju.time.gan];
+  for (let i = 0; i < gans.length; i++) {
+    for (let j = i + 1; j < gans.length; j++) {
+      if (CHEONGAN_HARMONY[gans[i]] === gans[j]) {
+        harmony += 10;
+      }
+    }
+  }
+
+  // 지지 합 체크
+  const jis = [saju.year.ji, saju.month.ji, saju.day.ji, saju.time.ji];
+
+  // 육합
+  for (let i = 0; i < jis.length; i++) {
+    for (let j = i + 1; j < jis.length; j++) {
+      if (JIJI_SIX_HARMONY[jis[i]] === jis[j]) {
+        harmony += 8;
+      }
+    }
+  }
+
+  // 삼합
+  for (const ji of jis) {
+    const tripleHarmony = JIJI_TRIPLE_HARMONY[ji];
+    if (tripleHarmony) {
+      const count = tripleHarmony.filter(h => jis.includes(h)).length;
+      harmony += count * 5;
+    }
+  }
+
+  return Math.min(100, harmony);
+}
+
+/**
+ * 충돌 수준 계산
+ */
+function calculateConflictLevel(saju: any): number {
+  let conflict = 0;
+
+  // 지지 충 체크
+  const jis = [saju.year.ji, saju.month.ji, saju.day.ji, saju.time.ji];
+  for (let i = 0; i < jis.length; i++) {
+    for (let j = i + 1; j < jis.length; j++) {
+      if (JIJI_CONFLICT[jis[i]] === jis[j]) {
+        conflict += 15;
+      }
+    }
+  }
+
+  // 오행 상극 체크
+  const elements = [
+    CHEONGAN_OHHAENG[saju.year.gan as CheonGan],
+    CHEONGAN_OHHAENG[saju.month.gan as CheonGan],
+    CHEONGAN_OHHAENG[saju.day.gan as CheonGan],
+    CHEONGAN_OHHAENG[saju.time.gan as CheonGan],
+  ];
+
+  for (let i = 0; i < elements.length; i++) {
+    for (let j = i + 1; j < elements.length; j++) {
+      if (ELEMENT_CONFLICT[elements[i]] === elements[j]) {
+        conflict += 10;
+      }
+    }
+  }
+
+  return Math.min(100, conflict);
+}
+
+/**
+ * 기본 점수 계산
+ */
+function calculateBaseLifeScore(
+  elementBalance: number,
+  dayMasterStrength: number,
+  harmonyLevel: number,
+  conflictLevel: number,
+): number {
+  // 가중 평균
+  const score = (
+    elementBalance * 0.3 +
+    dayMasterStrength * 0.3 +
+    harmonyLevel * 0.25 +
+    (100 - conflictLevel) * 0.15
+  );
+
+  return Math.round(score);
+}
+
+/**
+ * 대운 점수 계산
+ */
+function calculateDaeunScore(saju: any, cycle: number): number {
+  // 대운 천간지지 계산
+  const daeunGan = CHEONGAN[cycle % 10];
+  const daeunJi = JIJI[cycle % 12];
+
+  let score = 50;
+
+  // 일간과의 관계
+  const dayElement = CHEONGAN_OHHAENG[saju.day.gan as CheonGan];
+  const daeunElement = CHEONGAN_OHHAENG[daeunGan];
+
+  // 상생이면 가점
+  if (ELEMENT_GENERATION[daeunElement] === dayElement) {
+    score += 15;
+  } else if (ELEMENT_GENERATION[dayElement] === daeunElement) {
+    score += 10;
+  }
+
+  // 상극이면 감점
+  if (ELEMENT_CONFLICT[daeunElement] === dayElement) {
+    score -= 20;
+  } else if (ELEMENT_CONFLICT[dayElement] === daeunElement) {
+    score -= 10;
+  }
+
+  // 합이면 가점
+  if (CHEONGAN_HARMONY[saju.day.gan] === daeunGan) {
+    score += 20;
+  }
+
+  // 충이면 감점
+  if (JIJI_CONFLICT[saju.day.ji] === daeunJi) {
+    score -= 15;
+  }
+
+  return Math.max(0, Math.min(100, score));
+}
+
+/**
+ * 세운 점수 계산
+ */
+function calculateSeunScore(saju: any, year: number): number {
+  // 60갑자 순환
+  const ganIndex = (year - 4) % 10;
+  const jiIndex = (year - 4) % 12;
+
+  const yearGan = CHEONGAN[ganIndex];
+  const yearJi = JIJI[jiIndex];
+
+  let score = 50;
+
+  // 천간 관계
+  if (CHEONGAN_HARMONY[saju.day.gan] === yearGan) {
+    score += 15;
+  }
+
+  // 지지 관계
+  if (JIJI_SIX_HARMONY[saju.day.ji] === yearJi) {
+    score += 12;
+  }
+  if (JIJI_CONFLICT[saju.day.ji] === yearJi) {
+    score -= 18;
+  }
+
+  // 오행 관계
+  const dayElement = CHEONGAN_OHHAENG[saju.day.gan as CheonGan];
+  const yearElement = CHEONGAN_OHHAENG[yearGan];
+
+  if (ELEMENT_GENERATION[yearElement] === dayElement) {
+    score += 8;
+  }
+  if (ELEMENT_CONFLICT[yearElement] === dayElement) {
+    score -= 12;
+  }
+
+  return Math.max(0, Math.min(100, score));
+}
+
+/**
+ * 개인 리듬 계산
+ */
+function calculatePersonalRhythm(saju: any, age: number): number {
+  // 사주 고유값으로 개인 리듬 생성
+  const uniqueValue = getSajuUniqueValue(saju);
+
+  // 바이오리듬 형태의 주기적 변화
+  const physical = Math.sin((age * 2 * Math.PI) / 23) * 15;
+  const emotional = Math.sin((age * 2 * Math.PI) / 28) * 10;
+  const intellectual = Math.sin((age * 2 * Math.PI) / 33) * 8;
+
+  // 개인별 고유 변조
+  const personalModulation = Math.sin((age + uniqueValue) * 0.15) * 5;
+
+  const rhythm = 50 + physical + emotional + intellectual + personalModulation;
+
+  return Math.max(0, Math.min(100, rhythm));
+}
+
+/**
+ * 사주 고유값 계산
+ */
+function getSajuUniqueValue(saju: any): number {
+  const ganValues: Record<string, number> = {
+    갑: 1, 을: 2, 병: 3, 정: 4, 무: 5,
+    기: 6, 경: 7, 신: 8, 임: 9, 계: 10,
+  };
+
+  const jiValues: Record<string, number> = {
+    자: 1, 축: 2, 인: 3, 묘: 4, 진: 5, 사: 6,
+    오: 7, 미: 8, 신: 9, 유: 10, 술: 11, 해: 12,
+  };
+
+  return (
+    ganValues[saju.year.gan] * 1000 +
+    jiValues[saju.year.ji] * 100 +
+    ganValues[saju.month.gan] * 50 +
+    jiValues[saju.month.ji] * 25 +
+    ganValues[saju.day.gan] * 10 +
+    jiValues[saju.day.ji] * 5 +
+    ganValues[saju.time.gan] * 2 +
+    jiValues[saju.time.ji]
+  );
+}
+
+/**
+ * 나이대별 보정
+ */
+function applyAgeCorrection(score: number, age: number): number {
+  // 유년기 (0-10): 안정적
+  if (age <= 10) {
+    return score * 0.9 + 10;
+  }
+
+  // 청소년기 (11-20): 변동성 증가
+  if (age <= 20) {
+    return score * 1.1;
+  }
+
+  // 청년기 (21-35): 도전과 기회
+  if (age <= 35) {
+    return score * 1.05;
+  }
+
+  // 중년기 (36-55): 안정화
+  if (age <= 55) {
+    return score * 0.95 + 5;
+  }
+
+  // 노년기 (56+): 점진적 감소
+  return score * (1 - (age - 55) * 0.003);
+}
+
+/**
+ * 변동성 계산
+ */
+function calculateVolatility(saju: any, age: number): number {
+  const uniqueValue = getSajuUniqueValue(saju);
+
+  // 개인별 고유 변동 패턴
+  const noise1 = Math.sin((age + uniqueValue * 0.1) * 0.3) * 3;
+  const noise2 = Math.cos((age + uniqueValue * 0.2) * 0.5) * 2;
+  const noise3 = Math.sin((age * uniqueValue * 0.01) * 0.7) * 1.5;
+
+  return noise1 + noise2 + noise3;
+}
+
+/**
+ * 패턴 분석
+ */
+function analyzeLifePattern(scores: number[]): any {
+  const avg = scores.reduce((a, b) => a + b) / scores.length;
+  const variance = scores.reduce((sum, s) => sum + Math.pow(s - avg, 2), 0) / scores.length;
+  const volatility = Math.sqrt(variance) / 50; // 정규화
+
+  // 전반부와 후반부 비교
+  const firstHalf = scores.slice(0, 48).reduce((a, b) => a + b) / 48;
+  const secondHalf = scores.slice(48).reduce((a, b) => a + b) / 48;
+
+  let trend: 'ascending' | 'descending' | 'stable' | 'cyclic';
+  if (secondHalf - firstHalf > 10) {
+    trend = 'ascending';
+  } else if (firstHalf - secondHalf > 10) {
+    trend = 'descending';
+  } else if (volatility > 0.5) {
+    trend = 'cyclic';
+  } else {
+    trend = 'stable';
+  }
+
+  // 패턴 유형 결정
+  let type = '안정형';
+  if (volatility > 0.7) type = '격변형';
+  else if (volatility > 0.5) type = '변동형';
+  else if (trend === 'ascending') type = '상승형';
+  else if (trend === 'descending') type = '하강형';
+
+  return {
+    type,
+    volatility: Math.min(1, volatility),
+    trend,
   };
 }
