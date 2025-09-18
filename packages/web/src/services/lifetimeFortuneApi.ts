@@ -1,11 +1,20 @@
 /**
- * 100년 인생운세 API 서비스
+ * 100년 인생운세 API 서비스 v2.0
+ * 정통 사주학 기반 AuthenticSajuCalculator 통합
  */
 
 import { UniversalSajuEngine } from '@/utils/universalSajuEngine';
 import { SajuComponents, PersonalInfo } from '@/types/universalLifeChart';
 import { SajuCalculator } from '@/utils/sajuCalculator';
 import { SajuBirthInfo } from '@/types/saju';
+import { resolveSajuData, convertToUniversalSajuFormat, debugSajuData } from '@/utils/sajuDataConverter';
+import {
+  AuthenticSajuCalculator,
+  SajuPalJa,
+  AuthenticLifeChart,
+  CheonGan,
+  JiJi
+} from '@/utils/authenticSajuCalculator';
 
 // 임시로 프론트엔드 프록시를 사용하지 않고 직접 호출
 // 실제 서비스가 구현되면 프록시를 통해 호출하도록 변경 필요
@@ -62,6 +71,8 @@ export interface LifetimeFortuneRequest {
   hour: number
   isLunar?: boolean
   gender?: 'male' | 'female'
+  sajuData?: any // 이미 계산된 사주 데이터 (선택적)
+  useAuthenticCalculator?: boolean // 정통 사주학 계산기 사용 여부
 }
 
 /**
@@ -87,6 +98,21 @@ export async function fetchLifetimeFortune(request: LifetimeFortuneRequest): Pro
 // 새로운 엔진을 사용한 실제 패턴 기반 데이터 생성
 function generateMockLifetimeFortune(request: LifetimeFortuneRequest): LifetimeFortuneResponse {
   console.log('🔮 실제 사주 계산 시작:', request);
+  console.log('⚙️ 정통 사주학 계산기 사용:', request.useAuthenticCalculator !== false);
+
+  // 정통 사주학 계산기 사용 여부 결정 (기본값: true)
+  const useAuthenticCalculator = request.useAuthenticCalculator !== false;
+
+  if (useAuthenticCalculator) {
+    return generateAuthenticLifetimeFortune(request);
+  } else {
+    return generateLegacyLifetimeFortune(request);
+  }
+}
+
+// 정통 사주학 기반 운세 데이터 생성 (신규)
+function generateAuthenticLifetimeFortune(request: LifetimeFortuneRequest): LifetimeFortuneResponse {
+  console.log('🏛️ 정통 사주학 계산기로 운세 생성 중...');
 
   // 실제 생년월일시로부터 사주 계산
   const sajuResult = SajuCalculator.calculateFourPillars({
@@ -99,15 +125,133 @@ function generateMockLifetimeFortune(request: LifetimeFortuneRequest): LifetimeF
     isLeapMonth: false
   });
 
-  console.log('📊 계산된 사주:', sajuResult);
+  console.log('🔵 기본 사주 계산 완료:', sajuResult);
 
-  // UniversalSajuEngine에서 요구하는 형식으로 변환
-  const sajuData: SajuComponents = {
-    year: { gan: sajuResult.year.heavenly, ji: sajuResult.year.earthly },
-    month: { gan: sajuResult.month.heavenly, ji: sajuResult.month.earthly },
-    day: { gan: sajuResult.day.heavenly, ji: sajuResult.day.earthly },
-    time: { gan: sajuResult.hour.heavenly, ji: sajuResult.hour.earthly },
+  // AuthenticSajuCalculator 형식으로 변환
+  const sajuPalja: SajuPalJa = {
+    year: { gan: sajuResult.year.heavenly as CheonGan, ji: sajuResult.year.earthly as JiJi },
+    month: { gan: sajuResult.month.heavenly as CheonGan, ji: sajuResult.month.earthly as JiJi },
+    day: { gan: sajuResult.day.heavenly as CheonGan, ji: sajuResult.day.earthly as JiJi },
+    time: { gan: sajuResult.hour.heavenly as CheonGan, ji: sajuResult.hour.earthly as JiJi }
   };
+
+  console.log('📋 정통 사주학 형식 변환:', sajuPalja);
+
+  // 정통 사주학 계산 실행
+  const authenticChart = AuthenticSajuCalculator.calculateAuthenticLifeChart(sajuPalja, request.year);
+
+  console.log('✨ 정통 사주학 계산 완료');
+  console.log('🎯 격국:', authenticChart.개인정보.격국.격국유형);
+  console.log('⭐ 용신:', authenticChart.개인정보.용신.용신);
+  console.log('📊 평균점수:', authenticChart.통계.평균점수);
+
+  // AuthenticLifeChart를 LifetimeFortuneResponse로 변환
+  const lifetimeFortune: YearlyFortune[] = authenticChart.연도별점수.map(연도데이터 => ({
+    year: 연도데이터.년도,
+    age: 연도데이터.나이,
+    totalScore: 연도데이터.총점,
+    fortune: Math.min(100, 연도데이터.총점 + 연도데이터.용신효과), // 행운 = 총점 + 용신효과
+    willpower: Math.min(100, 연도데이터.대운점수 + 5), // 의지 = 대운점수 기반
+    environment: Math.min(100, 연도데이터.세운점수 + 10), // 환경 = 세운점수 기반
+    change: Math.min(100, Math.abs(연도데이터.용신효과) + 40), // 변화 = 용신효과 절댓값 기반
+    대운: {
+      천간: authenticChart.대운목록[Math.floor(연도데이터.나이 / 10)]?.천간 || '갑',
+      지지: authenticChart.대운목록[Math.floor(연도데이터.나이 / 10)]?.지지 || '자',
+      오행: authenticChart.대운목록[Math.floor(연도데이터.나이 / 10)]?.오행 || '목',
+      score: 연도데이터.대운점수
+    },
+    세운: {
+      천간: 연도데이터.상세.천간,
+      지지: 연도데이터.상세.지지,
+      오행: 연도데이터.상세.오행,
+      score: 연도데이터.세운점수
+    }
+  }));
+
+  // 분석 데이터 생성
+  const bestYear = lifetimeFortune.reduce((prev, curr) => prev.totalScore > curr.totalScore ? prev : curr);
+  const worstYear = lifetimeFortune.reduce((prev, curr) => prev.totalScore < curr.totalScore ? prev : curr);
+  const avgScore = authenticChart.통계.평균점수;
+
+  console.log('📈 분석 결과:');
+  console.log(`   최고점: ${bestYear.age}세 (${bestYear.totalScore}점)`);
+  console.log(`   최저점: ${worstYear.age}세 (${worstYear.totalScore}점)`);
+  console.log(`   평균: ${avgScore}점`);
+
+  return {
+    success: true,
+    data: {
+      lifetimeFortune,
+      analysis: {
+        keyYears: lifetimeFortune.filter(item => Math.abs(item.totalScore - avgScore) > 15).slice(0, 5),
+        bestYear: {
+          year: bestYear.year,
+          age: bestYear.age,
+          score: bestYear.totalScore
+        },
+        worstYear: {
+          year: worstYear.year,
+          age: worstYear.age,
+          score: worstYear.totalScore
+        },
+        averageScore: avgScore
+      }
+    },
+    timestamp: new Date().toISOString()
+  };
+}
+
+// 기존 엔진을 사용한 레거시 데이터 생성 (호환성 유지)
+function generateLegacyLifetimeFortune(request: LifetimeFortuneRequest): LifetimeFortuneResponse {
+  console.log('🔧 레거시 엔진으로 운세 생성 중...');
+
+  // 전달받은 사주 데이터 확인
+  if (request.sajuData) {
+    console.log('🔴 전달받은 사주 데이터:', request.sajuData);
+  } else {
+    console.log('⚠️ 사주 데이터가 전달되지 않음 - 재계산 필요');
+  }
+
+  // 실제 생년월일시로부터 사주 계산
+  const sajuResult = SajuCalculator.calculateFourPillars({
+    year: request.year,
+    month: request.month,
+    day: request.day,
+    hour: request.hour,
+    minute: 0,
+    isLunar: request.isLunar || false,
+    isLeapMonth: false
+  });
+
+  console.log('🔵 재계산된 사주:', sajuResult);
+
+  // 🔧 새로운 사주 데이터 해결 로직 적용
+  let finalSajuResolution;
+  try {
+    finalSajuResolution = resolveSajuData(request.sajuData, sajuResult);
+    console.log('✅ 사주 데이터 해결 완료:', finalSajuResolution.resolution);
+    console.log('🎯 신뢰도:', finalSajuResolution.confidence + '%');
+
+    // 디버깅용 출력
+    debugSajuData(finalSajuResolution.finalSaju, '최종 선택된');
+  } catch (error) {
+    console.error('❌ 사주 데이터 해결 실패:', error);
+    // 폴백: 재계산된 사주 사용
+    finalSajuResolution = {
+      finalSaju: {
+        year: { gan: sajuResult.year.heavenly, ji: sajuResult.year.earthly, combined: sajuResult.year.combined },
+        month: { gan: sajuResult.month.heavenly, ji: sajuResult.month.earthly, combined: sajuResult.month.combined },
+        day: { gan: sajuResult.day.heavenly, ji: sajuResult.day.earthly, combined: sajuResult.day.combined },
+        time: { gan: sajuResult.hour.heavenly, ji: sajuResult.hour.earthly, combined: sajuResult.hour.combined }
+      },
+      resolution: '폴백: 재계산 사주 사용',
+      confidence: 50
+    };
+  }
+
+  // UniversalSajuEngine 형식으로 변환
+  const sajuData: SajuComponents = convertToUniversalSajuFormat(finalSajuResolution.finalSaju);
+  console.log('📌 최종 사용 사주 (엔진 형식):', sajuData);
 
   // 개인 정보 구성
   const birthDate = `${request.year}-${String(request.month).padStart(2, '0')}-${String(request.day).padStart(2, '0')}`;
@@ -124,6 +268,8 @@ function generateMockLifetimeFortune(request: LifetimeFortuneRequest): LifetimeF
   };
 
   console.log('👤 개인정보:', personalInfo);
+  console.log('🔄 해결 방법:', finalSajuResolution.resolution);
+  console.log('📊 데이터 신뢰도:', finalSajuResolution.confidence + '%');
 
   // 새로운 엔진으로 차트 생성
   const chartData = UniversalSajuEngine.generateUniversalLifeChart(sajuData, personalInfo);

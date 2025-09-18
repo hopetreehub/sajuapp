@@ -16,7 +16,19 @@ export function convertCustomerToLifetimeRequest(
 ): LifetimeFortuneRequest {
   const birthDate = new Date(customer.birth_date);
   const [hour] = customer.birth_time.split(':').map(Number);
-  
+
+  // 사주 데이터 파싱 시도
+  let sajuData = null;
+  if (customer.saju_data) {
+    try {
+      sajuData = typeof customer.saju_data === 'string'
+        ? JSON.parse(customer.saju_data)
+        : customer.saju_data;
+    } catch (e) {
+      console.warn('사주 데이터 파싱 실패:', e);
+    }
+  }
+
   return {
     year: birthDate.getFullYear(),
     month: birthDate.getMonth() + 1, // JavaScript Date는 0부터 시작
@@ -24,6 +36,7 @@ export function convertCustomerToLifetimeRequest(
     hour,
     isLunar: customer.lunar_solar === 'lunar',
     gender: customer.gender,
+    sajuData, // 🔧 표준 해결 로직에 의해 처리될 사주 데이터
   };
 }
 

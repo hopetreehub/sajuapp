@@ -996,44 +996,164 @@ function calculateBaseLifeScore(
 }
 
 /**
- * 대운 점수 계산
+ * 강화된 대운 점수 계산 - 실제 사주 이론 반영
  */
 function calculateDaeunScore(saju: any, cycle: number): number {
-  // 대운 천간지지 계산
-  const daeunGan = CHEONGAN[cycle % 10];
-  const daeunJi = JIJI[cycle % 12];
+  // 1. 월지를 기준으로 한 순행/역행 결정
+  const monthJi = saju.month.ji;
+  const monthElement = JIJI_OHHAENG[monthJi as JiJi];
+
+  // 양간(갑병무경임)이면 순행, 음간(을정기신계)이면 역행 (간화)
+  const dayGan = saju.day.gan;
+  const isForward = ['갑', '병', '무', '경', '임'].includes(dayGan);
+
+  // 2. 실제 대운 천간지지 계산 (월주 기준으로 진행)
+  const monthGanIndex = CHEONGAN.indexOf(saju.month.gan as CheonGan);
+  const monthJiIndex = JIJI.indexOf(monthJi as JiJi);
+
+  let daeunGanIndex: number;
+  let daeunJiIndex: number;
+
+  if (isForward) {
+    // 순행: 월주에서 앞으로 진행
+    daeunGanIndex = (monthGanIndex + cycle + 1) % 10;
+    daeunJiIndex = (monthJiIndex + cycle + 1) % 12;
+  } else {
+    // 역행: 월주에서 뒤로 진행
+    daeunGanIndex = (monthGanIndex - cycle - 1 + 10) % 10;
+    daeunJiIndex = (monthJiIndex - cycle - 1 + 12) % 12;
+  }
+
+  const daeunGan = CHEONGAN[daeunGanIndex];
+  const daeunJi = JIJI[daeunJiIndex];
 
   let score = 50;
 
-  // 일간과의 관계
+  // 3. 일간과 대운 천간의 십신 관계 (복잡한 상호작용)
   const dayElement = CHEONGAN_OHHAENG[saju.day.gan as CheonGan];
   const daeunElement = CHEONGAN_OHHAENG[daeunGan];
 
-  // 상생이면 가점
+  // 상생 관계 (강한 길운) - 영향력 대폭 확대
   if (ELEMENT_GENERATION[daeunElement] === dayElement) {
-    score += 15;
+    score += 45; // 정인, 편인 관계 - 강화
   } else if (ELEMENT_GENERATION[dayElement] === daeunElement) {
-    score += 10;
+    score += 35; // 식신, 상관 관계 - 강화
   }
 
-  // 상극이면 감점
+  // 상극 관계 (흉운 가능성) - 영향력 대폭 확대
   if (ELEMENT_CONFLICT[daeunElement] === dayElement) {
-    score -= 20;
+    score -= 50; // 정관, 편관의 강한 극 - 강화
   } else if (ELEMENT_CONFLICT[dayElement] === daeunElement) {
-    score -= 10;
+    score -= 40; // 일간이 극하는 재성 - 강화
   }
 
-  // 합이면 가점
-  if (CHEONGAN_HARMONY[saju.day.gan] === daeunGan) {
-    score += 20;
+  // 같은 오행 (비견, 겁재)
+  if (dayElement === daeunElement) {
+    score += 10; // 비교적 안정
   }
 
-  // 충이면 감점
-  if (JIJI_CONFLICT[saju.day.ji] === daeunJi) {
-    score -= 15;
+  // 4. 천간 합 (강한 길운)
+  if (CHEONGAN_HARMONY[saju.day.gan] === daeunGan ||
+      CHEONGAN_HARMONY[daeunGan] === saju.day.gan) {
+    score += 35; // 천간 합은 매우 길함
   }
 
-  return Math.max(0, Math.min(100, score));
+  // 5. 지지 충/합 관계
+  if (JIJI_CONFLICT[saju.day.ji] === daeunJi ||
+      JIJI_CONFLICT[daeunJi] === saju.day.ji) {
+    score -= 25; // 일지와 대운지지의 충은 큰 변화
+  }
+
+  if (JIJI_SIX_HARMONY[saju.day.ji] === daeunJi ||
+      JIJI_SIX_HARMONY[daeunJi] === saju.day.ji) {
+    score += 20; // 육합은 길함
+  }
+
+  // 6. 삼합 관계 체크
+  const sajuJis = [saju.year.ji, saju.month.ji, saju.day.ji, saju.time.ji];
+  const tripleHarmony = JIJI_TRIPLE_HARMONY[daeunJi];
+  if (tripleHarmony) {
+    const harmonyCount = tripleHarmony.filter(ji => sajuJis.includes(ji)).length;
+    score += harmonyCount * 12; // 삼합 완성도에 따라 가점
+  }
+
+  // 7. 대운 전환 시 급변 효과 (특정 cycle에서 큰 변화)
+  const transitionBonus = calculateTransitionEffect(saju, cycle, daeunGan, daeunJi);
+  score += transitionBonus;
+
+  // 8. 월령과의 관계 (계절성)
+  const seasonalBonus = calculateSeasonalDaeun(monthJi, daeunJi);
+  score += seasonalBonus;
+
+  return Math.max(10, Math.min(90, score));
+}
+
+/**
+ * 대운 전환 시 급변 효과 계산
+ */
+function calculateTransitionEffect(saju: any, cycle: number, daeunGan: string, daeunJi: string): number {
+  let transitionEffect = 0;
+
+  // 특정 cycle에서 극적 변화 (개인별로 다름)
+  const uniqueValue = getSajuUniqueValue(saju);
+  const criticalCycles = [(uniqueValue % 3) + 1, (uniqueValue % 5) + 3, (uniqueValue % 7) + 6];
+
+  if (criticalCycles.includes(cycle)) {
+    // 대운에 따라 급상승 또는 급하락 - 극적 효과 확대
+    const isPositiveTransition = (uniqueValue + cycle) % 2 === 0;
+    transitionEffect = isPositiveTransition ? 45 : -45;
+
+    // 더 복잡한 전환 패턴 추가
+    if (cycle === criticalCycles[0]) {
+      transitionEffect *= 1.5; // 첫 번째 위기는 더 강하게
+    }
+  }
+
+  // 대운 천간지지의 조합에 따른 특수 효과 - 영향력 확대
+  const daeunPattern = CHEONGAN.indexOf(daeunGan) * 12 + JIJI.indexOf(daeunJi);
+  const specialEffects = [13, 27, 41, 55]; // 특수한 60갑자 조합
+
+  if (specialEffects.includes(daeunPattern)) {
+    transitionEffect += (uniqueValue % 3 - 1) * 30; // -30, 0, 30 중 하나로 확대
+  }
+
+  // 추가적인 개인별 변동성
+  const personalVariation = Math.sin((cycle + uniqueValue) * 0.7) * 20;
+  transitionEffect += personalVariation;
+
+  return transitionEffect;
+}
+
+/**
+ * 계절성 대운 보너스
+ */
+function calculateSeasonalDaeun(monthJi: string, daeunJi: string): number {
+  const seasonMap: Record<string, string> = {
+    인: '봄', 묘: '봄', 진: '봄말',
+    사: '여름', 오: '여름', 미: '여름말',
+    신: '가을', 유: '가을', 술: '가을말',
+    자: '겨울', 축: '겨울말', 해: '겨울',
+  };
+
+  const monthSeason = seasonMap[monthJi];
+  const daeunSeason = seasonMap[daeunJi];
+
+  // 같은 계절이면 조화
+  if (monthSeason === daeunSeason) {
+    return 8;
+  }
+
+  // 상극 계절이면 변화
+  const conflictSeasons: Record<string, string> = {
+    '봄': '가을', '가을': '봄',
+    '여름': '겨울', '겨울': '여름',
+  };
+
+  if (conflictSeasons[monthSeason] === daeunSeason) {
+    return -5;
+  }
+
+  return 0;
 }
 
 /**
@@ -1088,8 +1208,10 @@ function calculatePersonalRhythm(saju: any, age: number): number {
   const emotional = Math.sin((age * 2 * Math.PI) / 28) * 10;
   const intellectual = Math.sin((age * 2 * Math.PI) / 33) * 8;
 
-  // 개인별 고유 변조
-  const personalModulation = Math.sin((age + uniqueValue) * 0.15) * 5;
+  // 개인별 고유 변조 - 폭 대폭 확대
+  const personalModulation = Math.sin((age + uniqueValue) * 0.15) * 25 +
+                             Math.cos((age + uniqueValue * 2) * 0.08) * 15 +
+                             Math.sin((age + uniqueValue * 3) * 0.3) * 10;
 
   const rhythm = 50 + physical + emotional + intellectual + personalModulation;
 
@@ -1097,9 +1219,10 @@ function calculatePersonalRhythm(saju: any, age: number): number {
 }
 
 /**
- * 사주 고유값 계산
+ * 강화된 사주 고유값 계산 - 실제 사주 이론 반영
  */
 function getSajuUniqueValue(saju: any): number {
+  // 1. 기본 천간지지 값
   const ganValues: Record<string, number> = {
     갑: 1, 을: 2, 병: 3, 정: 4, 무: 5,
     기: 6, 경: 7, 신: 8, 임: 9, 계: 10,
@@ -1110,16 +1233,72 @@ function getSajuUniqueValue(saju: any): number {
     오: 7, 미: 8, 신: 9, 유: 10, 술: 11, 해: 12,
   };
 
-  return (
-    ganValues[saju.year.gan] * 1000 +
-    jiValues[saju.year.ji] * 100 +
-    ganValues[saju.month.gan] * 50 +
-    jiValues[saju.month.ji] * 25 +
-    ganValues[saju.day.gan] * 10 +
-    jiValues[saju.day.ji] * 5 +
-    ganValues[saju.time.gan] * 2 +
-    jiValues[saju.time.ji]
+  // 2. 60갑자 조합별 고유 패턴 계수
+  const gapjaPattern = ((ganValues[saju.year.gan] - 1) * 12 + (jiValues[saju.year.ji] - 1)) % 60;
+  const monthPattern = ((ganValues[saju.month.gan] - 1) * 12 + (jiValues[saju.month.ji] - 1)) % 60;
+  const dayPattern = ((ganValues[saju.day.gan] - 1) * 12 + (jiValues[saju.day.ji] - 1)) % 60;
+  const timePattern = ((ganValues[saju.time.gan] - 1) * 12 + (jiValues[saju.time.ji] - 1)) % 60;
+
+  // 3. 오행 편중도 계산
+  const elements: Record<string, number> = { 목: 0, 화: 0, 토: 0, 금: 0, 수: 0 };
+  [saju.year.gan, saju.month.gan, saju.day.gan, saju.time.gan].forEach(gan => {
+    elements[CHEONGAN_OHHAENG[gan as CheonGan]]++;
+  });
+  [saju.year.ji, saju.month.ji, saju.day.ji, saju.time.ji].forEach(ji => {
+    elements[JIJI_OHHAENG[ji as JiJi]]++;
+  });
+
+  const elementValues = Object.values(elements);
+  const maxElement = Math.max(...elementValues);
+  const minElement = Math.min(...elementValues);
+  const elementImbalance = (maxElement - minElement) * 100; // 편중도
+
+  // 4. 충합 관계 복잡도
+  let harmonyComplexity = 0;
+  let conflictComplexity = 0;
+
+  // 천간 합 체크
+  const gans = [saju.year.gan, saju.month.gan, saju.day.gan, saju.time.gan];
+  for (let i = 0; i < gans.length; i++) {
+    for (let j = i + 1; j < gans.length; j++) {
+      if (CHEONGAN_HARMONY[gans[i]] === gans[j]) {
+        harmonyComplexity += (i + 1) * (j + 1) * 10;
+      }
+    }
+  }
+
+  // 지지 충 체크
+  const jis = [saju.year.ji, saju.month.ji, saju.day.ji, saju.time.ji];
+  for (let i = 0; i < jis.length; i++) {
+    for (let j = i + 1; j < jis.length; j++) {
+      if (JIJI_CONFLICT[jis[i]] === jis[j]) {
+        conflictComplexity += (i + 1) * (j + 1) * 15;
+      }
+    }
+  }
+
+  // 5. 일간 중심 특수 계수
+  const dayMasterElement = CHEONGAN_OHHAENG[saju.day.gan as CheonGan];
+  const dayMasterBonus = ganValues[saju.day.gan] * jiValues[saju.day.ji] * 5;
+
+  // 6. 계절성 반영 (월지 기준)
+  const monthJi = saju.month.ji;
+  const seasonality = jiValues[monthJi] * 7;
+
+  // 7. 종합 고유값 계산 (각 요소의 가중치 조정)
+  const complexUniqueValue = (
+    gapjaPattern * 1000 +          // 년주 60갑자 패턴
+    monthPattern * 500 +          // 월주 패턴
+    dayPattern * 800 +            // 일주 패턴 (가장 중요)
+    timePattern * 300 +           // 시주 패턴
+    elementImbalance * 20 +       // 오행 편중도
+    harmonyComplexity * 3 +       // 조화 복잡도
+    conflictComplexity * 2 +      // 충돌 복잡도
+    dayMasterBonus +              // 일간 특수 계수
+    seasonality * 10              // 계절성
   );
+
+  return complexUniqueValue;
 }
 
 /**

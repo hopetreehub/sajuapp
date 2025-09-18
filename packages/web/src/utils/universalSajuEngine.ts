@@ -16,7 +16,7 @@ import {
 import { calculateLifeChartScore } from './sajuScoreCalculator';
 
 // 디버깅용 로그 플래그
-const DEBUG_MODE = false; // 프로덕션에서는 false로 설정
+const DEBUG_MODE = true; // 임시로 true로 설정하여 디버깅
 
 // 오행 상생상극 관계
 const _WUXING_RELATIONS = {
@@ -247,7 +247,7 @@ export class UniversalSajuEngine {
     _sajuData: SajuComponents,
   ): ChartDimensions {
     // DEPRECATED - 더 이상 사용하지 않음
-    const dimensions: ChartDimensions = {
+    const deprecatedDimensions: ChartDimensions = {
       geunbon: [], woon: [], haeng: [], hyeong: [], byeon: [],
     };
 
@@ -257,7 +257,7 @@ export class UniversalSajuEngine {
 
       // 근본(종합운) - 회색 그래프
       const geunbonValue = Math.max(0, Math.min(100, baseValue));
-      dimensions.geunbon.push({
+      deprecatedDimensions.geunbon.push({
         age,
         value: geunbonValue,
         year: 2000 + age, // 더미 년도
@@ -266,7 +266,7 @@ export class UniversalSajuEngine {
 
       // 운 - 근본과 유사하되 약간의 변화
       const woonValue = Math.max(0, Math.min(100, baseValue + Math.sin(age * 0.15) * 8));
-      dimensions.woon.push({
+      deprecatedDimensions.woon.push({
         age,
         value: woonValue,
         year: 2000 + age,
@@ -275,7 +275,7 @@ export class UniversalSajuEngine {
 
       // 행 - 좀 더 역동적
       const haengValue = Math.max(0, Math.min(100, baseValue + Math.sin(age * 0.2) * 10));
-      dimensions.haeng.push({
+      deprecatedDimensions.haeng.push({
         age,
         value: haengValue,
         year: 2000 + age,
@@ -284,7 +284,7 @@ export class UniversalSajuEngine {
 
       // 형 - 안정적
       const hyeongValue = Math.max(0, Math.min(100, baseValue + Math.sin(age * 0.08) * 5));
-      dimensions.hyeong.push({
+      deprecatedDimensions.hyeong.push({
         age,
         value: hyeongValue,
         year: 2000 + age,
@@ -293,7 +293,7 @@ export class UniversalSajuEngine {
 
       // 변 - 변동성
       const byeonValue = Math.max(0, Math.min(100, baseValue + Math.cos(age * 0.3) * 12));
-      dimensions.byeon.push({
+      deprecatedDimensions.byeon.push({
         age,
         value: byeonValue,
         year: 2000 + age,
@@ -301,7 +301,7 @@ export class UniversalSajuEngine {
       });
     }
 
-    return dimensions;
+    return deprecatedDimensions;
   }
 
 
