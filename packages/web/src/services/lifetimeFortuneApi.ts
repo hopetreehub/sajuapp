@@ -2,6 +2,11 @@
  * 100년 인생운세 API 서비스
  */
 
+import { UniversalSajuEngine } from '@/utils/universalSajuEngine';
+import { SajuComponents, PersonalInfo } from '@/types/universalLifeChart';
+import { SajuCalculator } from '@/utils/sajuCalculator';
+import { SajuBirthInfo } from '@/types/saju';
+
 // 임시로 프론트엔드 프록시를 사용하지 않고 직접 호출
 // 실제 서비스가 구현되면 프록시를 통해 호출하도록 변경 필요
 const API_BASE_URL = '';
@@ -79,53 +84,114 @@ export async function fetchLifetimeFortune(request: LifetimeFortuneRequest): Pro
   }
 }
 
-// 임시 모의 데이터 생성 함수
+// 새로운 엔진을 사용한 실제 패턴 기반 데이터 생성
 function generateMockLifetimeFortune(request: LifetimeFortuneRequest): LifetimeFortuneResponse {
-  const currentYear = new Date().getFullYear();
-  const birthYear = request.year;
+  console.log('🔮 실제 사주 계산 시작:', request);
+
+  // 실제 생년월일시로부터 사주 계산
+  const sajuResult = SajuCalculator.calculateFourPillars({
+    year: request.year,
+    month: request.month,
+    day: request.day,
+    hour: request.hour,
+    minute: 0,
+    isLunar: request.isLunar || false,
+    isLeapMonth: false
+  });
+
+  console.log('📊 계산된 사주:', sajuResult);
+
+  // UniversalSajuEngine에서 요구하는 형식으로 변환
+  const sajuData: SajuComponents = {
+    year: { gan: sajuResult.year.heavenly, ji: sajuResult.year.earthly },
+    month: { gan: sajuResult.month.heavenly, ji: sajuResult.month.earthly },
+    day: { gan: sajuResult.day.heavenly, ji: sajuResult.day.earthly },
+    time: { gan: sajuResult.hour.heavenly, ji: sajuResult.hour.earthly },
+  };
+
+  // 개인 정보 구성
+  const birthDate = `${request.year}-${String(request.month).padStart(2, '0')}-${String(request.day).padStart(2, '0')}`;
+  const birthTime = `${String(request.hour).padStart(2, '0')}:00`;
+  const sajuText = `${sajuResult.year.combined} ${sajuResult.month.combined} ${sajuResult.day.combined} ${sajuResult.hour.combined}`;
+
+  const personalInfo: PersonalInfo = {
+    name: '사용자',
+    birthDate,
+    birthTime,
+    sajuText,
+    gender: request.gender || 'male',
+    lunarSolar: request.isLunar ? 'lunar' : 'solar',
+  };
+
+  console.log('👤 개인정보:', personalInfo);
+
+  // 새로운 엔진으로 차트 생성
+  const chartData = UniversalSajuEngine.generateUniversalLifeChart(sajuData, personalInfo);
+
+  // UniversalLifeChartData를 LifetimeFortuneResponse로 변환
   const lifetimeFortune: YearlyFortune[] = [];
 
-  // 0세부터 100세까지의 운세 데이터 생성
-  for (let age = 0; age <= 100; age++) {
-    const year = birthYear + age;
+  for (let age = 0; age <= 95; age++) {
+    const year = request.year + age;
 
-    // 간단한 사인파 패턴으로 운세 변화 시뮬레이션
-    const baseScore = 50 + 30 * Math.sin((age / 12) * Math.PI);
+    // 5차원 데이터에서 값 추출
+    const 근본값 = chartData.chartData.geunbon[age]?.value || 50;
+    const 운값 = chartData.chartData.woon[age]?.value || 50;
+    const 행값 = chartData.chartData.haeng[age]?.value || 50;
+    const 형값 = chartData.chartData.hyeong[age]?.value || 50;
+    const 변값 = chartData.chartData.byeon[age]?.value || 50;
+
+    // 총점은 5차원 평균
+    const totalScore = Math.round((근본값 + 운값 + 행값 + 형값 + 변값) / 5);
 
     lifetimeFortune.push({
       year,
       age,
-      totalScore: Math.round(baseScore),
-      fortune: Math.round(baseScore + Math.random() * 20 - 10),
-      willpower: Math.round(baseScore + Math.random() * 20 - 10),
-      environment: Math.round(baseScore + Math.random() * 20 - 10),
-      change: Math.round(baseScore + Math.random() * 20 - 10),
+      totalScore,
+      fortune: 운값,        // 운 차원
+      willpower: 행값,      // 행 차원
+      environment: 형값,    // 형 차원
+      change: 변값,         // 변 차원
       대운: {
         천간: ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'][Math.floor(age / 10) % 10],
         지지: ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'][Math.floor(age / 10) % 12],
         오행: ['목', '화', '토', '금', '수'][Math.floor(age / 10) % 5],
-        score: Math.round(baseScore),
+        score: Math.round((운값 + 형값) / 2),
       },
       세운: {
         천간: ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'][year % 10],
         지지: ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'][year % 12],
         오행: ['목', '화', '토', '금', '수'][year % 5],
-        score: Math.round(50 + Math.random() * 50),
+        score: Math.round(변값),
       },
-      description: `${age}세 운세`,
     });
   }
+
+  // 최고/최저 연도 계산
+  const bestYear = lifetimeFortune.reduce((prev, curr) => prev.totalScore > curr.totalScore ? prev : curr);
+  const worstYear = lifetimeFortune.reduce((prev, curr) => prev.totalScore < curr.totalScore ? prev : curr);
+  const avgScore = lifetimeFortune.reduce((sum, item) => sum + item.totalScore, 0) / lifetimeFortune.length;
 
   return {
     success: true,
     data: {
       lifetimeFortune,
-      summary: {
-        bestYears: [25, 35, 45, 55, 65],
-        worstYears: [20, 30, 40, 50, 60],
-        currentYearRank: 50,
+      analysis: {
+        keyYears: lifetimeFortune.filter(item => Math.abs(item.totalScore - avgScore) > 20).slice(0, 5),
+        bestYear: {
+          year: bestYear.year,
+          age: bestYear.age,
+          score: bestYear.totalScore,
+        },
+        worstYear: {
+          year: worstYear.year,
+          age: worstYear.age,
+          score: worstYear.totalScore,
+        },
+        averageScore: Math.round(avgScore),
       },
     },
+    timestamp: new Date().toISOString(),
   };
 }
 
