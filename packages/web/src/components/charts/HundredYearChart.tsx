@@ -44,6 +44,14 @@ interface YearlyFortune {
     오행: string
     score: number
   }
+  // 🆕 주능/주흉 필드
+  주능주흉?: {
+    type: '대길' | '길' | '평' | '흉' | '대흉'
+    label: string
+    description: string
+    color: string
+    strength: number
+  }
 }
 
 interface HundredYearChartProps {
@@ -74,24 +82,42 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
     return {
       labels,
       datasets: [
-        // 막대 차트 - 종합 운세 (회색으로 변경)
+        // 막대 차트 - 종합 운세 (주능/주흉에 따른 색상)
         {
           type: 'bar' as const,
           label: '종합 운세',
           data: barData,
           backgroundColor: (context: any) => {
             const index = context.dataIndex;
-            const age = data[index]?.age;
-            // 현재 나이 강조
-            if (age === currentAge) return 'rgba(55, 65, 81, 0.8)';  // gray-700
-            return 'rgba(156, 163, 175, 0.6)';  // gray-400
+            const yearData = data[index];
+            const age = yearData?.age;
+
+            // 현재 나이는 진하게 표시
+            const isCurrentAge = age === currentAge;
+            const opacity = isCurrentAge ? 0.9 : 0.6;
+
+            // 주능/주흉에 따른 색상 결정
+            if (yearData?.주능주흉) {
+              const color = yearData.주능주흉.color;
+              // hex to rgba 변환
+              if (color === '#FFD700') return `rgba(255, 215, 0, ${opacity})`;     // 대길 - 금색
+              if (color === '#32CD32') return `rgba(50, 205, 50, ${opacity})`;     // 길 - 연두색
+              if (color === '#808080') return `rgba(128, 128, 128, ${opacity})`;   // 평 - 회색
+              if (color === '#FF6347') return `rgba(255, 99, 71, ${opacity})`;     // 흉 - 연한 빨강
+              if (color === '#8B0000') return `rgba(139, 0, 0, ${opacity})`;       // 대흉 - 진한 빨강
+            }
+            // 기본 색상
+            return `rgba(156, 163, 175, ${opacity})`;
           },
           borderColor: (context: any) => {
             const index = context.dataIndex;
-            const age = data[index]?.age;
-            // 현재 나이 강조
-            if (age === currentAge) return 'rgba(55, 65, 81, 1)';  // gray-700
-            return 'rgba(107, 114, 128, 1)';  // gray-500
+            const yearData = data[index];
+
+            // 주능/주흉에 따른 테두리 색상
+            if (yearData?.주능주흉) {
+              return yearData.주능주흉.color;
+            }
+            return 'rgba(107, 114, 128, 1)';
           },
           borderWidth: 1,
           yAxisID: 'y',
@@ -198,10 +224,19 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
             const index = context.dataIndex;
             const yearData = data[index];
             if (context.dataset.label === '종합 운세') {
-              return [
+              const lines = [
                 `대운: ${yearData.대운.천간}${yearData.대운.지지} (${yearData.대운.오행})`,
                 `세운: ${yearData.세운.천간}${yearData.세운.지지} (${yearData.세운.오행})`,
               ];
+
+              // 주능/주흉 정보 추가
+              if (yearData.주능주흉) {
+                lines.push('');  // 빈 줄 추가
+                lines.push(`🔮 ${yearData.주능주흉.label}`);
+                lines.push(yearData.주능주흉.description);
+              }
+
+              return lines;
             }
             return [];
           },
@@ -308,22 +343,59 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
         </div>
         
         {/* 범례 설명 */}
-        <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-green-500 rounded"></div>
-            <span className="text-gray-700 dark:text-gray-300">행운: 재물·명예·성공</span>
+        <div className="mb-4">
+          {/* 4가지 기운 범례 */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-green-500 rounded"></div>
+              <span className="text-gray-700 dark:text-gray-300">행운: 재물·명예·성공</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-orange-500 rounded"></div>
+              <span className="text-gray-700 dark:text-gray-300">의지: 추진력·실행력</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-blue-500 rounded"></div>
+              <span className="text-gray-700 dark:text-gray-300">환경: 대인관계·지원</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-purple-500 rounded"></div>
+              <span className="text-gray-700 dark:text-gray-300">변화: 기회·위기·변동</span>
+            </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-orange-500 rounded"></div>
-            <span className="text-gray-700 dark:text-gray-300">의지: 추진력·실행력</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-blue-500 rounded"></div>
-            <span className="text-gray-700 dark:text-gray-300">환경: 대인관계·지원</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-purple-500 rounded"></div>
-            <span className="text-gray-700 dark:text-gray-300">변화: 기회·위기·변동</span>
+
+          {/* 🆕 주능/주흉 범례 */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 text-xs p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-yellow-400 rounded"></div>
+              <span className="text-gray-600 dark:text-gray-400">
+                <strong>주능-대운</strong>: 최상의 시기
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-green-400 rounded"></div>
+              <span className="text-gray-600 dark:text-gray-400">
+                <strong>주능-길운</strong>: 좋은 시기
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-gray-400 rounded"></div>
+              <span className="text-gray-600 dark:text-gray-400">
+                <strong>평운</strong>: 보통 시기
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-red-400 rounded"></div>
+              <span className="text-gray-600 dark:text-gray-400">
+                <strong>주흉-흉운</strong>: 주의 시기
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-red-700 rounded"></div>
+              <span className="text-gray-600 dark:text-gray-400">
+                <strong>주흉-대흉</strong>: 위험 시기
+              </span>
+            </div>
           </div>
         </div>
 

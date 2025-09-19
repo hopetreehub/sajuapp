@@ -11,7 +11,6 @@ import HundredYearChart from '@/components/charts/HundredYearChartFixed';
 import { fetchLifetimeFortune, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
 import { convertCustomerToLifetimeRequest, getCacheKey } from '@/utils/customerDataConverter';
 import '@/utils/testUniqueValues'; // 개인별 고유값 테스트 함수 로드
-import { AuthenticSajuTest } from '@/utils/authenticSajuTest';
 
 export default function UnifiedSajuAnalysisPageWithLifeChart() {
   const [selectedCategory, setSelectedCategory] = useState('jubon');
@@ -24,8 +23,6 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
   const [lifeChartLoading, setLifeChartLoading] = useState(false);
   const [lifeChartError, setLifeChartError] = useState<string | null>(null);
   const [categories, setCategories] = useState<SajuRadarCategory[]>(SAJU_RADAR_CATEGORIES);
-  const [isTestRunning, setIsTestRunning] = useState(false);
-  const [testResults, setTestResults] = useState<string[]>([]);
 
   // 정확한 나이 계산 함수
   const calculateCurrentAge = (birthDate: string): number => {
@@ -42,33 +39,6 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
     return age + 1; // 한국 나이 계산 (태어나면 1살)
   };
 
-  // 정통 사주학 테스트 실행
-  const runAuthenticSajuTests = async () => {
-    setIsTestRunning(true);
-    setTestResults([]);
-
-    const originalConsoleLog = console.log;
-    const testLogs: string[] = [];
-
-    // 콘솔 로그를 캡처
-    console.log = (...args: any[]) => {
-      const message = args.map(arg =>
-        typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
-      ).join(' ');
-      testLogs.push(message);
-      setTestResults(prev => [...prev, message]);
-      originalConsoleLog(...args);
-    };
-
-    try {
-      await AuthenticSajuTest.runAllTests();
-    } catch (error) {
-      console.log('❌ 테스트 중 오류 발생:', error);
-    } finally {
-      console.log = originalConsoleLog; // 원래 콘솔 로그 복원
-      setIsTestRunning(false);
-    }
-  };
 
   const currentCategory = categories.find(cat => cat.id === selectedCategory);
 
@@ -256,60 +226,6 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
             />
           </div>
         )}
-
-        {/* 🧪 정통 사주학 테스트 섹션 */}
-        <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-700 rounded-lg">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h3 className="text-lg font-bold text-purple-800 dark:text-purple-300 mb-2">
-                🧪 정통 사주학 계산기 테스트
-              </h3>
-              <p className="text-sm text-purple-600 dark:text-purple-400">
-                박준수/정비제 테스트 케이스로 용신 기반 개인별 운세 차이 검증
-              </p>
-            </div>
-            <button
-              onClick={runAuthenticSajuTests}
-              disabled={isTestRunning}
-              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white font-semibold rounded-lg transition-colors flex items-center gap-2"
-            >
-              {isTestRunning ? (
-                <>
-                  <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
-                  테스트 실행 중...
-                </>
-              ) : (
-                <>
-                  🚀 테스트 실행
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* 테스트 결과 표시 */}
-          {testResults.length > 0 && (
-            <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg border max-h-96 overflow-y-auto">
-              <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-3">📊 테스트 결과:</h4>
-              <div className="space-y-1 font-mono text-xs">
-                {testResults.map((result, index) => (
-                  <div
-                    key={index}
-                    className={`
-                      ${result.includes('✅') ? 'text-green-600 dark:text-green-400' : ''}
-                      ${result.includes('❌') ? 'text-red-600 dark:text-red-400' : ''}
-                      ${result.includes('🧪') ? 'text-blue-600 dark:text-blue-400 font-bold' : ''}
-                      ${result.includes('🔮') || result.includes('🏛️') ? 'text-purple-600 dark:text-purple-400' : ''}
-                      ${result.includes('⭐') || result.includes('🎯') ? 'text-yellow-600 dark:text-yellow-400' : ''}
-                      ${!result.includes('✅') && !result.includes('❌') && !result.includes('🧪') && !result.includes('🔮') && !result.includes('🏛️') && !result.includes('⭐') && !result.includes('🎯') ? 'text-gray-600 dark:text-gray-400' : ''}
-                    `}
-                  >
-                    {result}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
 
         {/* 카테고리 로딩 상태 */}
         {isLoadingCategories && (
