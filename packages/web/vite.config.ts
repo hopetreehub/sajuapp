@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         // 캘린더 서비스 (고객 관리 포함)
         '/api/calendar': {
-          target: 'http://localhost:5001',
+          target: 'http://localhost:4012',
           changeOrigin: true,
           secure: false,
         },

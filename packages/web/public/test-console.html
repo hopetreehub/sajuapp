@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정통 사주학 계산기 테스트</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; margin-bottom: 30px; }
+        .test-section { margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .test-section h2 { color: #555; margin-bottom: 15px; }
+        .result-box { background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 5px; font-family: monospace; white-space: pre-wrap; }
+        .button { background: #007bff; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .button:hover { background: #0056b3; }
+        .error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔮 정통 사주학 계산기 검증 테스트</h1>
+
+        <div class="test-section">
+            <h2>📋 테스트 대상</h2>
+            <p><strong>박준수:</strong> 신해기해병오경인 (1971년생)</p>
+            <p><strong>정비제:</strong> 병진정유신미계사 (1976년생)</p>
+        </div>
+
+        <div class="test-section">
+            <h2>🎯 테스트 실행</h2>
+            <button class="button" onclick="runAuthenticTest()">정통 사주학 테스트 실행</button>
+            <button class="button" onclick="runLifetimeFortuneTest()">인생운세 API 테스트 실행</button>
+            <button class="button" onclick="clearResults()">결과 지우기</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 테스트 결과</h2>
+            <div id="testResults" class="result-box">
+테스트 결과가 여기에 표시됩니다.
+
+브라우저 개발자 도구(F12)를 열고 Console 탭을 확인하면 더 자세한 로그를 볼 수 있습니다.
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔧 수동 테스트</h2>
+            <p>브라우저 콘솔에서 다음 명령어들을 실행해볼 수 있습니다:</p>
+            <div class="result-box">
+// 정통 사주학 계산기 테스트
+AuthenticSajuCalculator.runTestCases();
+
+// 박준수 개별 테스트
+const 박준수사주 = AuthenticSajuCalculator.createParkJunSooTestCase();
+const 박준수결과 = AuthenticSajuCalculator.calculateAuthenticLifeChart(박준수사주, 1971);
+console.log('박준수 결과:', 박준수결과);
+
+// 정비제 개별 테스트
+const 정비제사주 = AuthenticSajuCalculator.createJeongBiJeTestCase();
+const 정비제결과 = AuthenticSajuCalculator.calculateAuthenticLifeChart(정비제사주, 1976);
+console.log('정비제 결과:', 정비제결과);
+
+// 인생운세 API 테스트
+fetchLifetimeFortune({
+  year: 1971, month: 11, day: 15, hour: 6,
+  useAuthenticCalculator: true
+}).then(result => console.log('박준수 API 결과:', result));
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // ES6 모듈 방식으로 import
+        import { AuthenticSajuCalculator } from '/src/utils/authenticSajuCalculator.ts';
+        import { fetchLifetimeFortune } from '/src/services/lifetimeFortuneApi.ts';
+
+        // 전역 변수로 등록
+        window.AuthenticSajuCalculator = AuthenticSajuCalculator;
+        window.fetchLifetimeFortune = fetchLifetimeFortune;
+
+        // 테스트 함수들
+        window.runAuthenticTest = async function() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '🔄 정통 사주학 테스트 실행 중...\n';
+
+            try {
+                console.log('🧪 정통 사주학 테스트 시작');
+
+                // 테스트 실행
+                AuthenticSajuCalculator.runTestCases();
+
+                // 박준수 테스트
+                const 박준수사주 = AuthenticSajuCalculator.createParkJunSooTestCase();
+                const 박준수결과 = AuthenticSajuCalculator.calculateAuthenticLifeChart(박준수사주, 1971);
+
+                // 정비제 테스트
+                const 정비제사주 = AuthenticSajuCalculator.createJeongBiJeTestCase();
+                const 정비제결과 = AuthenticSajuCalculator.calculateAuthenticLifeChart(정비제사주, 1976);
+
+                // 결과 표시
+                let resultText = '✅ 정통 사주학 테스트 완료!\n\n';
+
+                resultText += '👤 박준수 (신해기해병오경인)\n';
+                resultText += `   사주: ${박준수결과.개인정보.사주}\n`;
+                resultText += `   격국: ${박준수결과.개인정보.격국.격국유형}\n`;
+                resultText += `   일간: ${박준수결과.개인정보.격국.일간}(${박준수결과.개인정보.격국.일간오행})\n`;
+                resultText += `   용신: [${박준수결과.개인정보.용신.용신.join(', ')}]\n`;
+                resultText += `   평균점수: ${박준수결과.통계.평균점수}점\n`;
+                resultText += `   최고점: ${박준수결과.통계.최고점년도.나이}세 (${박준수결과.통계.최고점년도.점수}점)\n\n`;
+
+                resultText += '👤 정비제 (병진정유신미계사)\n';
+                resultText += `   사주: ${정비제결과.개인정보.사주}\n`;
+                resultText += `   격국: ${정비제결과.개인정보.격국.격국유형}\n`;
+                resultText += `   일간: ${정비제결과.개인정보.격국.일간}(${정비제결과.개인정보.격국.일간오행})\n`;
+                resultText += `   용신: [${정비제결과.개인정보.용신.용신.join(', ')}]\n`;
+                resultText += `   평균점수: ${정비제결과.통계.평균점수}점\n`;
+                resultText += `   최고점: ${정비제결과.통계.최고점년도.나이}세 (${정비제결과.통계.최고점년도.점수}점)\n\n`;
+
+                // 차이 분석
+                const 평균차이 = Math.abs(박준수결과.통계.평균점수 - 정비제결과.통계.평균점수);
+                const 용신차이 = 박준수결과.개인정보.용신.용신.join('') !== 정비제결과.개인정보.용신.용신.join('');
+                const 격국차이 = 박준수결과.개인정보.격국.격국유형 !== 정비제결과.개인정보.격국.격국유형;
+
+                resultText += '📊 차이 분석\n';
+                resultText += `   평균점수 차이: ${평균차이}점 ${평균차이 >= 10 ? '✅' : '⚠️'}\n`;
+                resultText += `   용신 차이: ${용신차이 ? '✅' : '❌'}\n`;
+                resultText += `   격국 차이: ${격국차이 ? '✅' : '❌'}\n\n`;
+
+                // 연령대별 비교
+                resultText += '📈 연령대별 점수 비교\n';
+                [20, 30, 40, 50, 60].forEach(age => {
+                    const 박준수점수 = 박준수결과.연도별점수[age]?.총점 || 0;
+                    const 정비제점수 = 정비제결과.연도별점수[age]?.총점 || 0;
+                    const 차이 = Math.abs(박준수점수 - 정비제점수);
+                    resultText += `   ${age}세: 박준수 ${박준수점수}점, 정비제 ${정비제점수}점 (차이: ${차이}점)\n`;
+                });
+
+                const 검증성공 = 평균차이 >= 10 && 용신차이 && 격국차이;
+                resultText += `\n🎯 최종 검증: ${검증성공 ? '✅ 성공' : '⚠️ 부분성공'}`;
+
+                resultsDiv.className = 'result-box ' + (검증성공 ? 'success' : 'warning');
+                resultsDiv.textContent = resultText;
+
+                // 전역 변수에 결과 저장
+                window.testResults = { 박준수결과, 정비제결과 };
+
+            } catch (error) {
+                console.error('테스트 실행 중 오류:', error);
+                resultsDiv.className = 'result-box error';
+                resultsDiv.textContent = `❌ 테스트 실행 중 오류 발생:\n${error.message}\n\n자세한 내용은 브라우저 콘솔을 확인해주세요.`;
+            }
+        };
+
+        window.runLifetimeFortuneTest = async function() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '🔄 인생운세 API 테스트 실행 중...\n';
+
+            try {
+                // 박준수 API 테스트
+                const 박준수API결과 = await fetchLifetimeFortune({
+                    year: 1971, month: 11, day: 15, hour: 6,
+                    useAuthenticCalculator: true
+                });
+
+                // 정비제 API 테스트
+                const 정비제API결과 = await fetchLifetimeFortune({
+                    year: 1976, month: 9, day: 23, hour: 10,
+                    useAuthenticCalculator: true
+                });
+
+                let resultText = '✅ 인생운세 API 테스트 완료!\n\n';
+
+                resultText += '👤 박준수 API 결과\n';
+                resultText += `   평균점수: ${박준수API결과.data.analysis.averageScore}점\n`;
+                resultText += `   최고점: ${박준수API결과.data.analysis.bestYear.age}세 (${박준수API결과.data.analysis.bestYear.score}점)\n`;
+                resultText += `   최저점: ${박준수API결과.data.analysis.worstYear.age}세 (${박준수API결과.data.analysis.worstYear.score}점)\n\n`;
+
+                resultText += '👤 정비제 API 결과\n';
+                resultText += `   평균점수: ${정비제API결과.data.analysis.averageScore}점\n`;
+                resultText += `   최고점: ${정비제API결과.data.analysis.bestYear.age}세 (${정비제API결과.data.analysis.bestYear.score}점)\n`;
+                resultText += `   최저점: ${정비제API결과.data.analysis.worstYear.age}세 (${정비제API결과.data.analysis.worstYear.score}점)\n\n`;
+
+                const API평균차이 = Math.abs(박준수API결과.data.analysis.averageScore - 정비제API결과.data.analysis.averageScore);
+                resultText += `📊 API 결과 차이: ${API평균차이}점\n`;
+
+                const API검증성공 = API평균차이 >= 5;
+                resultText += `🎯 API 검증: ${API검증성공 ? '✅ 성공' : '⚠️ 주의'}`;
+
+                resultsDiv.className = 'result-box ' + (API검증성공 ? 'success' : 'warning');
+                resultsDiv.textContent = resultText;
+
+                window.apiTestResults = { 박준수API결과, 정비제API결과 };
+
+            } catch (error) {
+                console.error('API 테스트 실행 중 오류:', error);
+                resultsDiv.className = 'result-box error';
+                resultsDiv.textContent = `❌ API 테스트 실행 중 오류 발생:\n${error.message}`;
+            }
+        };
+
+        window.clearResults = function() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.className = 'result-box';
+            resultsDiv.textContent = '테스트 결과가 지워졌습니다.';
+        };
+
+        console.log('🎯 정통 사주학 테스트 페이지 로드 완료');
+        console.log('💡 runAuthenticTest() 또는 runLifetimeFortuneTest() 함수를 호출해보세요.');
+
+    </script>
+</body>
+</html>

@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSajuSettingsStore } from '@/stores/sajuSettingsStore';
+import { useAuthStore } from '@/stores/authStore';
 import { calculateDailyFortune, getFortuneInfo } from '@/utils/dailyFortuneCalculator';
 import { DailyFortune } from '@/types/saju';
 
@@ -77,7 +79,11 @@ const LoadingFortuneSection: React.FC = () => (
   </div>
 );
 
-const NoSettingsSection: React.FC = () => (
+const NoSettingsSection: React.FC = () => {
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
+
+  return (
   <div className="h-full flex flex-col items-center justify-center">
     <div className="max-w-md text-center">
       <div className="text-6xl mb-6">🔮</div>
@@ -87,18 +93,24 @@ const NoSettingsSection: React.FC = () => (
       <p className="text-lg text-muted-foreground mb-8">
         생년월일시 정보를 입력하여 맞춤 운세를 받아보세요
       </p>
-      <button 
+      <button
         onClick={() => {
-          // 설정 페이지로 이동하는 로직 (향후 구현)
-          console.log('Navigate to settings');
+          navigate('/settings');
         }}
         className="px-8 py-4 bg-primary-500 text-white text-lg font-semibold rounded-xl hover:bg-primary-600 transition-colors shadow-lg"
       >
         설정하러 가기
       </button>
+      {user && (
+        <div className="mt-4 text-sm text-muted-foreground">
+          <p>로그인된 계정: {user.email}</p>
+          <p className="text-xs mt-1">설정 페이지에서 생년월일시를 입력하면 자동으로 운세가 계산됩니다</p>
+        </div>
+      )}
     </div>
   </div>
-);
+  );
+};
 
 const fortuneDescriptions: { [key: string]: string } = {
   '총운': '하루 전반적인 운의 흐름을 나타냅니다',
@@ -109,15 +121,66 @@ const fortuneDescriptions: { [key: string]: string } = {
 };
 
 const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate, onDiaryClick, hasDiary }) => {
-  const { birthInfo } = useSajuSettingsStore();
+  const { birthInfo, setBirthInfo } = useSajuSettingsStore();
+  const { user } = useAuthStore();
+
+  // localStorage에서 데이터 불러오기 및 Store 동기화
+  React.useEffect(() => {
+    if (!birthInfo) {
+      console.log('[TodayFortuneSection] birthInfo가 없음, localStorage 확인...');
+      const savedPersonalInfo = localStorage.getItem('sajuapp-personal-info');
+
+      if (savedPersonalInfo) {
+        try {
+          const personalInfo = JSON.parse(savedPersonalInfo);
+          console.log('[TodayFortuneSection] localStorage에서 데이터 발견:', personalInfo);
+
+          // localStorage 데이터를 SajuBirthInfo 형식으로 변환
+          if (personalInfo.birthDate && personalInfo.birthTime) {
+            const birthDate = new Date(personalInfo.birthDate);
+            const [hour, minute] = personalInfo.birthTime.split(':').map(Number);
+
+            const sajuBirthInfo = {
+              year: birthDate.getFullYear(),
+              month: birthDate.getMonth() + 1,
+              day: birthDate.getDate(),
+              hour: hour || 0,
+              minute: minute || 0,
+              isLunar: personalInfo.calendarType === 'lunar',
+              isMale: personalInfo.gender === 'male',
+              name: personalInfo.gender === 'male' ? '사용자(남)' : '사용자(여)',
+            };
+
+            console.log('[TodayFortuneSection] Store에 저장할 사주 정보:', sajuBirthInfo);
+            setBirthInfo(sajuBirthInfo);
+          }
+        } catch (error) {
+          console.error('[TodayFortuneSection] localStorage 파싱 오류:', error);
+        }
+      } else {
+        console.log('[TodayFortuneSection] localStorage에도 데이터 없음');
+      }
+    } else {
+      console.log('[TodayFortuneSection] birthInfo 존재:', birthInfo);
+    }
+  }, [birthInfo, setBirthInfo]);
+
+  // 디버깅: Store 데이터 확인
+  console.log('[TodayFortuneSection] 현재 birthInfo:', birthInfo);
+  console.log('[TodayFortuneSection] 현재 user:', user);
 
   const dailyFortune: DailyFortune | null = useMemo(() => {
-    if (!birthInfo) return null;
-    
+    if (!birthInfo) {
+      console.log('[TodayFortuneSection] No birthInfo available');
+      return null;
+    }
+
     try {
-      return calculateDailyFortune(birthInfo, currentDate);
+      const fortune = calculateDailyFortune(birthInfo, currentDate);
+      console.log('[TodayFortuneSection] Calculated fortune:', fortune);
+      return fortune;
     } catch (error) {
-      console.error('Failed to calculate daily fortune:', error);
+      console.error('[TodayFortuneSection] Failed to calculate daily fortune:', error);
       return null;
     }
   }, [birthInfo, currentDate]);

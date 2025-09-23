@@ -14,7 +14,7 @@ import { initDatabase } from './database/sqlite-connection'
 dotenv.config()
 
 const app: Application = express()
-const PORT = process.env.CALENDAR_SERVICE_PORT || 5001
+const PORT = 4012 // 고정 포트 사용
 
 // Middleware
 app.use(cors({

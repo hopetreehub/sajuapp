@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCalendar } from '@/contexts/CalendarContext';
+import { useSajuSettingsStore } from '@/stores/sajuSettingsStore';
 import NotificationSettings from '@/components/NotificationSettings';
 import ReferralSection from '@/components/Auth/ReferralSection';
 import CustomerManagementPage from './CustomerManagementPage';
@@ -13,7 +15,9 @@ interface PersonalInfo {
 }
 
 export default function SettingsPage() {
+  const navigate = useNavigate();
   const { settings } = useCalendar();
+  const { setBirthInfo } = useSajuSettingsStore();
   const [localSettings, setLocalSettings] = useState(settings);
   const [activeTab, setActiveTab] = useState<'general' | 'calendar' | 'diary' | 'notifications' | 'account' | 'customers'>('general');
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
@@ -74,7 +78,26 @@ export default function SettingsPage() {
       // 개인정보 저장
       if (activeTab === 'general') {
         localStorage.setItem('sajuapp-personal-info', JSON.stringify(personalInfo));
-        
+
+        // sajuSettingsStore에 사주 정보 저장 (운세 계산에 필요)
+        const sajuBirthInfo = {
+          year: new Date(personalInfo.birthDate).getFullYear(),
+          month: new Date(personalInfo.birthDate).getMonth() + 1,
+          day: new Date(personalInfo.birthDate).getDate(),
+          hour: parseInt(personalInfo.birthTime.split(':')[0]) || 0,
+          minute: parseInt(personalInfo.birthTime.split(':')[1]) || 0,
+          isLunar: personalInfo.calendarType === 'lunar',
+          isMale: personalInfo.gender === 'male',
+          name: personalInfo.gender === 'male' ? '사용자(남)' : '사용자(여)',
+        };
+
+        setBirthInfo(sajuBirthInfo);
+        console.log('[설정페이지] 사주 정보 저장됨:', sajuBirthInfo);
+
+        // Store에 제대로 저장되었는지 확인
+        const savedBirthInfo = useSajuSettingsStore.getState().birthInfo;
+        console.log('[설정페이지] Store에 저장된 정보:', savedBirthInfo);
+
         // 사주 정보가 저장되었음을 다른 컴포넌트들에게 알림
         window.dispatchEvent(new CustomEvent('personalInfoUpdated', {
           detail: personalInfo,
@@ -86,9 +109,15 @@ export default function SettingsPage() {
       
       setSaveStatus('saved');
       
-      // 2초 후 상태 초기화
+      // 2초 후 상태 초기화 및 캘린더로 이동
       setTimeout(() => {
         setSaveStatus('idle');
+        if (activeTab === 'general') {
+          const moveToCalendar = window.confirm('설정이 저장되었습니다. 운세를 확인하러 캘린더로 이동하시겠습니까?');
+          if (moveToCalendar) {
+            navigate('/calendar');
+          }
+        }
       }, 2000);
       
       console.log('Settings saved successfully:', {

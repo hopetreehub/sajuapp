@@ -11,7 +11,7 @@ import { initDatabase } from './database/connection';
 dotenv.config();
 
 const app: Application = express();
-const PORT = process.env.DIARY_SERVICE_PORT || 5002;
+const PORT = process.env.DIARY_SERVICE_PORT || process.env.PORT || 4004;
 
 // Middleware
 app.use(cors({
