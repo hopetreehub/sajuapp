@@ -40,14 +40,6 @@ export interface YearlyFortune {
     오행: string
     score: number
   }
-  // 🆕 주능/주흉 필드 추가
-  주능주흉: {
-    type: '대길' | '길' | '평' | '흉' | '대흉'
-    label: string           // "주능-대운", "주흉-흉운" 등
-    description: string     // 상세 설명
-    color: string          // 시각화 색상
-    strength: number       // 강도 (0-100)
-  }
 }
 
 export interface LifetimeFortuneResponse {
@@ -153,60 +145,6 @@ function generateAuthenticLifetimeFortune(request: LifetimeFortuneRequest): Life
   console.log('⭐ 용신:', authenticChart.개인정보.용신.용신);
   console.log('📊 평균점수:', authenticChart.통계.평균점수);
 
-  // 주능/주흉 판단 함수
-  const calculate주능주흉 = (총점: number, 용신효과: number) => {
-    // 점수와 용신효과를 기반으로 주능/주흉 분류
-    if (총점 >= 80 && 용신효과 > 20) {
-      return {
-        type: '대길' as const,
-        label: '주능-대운',
-        description: '용신이 강하게 작용하는 최상의 시기',
-        color: '#FFD700', // 금색
-        strength: 95
-      };
-    } else if (총점 >= 65 && 용신효과 > 10) {
-      return {
-        type: '길' as const,
-        label: '주능-길운',
-        description: '전반적으로 좋은 기운이 작용하는 시기',
-        color: '#32CD32', // 연두색
-        strength: 75
-      };
-    } else if (총점 >= 45 && 총점 <= 55) {
-      return {
-        type: '평' as const,
-        label: '평운',
-        description: '특별한 길흉이 없는 평온한 시기',
-        color: '#808080', // 회색
-        strength: 50
-      };
-    } else if (총점 < 35 && 용신효과 < -10) {
-      return {
-        type: '대흉' as const,
-        label: '주흉-대흉',
-        description: '기신이 강하게 작용하는 주의 시기',
-        color: '#8B0000', // 진한 빨강
-        strength: 15
-      };
-    } else if (총점 < 45) {
-      return {
-        type: '흉' as const,
-        label: '주흉-흉운',
-        description: '어려움이 예상되는 시기',
-        color: '#FF6347', // 연한 빨강
-        strength: 30
-      };
-    } else {
-      return {
-        type: '평' as const,
-        label: '평운',
-        description: '보통 운세',
-        color: '#808080',
-        strength: 50
-      };
-    }
-  };
-
   // AuthenticLifeChart를 LifetimeFortuneResponse로 변환
   const lifetimeFortune: YearlyFortune[] = authenticChart.연도별점수.map(연도데이터 => ({
     year: 연도데이터.년도,
@@ -227,9 +165,7 @@ function generateAuthenticLifetimeFortune(request: LifetimeFortuneRequest): Life
       지지: 연도데이터.상세.지지,
       오행: 연도데이터.상세.오행,
       score: 연도데이터.세운점수
-    },
-    // 🆕 주능/주흉 필드 추가
-    주능주흉: calculate주능주흉(연도데이터.총점, 연도데이터.용신효과)
+    }
   }));
 
   // 분석 데이터 생성

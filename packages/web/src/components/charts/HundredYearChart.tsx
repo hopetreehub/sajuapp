@@ -44,14 +44,6 @@ interface YearlyFortune {
     오행: string
     score: number
   }
-  // 🆕 주능/주흉 필드
-  주능주흉?: {
-    type: '대길' | '길' | '평' | '흉' | '대흉'
-    label: string
-    description: string
-    color: string
-    strength: number
-  }
 }
 
 interface HundredYearChartProps {
@@ -96,27 +88,14 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
             const isCurrentAge = age === currentAge;
             const opacity = isCurrentAge ? 0.9 : 0.6;
 
-            // 주능/주흉에 따른 색상 결정
-            if (yearData?.주능주흉) {
-              const color = yearData.주능주흉.color;
-              // hex to rgba 변환
-              if (color === '#FFD700') return `rgba(255, 215, 0, ${opacity})`;     // 대길 - 금색
-              if (color === '#32CD32') return `rgba(50, 205, 50, ${opacity})`;     // 길 - 연두색
-              if (color === '#808080') return `rgba(128, 128, 128, ${opacity})`;   // 평 - 회색
-              if (color === '#FF6347') return `rgba(255, 99, 71, ${opacity})`;     // 흉 - 연한 빨강
-              if (color === '#8B0000') return `rgba(139, 0, 0, ${opacity})`;       // 대흉 - 진한 빨강
-            }
-            // 기본 색상
+            // 기본 색상 (현재 나이는 진하게)
             return `rgba(156, 163, 175, ${opacity})`;
           },
           borderColor: (context: any) => {
             const index = context.dataIndex;
             const yearData = data[index];
 
-            // 주능/주흉에 따른 테두리 색상
-            if (yearData?.주능주흉) {
-              return yearData.주능주흉.color;
-            }
+            // 기본 테두리 색상
             return 'rgba(107, 114, 128, 1)';
           },
           borderWidth: 1,
@@ -230,12 +209,6 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
               ];
 
               // 주능/주흉 정보 추가
-              if (yearData.주능주흉) {
-                lines.push('');  // 빈 줄 추가
-                lines.push(`🔮 ${yearData.주능주흉.label}`);
-                lines.push(yearData.주능주흉.description);
-              }
-
               return lines;
             }
             return [];
