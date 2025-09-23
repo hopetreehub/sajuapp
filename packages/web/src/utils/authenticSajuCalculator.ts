@@ -449,7 +449,7 @@ export class AuthenticSajuCalculator {
   }
 
   /**
-   * 4단계: 96년 연도별 점수 계산
+   * 4단계: 96년 연도별 점수 계산 (개인차 강화)
    */
   private static calculateYearlyScores(
     saju: SajuPalJa,
@@ -459,6 +459,10 @@ export class AuthenticSajuCalculator {
     birthYear: number
   ): AuthenticLifeChart['연도별점수'] {
     const 연도별점수: AuthenticLifeChart['연도별점수'] = [];
+
+    // 격국별 기본 점수 차별화
+    const 격국별기본점수 = this.get격국별기본점수(격국.격국유형, 격국.일간);
+    const 일간보정값 = this.get일간보정값(격국.일간);
 
     for (let age = 0; age <= 95; age++) {
       const 년도 = birthYear + age;
@@ -472,8 +476,8 @@ export class AuthenticSajuCalculator {
       const 세운지 = JI_JI[세운지인덱스];
       const 세운오행 = CHEON_GAN_OH_HAENG[세운간];
 
-      // 세운 점수 계산
-      let 세운점수 = 50;
+      // 세운 점수 계산 (개인차 강화)
+      let 세운점수 = 격국별기본점수 + 일간보정값;  // 격국과 일간 반영
 
       // 일간과 세운간 관계
       if (세운간 === saju.day.gan) {
@@ -482,14 +486,16 @@ export class AuthenticSajuCalculator {
         세운점수 += 15;
       }
 
-      // 용신 효과 계산 (핵심!)
+      // 용신 효과 계산 (개인차 극대화!)
       let 용신효과 = 0;
+      const 나이가중치 = this.get나이별용신가중치(age);
+
       if (용신.용신.includes(세운오행)) {
-        용신효과 += 30; // 1, 2용신
-      } else if (용신.기신.includes(세운오행)) {
-        용신효과 += 15; // 희용신
+        용신효과 += 35 * 나이가중치;  // 강화된 용신 효과
       } else if (용신.희신.includes(세운오행)) {
-        용신효과 -= 10; // 기신
+        용신효과 += 18 * 나이가중치;  // 희신
+      } else if (용신.기신.includes(세운오행)) {
+        용신효과 -= 30 * 나이가중치;  // 강화된 기신 효과
       }
 
       // 대운-세운 상호작용
@@ -563,7 +569,59 @@ export class AuthenticSajuCalculator {
     };
   }
 
-  // ==================== 헬퍼 함수들 ====================
+  // ==================== 개인차 강화 헬퍼 함수들 ====================
+
+  /**
+   * 격국별 기본 점수 차별화
+   */
+  private static get격국별기본점수(격국유형: string, 일간: CheonGan): number {
+    const 격국점수맵: Record<string, number> = {
+      '신강격': 70,  // 안정적이고 지속적
+      '신약격': 50,  // 변화무쌍하고 극적
+      '종격': 60,    // 특정 분야 집중
+      '특수격': 65,  // 예측 불가능
+      '기타': 55
+    };
+
+    const 기본점수 = 격국점수맵[격국유형] || 55;
+    return 기본점수;
+  }
+
+  /**
+   * 일간별 개성 보정
+   */
+  private static get일간보정값(일간: CheonGan): number {
+    const 일간특성: Record<CheonGan, number> = {
+      '갑': 5,   // 리더십
+      '을': 3,   // 유연성
+      '병': 7,   // 열정
+      '정': 4,   // 섬세함
+      '무': 6,   // 안정성
+      '기': 2,   // 변화
+      '경': 8,   // 결단력
+      '신': 3,   // 예리함
+      '임': 4,   // 지혜
+      '계': 5    // 통찰력
+    };
+
+    return 일간특성[일간] || 0;
+  }
+
+  /**
+   * 나이별 용신 중요도 가중치
+   */
+  private static get나이별용신가중치(age: number): number {
+    if (age >= 20 && age <= 40) {
+      return 1.5;  // 청년기 용신 중요
+    } else if (age >= 40 && age <= 60) {
+      return 1.3;  // 중년기 용신 중요
+    } else if (age >= 60) {
+      return 1.1;  // 노년기 안정 추구
+    }
+    return 1.0;  // 유년기
+  }
+
+  // ==================== 기존 헬퍼 함수들 ====================
 
   private static getGeneratingElement(element: OhHaeng): OhHaeng {
     const reverse = Object.fromEntries(

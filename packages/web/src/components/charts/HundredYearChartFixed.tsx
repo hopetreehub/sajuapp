@@ -44,6 +44,14 @@ interface YearlyFortune {
     오행: string
     score: number
   }
+  // 주능/주흉 데이터
+  주능주흉?: {
+    type: '대길' | '길' | '평' | '흉' | '대흉'
+    label: string
+    description: string
+    color: string
+    strength: number
+  }
 }
 
 interface HundredYearChartProps {
@@ -56,7 +64,7 @@ export default function HundredYearChart({ data, currentAge = 0, birthYear }: Hu
   // 현재 연도와 출생연도 계산
   const currentYear = new Date().getFullYear();
   const actualBirthYear = birthYear || (currentAge > 0 ? currentYear - currentAge + 1 : currentYear - 35);
-  
+
   const chartData = useMemo(() => {
     const labels = data.map(d => {
       const year = actualBirthYear + d.age - 1;
@@ -83,6 +91,20 @@ export default function HundredYearChart({ data, currentAge = 0, birthYear }: Hu
           backgroundColor: (context: any) => {
             const index = context.dataIndex;
             const age = data[index]?.age;
+            const yearData = data[index];
+
+            // 주능/주흉 색상 적용
+            if (yearData?.주능주흉) {
+              const colorMap: Record<string, string> = {
+                '대길': 'rgba(255, 215, 0, 0.7)',   // 금색
+                '길': 'rgba(50, 205, 50, 0.6)',     // 연두색
+                '평': 'rgba(156, 163, 175, 0.6)',   // 회색
+                '흉': 'rgba(255, 99, 71, 0.6)',     // 토마토색
+                '대흉': 'rgba(139, 0, 0, 0.7)'      // 진한 빨강
+              };
+              return colorMap[yearData.주능주흉.type] || 'rgba(156, 163, 175, 0.6)';
+            }
+
             // 현재 나이 강조
             if (age === currentAge) return 'rgba(55, 65, 81, 0.8)';  // gray-700
             return 'rgba(156, 163, 175, 0.6)';  // gray-400
@@ -90,6 +112,20 @@ export default function HundredYearChart({ data, currentAge = 0, birthYear }: Hu
           borderColor: (context: any) => {
             const index = context.dataIndex;
             const age = data[index]?.age;
+            const yearData = data[index];
+
+            // 주능/주흉 테두리 색상
+            if (yearData?.주능주흉) {
+              const borderColorMap: Record<string, string> = {
+                '대길': 'rgba(255, 215, 0, 1)',     // 금색
+                '길': 'rgba(50, 205, 50, 1)',       // 연두색
+                '평': 'rgba(107, 114, 128, 1)',     // 회색
+                '흉': 'rgba(255, 99, 71, 1)',       // 토마토색
+                '대흉': 'rgba(139, 0, 0, 1)'        // 진한 빨강
+              };
+              return borderColorMap[yearData.주능주흉.type] || 'rgba(107, 114, 128, 1)';
+            }
+
             // 현재 나이 강조
             if (age === currentAge) return 'rgba(55, 65, 81, 1)';  // gray-700
             return 'rgba(107, 114, 128, 1)';  // gray-500
@@ -210,10 +246,19 @@ export default function HundredYearChart({ data, currentAge = 0, birthYear }: Hu
             const index = context.dataIndex;
             const yearData = data[index];
             if (context.dataset.label === '종합 운세') {
-              return [
+              const lines = [
                 `대운: ${yearData.대운.천간}${yearData.대운.지지} (${yearData.대운.오행})`,
                 `세운: ${yearData.세운.천간}${yearData.세운.지지} (${yearData.세운.오행})`,
               ];
+
+              // 주능/주흉 정보 추가
+              if (yearData.주능주흉) {
+                lines.push('');
+                lines.push(`${yearData.주능주흉.label}`);
+                lines.push(`${yearData.주능주흉.description}`);
+              }
+
+              return lines;
             }
             return [];
           },
@@ -428,6 +473,30 @@ export default function HundredYearChart({ data, currentAge = 0, birthYear }: Hu
             options={options}
             plugins={[currentAgePlugin]}
           />
+        </div>
+
+        {/* 주능/주흉 범례 */}
+        <div className="mt-4 flex justify-center space-x-3 text-xs">
+          <div className="flex items-center space-x-1">
+            <span className="w-3 h-3 rounded" style={{ backgroundColor: 'rgba(255, 215, 0, 0.7)' }}></span>
+            <span className="text-gray-700 dark:text-gray-300">주능-대길</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <span className="w-3 h-3 rounded" style={{ backgroundColor: 'rgba(50, 205, 50, 0.6)' }}></span>
+            <span className="text-gray-700 dark:text-gray-300">주능-길</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <span className="w-3 h-3 rounded" style={{ backgroundColor: 'rgba(156, 163, 175, 0.6)' }}></span>
+            <span className="text-gray-700 dark:text-gray-300">평운</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <span className="w-3 h-3 rounded" style={{ backgroundColor: 'rgba(255, 99, 71, 0.6)' }}></span>
+            <span className="text-gray-700 dark:text-gray-300">주흉-흉</span>
+          </div>
+          <div className="flex items-center space-x-1">
+            <span className="w-3 h-3 rounded" style={{ backgroundColor: 'rgba(139, 0, 0, 0.7)' }}></span>
+            <span className="text-gray-700 dark:text-gray-300">주흉-대흉</span>
+          </div>
         </div>
 
         {/* 주요 전환점 안내 */}
