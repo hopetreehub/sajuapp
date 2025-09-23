@@ -384,7 +384,8 @@ export default function HundredYearChart({ data, currentAge = 0, birthYear }: Hu
       ctx.fillStyle = '#ef4444';
       ctx.font = 'bold 12px sans-serif';
       ctx.textAlign = 'center';
-      const currentYearLabel = actualBirthYear + currentAge - 1;
+      // 현재 연도는 직접 계산하여 정확성 보장
+      const currentYearLabel = currentYear;
       ctx.fillText(`현재 ${currentYearLabel}년 (${currentAge}세)`, x, chartArea.top - 40);
       ctx.restore();
     },
