@@ -150,10 +150,14 @@ function generateAuthenticLifetimeFortune(request: LifetimeFortuneRequest): Life
     year: 연도데이터.년도,
     age: 연도데이터.나이,
     totalScore: 연도데이터.총점,
-    fortune: Math.min(100, 연도데이터.총점 + 연도데이터.용신효과), // 행운 = 총점 + 용신효과
-    willpower: Math.min(100, 연도데이터.대운점수 + 5), // 의지 = 대운점수 기반
-    environment: Math.min(100, 연도데이터.세운점수 + 10), // 환경 = 세운점수 기반
-    change: Math.min(100, Math.abs(연도데이터.용신효과) + 40), // 변화 = 용신효과 절댓값 기반
+    // 행운(재물·명예) = 총점에 용신효과의 긍정적인 부분만 반영
+    fortune: Math.min(100, Math.max(0, 연도데이터.총점 + Math.max(0, 연도데이터.용신효과 * 0.5))),
+    // 의지(추진력) = 대운점수를 기반으로 정규화
+    willpower: Math.min(100, Math.max(0, 연도데이터.대운점수 * 0.8 + 20)),
+    // 환경(대인관계) = 세운점수를 기반으로 정규화
+    environment: Math.min(100, Math.max(0, 연도데이터.세운점수 * 0.8 + 20)),
+    // 변화(기회·위기) = 용신효과의 변동성을 반영
+    change: Math.min(100, Math.max(0, Math.abs(연도데이터.용신효과) * 0.6 + 30)),
     대운: {
       천간: authenticChart.대운목록[Math.floor(연도데이터.나이 / 10)]?.천간 || '갑',
       지지: authenticChart.대운목록[Math.floor(연도데이터.나이 / 10)]?.지지 || '자',
@@ -294,10 +298,11 @@ function generateLegacyLifetimeFortune(request: LifetimeFortuneRequest): Lifetim
       year,
       age,
       totalScore,
-      fortune: 운값,        // 운 차원
-      willpower: 행값,      // 행 차원
-      environment: 형값,    // 형 차원
-      change: 변값,         // 변 차원
+      // 각 차원의 값을 적절히 정규화하여 할당
+      fortune: Math.min(100, Math.max(0, 운값 * 0.9 + 10)),      // 행운(재물·명예) - 운 차원 기반
+      willpower: Math.min(100, Math.max(0, 행값 * 0.9 + 10)),    // 의지(추진력) - 행 차원 기반
+      environment: Math.min(100, Math.max(0, 형값 * 0.9 + 10)),  // 환경(대인관계) - 형 차원 기반
+      change: Math.min(100, Math.max(0, 변값 * 0.9 + 10)),       // 변화(기회·위기) - 변 차원 기반
       대운: {
         천간: ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'][Math.floor(age / 10) % 10],
         지지: ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'][Math.floor(age / 10) % 12],
