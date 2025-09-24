@@ -1,18 +1,68 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSajuSettingsStore } from '@/stores/sajuSettingsStore';
 import { useAuthStore } from '@/stores/authStore';
 import { calculateDailyFortune } from '@/utils/dailyFortuneCalculator';
 
 const HomePage: React.FC = () => {
-  const { birthInfo } = useSajuSettingsStore();
+  const { birthInfo, setBirthInfo } = useSajuSettingsStore();
   const { user } = useAuthStore();
+
+  // localStorage에서 데이터 불러오기 및 Store 동기화
+  useEffect(() => {
+    if (!birthInfo) {
+      console.log('[HomePage] birthInfo가 없음, localStorage 확인...');
+      const savedPersonalInfo = localStorage.getItem('sajuapp-personal-info');
+
+      if (savedPersonalInfo) {
+        try {
+          const personalInfo = JSON.parse(savedPersonalInfo);
+          console.log('[HomePage] localStorage에서 데이터 발견:', personalInfo);
+
+          // localStorage 데이터를 SajuBirthInfo 형식으로 변환
+          if (personalInfo.birthDate && personalInfo.birthTime) {
+            const birthDate = new Date(personalInfo.birthDate);
+            const [hour, minute] = personalInfo.birthTime.split(':').map(Number);
+
+            const sajuBirthInfo = {
+              year: birthDate.getFullYear(),
+              month: birthDate.getMonth() + 1,
+              day: birthDate.getDate(),
+              hour: hour || 0,
+              minute: minute || 0,
+              isLunar: personalInfo.calendarType === 'lunar',
+              isMale: personalInfo.gender === 'male',
+              name: personalInfo.gender === 'male' ? '사용자(남)' : '사용자(여)',
+            };
+
+            console.log('[HomePage] Store에 저장할 사주 정보:', sajuBirthInfo);
+            setBirthInfo(sajuBirthInfo);
+          }
+        } catch (error) {
+          console.error('[HomePage] localStorage 파싱 오류:', error);
+        }
+      } else {
+        console.log('[HomePage] localStorage에도 데이터 없음');
+      }
+    } else {
+      console.log('[HomePage] birthInfo 존재:', birthInfo);
+    }
+  }, [birthInfo, setBirthInfo]);
+
+  // 디버깅: Store 데이터 확인
+  console.log('[HomePage] 현재 birthInfo:', birthInfo);
+  console.log('[HomePage] 현재 user:', user);
 
   // 실제 사주 기반 일일 운세 계산
   const dailyFortune = useMemo(() => {
-    if (!birthInfo) return null;
+    if (!birthInfo) {
+      console.log('[HomePage] No birthInfo available');
+      return null;
+    }
     try {
-      return calculateDailyFortune(birthInfo, new Date());
+      const fortune = calculateDailyFortune(birthInfo, new Date());
+      console.log('[HomePage] Calculated fortune:', fortune);
+      return fortune;
     } catch (error) {
       console.error('[HomePage] Fortune calculation failed:', error);
       return null;
