@@ -1,0 +1,62 @@
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "version": 1,
+  "name": "sajuapp-fortune-compass",
+  "services": [
+    {
+      "name": "web-frontend",
+      "root": "packages/web",
+      "builder": "NIXPACKS",
+      "buildCommand": "npm install && npm run build",
+      "startCommand": "npx vite preview --port $PORT --host 0.0.0.0",
+      "healthcheck": {
+        "path": "/",
+        "timeout": 300
+      }
+    },
+    {
+      "name": "calendar-service",
+      "root": "packages/backend/services/calendar",
+      "builder": "NIXPACKS",
+      "buildCommand": "npm install && npx tsc",
+      "startCommand": "node dist/index.js",
+      "healthcheck": {
+        "path": "/health",
+        "timeout": 300
+      }
+    },
+    {
+      "name": "diary-service",
+      "root": "packages/backend/services/diary",
+      "builder": "NIXPACKS",
+      "buildCommand": "npm install && npx tsc",
+      "startCommand": "node dist/index.js",
+      "healthcheck": {
+        "path": "/health",
+        "timeout": 300
+      }
+    },
+    {
+      "name": "saju-analysis-service",
+      "root": "packages/backend/services/saju-analysis",
+      "builder": "NIXPACKS",
+      "buildCommand": "npm install && npx tsc",
+      "startCommand": "node dist/index.js",
+      "healthcheck": {
+        "path": "/health",
+        "timeout": 300
+      }
+    }
+  ],
+  "databases": [
+    {
+      "name": "postgresql",
+      "plugin": "postgresql"
+    }
+  ],
+  "variables": {
+    "NODE_ENV": "production",
+    "JWT_SECRET": "generate-strong-secret-key-here",
+    "API_KEY": "generate-api-key-here"
+  }
+}
