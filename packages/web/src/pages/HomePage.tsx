@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSajuSettingsStore } from '@/stores/sajuSettingsStore';
 import { useAuthStore } from '@/stores/authStore';
-import { calculateDailyFortune } from '@/utils/dailyFortuneCalculator';
+import { useFortuneStore } from '@/stores/fortuneStore';
 
 const HomePage: React.FC = () => {
   const { birthInfo, setBirthInfo } = useSajuSettingsStore();
@@ -53,21 +53,15 @@ const HomePage: React.FC = () => {
   console.log('[HomePage] 현재 birthInfo:', birthInfo);
   console.log('[HomePage] 현재 user:', user);
 
-  // 실제 사주 기반 일일 운세 계산
+  // fortuneStore를 사용한 운세 데이터 가져오기
+  const { calculateFortune } = useFortuneStore();
   const dailyFortune = useMemo(() => {
     if (!birthInfo) {
       console.log('[HomePage] No birthInfo available');
       return null;
     }
-    try {
-      const fortune = calculateDailyFortune(birthInfo, new Date());
-      console.log('[HomePage] Calculated fortune:', fortune);
-      return fortune;
-    } catch (error) {
-      console.error('[HomePage] Fortune calculation failed:', error);
-      return null;
-    }
-  }, [birthInfo]);
+    return calculateFortune(birthInfo, new Date());
+  }, [birthInfo, calculateFortune]);
 
   const features = [
     {
@@ -137,74 +131,74 @@ const HomePage: React.FC = () => {
 
         {/* Today's Fortune Card */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
-            🌟 오늘의 운세 한눈에 보기
-          </h2>
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+              🌟 오늘의 운세 한눈에 보기
+            </h2>
 
-          {!birthInfo || !dailyFortune ? (
-            // 사주 정보가 없을 때 안내 메시지
-            <div className="text-center py-8">
-              <div className="text-6xl mb-4">🔮</div>
-              <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
-                운세를 확인하려면 설정이 필요합니다
-              </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
-                생년월일시 정보를 입력하여 맞춤 운세를 받아보세요
-              </p>
-              <Link
-                to="/settings"
-                className="inline-flex items-center px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors shadow-lg"
-              >
-                설정하러 가기 →
-              </Link>
-              {user && (
-                <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                  <p>로그인된 계정: {user.email}</p>
-                </div>
-              )}
-            </div>
-          ) : (
-            // 실제 사주 기반 운세 표시
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{todayDate}</p>
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {dailyFortune.message}
-                  </p>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <div className="bg-purple-100 dark:bg-purple-900/30 rounded-lg p-3">
-                      <span className="text-2xl">🔢</span>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">행운의 숫자</p>
-                      <p className="font-bold text-purple-600 dark:text-purple-400">{dailyFortune.luckyNumber}</p>
-                    </div>
+            {!birthInfo || !dailyFortune ? (
+              // 사주 정보가 없을 때 안내 메시지
+              <div className="text-center py-8">
+                <div className="text-6xl mb-4">🔮</div>
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-2">
+                  운세를 확인하려면 설정이 필요합니다
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  생년월일시 정보를 입력하여 맞춤 운세를 받아보세요
+                </p>
+                <Link
+                  to="/settings"
+                  className="inline-flex items-center px-6 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors shadow-lg"
+                >
+                  설정하러 가기 →
+                </Link>
+                {user && (
+                  <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                    <p>로그인된 계정: {user.email}</p>
                   </div>
-                  <div className="text-center">
-                    <div className="bg-pink-100 dark:bg-pink-900/30 rounded-lg p-3">
-                      <span className="text-2xl">🎨</span>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">행운의 색</p>
-                      <p className="font-bold text-pink-600 dark:text-pink-400">{dailyFortune.luckyColor}</p>
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="bg-blue-100 dark:bg-blue-900/30 rounded-lg p-3">
-                      <span className="text-2xl">🧭</span>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">총운</p>
-                      <p className="font-bold text-blue-600 dark:text-blue-400">{Math.round(dailyFortune.totalLuck)}점</p>
-                    </div>
-                  </div>
-                </div>
+                )}
               </div>
-              <Link
-                to="/fortune"
-                className="inline-flex items-center mt-4 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium"
-              >
-                자세히 보기 →
-              </Link>
-            </>
-          )}
+            ) : (
+              // 실제 사주 기반 운세 표시
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{todayDate}</p>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                      {dailyFortune.message}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="text-center">
+                      <div className="bg-purple-100 dark:bg-purple-900/30 rounded-lg p-3">
+                        <span className="text-2xl">🔢</span>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">행운의 숫자</p>
+                        <p className="font-bold text-purple-600 dark:text-purple-400">{dailyFortune.luckyNumber}</p>
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="bg-pink-100 dark:bg-pink-900/30 rounded-lg p-3">
+                        <span className="text-2xl">🎨</span>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">행운의 색</p>
+                        <p className="font-bold text-pink-600 dark:text-pink-400">{dailyFortune.luckyColor}</p>
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="bg-blue-100 dark:bg-blue-900/30 rounded-lg p-3">
+                        <span className="text-2xl">🧭</span>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">총운</p>
+                        <p className="font-bold text-blue-600 dark:text-blue-400">{Math.round(dailyFortune.totalLuck)}점</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <Link
+                  to="/fortune"
+                  className="inline-flex items-center mt-4 text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium"
+                >
+                  자세히 보기 →
+                </Link>
+              </>
+            )}
         </div>
 
         {/* Feature Cards */}

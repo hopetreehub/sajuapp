@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSajuSettingsStore } from '@/stores/sajuSettingsStore';
 import { useAuthStore } from '@/stores/authStore';
-import { calculateDailyFortune, getFortuneInfo } from '@/utils/dailyFortuneCalculator';
+import { useFortuneStore } from '@/stores/fortuneStore';
+import { getFortuneInfo } from '@/utils/dailyFortuneCalculator';
 import { DailyFortune } from '@/types/saju';
 
 interface TodayFortuneSectionProps {
@@ -169,21 +170,16 @@ const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate, 
   console.log('[TodayFortuneSection] 현재 birthInfo:', birthInfo);
   console.log('[TodayFortuneSection] 현재 user:', user);
 
+  // fortuneStore를 사용한 운세 데이터 가져오기
+  const { calculateFortune } = useFortuneStore();
   const dailyFortune: DailyFortune | null = useMemo(() => {
     if (!birthInfo) {
       console.log('[TodayFortuneSection] No birthInfo available');
       return null;
     }
 
-    try {
-      const fortune = calculateDailyFortune(birthInfo, currentDate);
-      console.log('[TodayFortuneSection] Calculated fortune:', fortune);
-      return fortune;
-    } catch (error) {
-      console.error('[TodayFortuneSection] Failed to calculate daily fortune:', error);
-      return null;
-    }
-  }, [birthInfo, currentDate]);
+    return calculateFortune(birthInfo, currentDate);
+  }, [birthInfo, currentDate, calculateFortune]);
 
   // 생년월일시 정보가 없는 경우
   if (!birthInfo) {
