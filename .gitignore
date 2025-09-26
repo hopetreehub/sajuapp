@@ -75,4 +75,4 @@ Thumbs.db
 
 # Runtime
 .cache/
-.parcel-cache/
+.parcel-cache/packages/web/dist/
