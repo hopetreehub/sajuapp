@@ -21,8 +21,7 @@ const Header: React.FC = () => {
   });
 
   const navItems = [
-    { path: '/', label: '홈', icon: '🏠' },
-    { path: '/calendar', label: '캘린더', icon: '📅' },
+    { path: '/', label: '캘린더', icon: '📅' },
     { path: '/saju', label: '사주분석', icon: '🔮' },
     { path: '/compatibility', label: '궁합', icon: '💑' },
     { path: '/settings', label: '설정', icon: '⚙️' },

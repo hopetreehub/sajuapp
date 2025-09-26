@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from '@/pages/HomePage';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from '@/pages/AuthPage';
 import DashboardPage from '@/pages/DashboardPage';
 import AdminDashboardPage from '@/pages/AdminDashboardPage';
@@ -40,11 +39,11 @@ function App() {
               <Header />
               <main className="flex-1">
                 <Routes>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<CalendarPage />} />
+                <Route path="/calendar" element={<Navigate to="/" replace />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/admin" element={<AdminDashboardPage />} />
-                <Route path="/calendar" element={<CalendarPage />} />
                 <Route path="/fortune" element={<FortunePage />} />
                 <Route path="/saju" element={<UnifiedSajuAnalysisPageWithLifeChart />} />
                 <Route path="/customers" element={<CustomerManagementPage />} />
