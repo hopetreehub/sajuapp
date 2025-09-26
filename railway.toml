@@ -1,0 +1,38 @@
+[build]
+builder = "nixpacks"
+
+[[services]]
+name = "calendar-service"
+root = "packages/backend/services/calendar"
+
+[services.build]
+buildCommand = "npm install && npm run build"
+
+[services.deploy]
+startCommand = "npm start"
+healthcheckPath = "/api/health"
+port = 4012
+
+[[services]]
+name = "diary-service"
+root = "packages/backend/services/diary"
+
+[services.build]
+buildCommand = "npm install && npm run build"
+
+[services.deploy]
+startCommand = "npm start"
+healthcheckPath = "/api/health"
+port = 4004
+
+[[services]]
+name = "saju-service"
+root = "packages/backend/services/saju-analysis"
+
+[services.build]
+buildCommand = "npm install && npm run build"
+
+[services.deploy]
+startCommand = "npm start"
+healthcheckPath = "/api/health"
+port = 4015
