@@ -2,7 +2,6 @@ import { Request, Response, Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { getDb } from '../database/connection';
 import logger from '../utils/logger';
-import { DiaryEntry } from '../models/diary.model';
 
 const router = Router();
 
@@ -91,7 +90,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 // GET /api/diaries/:date - 특정 날짜 일기 조회
-router.get('/:date', async (req: Request, res: Response) => {
+router.get('/:date', async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.headers['x-user-id'] || 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
     const { date } = req.params;
@@ -110,15 +109,15 @@ router.get('/:date', async (req: Request, res: Response) => {
     diary.tags = diary.tags ? JSON.parse(diary.tags) : [];
     diary.images = diary.images ? JSON.parse(diary.images) : [];
     
-    res.json(diary);
+    return res.json(diary);
   } catch (error) {
     logger.error('Failed to fetch diary:', error);
-    res.status(500).json({ error: 'Failed to fetch diary' });
+    return res.status(500).json({ error: 'Failed to fetch diary' });
   }
 });
 
 // POST /api/diaries - 일기 작성
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.headers['x-user-id'] || 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
     const { date, content, mood, weather, tags, images } = req.body;
@@ -142,18 +141,18 @@ router.post('/', async (req: Request, res: Response) => {
     newDiary.tags = newDiary.tags ? JSON.parse(newDiary.tags) : [];
     newDiary.images = newDiary.images ? JSON.parse(newDiary.images) : [];
     
-    res.status(201).json(newDiary);
+    return res.status(201).json(newDiary);
   } catch (error: any) {
     if (error.code === 'SQLITE_CONSTRAINT') {
       return res.status(409).json({ error: 'Diary entry for this date already exists' });
     }
     logger.error('Failed to create diary:', error);
-    res.status(500).json({ error: 'Failed to create diary' });
+    return res.status(500).json({ error: 'Failed to create diary' });
   }
 });
 
 // PUT /api/diaries/:id - 일기 수정
-router.put('/:id', async (req: Request, res: Response) => {
+router.put('/:id', async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.headers['x-user-id'] || 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
     const { id } = req.params;
@@ -183,15 +182,15 @@ router.put('/:id', async (req: Request, res: Response) => {
     updatedDiary.tags = updatedDiary.tags ? JSON.parse(updatedDiary.tags) : [];
     updatedDiary.images = updatedDiary.images ? JSON.parse(updatedDiary.images) : [];
     
-    res.json(updatedDiary);
+    return res.json(updatedDiary);
   } catch (error) {
     logger.error('Failed to update diary:', error);
-    res.status(500).json({ error: 'Failed to update diary' });
+    return res.status(500).json({ error: 'Failed to update diary' });
   }
 });
 
 // DELETE /api/diaries/:id - 일기 삭제
-router.delete('/:id', async (req: Request, res: Response) => {
+router.delete('/:id', async (req: Request, res: Response): Promise<Response | void> => {
   try {
     const userId = req.headers['x-user-id'] || 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
     const { id } = req.params;
@@ -207,10 +206,10 @@ router.delete('/:id', async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Diary entry not found' });
     }
     
-    res.status(204).send();
+    return res.status(204).send();
   } catch (error) {
     logger.error('Failed to delete diary:', error);
-    res.status(500).json({ error: 'Failed to delete diary' });
+    return res.status(500).json({ error: 'Failed to delete diary' });
   }
 });
 

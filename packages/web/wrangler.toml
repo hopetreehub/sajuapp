@@ -1,0 +1,25 @@
+# 🌩️ Cloudflare Pages 설정 파일
+name = "sajuapp-frontend"
+compatibility_date = "2024-01-01"
+
+# 빌드 설정
+[build]
+command = "npm run build"
+
+# 빌드 출력 디렉토리
+[site]
+bucket = "./dist"
+
+# 환경 변수 설정 (프로덕션)
+[env.production.vars]
+VITE_API_URL = "https://sajuapp-backend.railway.app"
+VITE_CALENDAR_SERVICE_URL = "https://sajuapp-backend.railway.app/api/calendar"
+VITE_DIARY_SERVICE_URL = "https://sajuapp-backend.railway.app/api/diary"
+VITE_SAJU_SERVICE_URL = "https://sajuapp-backend.railway.app/api/saju"
+
+# 환경 변수 설정 (스테이징)
+[env.staging.vars]
+VITE_API_URL = "https://sajuapp-staging.railway.app"
+VITE_CALENDAR_SERVICE_URL = "https://sajuapp-staging.railway.app/api/calendar"
+VITE_DIARY_SERVICE_URL = "https://sajuapp-staging.railway.app/api/diary"
+VITE_SAJU_SERVICE_URL = "https://sajuapp-staging.railway.app/api/saju"

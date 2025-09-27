@@ -308,9 +308,9 @@ export class EnhancedSajuScoreEngine {
     if (!seasonBonus) return 0
     
     for (const [activity, bonus] of Object.entries(seasonBonus)) {
-      if (categoryName.includes(activity) || 
+      if (categoryName.includes(activity) ||
           this.isRelatedActivity(categoryName, activity)) {
-        return Math.min(10, bonus)
+        return Math.min(10, bonus as number)
       }
     }
     

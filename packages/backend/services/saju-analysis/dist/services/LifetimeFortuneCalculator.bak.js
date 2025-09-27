@@ -1,8 +1,7 @@
 "use strict";
 /**
- * 100년 인생운세 계산 엔진 (개선 버전)
+ * 100년 인생운세 계산 엔진
  * 전통 사주 이론 기반 대운/세운 분석
- * 더 현실적인 나이별 운세 변화 패턴 적용
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LifetimeFortuneCalculator = void 0;
@@ -36,8 +35,8 @@ class LifetimeFortuneCalculator {
             const 대운 = this.calculate대운(사주, age, gender);
             // 세운 계산 (연간 운)
             const 세운 = this.calculate세운(targetYear);
-            // 종합 점수 계산 (개선된 버전)
-            const scores = this.calculateScoresImproved(사주, 대운, 세운, 용신, age, birthYear);
+            // 종합 점수 계산
+            const scores = this.calculateScores(사주, 대운, 세운, 용신, age);
             results.push({
                 year: targetYear,
                 age: age,
@@ -129,12 +128,8 @@ class LifetimeFortuneCalculator {
         const 천간 = this.천간[yearIndex % 10];
         const 지지 = this.지지[yearIndex % 12];
         const 오행 = this.오행[천간];
-        // 세운 점수 계산 - 더 다양한 변화 패턴
-        const baseScore = 50;
-        const cycle1 = Math.sin(yearIndex * 0.1) * 15; // 10년 주기
-        const cycle2 = Math.cos(yearIndex * 0.05) * 10; // 20년 주기
-        const cycle3 = Math.sin(yearIndex * 0.3) * 5; // 3년 주기
-        const score = baseScore + cycle1 + cycle2 + cycle3;
+        // 세운 점수 계산 (0-100)
+        const score = 50 + Math.sin(yearIndex * 0.1) * 30;
         return { 천간, 지지, 오행, score };
     }
     /**
@@ -166,232 +161,110 @@ class LifetimeFortuneCalculator {
         return Math.max(0, Math.min(100, score));
     }
     /**
-     * 개선된 종합 점수 계산
+     * 종합 점수 계산
      */
-    calculateScoresImproved(사주, 대운, 세운, 용신, age, birthYear) {
-        // 나이별 기본 점수 (더 현실적인 곡선)
-        let baseScore = this.getAgeBasedScore(age);
-        // 대운 영향 (40% - 강화)
-        const 대운영향 = 대운.score * 0.4;
-        // 세운 영향 (15%)
-        const 세운영향 = 세운.score * 0.15;
-        // 용신 영향 (15%)
+    calculateScores(사주, 대운, 세운, 용신, age) {
+        // 기본 점수 설정
+        let baseScore = 50;
+        // 나이별 보정 (청년기, 중년기, 노년기)
+        if (age < 30) {
+            baseScore += 10; // 청년기 보너스
+        }
+        else if (age > 60) {
+            baseScore -= 5; // 노년기 감소
+        }
+        // 대운 영향 (30%)
+        const 대운영향 = 대운.score * 0.3;
+        // 세운 영향 (20%)
+        const 세운영향 = 세운.score * 0.2;
+        // 용신 영향 (20%)
         const 용신점수 = this.calculate용신Score(대운.오행, 세운.오행, 용신);
-        const 용신영향 = 용신점수 * 0.15;
-        // 사주 특성 (30%)
-        const 사주특성 = this.calculate사주특성Score(사주, age) * 0.3;
+        const 용신영향 = 용신점수 * 0.2;
         // 종합 점수
-        const totalScore = baseScore * 0.3 + 대운영향 + 세운영향 + 용신영향 + 사주특성;
-        // 4가지 기운 계산 (개선된 버전)
-        const fortune = this.calculateFortuneImproved(사주, 대운, 세운, age);
-        const willpower = this.calculateWillpowerImproved(사주, 대운, age);
-        const environment = this.calculateEnvironmentImproved(대운, 세운, age);
-        const change = this.calculateChangeImproved(대운, 세운, age);
+        const totalScore = baseScore + 대운영향 + 세운영향 + 용신영향;
+        // 4가지 기운 계산
+        const fortune = this.calculateFortune(사주, 대운, 세운, age);
+        const willpower = this.calculateWillpower(사주, 대운, age);
+        const environment = this.calculateEnvironment(대운, 세운, age);
+        const change = this.calculateChange(대운, 세운, age);
         return {
-            total: Math.max(20, Math.min(85, totalScore)),
-            fortune: Math.max(15, Math.min(90, fortune)),
-            willpower: Math.max(20, Math.min(85, willpower)),
-            environment: Math.max(20, Math.min(85, environment)),
-            change: Math.max(10, Math.min(90, change))
+            total: Math.max(0, Math.min(100, totalScore)),
+            fortune: Math.max(0, Math.min(100, fortune)),
+            willpower: Math.max(0, Math.min(100, willpower)),
+            environment: Math.max(0, Math.min(100, environment)),
+            change: Math.max(0, Math.min(100, change))
         };
     }
     /**
-     * 나이별 기본 점수 (현실적인 패턴)
+     * 행운 점수 계산 (재물, 명예, 성공운)
      */
-    getAgeBasedScore(age) {
-        // 유아기 (0-7세): 불안정하지만 잠재력
-        if (age <= 7) {
-            return 35 + Math.sin(age * 0.5) * 10 + Math.random() * 5;
+    calculateFortune(사주, 대운, 세운, age) {
+        let score = 50;
+        // 재성 분석
+        if (대운.오행 === '金' || 세운.오행 === '金') {
+            score += 15;
         }
-        // 성장기 (8-19세): 가능성과 혼란의 시기
-        else if (age <= 19) {
-            return 40 + Math.sin((age - 8) * 0.3) * 12 + Math.cos(age * 0.2) * 5;
+        // 관성 분석
+        if (대운.오행 === '火' || 세운.오행 === '火') {
+            score += 10;
         }
-        // 청년기 (20-35세): 도전과 성장
-        else if (age <= 35) {
-            return 48 + Math.sin((age - 20) * 0.2) * 10 + Math.cos(age * 0.1) * 5;
-        }
-        // 중년기 (36-55세): 안정과 성취
-        else if (age <= 55) {
-            return 55 + Math.cos((age - 36) * 0.15) * 8 - ((age - 36) * 0.2);
-        }
-        // 장년기 (56-70세): 수확과 정리
-        else if (age <= 70) {
-            return 50 - ((age - 55) * 0.6) + Math.sin(age * 0.1) * 5;
-        }
-        // 노년기 (71세+): 지혜와 평온
-        else {
-            return 38 + Math.sin(age * 0.08) * 6 + Math.cos(age * 0.12) * 4;
-        }
+        // 나이별 행운 주기
+        const fortuneCycle = Math.sin(age * 0.15) * 20;
+        score += fortuneCycle;
+        return score;
     }
     /**
-     * 사주 특성 점수 계산
+     * 의지력 점수 계산 (노력, 추진력, 실행력)
      */
-    calculate사주특성Score(사주, age) {
-        let score = 50;
-        // 일간의 강약 분석
-        const 일간 = 사주.일주.천간;
-        const 일간오행 = this.오행[일간];
-        // 사주 내 같은 오행 개수 계산
-        let sameElementCount = 0;
-        Object.values(사주).forEach((주) => {
-            if (this.오행[주.천간] === 일간오행)
-                sameElementCount++;
-            if (this.오행[주.지지] === 일간오행)
-                sameElementCount++;
-        });
-        // 일간이 강한 경우 중년기에 유리
-        if (sameElementCount >= 3 && age >= 30 && age <= 60) {
-            score += 15;
+    calculateWillpower(사주, 대운, age) {
+        let score = 60; // 기본 의지력
+        // 비겁성 분석 (자신감, 추진력)
+        if (대운.오행 === 사주.일주.천간) {
+            score += 20;
+        }
+        // 나이별 의지력 변화
+        if (age >= 20 && age <= 50) {
+            score += 15; // 황금기
         }
         return score;
     }
     /**
-     * 개선된 행운 점수 계산 (재물, 명예, 성공운)
+     * 환경 점수 계산 (대인관계, 외부 지원)
      */
-    calculateFortuneImproved(사주, 대운, 세운, age) {
-        // 나이별 경제 활동 주기 반영
-        let baseScore = 40;
-        // 준비기 (0-25세)
-        if (age <= 25) {
-            baseScore = 35 + (age / 25) * 15;
-        }
-        // 상승기 (26-40세)
-        else if (age <= 40) {
-            baseScore = 50 + Math.sin((age - 26) * 0.2) * 15;
-        }
-        // 전성기 (41-55세)
-        else if (age <= 55) {
-            baseScore = 65 + Math.cos((age - 41) * 0.15) * 10;
-        }
-        // 안정기 (56-70세)
-        else if (age <= 70) {
-            baseScore = 60 - ((age - 56) * 0.7);
-        }
-        // 유지기 (71세+)
-        else {
-            baseScore = 45 + Math.sin(age * 0.1) * 8;
-        }
-        // 재성 분석
-        if (대운.오행 === '金' || 세운.오행 === '金') {
-            baseScore += 12;
-        }
-        // 관성 분석
-        if (대운.오행 === '火' || 세운.오행 === '火') {
-            baseScore += 8;
-        }
-        // 7년 주기 변화
-        const fortuneCycle = Math.sin(age * 0.14) * 10;
-        return baseScore + fortuneCycle;
-    }
-    /**
-     * 개선된 의지력 점수 계산 (노력, 추진력, 실행력)
-     */
-    calculateWillpowerImproved(사주, 대운, age) {
-        // 나이별 의지력 곡선 (더 자연스러운 변화)
-        let baseWillpower = 45;
-        // 성장기 (0-20세): 점진적 상승
-        if (age <= 20) {
-            baseWillpower = 30 + (age * 1.2) + Math.sin(age * 0.3) * 5;
-        }
-        // 청년기 (21-35세): 최고점
-        else if (age <= 35) {
-            baseWillpower = 54 + Math.sin((age - 21) * 0.2) * 12 + Math.cos(age * 0.15) * 6;
-        }
-        // 중년기 (36-55세): 성숙한 의지
-        else if (age <= 55) {
-            baseWillpower = 60 + Math.cos((age - 36) * 0.12) * 8 - ((age - 36) * 0.15);
-        }
-        // 장년기 (56-70세): 점진적 감소
-        else if (age <= 70) {
-            baseWillpower = 55 - ((age - 56) * 0.9) + Math.sin(age * 0.1) * 4;
-        }
-        // 노년기 (71세+): 지혜로운 의지
-        else {
-            baseWillpower = 40 + Math.sin(age * 0.08) * 8 + Math.cos(age * 0.06) * 5;
-        }
-        // 비겁성 분석 (자신감, 추진력)
-        const 일간오행 = this.오행[사주.일주.천간];
-        if (대운.오행 === 일간오행) {
-            baseWillpower += 10;
-        }
-        // 10년 주기 변화
-        const cycleEffect = Math.sin((age % 10) * 0.628) * 6;
-        // 대운 전환기 보정
-        if (age % 10 === 0 || age % 10 === 9) {
-            baseWillpower -= 5; // 전환기 불안정
-        }
-        return baseWillpower + cycleEffect;
-    }
-    /**
-     * 개선된 환경 점수 계산 (대인관계, 외부 지원)
-     */
-    calculateEnvironmentImproved(대운, 세운, age) {
-        let baseScore = 45;
-        // 학령기 (7-19세): 학교 환경
-        if (age >= 7 && age <= 19) {
-            baseScore = 50 + Math.sin((age - 7) * 0.3) * 10;
-        }
-        // 사회진출기 (20-30세): 네트워킹 형성
-        else if (age <= 30) {
-            baseScore = 45 + (age - 20) * 1.5;
-        }
-        // 가정형성기 (31-45세): 안정적 관계
-        else if (age <= 45) {
-            baseScore = 60 + Math.cos((age - 31) * 0.2) * 8;
-        }
-        // 사회활동기 (46-65세): 영향력 확대
-        else if (age <= 65) {
-            baseScore = 65 - ((age - 46) * 0.5);
-        }
-        // 은퇴기 (66세+): 축소된 관계
-        else {
-            baseScore = 50 - ((age - 66) * 0.3) + Math.sin(age * 0.1) * 5;
-        }
+    calculateEnvironment(대운, 세운, age) {
+        let score = 55;
         // 인성 분석 (도움, 지원)
         if (대운.오행 === '水' || 세운.오행 === '水') {
-            baseScore += 10;
+            score += 15;
         }
         // 식상 분석 (표현, 소통)
         if (대운.오행 === '木' || 세운.오행 === '木') {
-            baseScore += 8;
+            score += 10;
         }
-        return baseScore;
+        // 사회 활동기
+        if (age >= 25 && age <= 65) {
+            score += 10;
+        }
+        return score;
     }
     /**
-     * 개선된 변화 점수 계산 (변동성, 기회, 위기)
+     * 변화 점수 계산 (변동성, 기회, 위기)
      */
-    calculateChangeImproved(대운, 세운, age) {
-        let baseScore = 30;
-        // 인생 주요 전환점
-        const majorTransitions = [7, 13, 19, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80];
-        const minorTransitions = [3, 10, 16, 22, 28, 33, 38, 43, 48, 53, 58, 63, 68, 73, 78];
-        if (majorTransitions.includes(age)) {
-            baseScore += 35;
-        }
-        else if (minorTransitions.includes(age)) {
-            baseScore += 20;
-        }
+    calculateChange(대운, 세운, age) {
+        let score = 40;
         // 충 관계 분석 (변화, 변동)
         if (this.has충Relationship(대운.지지, 세운.지지)) {
-            baseScore += 25;
+            score += 30;
         }
         // 대운 전환기
         if (age % 10 === 0 || age % 10 === 9) {
-            baseScore += 15;
+            score += 20;
         }
-        // 나이별 변화 경향
-        if (age <= 30) {
-            // 젊은 시절 더 많은 변화
-            baseScore += 10;
+        // 인생 전환점
+        if ([30, 40, 50, 60].includes(age)) {
+            score += 15;
         }
-        else if (age >= 70) {
-            // 노년기 변화 감소
-            baseScore -= 10;
-        }
-        // 랜덤 변동성 (인생의 예측 불가능성)
-        const randomFactor = Math.sin(age * 1.7) * 8 + Math.cos(age * 2.3) * 5;
-        return baseScore + randomFactor;
+        return score;
     }
     /**
      * 용신 점수 계산
@@ -487,4 +360,4 @@ class LifetimeFortuneCalculator {
     }
 }
 exports.LifetimeFortuneCalculator = LifetimeFortuneCalculator;
-//# sourceMappingURL=LifetimeFortuneCalculator.js.map
+//# sourceMappingURL=LifetimeFortuneCalculator.bak.js.map

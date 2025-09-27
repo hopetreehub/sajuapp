@@ -89,11 +89,11 @@ router.get('/:date', async (req, res) => {
         // Parse tags and images JSON
         diary.tags = diary.tags ? JSON.parse(diary.tags) : [];
         diary.images = diary.images ? JSON.parse(diary.images) : [];
-        res.json(diary);
+        return res.json(diary);
     }
     catch (error) {
         logger_1.default.error('Failed to fetch diary:', error);
-        res.status(500).json({ error: 'Failed to fetch diary' });
+        return res.status(500).json({ error: 'Failed to fetch diary' });
     }
 });
 // POST /api/diaries - 일기 작성
@@ -113,14 +113,14 @@ router.post('/', async (req, res) => {
         const newDiary = await db.get('SELECT * FROM diary_entries WHERE id = ?', [id]);
         newDiary.tags = newDiary.tags ? JSON.parse(newDiary.tags) : [];
         newDiary.images = newDiary.images ? JSON.parse(newDiary.images) : [];
-        res.status(201).json(newDiary);
+        return res.status(201).json(newDiary);
     }
     catch (error) {
         if (error.code === 'SQLITE_CONSTRAINT') {
             return res.status(409).json({ error: 'Diary entry for this date already exists' });
         }
         logger_1.default.error('Failed to create diary:', error);
-        res.status(500).json({ error: 'Failed to create diary' });
+        return res.status(500).json({ error: 'Failed to create diary' });
     }
 });
 // PUT /api/diaries/:id - 일기 수정
@@ -146,11 +146,11 @@ router.put('/:id', async (req, res) => {
         const updatedDiary = await db.get('SELECT * FROM diary_entries WHERE id = ?', [id]);
         updatedDiary.tags = updatedDiary.tags ? JSON.parse(updatedDiary.tags) : [];
         updatedDiary.images = updatedDiary.images ? JSON.parse(updatedDiary.images) : [];
-        res.json(updatedDiary);
+        return res.json(updatedDiary);
     }
     catch (error) {
         logger_1.default.error('Failed to update diary:', error);
-        res.status(500).json({ error: 'Failed to update diary' });
+        return res.status(500).json({ error: 'Failed to update diary' });
     }
 });
 // DELETE /api/diaries/:id - 일기 삭제
@@ -163,11 +163,11 @@ router.delete('/:id', async (req, res) => {
         if (result.changes === 0) {
             return res.status(404).json({ error: 'Diary entry not found' });
         }
-        res.status(204).send();
+        return res.status(204).send();
     }
     catch (error) {
         logger_1.default.error('Failed to delete diary:', error);
-        res.status(500).json({ error: 'Failed to delete diary' });
+        return res.status(500).json({ error: 'Failed to delete diary' });
     }
 });
 exports.default = router;

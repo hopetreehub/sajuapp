@@ -1,7 +1,6 @@
 /**
- * 100년 인생운세 계산 엔진 (개선 버전)
+ * 100년 인생운세 계산 엔진
  * 전통 사주 이론 기반 대운/세운 분석
- * 더 현실적인 나이별 운세 변화 패턴 적용
  */
 interface YearlyFortune {
     year: number;
@@ -53,33 +52,25 @@ export declare class LifetimeFortuneCalculator {
      */
     private calculate대운Score;
     /**
-     * 개선된 종합 점수 계산
+     * 종합 점수 계산
      */
-    private calculateScoresImproved;
+    private calculateScores;
     /**
-     * 나이별 기본 점수 (현실적인 패턴)
+     * 행운 점수 계산 (재물, 명예, 성공운)
      */
-    private getAgeBasedScore;
+    private calculateFortune;
     /**
-     * 사주 특성 점수 계산
+     * 의지력 점수 계산 (노력, 추진력, 실행력)
      */
-    private calculate사주특성Score;
+    private calculateWillpower;
     /**
-     * 개선된 행운 점수 계산 (재물, 명예, 성공운)
+     * 환경 점수 계산 (대인관계, 외부 지원)
      */
-    private calculateFortuneImproved;
+    private calculateEnvironment;
     /**
-     * 개선된 의지력 점수 계산 (노력, 추진력, 실행력)
+     * 변화 점수 계산 (변동성, 기회, 위기)
      */
-    private calculateWillpowerImproved;
-    /**
-     * 개선된 환경 점수 계산 (대인관계, 외부 지원)
-     */
-    private calculateEnvironmentImproved;
-    /**
-     * 개선된 변화 점수 계산 (변동성, 기회, 위기)
-     */
-    private calculateChangeImproved;
+    private calculateChange;
     /**
      * 용신 점수 계산
      */
@@ -110,4 +101,4 @@ export declare class LifetimeFortuneCalculator {
     private has충Relationship;
 }
 export {};
-//# sourceMappingURL=LifetimeFortuneCalculator.d.ts.map
+//# sourceMappingURL=LifetimeFortuneCalculator.bak.d.ts.map

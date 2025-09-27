@@ -294,7 +294,7 @@ app.get('/api/saju/categories', (req, res) => {
             positive: {},
             negative: {}
         };
-        rows.forEach(row => {
+        rows.forEach((row) => {
             const type = row.type === 'positive' ? 'positive' : 'negative';
             if (!result[type][row.middle_category]) {
                 result[type][row.middle_category] = {

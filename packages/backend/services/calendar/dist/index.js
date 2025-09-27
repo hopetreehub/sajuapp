@@ -17,7 +17,7 @@ const customers_1 = __importDefault(require("./routes/customers"));
 const sqlite_connection_1 = require("./database/sqlite-connection");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const PORT = process.env.CALENDAR_SERVICE_PORT || 4001;
+const PORT = 4012; // 고정 포트 사용
 // Middleware
 app.use((0, cors_1.default)({
     origin: process.env.FRONTEND_URL || 'http://localhost:4000',

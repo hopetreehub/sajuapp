@@ -14,7 +14,7 @@ const diaries_1 = __importDefault(require("./routes/diaries"));
 const connection_1 = require("./database/connection");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const PORT = process.env.DIARY_SERVICE_PORT || 4004;
+const PORT = process.env.DIARY_SERVICE_PORT || process.env.PORT || 4004;
 // Middleware
 app.use((0, cors_1.default)({
     origin: process.env.FRONTEND_URL || 'http://localhost:4000',
@@ -25,7 +25,7 @@ app.use(express_1.default.json({ limit: '50mb' }));
 app.use(express_1.default.urlencoded({ extended: true, limit: '50mb' }));
 app.use(requestLogger_1.requestLogger);
 // Routes
-app.use('/health', (req, res) => {
+app.use('/health', (_req, res) => {
     res.json({
         status: 'healthy',
         service: 'diary-service',
