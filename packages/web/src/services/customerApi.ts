@@ -3,7 +3,7 @@
 // 프로덕션 URL 직접 설정 (localhost 문제 해결)
 const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost'
   ? '/api/calendar'  // 로컬 개발 환경
-  : 'https://sajuapp-calendar.vercel.app/api/calendar';  // Vercel 프로덕션 환경
+  : 'https://calendar-k79696r93-johns-projects-bf5e60f3.vercel.app/api/calendar';  // Vercel 프로덕션 환경
 
 // 디버깅용 로그
 if (typeof window !== 'undefined') {
