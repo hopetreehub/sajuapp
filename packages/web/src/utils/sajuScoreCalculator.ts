@@ -681,7 +681,7 @@ export function generateSampleSajuData(): SajuData {
 // ====================
 
 // 십신 강도 점수
-const SIBSIN_STRENGTH: Record<string, number> = {
+const _SIBSIN_STRENGTH: Record<string, number> = {
   비견: 80, 겁재: 75, 식신: 85, 상관: 70,
   편재: 80, 정재: 85, 편관: 75, 정관: 90,
   편인: 80, 정인: 85,
@@ -770,7 +770,7 @@ export function calculateLifeChartScore(
 
   // 3. 96년간 연도별 점수 계산
   const yearlyScores: number[] = [];
-  const currentYear = new Date().getFullYear();
+  const _currentYear = new Date().getFullYear();
 
   for (let age = 0; age <= 95; age++) {
     const year = birthYear + age;
@@ -1001,7 +1001,7 @@ function calculateBaseLifeScore(
 function calculateDaeunScore(saju: any, cycle: number): number {
   // 1. 월지를 기준으로 한 순행/역행 결정
   const monthJi = saju.month.ji;
-  const monthElement = JIJI_OHHAENG[monthJi as JiJi];
+  const _monthElement = JIJI_OHHAENG[monthJi as JiJi];
 
   // 양간(갑병무경임)이면 순행, 음간(을정기신계)이면 역행 (간화)
   const dayGan = saju.day.gan;
@@ -1110,7 +1110,7 @@ function calculateTransitionEffect(saju: any, cycle: number, daeunGan: string, d
   }
 
   // 대운 천간지지의 조합에 따른 특수 효과 - 영향력 확대
-  const daeunPattern = CHEONGAN.indexOf(daeunGan) * 12 + JIJI.indexOf(daeunJi);
+  const daeunPattern = CHEONGAN.indexOf(daeunGan as CheonGan) * 12 + JIJI.indexOf(daeunJi as JiJi);
   const specialEffects = [13, 27, 41, 55]; // 특수한 60갑자 조합
 
   if (specialEffects.includes(daeunPattern)) {
@@ -1278,7 +1278,7 @@ function getSajuUniqueValue(saju: any): number {
   }
 
   // 5. 일간 중심 특수 계수
-  const dayMasterElement = CHEONGAN_OHHAENG[saju.day.gan as CheonGan];
+  const _dayMasterElement = CHEONGAN_OHHAENG[saju.day.gan as CheonGan];
   const dayMasterBonus = ganValues[saju.day.gan] * jiValues[saju.day.ji] * 5;
 
   // 6. 계절성 반영 (월지 기준)

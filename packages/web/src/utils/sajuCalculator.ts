@@ -258,7 +258,7 @@ export class SajuCalculator {
    */
   public static calculateFourPillars(birthInfo: SajuBirthInfo): FourPillarsResult {
     let { year, month, day, hour, minute = 0 } = birthInfo;
-    
+
     // 음력 변환 처리
     if (birthInfo.isLunar) {
       try {

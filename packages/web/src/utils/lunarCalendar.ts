@@ -23,15 +23,15 @@ export const solarToLunar = (date: Date): LunarDate => {
     );
     
     // getLunarYear() 메서드로 음력 정보 가져오기
-    const lunarData = calendar.getLunarYear();
-    
+    const lunarData = calendar.getLunarYear() as any;
+
     return {
-      year: lunarData.year || date.getFullYear(),
-      month: lunarData.month || date.getMonth() + 1,
-      day: lunarData.day || date.getDate(),
-      isLeapMonth: lunarData.leapMonth || false,
-      zodiac: lunarData.zodiac || '',
-      chineseYear: lunarData.GanJi?.year || '',
+      year: (typeof lunarData === 'object' && lunarData?.year) || date.getFullYear(),
+      month: (typeof lunarData === 'object' && lunarData?.month) || date.getMonth() + 1,
+      day: (typeof lunarData === 'object' && lunarData?.day) || date.getDate(),
+      isLeapMonth: (typeof lunarData === 'object' && lunarData?.leapMonth) || false,
+      zodiac: (typeof lunarData === 'object' && lunarData?.zodiac) || '',
+      chineseYear: (typeof lunarData === 'object' && lunarData?.GanJi?.year) || '',
     };
   } catch (error) {
     console.error('Error converting solar to lunar:', error);
@@ -57,12 +57,12 @@ export const lunarToSolar = (year: number, month: number, day: number, isLeapMon
     calendar.setLunarDate(year, month, day, isLeapMonth);
     
     // getSolarYear() 메서드로 양력 정보 가져오기
-    const solarData = calendar.getSolarYear();
-    
+    const solarData = calendar.getSolarYear() as any;
+
     return new Date(
-      solarData.year || year,
-      (solarData.month || month) - 1, // Convert to 0-indexed
-      solarData.day || day,
+      (typeof solarData === 'object' && solarData?.year) || year,
+      ((typeof solarData === 'object' && solarData?.month) || month) - 1, // Convert to 0-indexed
+      (typeof solarData === 'object' && solarData?.day) || day,
     );
   } catch (error) {
     console.error('Error converting lunar to solar:', error);

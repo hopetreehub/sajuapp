@@ -97,7 +97,7 @@ export class TenGodsAnalyzer {
     }
 
     // 카테고리별 균형도 계산
-    const categoryBalance = Object.entries(TEN_GODS_CATEGORIES).map(([category, info]) => {
+    const categoryBalance = Object.entries(TEN_GODS_CATEGORIES).map(([_category, info]) => {
       const categorySum = info.tenGods.reduce((sum, tenGod) => sum + data[tenGod], 0);
       return categorySum / total;
     });
@@ -270,7 +270,11 @@ export class TenGodsAnalyzer {
   }
 
   private static getDevelopmentSuggestions(data: TenGodsData) {
-    const suggestions = [];
+    const suggestions: Array<{
+      area: string;
+      method: string;
+      targetTenGod: TenGodType;
+    }> = [];
     // const total = Object.values(data).reduce((sum, val) => sum + val, 0);
 
     // 가장 약한 십성 찾기
@@ -292,7 +296,11 @@ export class TenGodsAnalyzer {
   }
 
   private static getCautionAreas(data: TenGodsData) {
-    const cautions = [];
+    const cautions: Array<{
+      issue: string;
+      reason: string;
+      solution: string;
+    }> = [];
     const total = Object.values(data).reduce((sum, val) => sum + val, 0);
 
     // 과도하게 강한 십성 체크

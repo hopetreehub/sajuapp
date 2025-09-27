@@ -134,7 +134,7 @@ export class FiveElementsCalculator {
       precisionLevel: 'detailed',
     };
 
-    const finalOptions = { ...defaultOptions, ...options };
+    const _finalOptions = { ...defaultOptions, ...options };
     
     // 사주 계산 (임시로 더미 데이터 사용)
     const fourPillars = this.getFourPillars(birthInfo);
@@ -171,7 +171,7 @@ export class FiveElementsCalculator {
   }
 
   // 임시 사주 계산 (실제로는 더 복잡한 로직 필요)
-  private static getFourPillars(birthInfo: SajuBirthInfo): FourPillars {
+  private static getFourPillars(_birthInfo: SajuBirthInfo): FourPillars {
     // 임시 더미 데이터 - 실제로는 만세력 계산 필요
     return {
       year: { heavenly: '병', earthly: '술' },
@@ -305,7 +305,7 @@ export class FiveElementsCalculator {
   // 개인맞춤 추천사항 생성
   private static generateRecommendations(
     elements: FiveElementsData,
-    relationships: ElementRelationship,
+    _relationships: ElementRelationship,
   ): FiveElementsRecommendation {
     
     const sortedElements = Object.entries(elements) as [keyof FiveElementsData, number][];
@@ -392,8 +392,8 @@ export class FiveElementsCalculator {
   // 차트 데이터 생성
   private static createChartData(
     elements: FiveElementsData,
-    relationships: ElementRelationship,
-    recommendations: FiveElementsRecommendation,
+    _relationships: ElementRelationship,
+    _recommendations: FiveElementsRecommendation,
   ): any {
     return {
       meta: {
@@ -416,10 +416,10 @@ export class FiveElementsCalculator {
         base: [elements.wood, elements.fire, elements.earth, elements.metal, elements.water],
       },
       interpretation: {
-        summary: `균형도 ${relationships.balance_score}점 - ${relationships.balance_score >= 70 ? '균형적' : relationships.balance_score >= 40 ? '보통' : '불균형적'}인 오행 상태입니다.`,
-        positive: relationships.dominant_elements.map(el => `${el} 기운이 강하여 해당 분야에서 능력 발휘 가능`),
-        negative: relationships.weak_elements.map(el => `${el} 기운 부족으로 해당 영역 보강 필요`),
-        recommendations: [`${relationships.weak_elements[0]} 기운 보강을 위한 활동 추천`, '상생 관계 활용한 균형 개선 방안'],
+        summary: `균형도 ${_relationships.balance_score}점 - ${_relationships.balance_score >= 70 ? '균형적' : _relationships.balance_score >= 40 ? '보통' : '불균형적'}인 오행 상태입니다.`,
+        positive: _relationships.dominant_elements.map(el => `${el} 기운이 강하여 해당 분야에서 능력 발휘 가능`),
+        negative: _relationships.weak_elements.map(el => `${el} 기운 부족으로 해당 영역 보강 필요`),
+        recommendations: [`${_relationships.weak_elements[0]} 기운 보강을 위한 활동 추천`, '상생 관계 활용한 균형 개선 방안'],
       },
     };
   }
