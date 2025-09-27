@@ -3,7 +3,7 @@ import axios from 'axios';
 // 프로덕션 URL 직접 설정 (localhost 문제 해결)
 const baseURL = typeof window !== 'undefined' && window.location.hostname === 'localhost'
   ? '/api/calendar'  // 로컬 개발 환경
-  : 'https://calendar-4out3wduo-johns-projects-bf5e60f3.vercel.app/api/calendar';  // Vercel 프로덕션 환경
+  : 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';  // Vercel 프로덕션 환경
 
 // 디버깅용 로그
 if (typeof window !== 'undefined') {
