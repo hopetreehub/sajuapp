@@ -1,4 +1,4 @@
 @echo off
-set RAILWAY_API_TOKEN=ffaf8b4f-0cd2-4156-a7b5-2a286f83b92d
+set RAILWAY_TOKEN=0ff72bbe-a7c4-47fb-84b0-7aed6600f82f
 echo Testing Railway authentication...
 railway whoami

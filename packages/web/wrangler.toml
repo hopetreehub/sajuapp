@@ -12,10 +12,10 @@ bucket = "./dist"
 
 # 환경 변수 설정 (프로덕션)
 [env.production.vars]
-VITE_API_URL = "https://sajuapp-backend.railway.app"
-VITE_CALENDAR_SERVICE_URL = "https://sajuapp-backend.railway.app/api/calendar"
-VITE_DIARY_SERVICE_URL = "https://sajuapp-backend.railway.app/api/diary"
-VITE_SAJU_SERVICE_URL = "https://sajuapp-backend.railway.app/api/saju"
+VITE_API_URL = ""
+VITE_CALENDAR_SERVICE_URL = "https://fortune-calendar.up.railway.app/api"
+VITE_DIARY_SERVICE_URL = "https://fortune-diary.up.railway.app/api"
+VITE_SAJU_SERVICE_URL = "https://fortune-saju.up.railway.app/api"
 
 # 환경 변수 설정 (스테이징)
 [env.staging.vars]
