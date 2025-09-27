@@ -26,7 +26,7 @@ interface YearViewProps {
   _onEditEvent: (event: CalendarEvent) => void
 }
 
-export default function YearView({ events, onCreateEvent, onEditEvent }: YearViewProps) {
+export default function YearView({ events, _onCreateEvent, _onEditEvent }: YearViewProps) {
   const { currentDate, setCurrentDate, setViewMode } = useCalendar();
 
   const yearMonths = useMemo(() => {

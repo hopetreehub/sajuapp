@@ -103,7 +103,7 @@ export default function WeeklyStats({ weeklyData, loading }: WeeklyStatsProps) {
         </h3>
         
         <div className="space-y-3">
-          {weeklyData.activityData.map((day, index) => {
+          {weeklyData.activityData.map((day, _index) => {
             const totalActivity = day.events + day.todos + (day.diary ? 1 : 0);
             const percentage = maxActivity > 0 ? (totalActivity / maxActivity) * 100 : 0;
             const dayName = format(new Date(day.date), 'E', { locale: ko });
@@ -157,7 +157,7 @@ export default function WeeklyStats({ weeklyData, loading }: WeeklyStatsProps) {
           </h3>
           
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
-            {weeklyData.moodTrend.map((mood, index) => {
+            {weeklyData.moodTrend.map((mood, _index) => {
               const date = new Date(mood.date);
               const dayName = format(date, 'E', { locale: ko });
               const dayOfMonth = format(date, 'd');

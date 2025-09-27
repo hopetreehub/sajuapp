@@ -12,18 +12,18 @@ const HANGUL_END = 55203;   // '힣'
 // 초성, 중성, 종성 배열
 const CHOSUNG = [
   'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ',
-  'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
+  'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ',
 ];
 
 const JUNGSUNG = [
   'ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ',
-  'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ'
+  'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ',
 ];
 
 const JONGSUNG = [
   '', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', 'ㄺ',
   'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ', 'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ',
-  'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'
+  'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ',
 ];
 
 /**
@@ -44,7 +44,7 @@ export function decomposeHangul(char: string): { cho: string; jung: string; jong
   return {
     cho: CHOSUNG[cho],
     jung: JUNGSUNG[jung],
-    jong: JONGSUNG[jong]
+    jong: JONGSUNG[jong],
   };
 }
 
@@ -161,7 +161,7 @@ export function filterByKoreanSearch<T>(
   items: T[],
   query: string,
   getSearchText: (item: T) => string,
-  minScore: number = 10
+  minScore: number = 10,
 ): Array<T & { searchScore: number }> {
   if (!query.trim()) {
     return items.map(item => ({ ...item, searchScore: 0 }));
@@ -183,12 +183,12 @@ export function filterByKoreanSearch<T>(
 export function highlightKoreanText(text: string, query: string): string {
   if (!query || !text) return text;
 
-  const normalizedQuery = query.toLowerCase();
-  const normalizedText = text.toLowerCase();
+  const _normalizedQuery = query.toLowerCase();
+  const _normalizedText = text.toLowerCase();
 
   // 1. 완전 일치 하이라이트
   const exactRegex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
-  let highlighted = text.replace(exactRegex, '<mark>$1</mark>');
+  const highlighted = text.replace(exactRegex, '<mark>$1</mark>');
 
   // 2. 초성 매칭 하이라이트 (복잡하므로 생략, 필요시 구현)
 
@@ -208,7 +208,7 @@ function escapeRegExp(string: string): string {
 export function generateKoreanSuggestions(
   items: string[],
   query: string,
-  maxSuggestions: number = 5
+  maxSuggestions: number = 5,
 ): string[] {
   if (!query.trim()) return [];
 
@@ -244,6 +244,7 @@ export function getHighlightInfo(text: string, query: string): HighlightInfo {
   const normalizedQuery = query.toLowerCase();
   let startIndex = 0;
 
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const index = normalizedText.indexOf(normalizedQuery, startIndex);
     if (index === -1) break;
@@ -251,7 +252,7 @@ export function getHighlightInfo(text: string, query: string): HighlightInfo {
     matches.push({
       start: index,
       end: index + query.length,
-      type: 'exact'
+      type: 'exact',
     });
 
     startIndex = index + 1;
@@ -263,7 +264,7 @@ export function getHighlightInfo(text: string, query: string): HighlightInfo {
   return {
     original: text,
     highlighted,
-    matches
+    matches,
   };
 }
 
@@ -278,5 +279,5 @@ export default {
   filterByKoreanSearch,
   highlightKoreanText,
   generateKoreanSuggestions,
-  getHighlightInfo
+  getHighlightInfo,
 };

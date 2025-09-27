@@ -8,7 +8,7 @@ import { SajuBirthInfo, DailyFortune, FortuneLevel } from '@/types/saju';
 
 // 천간과 지지
 const HEAVENLY_STEMS = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
-const EARTHLY_BRANCHES = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
+const _EARTHLY_BRANCHES = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
 
 // 오행 속성
 const ELEMENT_MAP: { [key: string]: string } = {
@@ -56,7 +56,7 @@ function getDayMaster(date: Date): string {
   const cycleIndex = (diffDays + 36) % 60; // 1900년 1월 1일이 경자일이므로 36을 더함
   
   const stemIndex = cycleIndex % 10;
-  const branchIndex = cycleIndex % 12;
+  const _branchIndex = cycleIndex % 12;
   
   return HEAVENLY_STEMS[stemIndex];
 }
@@ -97,7 +97,7 @@ function getUserElement(birthInfo: SajuBirthInfo): string {
 /**
  * 운세 메시지 생성
  */
-function generateFortuneMessage(totalLuck: number, userElement: string, dayElement: string): string {
+function generateFortuneMessage(totalLuck: number, _userElement: string, _dayElement: string): string {
   const level = getFortuneLevel(totalLuck);
   const messages = {
     excellent: [

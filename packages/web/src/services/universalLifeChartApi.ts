@@ -6,7 +6,7 @@ import {
   PersonalInfo,
   SajuComponents,
   LifeChartRequest,
-  LifeChartResponse,
+  // LifeChartResponse,
   ExportOptions,
 } from '@/types/universalLifeChart';
 
@@ -18,7 +18,7 @@ import { getCustomerById } from '@/services/customerApi';
  */
 export const generateUniversalLifeChart = async (
   customerId: number,
-  options: Partial<LifeChartRequest> = {}
+  _options: Partial<LifeChartRequest> = {},
 ): Promise<UniversalLifeChartData> => {
   try {
     console.log('🔍 고객 정보 조회 중...', customerId);
@@ -68,7 +68,7 @@ export const generateUniversalLifeChart = async (
     // 4. 범용 인생차트 생성
     const chartData = UniversalSajuEngine.generateUniversalLifeChart(
       sajuData,
-      personalInfo
+      personalInfo,
     );
 
     console.log(`✅ ${customer.name}님의 인생차트 생성 완료:`, {
@@ -109,7 +109,7 @@ export const generateTestLifeChart = (): UniversalLifeChartData => {
 
   return UniversalSajuEngine.generateUniversalLifeChart(
     testSajuData,
-    testPersonalInfo
+    testPersonalInfo,
   );
 };
 
@@ -136,7 +136,7 @@ export const generateTestLifeChart2 = (): UniversalLifeChartData => {
 
   return UniversalSajuEngine.generateUniversalLifeChart(
     testSajuData,
-    testPersonalInfo
+    testPersonalInfo,
   );
 };
 
@@ -145,7 +145,7 @@ export const generateTestLifeChart2 = (): UniversalLifeChartData => {
  */
 export const exportLifeChart = async (
   chartData: UniversalLifeChartData,
-  options: ExportOptions
+  options: ExportOptions,
 ): Promise<Blob> => {
   const { format, quality = 'medium', includeAnalysis = true, watermark = true } = options;
 
@@ -176,7 +176,7 @@ export const exportLifeChart = async (
  * JSON 형식으로 내보내기
  */
 function exportAsJSON(chartData: UniversalLifeChartData, includeAnalysis: boolean): Blob {
-  let exportData = { ...chartData };
+  const exportData = { ...chartData };
 
   if (!includeAnalysis) {
     // 분석 데이터 제외
@@ -192,10 +192,10 @@ function exportAsJSON(chartData: UniversalLifeChartData, includeAnalysis: boolea
  * PDF 형식으로 내보내기 (향후 구현)
  */
 function exportAsPDF(
-  chartData: UniversalLifeChartData,
-  quality: string,
-  includeAnalysis: boolean,
-  watermark: boolean
+  _chartData: UniversalLifeChartData,
+  _quality: string,
+  _includeAnalysis: boolean,
+  _watermark: boolean,
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     // PDF 생성 로직 구현 필요 (jsPDF + html2canvas 등 활용)
@@ -207,9 +207,9 @@ function exportAsPDF(
  * PNG 형식으로 내보내기 (향후 구현)
  */
 function exportAsPNG(
-  chartData: UniversalLifeChartData,
-  quality: string,
-  watermark: boolean
+  _chartData: UniversalLifeChartData,
+  _quality: string,
+  _watermark: boolean,
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     // PNG 생성 로직 구현 필요 (html2canvas 등 활용)
@@ -221,8 +221,8 @@ function exportAsPNG(
  * SVG 형식으로 내보내기 (향후 구현)
  */
 function exportAsSVG(
-  chartData: UniversalLifeChartData,
-  watermark: boolean
+  _chartData: UniversalLifeChartData,
+  _watermark: boolean,
 ): Promise<Blob> {
   return new Promise((resolve, reject) => {
     // SVG 생성 로직 구현 필요

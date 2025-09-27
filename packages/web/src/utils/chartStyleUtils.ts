@@ -309,7 +309,7 @@ export class ChartStyleUtils {
    */
   public static getResponsiveOptions(containerWidth: number): Partial<ChartOptions<'radar'>> {
     const fontSize = containerWidth < 400 ? 10 : containerWidth < 600 ? 12 : 14;
-    const pointRadius = containerWidth < 400 ? 2 : containerWidth < 600 ? 3 : 4;
+    const _pointRadius = containerWidth < 400 ? 2 : containerWidth < 600 ? 3 : 4;
 
     return {
       plugins: {

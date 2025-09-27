@@ -33,7 +33,7 @@ export class AuthenticSajuTest {
         day: 15,   // 추정
         hour: 11,  // 경인시 (오전 11시)
         isLunar: false,
-        useAuthenticCalculator: true
+        useAuthenticCalculator: true,
       });
 
       if (apiResult.success) {
@@ -98,7 +98,7 @@ export class AuthenticSajuTest {
         day: 20,   // 신미일 추정
         hour: 9,   // 계사시 (오전 9시)
         isLunar: false,
-        useAuthenticCalculator: true
+        useAuthenticCalculator: true,
       });
 
       if (apiResult.success) {
@@ -147,12 +147,12 @@ export class AuthenticSajuTest {
       const [박준수결과, 정비제결과] = await Promise.all([
         fetchLifetimeFortune({
           year: 1971, month: 11, day: 15, hour: 11,
-          useAuthenticCalculator: true
+          useAuthenticCalculator: true,
         }),
         fetchLifetimeFortune({
           year: 1976, month: 8, day: 20, hour: 9,
-          useAuthenticCalculator: true
-        })
+          useAuthenticCalculator: true,
+        }),
       ]);
 
       if (박준수결과.success && 정비제결과.success) {
@@ -179,7 +179,7 @@ export class AuthenticSajuTest {
         const 정비제평균 = 정비제결과.data.analysis.averageScore;
         const 평균차이 = Math.abs(박준수평균 - 정비제평균);
 
-        console.log(`\n📈 전체 패턴 비교:`);
+        console.log('\n📈 전체 패턴 비교:');
         console.log(`   박준수 평균: ${박준수평균}점`);
         console.log(`   정비제 평균: ${정비제평균}점`);
         console.log(`   평균 차이: ${평균차이}점`);
@@ -204,7 +204,7 @@ export class AuthenticSajuTest {
    */
   private static analyzeFortuneTrend(
     lifetimeFortune: any[],
-    targetElements: string[]
+    targetElements: string[],
   ): { 평균점수: number; 샘플수: number } {
     const 대상연도들 = lifetimeFortune.filter(년도 => {
       const 대운오행 = 년도.대운?.오행;

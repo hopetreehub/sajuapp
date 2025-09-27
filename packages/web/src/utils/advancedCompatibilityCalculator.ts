@@ -7,8 +7,8 @@ import {
   CompatibilityGrade,
   GradeInfo,
   AnimalCompatibilityMatrix,
-  FiveElementsRelation,
-  PersonalityCompatibility,
+  // FiveElementsRelation,
+  // PersonalityCompatibility,
 } from '@/types/compatibility';
 
 export class AdvancedCompatibilityCalculator {
@@ -91,7 +91,7 @@ export class AdvancedCompatibilityCalculator {
   /**
    * 메인 궁합 분석 메서드
    */
-  public static calculateCompatibility(person1: SajuData, person2: SajuData): CompatibilityAnalysisResult {
+  public static calculateCompatibility(_person1: SajuData, _person2: SajuData): CompatibilityAnalysisResult {
     const components = this.calculateScoreComponents(person1, person2);
     const totalScore = this.calculateTotalScore(components);
     const grade = this.determineGrade(totalScore);
@@ -111,7 +111,7 @@ export class AdvancedCompatibilityCalculator {
   /**
    * 점수 컴포넌트별 계산
    */
-  private static calculateScoreComponents(person1: SajuData, person2: SajuData): CompatibilityScoreComponents {
+  private static calculateScoreComponents(_person1: SajuData, _person2: SajuData): CompatibilityScoreComponents {
     return {
       // Tier 1: 핵심 명리학 (50점)
       ilganCompatibility: this.calculateIlganScore(person1, person2),
@@ -133,7 +133,7 @@ export class AdvancedCompatibilityCalculator {
   /**
    * 일간 상성 계산 (20점 만점)
    */
-  private static calculateIlganScore(person1: SajuData, person2: SajuData): number {
+  private static calculateIlganScore(_person1: SajuData, _person2: SajuData): number {
     const ilgan1 = person1.dayMaster || person1.fourPillars.day.heavenly;
     const ilgan2 = person2.dayMaster || person2.fourPillars.day.heavenly;
     
@@ -163,10 +163,10 @@ export class AdvancedCompatibilityCalculator {
   /**
    * 용신 관계 계산 (15점 만점)
    */
-  private static calculateYongsinScore(person1: SajuData, person2: SajuData): number {
+  private static calculateYongsinScore(_person1: SajuData, _person2: SajuData): number {
     // 용신 분석은 복잡하므로 간단히 오행 균형으로 대체
-    const balance1 = this.calculateFiveElementsBalance(person1.fiveElements);
-    const balance2 = this.calculateFiveElementsBalance(person2.fiveElements);
+    const _balance1 = this.calculateFiveElementsBalance(person1.fiveElements);
+    const _balance2 = this.calculateFiveElementsBalance(person2.fiveElements);
     
     const complementarity = this.calculateComplementarity(person1.fiveElements, person2.fiveElements);
     
@@ -176,7 +176,7 @@ export class AdvancedCompatibilityCalculator {
   /**
    * 지지 조화 계산 (15점 만점)
    */
-  private static calculateJijiHarmony(person1: SajuData, person2: SajuData): number {
+  private static calculateJijiHarmony(_person1: SajuData, _person2: SajuData): number {
     const earthly1 = person1.fourPillars.day.earthly;
     const earthly2 = person2.fourPillars.day.earthly;
     
@@ -188,7 +188,7 @@ export class AdvancedCompatibilityCalculator {
   /**
    * 대운 매칭 계산 (12점 만점)
    */
-  private static calculateDaeunMatching(person1: SajuData, person2: SajuData): number {
+  private static calculateDaeunMatching(_person1: SajuData, _person2: SajuData): number {
     // 현재 시점의 대운 분석 (간단히 나이 기반으로 계산)
     const currentYear = new Date().getFullYear();
     const age1 = currentYear - person1.birthInfo.year;
@@ -203,7 +203,7 @@ export class AdvancedCompatibilityCalculator {
   /**
    * 성격 오행 매칭 (10점 만점)
    */
-  private static calculatePersonalityFit(person1: SajuData, person2: SajuData): number {
+  private static calculatePersonalityFit(_person1: SajuData, _person2: SajuData): number {
     if (!person1.personalityTraits || !person2.personalityTraits) {
       return 7; // 기본값
     }
@@ -224,7 +224,7 @@ export class AdvancedCompatibilityCalculator {
   /**
    * 나이차 균형 (8점 만점)
    */
-  private static calculateAgeBalance(person1: SajuData, person2: SajuData): number {
+  private static calculateAgeBalance(_person1: SajuData, _person2: SajuData): number {
     const ageDiff = Math.abs(person1.birthInfo.year - person2.birthInfo.year);
     
     if (ageDiff <= 2) return 8; // 완벽한 나이차
@@ -238,7 +238,7 @@ export class AdvancedCompatibilityCalculator {
   /**
    * AI 예측 점수 (10점 만점)
    */
-  private static calculateAIPrediction(person1: SajuData, person2: SajuData): number {
+  private static calculateAIPrediction(_person1: SajuData, _person2: SajuData): number {
     // 실제로는 ML 모델을 사용하겠지만, 여기서는 종합적인 호환성으로 계산
     const fiveElementsCompat = this.calculateFiveElementsCompatibility(person1, person2);
     const personalityCompat = this.calculatePersonalityCompatibility(person1, person2);
@@ -252,7 +252,7 @@ export class AdvancedCompatibilityCalculator {
   /**
    * 통계 보정 (5점 만점)
    */
-  private static calculateStatisticalAdjust(person1: SajuData, person2: SajuData): number {
+  private static calculateStatisticalAdjust(_person1: SajuData, _person2: SajuData): number {
     // 통계적 성공 사례 기반 보정
     return 4 + Math.random(); // 4-5점 범위
   }
@@ -260,7 +260,7 @@ export class AdvancedCompatibilityCalculator {
   /**
    * 현대적 요소 (5점 만점)
    */
-  private static calculateModernFactors(person1: SajuData, person2: SajuData): number {
+  private static calculateModernFactors(_person1: SajuData, _person2: SajuData): number {
     // 현대 사회 요소 반영 (교육, 직업, 가치관 등)
     return 3 + Math.random() * 2; // 3-5점 범위
   }
@@ -310,8 +310,8 @@ export class AdvancedCompatibilityCalculator {
     const elementNames = ['wood', 'fire', 'earth', 'metal', 'water'];
     
     elementNames.forEach(element => {
-      const diff1 = Math.abs(elements1[element] - 20); // 20이 이상적인 값
-      const diff2 = Math.abs(elements2[element] - 20);
+      const _diff1 = Math.abs(elements1[element] - 20); // 20이 이상적인 값
+      const _diff2 = Math.abs(elements2[element] - 20);
       
       // 한쪽이 부족하고 다른 쪽이 풍부하면 보완적
       if ((elements1[element] < 15 && elements2[element] > 25) ||
@@ -340,7 +340,7 @@ export class AdvancedCompatibilityCalculator {
     return 'D';
   }
 
-  private static generateAnalysis(person1: SajuData, person2: SajuData, components: CompatibilityScoreComponents, totalScore: number) {
+  private static generateAnalysis(_person1: SajuData, _person2: SajuData, components: CompatibilityScoreComponents, totalScore: number) {
     const strengths: string[] = [];
     const challenges: string[] = [];
     const advice: string[] = [];
@@ -394,7 +394,7 @@ export class AdvancedCompatibilityCalculator {
     };
   }
 
-  private static calculateTimePeriods(person1: SajuData, person2: SajuData, baseScore: number) {
+  private static calculateTimePeriods(_person1: SajuData, _person2: SajuData, baseScore: number) {
     // 시간에 따른 궁합 변화 예측 (대운 등을 고려한 간단한 모델)
     const current = baseScore;
     const oneYear = Math.max(0, Math.min(100, current + (Math.random() - 0.5) * 10));
@@ -403,7 +403,7 @@ export class AdvancedCompatibilityCalculator {
     return { current, oneYear, fiveYears };
   }
 
-  private static generateKeyInsight(person1: SajuData, person2: SajuData, totalScore: number): string {
+  private static generateKeyInsight(_person1: SajuData, _person2: SajuData, totalScore: number): string {
     if (totalScore >= 90) {
       return '화토상생의 완벽한 조화로 서로를 성장시키는 이상적인 관계';
     } else if (totalScore >= 80) {
@@ -461,11 +461,11 @@ export class AdvancedCompatibilityCalculator {
     return Math.min(1, complementarity + 0.3); // 기본 보완성 추가
   }
 
-  private static calculateFiveElementsCompatibility(person1: SajuData, person2: SajuData): number {
+  private static calculateFiveElementsCompatibility(_person1: SajuData, _person2: SajuData): number {
     return this.calculateComplementarity(person1.fiveElements, person2.fiveElements);
   }
 
-  private static calculatePersonalityCompatibility(person1: SajuData, person2: SajuData): number {
+  private static calculatePersonalityCompatibility(_person1: SajuData, _person2: SajuData): number {
     if (!person1.personalityTraits || !person2.personalityTraits) {
       return 0.7; // 기본값
     }
@@ -474,13 +474,13 @@ export class AdvancedCompatibilityCalculator {
             this.calculateTraitComplementarity(person1.personalityTraits, person2.personalityTraits) * 0.6);
   }
 
-  private static calculateStructuralCompatibility(person1: SajuData, person2: SajuData): number {
+  private static calculateStructuralCompatibility(_person1: SajuData, _person2: SajuData): number {
     // 사주 구조의 조화도 계산 (십신, 육친 등을 종합)
     let compatibility = 0;
     
     // 오행 균형도 비교
-    const balance1 = this.calculateFiveElementsBalance(person1.fiveElements);
-    const balance2 = this.calculateFiveElementsBalance(person2.fiveElements);
+    const _balance1 = this.calculateFiveElementsBalance(person1.fiveElements);
+    const _balance2 = this.calculateFiveElementsBalance(person2.fiveElements);
     compatibility += (balance1 + balance2) / 2 * 0.4;
     
     // 십신 조화도

@@ -96,6 +96,9 @@ router.get('/:id', (req: Request, res: Response) => {
 // Create customer
 router.post('/', (req: Request, res: Response) => {
   try {
+    console.log('Received customer creation request:');
+    console.log('URL:', req.originalUrl);
+    console.log('Body:', JSON.stringify(req.body, null, 2));
     const {
       name,
       birth_date,

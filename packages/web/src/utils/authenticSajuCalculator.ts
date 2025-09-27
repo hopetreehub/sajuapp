@@ -103,7 +103,7 @@ export const CHEON_GAN_OH_HAENG: Record<CheonGan, OhHaeng> = {
   '병': '화', '정': '화',
   '무': '토', '기': '토',
   '경': '금', '신': '금',
-  '임': '수', '계': '수'
+  '임': '수', '계': '수',
 };
 
 // 지지의 오행 매핑
@@ -112,7 +112,7 @@ export const JI_JI_OH_HAENG: Record<JiJi, OhHaeng> = {
   '사': '화', '오': '화',
   '진': '토', '술': '토', '축': '토', '미': '토',
   '신': '금', '유': '금',
-  '자': '수', '해': '수'
+  '자': '수', '해': '수',
 };
 
 // 60갑자 순서 (정통 사주학)
@@ -134,7 +134,7 @@ export const 오행상생: Record<OhHaeng, OhHaeng> = {
   '화': '토', // 화생토
   '토': '금', // 토생금
   '금': '수', // 금생수
-  '수': '목'  // 수생목
+  '수': '목',  // 수생목
 };
 
 // 오행 상극 관계 (정통)
@@ -143,7 +143,7 @@ export const 오행상극: Record<OhHaeng, OhHaeng> = {
   '화': '금', // 화극금
   '토': '수', // 토극수
   '금': '목', // 금극목
-  '수': '화'  // 수극화
+  '수': '화',  // 수극화
 };
 
 // 계절별 오행 강약 (정통 사주학)
@@ -151,7 +151,7 @@ export const 계절별오행강약: Record<string, Record<OhHaeng, number>> = {
   '봄': { '목': 100, '화': 50, '토': 25, '금': 10, '수': 75 }, // 목왕, 화상, 토사, 금수, 수상
   '여름': { '목': 25, '화': 100, '토': 75, '금': 10, '수': 10 }, // 화왕, 토상, 목사, 금수, 수수
   '가을': { '목': 10, '화': 10, '토': 25, '금': 100, '수': 50 }, // 금왕, 수상, 토사, 목수, 화수
-  '겨울': { '목': 50, '화': 10, '토': 10, '금': 75, '수': 100 }  // 수왕, 목상, 금사, 화수, 토수
+  '겨울': { '목': 50, '화': 10, '토': 10, '금': 75, '수': 100 },  // 수왕, 목상, 금사, 화수, 토수
 };
 
 // 지지별 계절 매핑
@@ -159,7 +159,7 @@ export const 지지계절: Record<JiJi, string> = {
   '인': '봄', '묘': '봄', '진': '봄',
   '사': '여름', '오': '여름', '미': '여름',
   '신': '가을', '유': '가을', '술': '가을',
-  '자': '겨울', '축': '겨울', '해': '겨울'
+  '자': '겨울', '축': '겨울', '해': '겨울',
 };
 
 // 천간 합 (정통)
@@ -168,7 +168,7 @@ export const 천간합: Record<CheonGan, CheonGan> = {
   '을': '경', '경': '을',
   '병': '신', '신': '병',
   '정': '임', '임': '정',
-  '무': '계', '계': '무'
+  '무': '계', '계': '무',
 };
 
 // 지지 충 (정통)
@@ -178,7 +178,7 @@ export const 지지충: Record<JiJi, JiJi> = {
   '인': '신', '신': '인',
   '묘': '유', '유': '묘',
   '진': '술', '술': '진',
-  '사': '해', '해': '사'
+  '사': '해', '해': '사',
 };
 
 // 지지 합 (육합)
@@ -188,7 +188,7 @@ export const 지지육합: Record<JiJi, JiJi> = {
   '묘': '술', '술': '묘',
   '진': '유', '유': '진',
   '사': '신', '신': '사',
-  '오': '미', '미': '오'
+  '오': '미', '미': '오',
 };
 
 // ==================== AuthenticSajuCalculator 클래스 ====================
@@ -201,7 +201,7 @@ export class AuthenticSajuCalculator {
    */
   public static calculateAuthenticLifeChart(
     sajuPalja: SajuPalJa,
-    birthYear: number
+    birthYear: number,
   ): AuthenticLifeChart {
     if (this.DEBUG) {
       console.log('🔮 정통 사주학 계산 시작');
@@ -235,11 +235,11 @@ export class AuthenticSajuCalculator {
       개인정보: {
         사주: this.formatSaju(sajuPalja),
         격국,
-        용신
+        용신,
       },
       대운목록,
       연도별점수,
-      통계
+      통계,
     };
   }
 
@@ -292,7 +292,7 @@ export class AuthenticSajuCalculator {
     if (this.DEBUG) {
       console.log('🏛️ 격국 분석:');
       console.log(`   일간: ${일간}(${일간오행}) | 월령: ${월령}(${계절})`);
-      console.log(`   오행분포:`, 오행분포);
+      console.log('   오행분포:', 오행분포);
       console.log(`   월령지원: ${월령지원} | 일간강약: ${일간강약}`);
       console.log(`   격국유형: ${격국유형}`);
     }
@@ -305,7 +305,7 @@ export class AuthenticSajuCalculator {
       계절,
       월령지원,
       오행분포,
-      격국유형
+      격국유형,
     };
   }
 
@@ -365,7 +365,7 @@ export class AuthenticSajuCalculator {
       console.log('⭐ 용신 선정:');
       console.log(`   용신: [${용신.join(', ')}]`);
       console.log(`   기신: [${기신.join(', ')}]`);
-      console.log(`   용신점수:`, 용신점수);
+      console.log('   용신점수:', 용신점수);
       console.log(`   선정이유: ${기신원인}`);
     }
 
@@ -424,7 +424,7 @@ export class AuthenticSajuCalculator {
         점수 += 15; // 일지합
       }
 
-      let 특징 = this.analyzeDaeunFeatures(cycle, 천간, 지지, 순역행);
+      const 특징 = this.analyzeDaeunFeatures(cycle, 천간, 지지, 순역행);
 
       대운목록.push({
         cycle,
@@ -433,7 +433,7 @@ export class AuthenticSajuCalculator {
         오행,
         순역행,
         점수: Math.max(10, Math.min(90, 점수)),
-        특징
+        특징,
       });
     }
 
@@ -456,7 +456,7 @@ export class AuthenticSajuCalculator {
     격국: GyeokGukAnalysis,
     용신: YongSinAnalysis,
     대운목록: DaeUnData[],
-    birthYear: number
+    birthYear: number,
   ): AuthenticLifeChart['연도별점수'] {
     const 연도별점수: AuthenticLifeChart['연도별점수'] = [];
 
@@ -515,7 +515,7 @@ export class AuthenticSajuCalculator {
       const 총점 = Math.max(10, Math.min(90,
         대운점수 * 0.4 +
         (세운점수 + 용신효과) * 0.4 +
-        대운상호작용 * 0.2
+        대운상호작용 * 0.2,
       ));
 
       const 세운상세: SeUnData = {
@@ -525,7 +525,7 @@ export class AuthenticSajuCalculator {
         지지: 세운지,
         오행: 세운오행,
         점수: 세운점수,
-        대운상호작용
+        대운상호작용,
       };
 
       연도별점수.push({
@@ -535,7 +535,7 @@ export class AuthenticSajuCalculator {
         대운점수,
         세운점수,
         용신효과,
-        상세: 세운상세
+        상세: 세운상세,
       });
     }
 
@@ -547,7 +547,7 @@ export class AuthenticSajuCalculator {
    */
   private static calculateStatistics(
     연도별점수: AuthenticLifeChart['연도별점수'],
-    용신: YongSinAnalysis
+    _용신: YongSinAnalysis,
   ): AuthenticLifeChart['통계'] {
     const 점수들 = 연도별점수.map(년 => 년.총점);
     const 최고점 = Math.max(...점수들);
@@ -565,7 +565,7 @@ export class AuthenticSajuCalculator {
       최고점년도: { 나이: 최고점년도.나이, 점수: 최고점 },
       최저점년도: { 나이: 최저점년도.나이, 점수: 최저점 },
       평균점수: Math.round(평균점수),
-      용신부합도: Math.round(용신부합도)
+      용신부합도: Math.round(용신부합도),
     };
   }
 
@@ -574,13 +574,13 @@ export class AuthenticSajuCalculator {
   /**
    * 격국별 기본 점수 차별화
    */
-  private static get격국별기본점수(격국유형: string, 일간: CheonGan): number {
+  private static get격국별기본점수(격국유형: string, _일간: CheonGan): number {
     const 격국점수맵: Record<string, number> = {
       '신강격': 70,  // 안정적이고 지속적
       '신약격': 50,  // 변화무쌍하고 극적
       '종격': 60,    // 특정 분야 집중
       '특수격': 65,  // 예측 불가능
-      '기타': 55
+      '기타': 55,
     };
 
     const 기본점수 = 격국점수맵[격국유형] || 55;
@@ -601,7 +601,7 @@ export class AuthenticSajuCalculator {
       '경': 8,   // 결단력
       '신': 3,   // 예리함
       '임': 4,   // 지혜
-      '계': 5    // 통찰력
+      '계': 5,    // 통찰력
     };
 
     return 일간특성[일간] || 0;
@@ -625,14 +625,14 @@ export class AuthenticSajuCalculator {
 
   private static getGeneratingElement(element: OhHaeng): OhHaeng {
     const reverse = Object.fromEntries(
-      Object.entries(오행상생).map(([k, v]) => [v, k])
+      Object.entries(오행상생).map(([k, v]) => [v, k]),
     );
     return reverse[element] as OhHaeng;
   }
 
   private static getConflictingElement(element: OhHaeng): OhHaeng {
     const reverse = Object.fromEntries(
-      Object.entries(오행상극).map(([k, v]) => [v, k])
+      Object.entries(오행상극).map(([k, v]) => [v, k]),
     );
     return reverse[element] as OhHaeng;
   }
@@ -647,7 +647,7 @@ export class AuthenticSajuCalculator {
     return 년간이양간 ? '순행' : '역행';
   }
 
-  private static analyzeDaeunFeatures(cycle: number, 간: CheonGan, 지: JiJi, 순역행: '순행' | '역행'): string {
+  private static analyzeDaeunFeatures(cycle: number, 간: CheonGan, _지: JiJi, _순역행: '순행' | '역행'): string {
     const features = [];
 
     if (cycle === 0) features.push('기초형성기');
@@ -679,7 +679,7 @@ export class AuthenticSajuCalculator {
       year: { gan: '신', ji: '해' },  // 신해
       month: { gan: '기', ji: '해' }, // 기해
       day: { gan: '병', ji: '오' },   // 병오
-      time: { gan: '경', ji: '인' }   // 경인
+      time: { gan: '경', ji: '인' },   // 경인
     };
   }
 
@@ -692,7 +692,7 @@ export class AuthenticSajuCalculator {
       year: { gan: '병', ji: '진' },  // 병진
       month: { gan: '정', ji: '유' }, // 정유
       day: { gan: '신', ji: '미' },   // 신미
-      time: { gan: '계', ji: '사' }   // 계사
+      time: { gan: '계', ji: '사' },   // 계사
     };
   }
 

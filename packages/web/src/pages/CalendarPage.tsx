@@ -3,8 +3,6 @@ import { useCalendar } from '@/contexts/CalendarContext';
 import MonthView from '@/components/Calendar/MonthView';
 import WeekView from '@/components/Calendar/WeekView';
 import DayView from '@/components/Calendar/DayView';
-import DayViewEnhanced from '@/components/Calendar/DayViewEnhanced';
-import YearView from '@/components/Calendar/YearView';
 import YearViewEnhanced from '@/components/Calendar/YearViewEnhanced';
 import EventModal from '@/components/EventModal';
 import DiaryBookModal from '@/components/DiaryBookModal';
@@ -100,7 +98,7 @@ export default function CalendarPage() {
     setIsModalOpen(true);
   };
 
-  const handleSaveEvent = (event: CalendarEvent) => {
+  const handleSaveEvent = (_event: CalendarEvent) => {
     loadEvents();
   };
 

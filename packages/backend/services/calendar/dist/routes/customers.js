@@ -90,6 +90,9 @@ router.get('/:id', (req, res) => {
 // Create customer
 router.post('/', (req, res) => {
     try {
+        console.log('Received customer creation request:');
+        console.log('URL:', req.originalUrl);
+        console.log('Body:', JSON.stringify(req.body, null, 2));
         const { name, birth_date, birth_time, phone, lunar_solar, gender, memo } = req.body;
         // 정확한 사주 계산
         let saju_data = null;

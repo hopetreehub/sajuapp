@@ -12,7 +12,7 @@ import {
 } from 'chart.js';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import { TenGodsAnalyzer } from '@/utils/tenGodsAnalyzer';
-import { TEN_GODS_INFO, TEN_GODS_CATEGORIES } from '@/types/tenGods';
+import { TEN_GODS_INFO } from '@/types/tenGods';
 import { SajuData } from '@/types/saju';
 import InterpretationPanel from '@/components/charts/InterpretationPanel';
 import { interpretationService, InterpretationResponse } from '@/services/api';
@@ -41,7 +41,7 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
   height = 400,
   className = '',
   chartType = 'bar',
-  showCategory = false,
+  _showCategory = false,
 }) => {
   const [viewMode, setViewMode] = useState<'individual' | 'category'>('individual');
   

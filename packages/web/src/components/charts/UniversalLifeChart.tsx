@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -31,7 +31,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  annotationPlugin
+  annotationPlugin,
 );
 
 interface UniversalLifeChartProps {
@@ -49,7 +49,7 @@ export default function UniversalLifeChart({
 }: UniversalLifeChartProps) {
   const [activeDimensions, setActiveDimensions] = useState<ChartDimensionType[]>(selectedDimensions);
   const [viewMode, setViewMode] = useState<'line' | 'bar' | 'combined'>('combined');
-  const [zoomRange, setZoomRange] = useState<{ start: number; end: number } | null>(null);
+  const [_zoomRange, _setZoomRange] = useState<{ start: number; end: number } | null>(null);
   const chartRef = useRef<ChartJS<'line'>>(null);
 
   // 차트 데이터 생성
@@ -72,7 +72,7 @@ export default function UniversalLifeChart({
         },
         ticks: {
           stepSize: 0.5,
-          callback: function(value: any) {
+          callback(value: any) {
             if (value === 0) return '기준선';
             if (value > 0) return `+${value}`;
             return value.toString();
@@ -96,7 +96,7 @@ export default function UniversalLifeChart({
         },
         ticks: {
           maxTicksLimit: 20,
-          callback: function(value: any, index: number) {
+          callback(value: any, index: number) {
             const year = data.timeline.startYear + index;
             const age = index;
 
@@ -130,7 +130,7 @@ export default function UniversalLifeChart({
           font: {
             size: 13,
           },
-          generateLabels: function(chart: ChartJS) {
+          generateLabels(_chart: ChartJS) {
             return activeDimensions.map((dim, index) => ({
               text: `${DIMENSION_NAMES[dim]} (${DIMENSION_DESCRIPTIONS[dim]})`,
               fillStyle: DEFAULT_CHART_CONFIG.colors[dim],
@@ -145,13 +145,13 @@ export default function UniversalLifeChart({
         mode: 'index' as const,
         intersect: false,
         callbacks: {
-          title: function(context: any) {
+          title(context: any) {
             const index = context[0].dataIndex;
             const year = data.timeline.startYear + index;
             const age = index;
             return `${year}년 (${age}세)`;
           },
-          label: function(context: any) {
+          label(context: any) {
             const dimensionIndex = context.datasetIndex;
             const dimension = activeDimensions[dimensionIndex];
             const value = context.parsed.y;
@@ -159,7 +159,7 @@ export default function UniversalLifeChart({
 
             return `${DIMENSION_NAMES[dimension]}: ${value.toFixed(2)} (${interpretation})`;
           },
-          afterBody: function(context: any) {
+          afterBody(context: any) {
             const index = context[0].dataIndex;
             const age = index;
             const phase = data.chartData.geunbon[index]?.phase;
@@ -232,7 +232,7 @@ export default function UniversalLifeChart({
     setActiveDimensions(prev =>
       prev.includes(dimension)
         ? prev.filter(d => d !== dimension)
-        : [...prev, dimension]
+        : [...prev, dimension],
     );
   };
 
@@ -241,7 +241,7 @@ export default function UniversalLifeChart({
     setActiveDimensions(['geunbon', 'woon', 'haeng', 'hyeong', 'byeon']);
   };
 
-  const selectSingleDimension = (dimension: ChartDimensionType) => {
+  const _selectSingleDimension = (dimension: ChartDimensionType) => {
     setActiveDimensions([dimension]);
   };
 
@@ -281,7 +281,7 @@ export default function UniversalLifeChart({
                   style={{
                     backgroundColor: activeDimensions.includes(dimension)
                       ? DEFAULT_CHART_CONFIG.colors[dimension]
-                      : undefined
+                      : undefined,
                   }}
                 >
                   {DIMENSION_NAMES[dimension]}

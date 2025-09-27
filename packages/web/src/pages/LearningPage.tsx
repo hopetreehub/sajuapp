@@ -6,7 +6,7 @@ import {
   CheckCircleIcon, 
   ClockIcon,
   ArrowLeftIcon,
-  ArrowRightIcon,
+  // ArrowRightIcon,
   DocumentTextIcon,
   VideoCameraIcon,
   QuestionMarkCircleIcon,

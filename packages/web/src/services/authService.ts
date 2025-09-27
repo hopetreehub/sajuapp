@@ -441,7 +441,7 @@ export const authUtils = {
    */
   sanitizeInput: (input: string): string => {
     if (!input) return '';
-    return input.replace(/[<>\"'&]/g, '').trim();
+    return input.replace(/[<>'&]/g, '').trim();
   },
 };
 

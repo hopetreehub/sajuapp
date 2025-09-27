@@ -2,24 +2,21 @@ import React, { useState, useMemo } from 'react';
 import { useCalendar } from '@/contexts/CalendarContext';
 import { useYearlyMemo } from '@/contexts/YearlyMemoContext';
 import { useDiaryData } from '@/hooks/useDiaryData';
-import { format } from 'date-fns';
-import { ko } from 'date-fns/locale';
 import { CalendarEvent } from '@/services/api';
-import { 
-  YearlyMemo, 
+import {
   MemoType, 
   ImportanceLevel,
   MEMO_TYPE_CONFIG,
   IMPORTANCE_CONFIG, 
 } from '@/types/yearlyMemo';
-import { Plus, X, Check, Edit2, Trash2, Filter, Search } from 'lucide-react';
+import { Plus, Check, Trash2, Search } from 'lucide-react';
 
 interface YearViewEnhancedProps {
-  events: CalendarEvent[];
-  onCreateEvent: (date: Date) => void;
-  onDateClick?: (date: Date, event: React.MouseEvent) => void;
-  onEditEvent: (event: CalendarEvent) => void;
-  highlightedEventId?: string | null;
+  _events: CalendarEvent[];
+  _onCreateEvent: (date: Date) => void;
+  _onDateClick?: (date: Date, event: React.MouseEvent) => void;
+  _onEditEvent: (event: CalendarEvent) => void;
+  _highlightedEventId?: string | null;
 }
 
 const MONTHS = [
@@ -27,15 +24,14 @@ const MONTHS = [
   '7월', '8월', '9월', '10월', '11월', '12월',
 ];
 
-export default function YearViewEnhanced({ events, onDateClick, highlightedEventId }: YearViewEnhancedProps) {
+export default function YearViewEnhanced({ _events, _onCreateEvent, _onEditEvent, _onDateClick, _highlightedEventId }: YearViewEnhancedProps) {
   const { currentDate, setCurrentDate, setViewMode } = useCalendar();
-  const { 
-    getMemosByMonth, 
-    addMemo, 
-    updateMemo, 
-    deleteMemo, 
+  const {
+    getMemosByMonth,
+    addMemo,
+    deleteMemo,
     toggleComplete,
-    getMonthStatistics, 
+    getMonthStatistics,
   } = useYearlyMemo();
   
   // 일기 데이터 가져오기
@@ -45,9 +41,9 @@ export default function YearViewEnhanced({ events, onDateClick, highlightedEvent
   });
 
   const currentYear = currentDate.getFullYear();
-  const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
+  const [_selectedMonth, _setSelectedMonth] = useState<number | null>(null);
   const [isAddingMemo, setIsAddingMemo] = useState<number | null>(null);
-  const [editingMemo, setEditingMemo] = useState<string | null>(null);
+  const [_editingMemo, _setEditingMemo] = useState<string | null>(null);
   const [filterType, setFilterType] = useState<MemoType | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -333,7 +329,7 @@ export default function YearViewEnhanced({ events, onDateClick, highlightedEvent
                   ) : (
                     memos.slice(0, 5).map((memo) => {
                       const typeConfig = MEMO_TYPE_CONFIG[memo.type];
-                      const isEditing = editingMemo === memo.id;
+                      const _isEditing = _editingMemo === memo.id;
 
                       return (
                         <div

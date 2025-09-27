@@ -116,12 +116,12 @@ export default function CustomerManagementPage({ embedded = false }: CustomerMan
   };
 
   return (
-    <div className={embedded ? "w-full" : "min-h-screen bg-gray-50 dark:bg-gray-900 p-6"}>
-      <div className={embedded ? "w-full" : "max-w-7xl mx-auto"}>
-        <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 ${embedded ? "border border-gray-200 dark:border-gray-600" : ""}`}>
+    <div className={embedded ? 'w-full' : 'min-h-screen bg-gray-50 dark:bg-gray-900 p-6'}>
+      <div className={embedded ? 'w-full' : 'max-w-7xl mx-auto'}>
+        <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 ${embedded ? 'border border-gray-200 dark:border-gray-600' : ''}`}>
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
-            <h1 className={`${embedded ? "text-lg" : "text-2xl"} font-bold text-gray-900 dark:text-white`}>
+            <h1 className={`${embedded ? 'text-lg' : 'text-2xl'} font-bold text-gray-900 dark:text-white`}>
               🗂️ 고객 관리
             </h1>
             <button
@@ -326,7 +326,7 @@ export default function CustomerManagementPage({ embedded = false }: CustomerMan
                           type="radio"
                           value="solar"
                           checked={formData.lunar_solar === 'solar'}
-                          onChange={(e) => setFormData({...formData, lunar_solar: 'solar'})}
+                          onChange={(_e) => setFormData({...formData, lunar_solar: 'solar'})}
                           className="mr-2"
                         />
                         양력
@@ -336,7 +336,7 @@ export default function CustomerManagementPage({ embedded = false }: CustomerMan
                           type="radio"
                           value="lunar"
                           checked={formData.lunar_solar === 'lunar'}
-                          onChange={(e) => setFormData({...formData, lunar_solar: 'lunar'})}
+                          onChange={(_e) => setFormData({...formData, lunar_solar: 'lunar'})}
                           className="mr-2"
                         />
                         음력
@@ -354,7 +354,7 @@ export default function CustomerManagementPage({ embedded = false }: CustomerMan
                           type="radio"
                           value="male"
                           checked={formData.gender === 'male'}
-                          onChange={(e) => setFormData({...formData, gender: 'male'})}
+                          onChange={(_e) => setFormData({...formData, gender: 'male'})}
                           className="mr-2"
                         />
                         남
@@ -364,7 +364,7 @@ export default function CustomerManagementPage({ embedded = false }: CustomerMan
                           type="radio"
                           value="female"
                           checked={formData.gender === 'female'}
-                          onChange={(e) => setFormData({...formData, gender: 'female'})}
+                          onChange={(_e) => setFormData({...formData, gender: 'female'})}
                           className="mr-2"
                         />
                         여

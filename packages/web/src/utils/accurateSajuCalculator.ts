@@ -14,10 +14,10 @@ const SIXTY_CYCLE = [
 ];
 
 // 천간
-const HEAVENLY_STEMS = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
+const _HEAVENLY_STEMS = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
 
 // 지지
-const EARTHLY_BRANCHES = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
+const _EARTHLY_BRANCHES = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
 
 // 시간대 정의 (정시 기준)
 const TIME_BRANCHES = [
@@ -55,7 +55,7 @@ function isLeapYear(year: number): boolean {
 }
 
 // 월별 일수
-function getDaysInMonth(year: number, month: number): number {
+function _getDaysInMonth(year: number, month: number): number {
   const monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   if (month === 2 && isLeapYear(year)) {
     return 29;

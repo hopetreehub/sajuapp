@@ -6,19 +6,19 @@
 import { UniversalSajuEngine } from '@/utils/universalSajuEngine';
 import { SajuComponents, PersonalInfo } from '@/types/universalLifeChart';
 import { SajuCalculator } from '@/utils/sajuCalculator';
-import { SajuBirthInfo } from '@/types/saju';
+// import { SajuBirthInfo } from '@/types/saju';
 import { resolveSajuData, convertToUniversalSajuFormat, debugSajuData } from '@/utils/sajuDataConverter';
 import {
   AuthenticSajuCalculator,
   SajuPalJa,
-  AuthenticLifeChart,
+  // AuthenticLifeChart,
   CheonGan,
-  JiJi
+  JiJi,
 } from '@/utils/authenticSajuCalculator';
 
 // 임시로 프론트엔드 프록시를 사용하지 않고 직접 호출
 // 실제 서비스가 구현되면 프록시를 통해 호출하도록 변경 필요
-const API_BASE_URL = '';
+const _API_BASE_URL = '';
 
 export interface YearlyFortune {
   year: number
@@ -122,7 +122,7 @@ function generateAuthenticLifetimeFortune(request: LifetimeFortuneRequest): Life
     hour: request.hour,
     minute: 0,
     isLunar: request.isLunar || false,
-    isLeapMonth: false
+    isLeapMonth: false,
   });
 
   console.log('🔵 기본 사주 계산 완료:', sajuResult);
@@ -132,7 +132,7 @@ function generateAuthenticLifetimeFortune(request: LifetimeFortuneRequest): Life
     year: { gan: sajuResult.year.heavenly as CheonGan, ji: sajuResult.year.earthly as JiJi },
     month: { gan: sajuResult.month.heavenly as CheonGan, ji: sajuResult.month.earthly as JiJi },
     day: { gan: sajuResult.day.heavenly as CheonGan, ji: sajuResult.day.earthly as JiJi },
-    time: { gan: sajuResult.hour.heavenly as CheonGan, ji: sajuResult.hour.earthly as JiJi }
+    time: { gan: sajuResult.hour.heavenly as CheonGan, ji: sajuResult.hour.earthly as JiJi },
   };
 
   console.log('📋 정통 사주학 형식 변환:', sajuPalja);
@@ -162,14 +162,14 @@ function generateAuthenticLifetimeFortune(request: LifetimeFortuneRequest): Life
       천간: authenticChart.대운목록[Math.floor(연도데이터.나이 / 10)]?.천간 || '갑',
       지지: authenticChart.대운목록[Math.floor(연도데이터.나이 / 10)]?.지지 || '자',
       오행: authenticChart.대운목록[Math.floor(연도데이터.나이 / 10)]?.오행 || '목',
-      score: 연도데이터.대운점수
+      score: 연도데이터.대운점수,
     },
     세운: {
       천간: 연도데이터.상세.천간,
       지지: 연도데이터.상세.지지,
       오행: 연도데이터.상세.오행,
-      score: 연도데이터.세운점수
-    }
+      score: 연도데이터.세운점수,
+    },
   }));
 
   // 분석 데이터 생성
@@ -191,17 +191,17 @@ function generateAuthenticLifetimeFortune(request: LifetimeFortuneRequest): Life
         bestYear: {
           year: bestYear.year,
           age: bestYear.age,
-          score: bestYear.totalScore
+          score: bestYear.totalScore,
         },
         worstYear: {
           year: worstYear.year,
           age: worstYear.age,
-          score: worstYear.totalScore
+          score: worstYear.totalScore,
         },
-        averageScore: avgScore
-      }
+        averageScore: avgScore,
+      },
     },
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 }
 
@@ -224,7 +224,7 @@ function generateLegacyLifetimeFortune(request: LifetimeFortuneRequest): Lifetim
     hour: request.hour,
     minute: 0,
     isLunar: request.isLunar || false,
-    isLeapMonth: false
+    isLeapMonth: false,
   });
 
   console.log('🔵 재계산된 사주:', sajuResult);
@@ -234,7 +234,7 @@ function generateLegacyLifetimeFortune(request: LifetimeFortuneRequest): Lifetim
   try {
     finalSajuResolution = resolveSajuData(request.sajuData, sajuResult);
     console.log('✅ 사주 데이터 해결 완료:', finalSajuResolution.resolution);
-    console.log('🎯 신뢰도:', finalSajuResolution.confidence + '%');
+    console.log('🎯 신뢰도:', `${finalSajuResolution.confidence  }%`);
 
     // 디버깅용 출력
     debugSajuData(finalSajuResolution.finalSaju, '최종 선택된');
@@ -246,10 +246,10 @@ function generateLegacyLifetimeFortune(request: LifetimeFortuneRequest): Lifetim
         year: { gan: sajuResult.year.heavenly, ji: sajuResult.year.earthly, combined: sajuResult.year.combined },
         month: { gan: sajuResult.month.heavenly, ji: sajuResult.month.earthly, combined: sajuResult.month.combined },
         day: { gan: sajuResult.day.heavenly, ji: sajuResult.day.earthly, combined: sajuResult.day.combined },
-        time: { gan: sajuResult.hour.heavenly, ji: sajuResult.hour.earthly, combined: sajuResult.hour.combined }
+        time: { gan: sajuResult.hour.heavenly, ji: sajuResult.hour.earthly, combined: sajuResult.hour.combined },
       },
       resolution: '폴백: 재계산 사주 사용',
-      confidence: 50
+      confidence: 50,
     };
   }
 
@@ -273,7 +273,7 @@ function generateLegacyLifetimeFortune(request: LifetimeFortuneRequest): Lifetim
 
   console.log('👤 개인정보:', personalInfo);
   console.log('🔄 해결 방법:', finalSajuResolution.resolution);
-  console.log('📊 데이터 신뢰도:', finalSajuResolution.confidence + '%');
+  console.log('📊 데이터 신뢰도:', `${finalSajuResolution.confidence  }%`);
 
   // 새로운 엔진으로 차트 생성
   const chartData = UniversalSajuEngine.generateUniversalLifeChart(sajuData, personalInfo);

@@ -3,7 +3,7 @@
  * 백엔드 사주 분석 서비스와 연동
  */
 
-import { SajuRadarCategory, SajuRadarSubcategory, SajuRadarItem } from '@/types/sajuRadar';
+import { SajuRadarCategory, SajuRadarSubcategory } from '@/types/sajuRadar';
 
 const SAJU_ANALYSIS_API_BASE = 'http://localhost:4015/api/saju';
 

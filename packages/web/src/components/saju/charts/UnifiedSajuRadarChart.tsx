@@ -12,10 +12,10 @@ import {
   BarElement,
 } from 'chart.js';
 import { Radar, Bar } from 'react-chartjs-2';
-import { SajuRadarData, SajuRadarItem, TimeFrame, TimeFrameWeights } from '@/types/sajuRadar';
+import { SajuRadarData, TimeFrame, TimeFrameWeights } from '@/types/sajuRadar';
 import { CHART_DESIGN_SYSTEM, getTimeFrameColors, getChartOptions } from '@/constants/chartDesignSystem';
 import { calculateTimeBasedScore, SajuData } from '@/utils/sajuScoreCalculator';
-import { ChartStyleUtils, TimeFrameData, DEFAULT_ENHANCED_OPTIONS } from '@/utils/chartStyleUtils';
+import { ChartStyleUtils, TimeFrameData } from '@/utils/chartStyleUtils';
 
 ChartJS.register(
   RadialLinearScale,
@@ -66,7 +66,7 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
   }, []);
 
   // 시간대별 가중치 정의 (카테고리별로 다르게 적용 가능)
-  const timeFrameWeights: { [key in TimeFrame]: TimeFrameWeights } = {
+  const _timeFrameWeights: { [key in TimeFrame]: TimeFrameWeights } = {
     base: {},
     today: {
       // 오늘: 감성적, 즉석적 요소 강화
@@ -230,14 +230,14 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
   const maxScoreIndexes = scoreValues.map((score, index) => score === maxScore ? index : -1).filter(index => index !== -1);
   
   // 통일된 시간대 색상 사용 (기존과 동일)
-  const timeFrameColors = {
+  const _timeFrameColors = {
     today: getTimeFrameColors('today'),
     month: getTimeFrameColors('month'),
     year: getTimeFrameColors('year'),
   };
 
   // 시간대별 라벨 (기존과 동일)
-  const timeFrameLabels = {
+  const _timeFrameLabels = {
     today: '오늘의 운세',
     month: '이번달 운세',
     year: '올해 운세',
@@ -403,7 +403,7 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
           { key: 'today' as TimeFrame, label: '오늘', active: 'today' },
           { key: 'month' as TimeFrame, label: '이달', active: 'month' },
           { key: 'year' as TimeFrame, label: '올해', active: 'year' },
-        ].map(({ key, label, active }) => (
+        ].map(({ key, label, active: _active }) => (
           <button
             key={key}
             onClick={() => setSelectedTimeFrame(key)}

@@ -19,7 +19,7 @@ interface SignUpData {
   agreedToMarketing?: boolean
 }
 
-interface LoginData {
+interface _LoginData {
   email: string
   password: string
 }
@@ -78,7 +78,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       // 매개변수 정규화 (이전 버전과 호환성 유지)
       const email = typeof credentials === 'string' ? credentials : credentials.email;
-      const pwd = typeof credentials === 'string' ? password : credentials.password;
+      const _pwd = typeof credentials === 'string' ? password : credentials.password;
       
       // 임시로 성공 처리 - name 필드 추가
       const userName = email?.split('@')[0] || 'User';
@@ -122,7 +122,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
   
-  loadReferralStats: async (userId: string) => {
+  loadReferralStats: async (_userId: string) => {
     set({ isLoadingReferralStats: true });
     try {
       // 임시 데이터

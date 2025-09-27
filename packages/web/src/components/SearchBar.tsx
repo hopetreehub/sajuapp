@@ -42,7 +42,7 @@ const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(({
     onSearchFocus: () => {
       inputRef.current?.focus();
       setShowDropdown(true);
-    }
+    },
   });
 
   // ref 메서드 노출
@@ -55,7 +55,7 @@ const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(({
       setQuery('');
       setResults([]);
       setShowDropdown(false);
-    }
+    },
   }));
   
   // 검색 실행

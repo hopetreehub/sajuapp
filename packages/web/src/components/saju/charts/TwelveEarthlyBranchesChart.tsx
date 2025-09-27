@@ -15,7 +15,7 @@ import { EARTHLY_BRANCHES_INFO, RELATIONSHIP_TYPES } from '@/types/twelveEarthly
 import { SajuData } from '@/types/saju';
 import InterpretationPanel from '@/components/charts/InterpretationPanel';
 import { interpretationService, InterpretationResponse } from '@/services/api';
-import { ChartStyleUtils, TimeFrameData, DEFAULT_ENHANCED_OPTIONS } from '@/utils/chartStyleUtils';
+import { ChartStyleUtils, TimeFrameData } from '@/utils/chartStyleUtils';
 
 // Chart.js 컴포넌트 등록
 ChartJS.register(

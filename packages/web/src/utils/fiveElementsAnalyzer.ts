@@ -81,8 +81,8 @@ export class FiveElementsAnalyzer {
    * 오행 기반 맞춤 추천사항 생성
    */
   static generateRecommendations(
-    elements: FiveElementsData, 
-    relationships: ElementRelationship,
+    elements: FiveElementsData,
+    _relationships: ElementRelationship,
   ): FiveElementsRecommendation {
     const colors = this.getColorRecommendations(elements);
     const directions = this.getDirectionRecommendations(elements);
@@ -245,7 +245,7 @@ export class FiveElementsAnalyzer {
     };
   }
 
-  private static getActivityRecommendations(elements: FiveElementsData) {
+  private static getActivityRecommendations(_elements: FiveElementsData) {
     return {
       beneficial: [
         { activity: '산책, 원예', element: 'wood', effect: '목 오행 보충으로 창의성 증진' },
@@ -258,7 +258,7 @@ export class FiveElementsAnalyzer {
     };
   }
 
-  private static getLifestyleRecommendations(elements: FiveElementsData) {
+  private static getLifestyleRecommendations(_elements: FiveElementsData) {
     return {
       diet: [
         { food: '녹색 채소', element: 'wood', benefit: '간 건강과 해독 기능 강화' },

@@ -7,7 +7,7 @@ import { getSajuCategories } from '@/services/sajuAnalysisApi';
 let globalSajuData: SajuData | null = null;
 
 // 동적 카테고리 데이터 관리
-const dynamicCategories: SajuRadarCategory[] = [];
+const _dynamicCategories: SajuRadarCategory[] = [];
 
 // 사주 데이터 설정 함수 (외부에서 호출)
 export function setGlobalSajuData(sajuData: SajuData | null) {

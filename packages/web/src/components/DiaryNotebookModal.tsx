@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { format, addDays, subDays } from 'date-fns';
+import { format, subDays } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { Camera } from 'lucide-react';
 import { diaryService } from '@/services/diaryService';
@@ -34,7 +34,7 @@ const INSPIRATIONAL_MESSAGES = [
 export default function DiaryNotebookModal({ isOpen, onClose, date, onSave }: DiaryNotebookModalProps) {
   const [todayEntry, setTodayEntry] = useState<DiaryEntry>({ content: '', mood: 'neutral', images: [] });
   const [yesterdayEntry, setYesterdayEntry] = useState<DiaryEntry>({ content: '', mood: 'neutral', images: [] });
-  const [isLoading, setIsLoading] = useState(false);
+  const [_isLoading, _setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -69,7 +69,7 @@ export default function DiaryNotebookModal({ isOpen, onClose, date, onSave }: Di
   }, [isOpen, onClose]);
 
   const loadDiaryEntries = async () => {
-    setIsLoading(true);
+    _setIsLoading(true);
     try {
       // 오늘 일기 로드
       const todayData = await diaryService.getDiaryByDate(format(today, 'yyyy-MM-dd'));
@@ -97,7 +97,7 @@ export default function DiaryNotebookModal({ isOpen, onClose, date, onSave }: Di
     } catch (error) {
       console.error('일기 로드 실패:', error);
     } finally {
-      setIsLoading(false);
+      _setIsLoading(false);
     }
   };
 

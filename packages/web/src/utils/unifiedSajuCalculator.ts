@@ -542,7 +542,7 @@ export function runTestCases(): void {
   for (const testCase of testCases) {
     
     const result = calculateSaju(testCase.birthInfo);
-    const isValid = validateSaju(result);
+    const _isValid = validateSaju(result);
     
   }
 }

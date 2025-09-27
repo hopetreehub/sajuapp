@@ -81,7 +81,7 @@ const TodayFortuneWidget: React.FC<TodayFortuneWidgetProps> = ({ sajuData, custo
   const isToday = targetDate.toDateString() === new Date().toDateString();
   
   // 오늘의 일진 정보
-  const dailyPillar = getDailyPillar(targetDate);
+  const _dailyPillar = getDailyPillar(targetDate);
   
   // 카테고리별 점수 계산 (날짜 보정 포함, 확대된 범위)
   const calculateCategoryScores = (saju: SajuData, date: Date) => {

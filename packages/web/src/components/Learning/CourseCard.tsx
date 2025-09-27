@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
+import {
   BookOpenIcon,
   ClockIcon,
   UserIcon,
   StarIcon,
   PlayIcon,
-  CheckCircleIcon,
   LockClosedIcon,
 } from '@heroicons/react/24/outline';
 import { CheckCircleIcon as CheckCircleIconSolid } from '@heroicons/react/24/solid';

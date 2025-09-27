@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import SajuInputForm from '@/components/saju/SajuInputForm';
 import { FiveElementsBalanceChart } from '@/components/saju/charts/FiveElementsBalanceChart';
 import { TenGodsDistributionChart } from '@/components/saju/charts/TenGodsDistributionChart';
-import SixAreaChart from '@/components/saju/charts/SixAreaChart';
+// import SixAreaChart from '@/components/saju/charts/SixAreaChart';
 import HundredYearChart from '@/components/Charts/HundredYearChart';
 import ChartNavigation from '@/components/Common/ChartNavigation';
 import UserSelectionPanel from '@/components/User/UserSelectionPanel';
@@ -12,13 +12,13 @@ import { convertToLifetimeRequest, getCacheKey } from '@/utils/customerDataConve
 import { SajuBirthInfo, SajuAnalysisResult, SajuData } from '@/types/saju';
 import { UserProfile, AnalysisType } from '@/types/user';
 import { getCurrentUser, addAnalysisHistory } from '@/utils/userStorage';
-import { SajuCalculator, formatFourPillars, formatFourPillarsDetailed, FourPillarsResult } from '@/utils/sajuCalculator';
+import { SajuCalculator, formatFourPillarsDetailed, FourPillarsResult } from '@/utils/sajuCalculator';
 import { calculateSajuData } from '@/utils/sajuDataCalculator';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
-import { fetchLifetimeFortune, calculateCurrentAge, YearlyFortune, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
+import { fetchLifetimeFortune, calculateCurrentAge, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
 
 const SajuAnalysisPageEnhanced: React.FC = () => {
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
   const [birthInfo, setBirthInfo] = useState<SajuBirthInfo | null>(null);
   const [analysisResult, setAnalysisResult] = useState<SajuAnalysisResult | null>(null);

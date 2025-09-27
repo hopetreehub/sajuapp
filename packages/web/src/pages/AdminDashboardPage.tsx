@@ -1,14 +1,10 @@
 import { useState, useEffect } from 'react';
-import { 
+import {
   ChartBarIcon,
   AcademicCapIcon,
   UserGroupIcon,
-  CurrencyDollarIcon,
-  StarIcon,
   ArrowTrendingUpIcon,
   BookOpenIcon,
-  CheckCircleIcon,
-  ClockIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline';
 import AcademyStatsCards from '@/components/Admin/AcademyStatsCards';

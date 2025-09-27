@@ -46,7 +46,7 @@ const JI_DESTRUCTION: string[][] = [
 ];
 
 // 지지 해
-const JI_HARM: string[][] = [
+const _JI_HARM: string[][] = [
   ['자', '미'], ['축', '오'], ['인', '사'],
   ['묘', '진'], ['신', '해'], ['유', '술'],
 ];
@@ -273,7 +273,7 @@ export function calculateLifePatternScore(saju1: SajuData, saju2: SajuData): Det
   const timeJi2 = saju2.time.ji;
   
   // 시간대별 활동 패턴
-  const timePatterns: { [key: string]: string } = {
+  const _timePatterns: { [key: string]: string } = {
     '자': '야행성(23-01시)', '축': '새벽형(01-03시)',
     '인': '새벽형(03-05시)', '묘': '아침형(05-07시)',
     '진': '아침형(07-09시)', '사': '오전형(09-11시)',
@@ -348,7 +348,7 @@ export function calculateConflictResolutionScore(saju1: SajuData, saju2: SajuDat
   let clashCount = 0;
   let punishmentCount = 0;
   let destructionCount = 0;
-  const harmCount = 0;
+  const _harmCount = 0;
   
   // 충 체크
   for (const ji1 of allJi1) {

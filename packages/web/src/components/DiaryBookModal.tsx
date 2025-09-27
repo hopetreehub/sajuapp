@@ -3,7 +3,7 @@ import { format, addDays, subDays, isToday } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { diaryService, DiaryEntry } from '@/services/api';
 import { generateDiaryAdvice, getCategoryIcon, getCategoryColor } from '@/utils/diaryAdvice';
-import { Camera, X, Calendar } from 'lucide-react';
+import { Camera, X } from 'lucide-react';
 import ImageViewer from './ImageViewer';
 
 interface DiaryBookModalProps {
@@ -285,7 +285,7 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
     setCurrentDate(addDays(currentDate, 1));
   };
 
-  const handleGoToToday = () => {
+  const _handleGoToToday = () => {
     const today = new Date();
     setCurrentDate(today);
   };

@@ -93,7 +93,7 @@ export default function HundredYearChart({ data, currentAge = 0 }: HundredYearCh
           },
           borderColor: (context: any) => {
             const index = context.dataIndex;
-            const yearData = data[index];
+            const _yearData = data[index];
 
             // 기본 테두리 색상
             return 'rgba(107, 114, 128, 1)';

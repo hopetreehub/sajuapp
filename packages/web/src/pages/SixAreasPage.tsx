@@ -48,6 +48,20 @@ const SixAreasPage: React.FC = () => {
     return `${birthInfo.year}년 ${birthInfo.month}월 ${birthInfo.day}일 ${birthInfo.hour}시 ${birthInfo.minute || 0}분 (${weekday}요일) ${birthInfo.isLunar ? '음력' : '양력'}`;
   };
 
+  // 사주 데이터 계산 (해석 패널용) - Hook을 조건문 전에 호출
+  const sajuData = useMemo(() => {
+    if (!currentUser?.birthInfo) return null;
+
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const { calculateSajuData } = require('@/utils/sajuDataCalculator');
+      return calculateSajuData(currentUser.birthInfo);
+    } catch (error) {
+      console.error('사주 계산 오류:', error);
+      return null;
+    }
+  }, [currentUser?.birthInfo]);
+
   if (loading) {
     return (
       <div className={CHART_DESIGN_SYSTEM.LAYOUT.pageContainer}>
@@ -86,19 +100,6 @@ const SixAreasPage: React.FC = () => {
   }
 
   const analysisResult = generateAnalysisResult(currentUser.birthInfo);
-  
-  // 사주 데이터 계산 (해석 패널용)
-  const sajuData = useMemo(() => {
-    if (!currentUser.birthInfo) return null;
-    
-    try {
-      const { calculateSajuData } = require('@/utils/sajuDataCalculator');
-      return calculateSajuData(currentUser.birthInfo);
-    } catch (error) {
-      console.error('사주 계산 오류:', error);
-      return null;
-    }
-  }, [currentUser.birthInfo]);
 
   return (
     <div className={CHART_DESIGN_SYSTEM.LAYOUT.pageContainer}>

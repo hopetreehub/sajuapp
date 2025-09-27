@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
-import { CalendarEvent, eventService, Tag, tagService } from '../services/api';
+import { CalendarEvent, eventService, Tag } from '../services/api';
 import { useCalendar } from '../contexts/CalendarContext';
 import TagSelector from './TagSelector';
 
@@ -82,7 +82,7 @@ const EventModal: React.FC<EventModalProps> = ({
   };
 
 
-  const getPriorityIcon = (priority: string) => {
+  const _getPriorityIcon = (priority: string) => {
     switch (priority) {
       case 'high': return '🔴';
       case 'medium': return '🟡';

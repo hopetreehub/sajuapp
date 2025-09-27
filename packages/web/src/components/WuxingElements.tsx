@@ -26,7 +26,7 @@ export function WuxingIcon({ element, size = 'md', variant = 'filled', className
     sm: 'w-6 h-6',
     md: 'w-8 h-8',
     lg: 'w-12 h-12',
-    xl: 'w-16 h-16'
+    xl: 'w-16 h-16',
   };
 
   const elementConfig = {
@@ -35,36 +35,36 @@ export function WuxingIcon({ element, size = 'md', variant = 'filled', className
       symbol: '木',
       korean: '목',
       color: 'wuxing-wood',
-      gradient: 'from-green-400 to-emerald-600'
+      gradient: 'from-green-400 to-emerald-600',
     },
     fire: {
       icon: '🔥',
       symbol: '火',
       korean: '화',
       color: 'wuxing-fire',
-      gradient: 'from-red-400 to-orange-600'
+      gradient: 'from-red-400 to-orange-600',
     },
     earth: {
       icon: '🏔️',
       symbol: '土',
       korean: '토',
       color: 'wuxing-earth',
-      gradient: 'from-yellow-400 to-amber-600'
+      gradient: 'from-yellow-400 to-amber-600',
     },
     metal: {
       icon: '⚡',
       symbol: '金',
       korean: '금',
       color: 'wuxing-metal',
-      gradient: 'from-gray-300 to-zinc-500'
+      gradient: 'from-gray-300 to-zinc-500',
     },
     water: {
       icon: '💧',
       symbol: '水',
       korean: '수',
       color: 'wuxing-water',
-      gradient: 'from-blue-400 to-indigo-600'
-    }
+      gradient: 'from-blue-400 to-indigo-600',
+    },
   };
 
   const config = elementConfig[element];
@@ -106,7 +106,7 @@ export function YinyangIcon({ type, size = 'md', animated = false, className = '
     sm: 'w-6 h-6',
     md: 'w-8 h-8',
     lg: 'w-12 h-12',
-    xl: 'w-16 h-16'
+    xl: 'w-16 h-16',
   };
 
   const animationClass = animated ? 'animate-spin' : '';
@@ -157,7 +157,7 @@ export function WuxingCycle({ size = 'md', showLabels = true, highlightElement, 
   const sizeClasses = {
     sm: 'w-32 h-32',
     md: 'w-48 h-48',
-    lg: 'w-64 h-64'
+    lg: 'w-64 h-64',
   };
 
   const elements: WuxingElement[] = ['wood', 'fire', 'earth', 'metal', 'water'];
@@ -192,7 +192,7 @@ export function WuxingCycle({ size = 'md', showLabels = true, highlightElement, 
               <circle
                 cx={position.x}
                 cy={position.y}
-                r={isHighlighted ? "8" : "6"}
+                r={isHighlighted ? '8' : '6'}
                 className={`fill-wuxing-${element} ${isHighlighted ? 'opacity-100' : 'opacity-70'} transition-all duration-300`}
               />
               {showLabels && (
@@ -232,7 +232,7 @@ export function WuxingCompatibility({ element1, element2, showDetails = false, c
     fire: { generates: 'earth', destroys: 'metal' },
     earth: { generates: 'metal', destroys: 'water' },
     metal: { generates: 'water', destroys: 'wood' },
-    water: { generates: 'wood', destroys: 'fire' }
+    water: { generates: 'wood', destroys: 'fire' },
   };
 
   const getRelationship = (elem1: WuxingElement, elem2: WuxingElement) => {
@@ -252,7 +252,7 @@ export function WuxingCompatibility({ element1, element2, showDetails = false, c
     generated: { color: 'green', symbol: '←', label: '상생', description: '서로 도움' },
     destroys: { color: 'red', symbol: '⚡', label: '상극', description: '서로 충돌' },
     destroyed: { color: 'red', symbol: '⚡', label: '상극', description: '서로 충돌' },
-    neutral: { color: 'gray', symbol: '~', label: '중립', description: '보통 관계' }
+    neutral: { color: 'gray', symbol: '~', label: '중립', description: '보통 관계' },
   };
 
   const config = relationshipConfig[relationship];
@@ -283,10 +283,10 @@ interface TraditionalPatternProps {
 
 export function TraditionalPattern({ pattern = 'clouds', opacity = 0.1, className = '' }: TraditionalPatternProps) {
   const patterns = {
-    clouds: "M10,20 Q15,10 20,20 Q25,10 30,20 Q35,10 40,20",
-    waves: "M0,15 Q5,5 10,15 Q15,25 20,15 Q25,5 30,15 Q35,25 40,15",
-    mountains: "M0,25 L5,15 L10,20 L15,10 L20,20 L25,15 L30,25 L35,10 L40,25",
-    bamboo: "M10,5 L10,25 M15,8 L15,25 M20,5 L20,25"
+    clouds: 'M10,20 Q15,10 20,20 Q25,10 30,20 Q35,10 40,20',
+    waves: 'M0,15 Q5,5 10,15 Q15,25 20,15 Q25,5 30,15 Q35,25 40,15',
+    mountains: 'M0,25 L5,15 L10,20 L15,10 L20,20 L25,15 L30,25 L35,10 L40,25',
+    bamboo: 'M10,5 L10,25 M15,8 L15,25 M20,5 L20,25',
   };
 
   return (

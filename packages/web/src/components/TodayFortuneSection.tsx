@@ -121,7 +121,7 @@ const fortuneDescriptions: { [key: string]: string } = {
   '직업운': '업무 성과와 경력 발전 가능성을 보여줍니다',
 };
 
-const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate, onDiaryClick, hasDiary }) => {
+const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate, _onDiaryClick, _hasDiary }) => {
   const { birthInfo, setBirthInfo } = useSajuSettingsStore();
   const { user } = useAuthStore();
 

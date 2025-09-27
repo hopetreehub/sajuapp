@@ -9,7 +9,7 @@ import { Customer, getCustomerById } from '@/services/customerApi';
 import LifeChartButton from '@/components/saju/LifeChartButton';
 import HundredYearChart from '@/components/charts/HundredYearChartFixed';
 import { fetchLifetimeFortune, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
-import { convertCustomerToLifetimeRequest, getCacheKey } from '@/utils/customerDataConverter';
+import { convertCustomerToLifetimeRequest } from '@/utils/customerDataConverter';
 import '@/utils/testUniqueValues'; // 개인별 고유값 테스트 함수 로드
 
 export default function UnifiedSajuAnalysisPageWithLifeChart() {

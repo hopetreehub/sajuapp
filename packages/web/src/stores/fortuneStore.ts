@@ -92,6 +92,6 @@ export const useFortuneStore = create<FortuneState>()(
         lastCalculatedDate: state.lastCalculatedDate,
         lastBirthInfo: state.lastBirthInfo,
       }),
-    }
-  )
+    },
+  ),
 );

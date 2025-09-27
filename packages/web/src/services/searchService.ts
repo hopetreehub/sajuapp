@@ -23,7 +23,7 @@ export interface SearchResult {
 }
 
 // 검색어 하이라이팅
-const highlightText = (text: string, query: string): string => {
+const _highlightText = (text: string, query: string): string => {
   if (!text || !query) return text;
   const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
   return text.replace(regex, '<mark>$1</mark>');

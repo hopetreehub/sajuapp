@@ -51,7 +51,7 @@ const STEM_ELEMENTS: { [key: string]: string } = {
   '임': '수', '계': '수',
 };
 
-const BRANCH_ELEMENTS: { [key: string]: string } = {
+const _BRANCH_ELEMENTS: { [key: string]: string } = {
   '인': '목', '묘': '목',
   '사': '화', '오': '화',
   '진': '토', '술': '토', '축': '토', '미': '토',

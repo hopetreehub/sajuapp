@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { YearlyMemo, MemoType, ImportanceLevel } from '@/types/yearlyMemo';
+import { YearlyMemo, MemoType } from '@/types/yearlyMemo';
 
 interface YearlyMemoContextType {
   memos: YearlyMemo[];

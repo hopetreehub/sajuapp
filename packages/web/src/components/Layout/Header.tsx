@@ -17,7 +17,7 @@ const Header: React.FC = () => {
   useKeyboardShortcuts({
     onSearchFocus: () => {
       searchBarRef.current?.focus();
-    }
+    },
   });
 
   const navItems = [

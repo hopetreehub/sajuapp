@@ -9,7 +9,7 @@ import {
   BackendSajuData,
   FrontendSajuData,
   SajuConversionResult,
-  SajuValidationResult
+  SajuValidationResult,
 } from '@/types/standardSaju';
 
 /**
@@ -23,23 +23,23 @@ export function convertBackendToStandard(backendSaju: BackendSajuData): SajuConv
       year: {
         gan: backendSaju.year.gan,
         ji: backendSaju.year.ji,
-        combined: backendSaju.year.gan + backendSaju.year.ji
+        combined: backendSaju.year.gan + backendSaju.year.ji,
       },
       month: {
         gan: backendSaju.month.gan,
         ji: backendSaju.month.ji,
-        combined: backendSaju.month.gan + backendSaju.month.ji
+        combined: backendSaju.month.gan + backendSaju.month.ji,
       },
       day: {
         gan: backendSaju.day.gan,
         ji: backendSaju.day.ji,
-        combined: backendSaju.day.gan + backendSaju.day.ji
+        combined: backendSaju.day.gan + backendSaju.day.ji,
       },
       time: {
         gan: backendSaju.time.gan,
         ji: backendSaju.time.ji,
-        combined: backendSaju.time.gan + backendSaju.time.ji
-      }
+        combined: backendSaju.time.gan + backendSaju.time.ji,
+      },
     };
 
     // 데이터 유효성 검사
@@ -52,7 +52,7 @@ export function convertBackendToStandard(backendSaju: BackendSajuData): SajuConv
       standardSaju,
       isValid: warnings.length === 0,
       source: 'backend',
-      warnings
+      warnings,
     };
   } catch (error) {
     console.error('Backend 사주 변환 실패:', error);
@@ -71,23 +71,23 @@ export function convertFrontendToStandard(frontendSaju: FrontendSajuData): SajuC
       year: {
         gan: frontendSaju.year.heavenly,
         ji: frontendSaju.year.earthly,
-        combined: frontendSaju.year.combined
+        combined: frontendSaju.year.combined,
       },
       month: {
         gan: frontendSaju.month.heavenly,
         ji: frontendSaju.month.earthly,
-        combined: frontendSaju.month.combined
+        combined: frontendSaju.month.combined,
       },
       day: {
         gan: frontendSaju.day.heavenly,
         ji: frontendSaju.day.earthly,
-        combined: frontendSaju.day.combined
+        combined: frontendSaju.day.combined,
       },
       time: {
         gan: frontendSaju.hour.heavenly,
         ji: frontendSaju.hour.earthly,
-        combined: frontendSaju.hour.combined
-      }
+        combined: frontendSaju.hour.combined,
+      },
     };
 
     // 조합 일치성 검사
@@ -108,7 +108,7 @@ export function convertFrontendToStandard(frontendSaju: FrontendSajuData): SajuC
       standardSaju,
       isValid: warnings.length === 0,
       source: 'frontend',
-      warnings
+      warnings,
     };
   } catch (error) {
     console.error('Frontend 사주 변환 실패:', error);
@@ -121,13 +121,13 @@ export function convertFrontendToStandard(frontendSaju: FrontendSajuData): SajuC
  */
 export function validateSajuConsistency(
   saju1: StandardSajuData,
-  saju2: StandardSajuData
+  saju2: StandardSajuData,
 ): SajuValidationResult {
   const differences = {
     year: saju1.year.combined !== saju2.year.combined,
     month: saju1.month.combined !== saju2.month.combined,
     day: saju1.day.combined !== saju2.day.combined,
-    time: saju1.time.combined !== saju2.time.combined
+    time: saju1.time.combined !== saju2.time.combined,
   };
 
   const totalPillars = 4;
@@ -147,7 +147,7 @@ export function validateSajuConsistency(
     isMatch: confidence === 100,
     differences,
     confidence,
-    recommendation
+    recommendation,
   };
 }
 
@@ -157,7 +157,7 @@ export function validateSajuConsistency(
  */
 export function resolveSajuData(
   backendSaju: any,
-  frontendSaju: any
+  frontendSaju: any,
 ): {
   finalSaju: StandardSajuData;
   resolution: string;
@@ -210,7 +210,7 @@ export function resolveSajuData(
       return {
         finalSaju: backendStandard,
         resolution: '사주 완전 일치 - Backend 데이터 사용',
-        confidence: 100
+        confidence: 100,
       };
     } else {
       switch (validation.recommendation) {
@@ -219,21 +219,21 @@ export function resolveSajuData(
           return {
             finalSaju: backendStandard,
             resolution: `Backend 우선 사용 (일치도: ${validation.confidence}%)`,
-            confidence: validation.confidence
+            confidence: validation.confidence,
           };
         case 'use_frontend':
           console.log('🔄 Frontend 재계산 데이터 사용 (일치도 중간)');
           return {
             finalSaju: frontendStandard,
             resolution: `Frontend 재계산 사용 (일치도: ${validation.confidence}%)`,
-            confidence: validation.confidence
+            confidence: validation.confidence,
           };
         default:
           console.log('⚠️ 사주 심각한 불일치 - Backend 데이터 강제 사용');
           return {
             finalSaju: backendStandard,
             resolution: `심각한 불일치로 Backend 강제 사용 (일치도: ${validation.confidence}%)`,
-            confidence: validation.confidence
+            confidence: validation.confidence,
           };
       }
     }
@@ -245,7 +245,7 @@ export function resolveSajuData(
     return {
       finalSaju: backendStandard,
       resolution: 'Backend 데이터만 사용',
-      confidence: 80
+      confidence: 80,
     };
   }
 
@@ -255,7 +255,7 @@ export function resolveSajuData(
     return {
       finalSaju: frontendStandard,
       resolution: 'Frontend 재계산 데이터만 사용',
-      confidence: 60
+      confidence: 60,
     };
   }
 
@@ -285,7 +285,7 @@ export function convertToUniversalSajuFormat(standardSaju: StandardSajuData) {
     year: { gan: standardSaju.year.gan, ji: standardSaju.year.ji },
     month: { gan: standardSaju.month.gan, ji: standardSaju.month.ji },
     day: { gan: standardSaju.day.gan, ji: standardSaju.day.ji },
-    time: { gan: standardSaju.time.gan, ji: standardSaju.time.ji }
+    time: { gan: standardSaju.time.gan, ji: standardSaju.time.ji },
   };
 }
 
@@ -297,6 +297,6 @@ export function debugSajuData(saju: StandardSajuData, label: string) {
     년주: saju.year.combined,
     월주: saju.month.combined,
     일주: saju.day.combined,
-    시주: saju.time.combined
+    시주: saju.time.combined,
   });
 }

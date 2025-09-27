@@ -4,15 +4,13 @@ import {
   MagnifyingGlassIcon,
   AdjustmentsHorizontalIcon,
   ClockIcon,
-  CalendarIcon,
 } from '@heroicons/react/24/outline';
 import SearchBar from '@/components/SearchBar';
 import SearchResultItem from '@/components/SearchResultItem';
 import { SearchResult, searchService } from '@/services/searchService';
 import { useCalendar } from '@/contexts/CalendarContext';
 import { groupResultsByType, getCategoryLabel } from '@/utils/searchUtils';
-import { format, parseISO } from 'date-fns';
-import { ko } from 'date-fns/locale';
+import { parseISO } from 'date-fns';
 
 const SearchPage: React.FC = () => {
   const location = useLocation();
@@ -79,7 +77,7 @@ const SearchPage: React.FC = () => {
       // 최근 검색어에 추가
       const newRecentSearches = [
         currentQuery,
-        ...recentSearches.filter(s => s !== currentQuery)
+        ...recentSearches.filter(s => s !== currentQuery),
       ].slice(0, 10);
       setRecentSearches(newRecentSearches);
       localStorage.setItem('recentSearches', JSON.stringify(newRecentSearches));

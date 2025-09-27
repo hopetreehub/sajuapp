@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { TimeFrame } from '@/components/saju/charts/common/StandardTimeFrameSelector';
-import { ChartStyleUtils, TimeFrameData, DEFAULT_ENHANCED_OPTIONS } from '@/utils/chartStyleUtils';
+import { ChartStyleUtils, TimeFrameData } from '@/utils/chartStyleUtils';
 
 interface UseStandardRadarChartOptions {
   baseData: any;
