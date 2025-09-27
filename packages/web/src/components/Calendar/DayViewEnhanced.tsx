@@ -85,7 +85,6 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
   const todayTags = ['#중요', '#긴급', '#업무', '#개인'];
   const completedTodos = todos.filter(todo => todo.completed).length;
   const totalTodos = todos.length;
-  const _progressPercentage = totalTodos > 0 ? (completedTodos / totalTodos) * 100 : 0;
 
   const handleAddTodo = () => {
     if (newTodo.trim()) {
