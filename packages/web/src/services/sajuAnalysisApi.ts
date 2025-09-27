@@ -4,8 +4,9 @@
  */
 
 import { SajuRadarCategory, SajuRadarSubcategory } from '@/types/sajuRadar';
+import { getApiUrl } from '@/config/api.config';
 
-const SAJU_ANALYSIS_API_BASE = 'http://localhost:4015/api/saju';
+const SAJU_ANALYSIS_API_BASE = getApiUrl('saju');
 
 export interface ApiCategoryResponse {
   success: boolean;
