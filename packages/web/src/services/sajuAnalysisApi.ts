@@ -4,9 +4,17 @@
  */
 
 import { SajuRadarCategory, SajuRadarSubcategory } from '@/types/sajuRadar';
-import { getApiUrl } from '@/config/api.config';
 
-const SAJU_ANALYSIS_API_BASE = getApiUrl('saju');
+// 프로덕션 URL 직접 설정 (localhost 문제 해결)
+const SAJU_ANALYSIS_API_BASE = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+  ? '/api/saju'  // 로컬 개발 환경
+  : 'https://sajuapp-saju.up.railway.app/api/saju';  // 프로덕션 환경 (Railway 또는 대체 URL)
+
+// 디버깅용 로그
+if (typeof window !== 'undefined') {
+  console.log('[Saju API] Using URL:', SAJU_ANALYSIS_API_BASE);
+  console.log('[Saju API] Current hostname:', window.location.hostname);
+}
 
 export interface ApiCategoryResponse {
   success: boolean;

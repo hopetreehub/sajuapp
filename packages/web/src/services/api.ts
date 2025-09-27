@@ -1,9 +1,19 @@
 import axios from 'axios';
-import { getApiUrl } from '@/config/api.config';
+
+// 프로덕션 URL 직접 설정 (localhost 문제 해결)
+const baseURL = typeof window !== 'undefined' && window.location.hostname === 'localhost'
+  ? '/api/calendar'  // 로컬 개발 환경
+  : 'https://sajuapp-calendar.up.railway.app/api/calendar';  // 프로덕션 환경
+
+// 디버깅용 로그
+if (typeof window !== 'undefined') {
+  console.log('[Calendar API] Using URL:', baseURL);
+  console.log('[Calendar API] Current hostname:', window.location.hostname);
+}
 
 // 캘린더 서비스용 axios 인스턴스
 const api = axios.create({
-  baseURL: getApiUrl('calendar'),
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
   },
