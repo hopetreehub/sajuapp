@@ -5,10 +5,11 @@ const baseURL = typeof window !== 'undefined' && window.location.hostname === 'l
   ? '/api/calendar'  // 로컬 개발 환경
   : 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';  // Vercel 프로덕션 환경
 
-// 디버깅용 로그
+// 디버깅용 로그 (v2)
 if (typeof window !== 'undefined') {
-  console.log('[Calendar API] Using URL:', baseURL);
-  console.log('[Calendar API] Current hostname:', window.location.hostname);
+  console.log('[Calendar API v2] Using URL:', baseURL);
+  console.log('[Calendar API v2] Current hostname:', window.location.hostname);
+  console.log('[Calendar API v2] Is localhost?:', window.location.hostname === 'localhost');
 }
 
 // 캘린더 서비스용 axios 인스턴스
