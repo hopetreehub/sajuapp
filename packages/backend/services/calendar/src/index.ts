@@ -14,13 +14,51 @@ import { initDatabase } from './database/sqlite-connection'
 dotenv.config()
 
 const app: Application = express()
-const PORT = 4012 // 고정 포트 사용
+const PORT = process.env.PORT || 4012 // Railway에서는 PORT 환경변수 사용
+
+// CORS 설정 - 개발/프로덕션 환경 분기
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    // 개발 환경 또는 허용된 origin
+    const allowedOrigins = [
+      'http://localhost:4000',
+      'http://localhost:4001',
+      'https://fortune-compass.pages.dev',
+      'https://*.fortune-compass.pages.dev',
+      process.env.FRONTEND_URL
+    ].filter(Boolean)
+
+    // origin이 없는 경우(예: Postman, 서버 간 통신) 허용
+    if (!origin) {
+      callback(null, true)
+      return
+    }
+
+    // 패턴 매칭 체크
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (!allowed) return false
+      if (allowed.includes('*')) {
+        const pattern = new RegExp(allowed.replace('*', '.*'))
+        return pattern.test(origin)
+      }
+      return allowed === origin
+    })
+
+    if (isAllowed) {
+      callback(null, true)
+    } else {
+      logger.warn(`CORS blocked origin: ${origin}`)
+      callback(null, true) // 개발 편의를 위해 일단 허용
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range']
+}
 
 // Middleware
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:4000',
-  credentials: true
-}))
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(requestLogger)

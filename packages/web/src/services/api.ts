@@ -1,9 +1,9 @@
 import axios from 'axios';
+import { getApiUrl } from '@/config/api.config';
 
-const API_URL = import.meta.env.VITE_API_URL || '';
-
+// 캘린더 서비스용 axios 인스턴스
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: getApiUrl('calendar'),
   headers: {
     'Content-Type': 'application/json',
   },
@@ -41,31 +41,31 @@ export const eventService = {
     end_date?: string;
     type?: string;
   }): Promise<CalendarEvent[]> => {
-    const response = await api.get('/api/calendar/events', { params });
+    const response = await api.get('/events', { params });
     return response.data.data || [];
   },
 
   // Get single event
   getEvent: async (id: string): Promise<CalendarEvent> => {
-    const response = await api.get(`/api/calendar/events/${id}`);
+    const response = await api.get(`/events/${id}`);
     return response.data.data;
   },
 
   // Create event
   createEvent: async (event: Omit<CalendarEvent, 'id' | 'created_at' | 'updated_at'>): Promise<CalendarEvent> => {
-    const response = await api.post('/api/calendar/events', event);
+    const response = await api.post('/events', event);
     return response.data.data;
   },
 
   // Update event
   updateEvent: async (id: string, event: Partial<CalendarEvent>): Promise<CalendarEvent> => {
-    const response = await api.put(`/api/calendar/events/${id}`, event);
+    const response = await api.put(`/events/${id}`, event);
     return response.data.data;
   },
 
   // Delete event
   deleteEvent: async (id: string): Promise<void> => {
-    await api.delete(`/api/calendar/events/${id}`);
+    await api.delete(`/events/${id}`);
   },
 };
 
@@ -73,48 +73,48 @@ export const eventService = {
 export const tagService = {
   // Get all tags
   getTags: async (): Promise<Tag[]> => {
-    const response = await api.get('/api/calendar/tags');
+    const response = await api.get('/tags');
     return response.data;
   },
 
   // Get single tag
   getTag: async (id: string): Promise<Tag> => {
-    const response = await api.get(`/api/calendar/tags/${id}`);
+    const response = await api.get(`/tags/${id}`);
     return response.data;
   },
 
   // Create tag
   createTag: async (tag: Omit<Tag, 'id' | 'created_at' | 'updated_at'>): Promise<Tag> => {
-    const response = await api.post('/api/calendar/tags', tag);
+    const response = await api.post('/tags', tag);
     return response.data;
   },
 
   // Update tag
   updateTag: async (id: string, tag: Partial<Tag>): Promise<Tag> => {
-    const response = await api.put(`/api/calendar/tags/${id}`, tag);
+    const response = await api.put(`/tags/${id}`, tag);
     return response.data;
   },
 
   // Delete tag
   deleteTag: async (id: string): Promise<void> => {
-    await api.delete(`/api/calendar/tags/${id}`);
+    await api.delete(`/tags/${id}`);
   },
 
   // Add tags to event
   addTagsToEvent: async (eventId: string, tagIds: string[]): Promise<Tag[]> => {
-    const response = await api.post(`/api/calendar/tags/events/${eventId}/tags`, { tagIds });
+    const response = await api.post(`/tags/events/${eventId}/tags`, { tagIds });
     return response.data;
   },
 
   // Get event tags
   getEventTags: async (eventId: string): Promise<Tag[]> => {
-    const response = await api.get(`/api/calendar/tags/events/${eventId}/tags`);
+    const response = await api.get(`/tags/events/${eventId}/tags`);
     return response.data;
   },
 
   // Remove tag from event
   removeTagFromEvent: async (eventId: string, tagId: string): Promise<void> => {
-    await api.delete(`/api/calendar/tags/events/${eventId}/tags/${tagId}`);
+    await api.delete(`/tags/events/${eventId}/tags/${tagId}`);
   },
 };
 

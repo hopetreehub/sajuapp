@@ -1,7 +1,8 @@
 // 고객 관리 API 서비스
+import { getApiUrl } from '@/config/api.config';
 
-// Vite 프록시를 통해 4000 포트로 통합 접근
-const API_BASE_URL = '/api/calendar';
+// API 설정 - 개발/프로덕션 환경 자동 전환
+const API_BASE_URL = getApiUrl('calendar');
 
 export interface Customer {
   id?: number;
