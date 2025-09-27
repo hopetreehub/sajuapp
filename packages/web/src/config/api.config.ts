@@ -1,12 +1,12 @@
 // API 서비스별 URL 설정
 const isDevelopment = import.meta.env.MODE === 'development';
 
-// Railway 배포 URL - 실제 배포된 서비스 URL
-// 임시 공개 백엔드 서버 (테스트용)
-const RAILWAY_URLS = {
-  calendar: 'https://sajuapp-calendar.up.railway.app/api/calendar',
-  diary: 'https://sajuapp-diary.up.railway.app/api',
-  saju: 'https://sajuapp-saju.up.railway.app/api',
+// Vercel 배포 URL - 실제 작동 중인 서비스 URL (2025-09-28)
+// Protection OFF 상태로 공개 접근 가능
+const VERCEL_URLS = {
+  calendar: 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar',
+  diary: 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/diary',
+  saju: 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/saju',
 };
 
 // 대체 URL (Railway가 작동하지 않을 때)
@@ -22,31 +22,32 @@ const isProduction = !isLocalhost || import.meta.env.MODE === 'production';
 
 export const API_ENDPOINTS = {
   calendar: isProduction
-    ? (import.meta.env.VITE_CALENDAR_SERVICE_URL || RAILWAY_URLS.calendar || FALLBACK_URLS.calendar)
+    ? (import.meta.env.VITE_CALENDAR_SERVICE_URL || VERCEL_URLS.calendar || FALLBACK_URLS.calendar)
     : '/api/calendar',
 
   diary: isProduction
-    ? (import.meta.env.VITE_DIARY_SERVICE_URL || RAILWAY_URLS.diary || FALLBACK_URLS.diary)
+    ? (import.meta.env.VITE_DIARY_SERVICE_URL || VERCEL_URLS.diary || FALLBACK_URLS.diary)
     : '/api/diaries',
 
   saju: isProduction
-    ? (import.meta.env.VITE_SAJU_SERVICE_URL || RAILWAY_URLS.saju || FALLBACK_URLS.saju)
+    ? (import.meta.env.VITE_SAJU_SERVICE_URL || VERCEL_URLS.saju || FALLBACK_URLS.saju)
     : '/api/saju',
 
   lifetimeFortune: isProduction
-    ? (import.meta.env.VITE_SAJU_SERVICE_URL || RAILWAY_URLS.saju || FALLBACK_URLS.saju)
+    ? (import.meta.env.VITE_SAJU_SERVICE_URL || VERCEL_URLS.saju || FALLBACK_URLS.saju)
     : '/api/lifetime-fortune',
 };
 
 // 개발 환경에서는 Vite proxy를 통해 라우팅
-// 프로덕션에서는 각 Railway 서비스로 직접 연결
+// 프로덕션에서는 Vercel 서비스로 직접 연결
 export const getApiUrl = (service: keyof typeof API_ENDPOINTS): string => {
   const url = API_ENDPOINTS[service];
 
-  // 디버깅용 로그 (프로덕션에서도 확인 가능)
+  // 디버깅용 로그 (프로덕션에서도 확인 가능) - v3
   if (typeof window !== 'undefined') {
-    console.log(`[API Config] Service: ${service}, URL: ${url}`);
-    console.log(`[API Config] Mode: ${import.meta.env.MODE}, isProduction: ${isProduction}`);
+    console.log(`[API Config v3] Service: ${service}, URL: ${url}`);
+    console.log(`[API Config v3] Mode: ${import.meta.env.MODE}, isProduction: ${isProduction}`);
+    console.log(`[API Config v3] Using Vercel Backend`);
   }
 
   return url;
