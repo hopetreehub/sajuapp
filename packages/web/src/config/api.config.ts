@@ -1,53 +1,38 @@
-// API 서비스별 URL 설정
-const isDevelopment = import.meta.env.MODE === 'development';
+// API 서비스별 URL 설정 - v6 FINAL
+const VERCEL_API_BASE = 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app';
 
-// Vercel 배포 URL - 실제 작동 중인 서비스 URL (2025-09-28)
-// Protection OFF 상태로 공개 접근 가능
+// Vercel 배포 URL (2025-09-28 확인)
 const VERCEL_URLS = {
-  calendar: 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar',
-  diary: 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/diary',
-  saju: 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/saju',
+  calendar: `${VERCEL_API_BASE}/api/calendar`,
+  diary: `${VERCEL_API_BASE}/api/diary`,
+  saju: `${VERCEL_API_BASE}/api/saju`,
 };
 
-// 대체 URL (Railway가 작동하지 않을 때)
-const FALLBACK_URLS = {
-  calendar: 'https://fortune-compass-api.onrender.com/api/calendar',
-  diary: 'https://fortune-compass-api.onrender.com/api/diary',
-  saju: 'https://fortune-compass-api.onrender.com/api/saju',
-};
+// 환경 판별
+function isLocalEnvironment(): boolean {
+  if (typeof window === 'undefined') return false;
+  const hostname = window.location.hostname;
+  return hostname === 'localhost' || hostname === '127.0.0.1';
+}
 
-// 프로덕션 환경 강제 설정 (localhost 문제 해결)
-const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
-const isProduction = !isLocalhost || import.meta.env.MODE === 'production';
-
+// API 엔드포인트 설정
 export const API_ENDPOINTS = {
-  calendar: isProduction
-    ? (import.meta.env.VITE_CALENDAR_SERVICE_URL || VERCEL_URLS.calendar || FALLBACK_URLS.calendar)
-    : '/api/calendar',
-
-  diary: isProduction
-    ? (import.meta.env.VITE_DIARY_SERVICE_URL || VERCEL_URLS.diary || FALLBACK_URLS.diary)
-    : '/api/diaries',
-
-  saju: isProduction
-    ? (import.meta.env.VITE_SAJU_SERVICE_URL || VERCEL_URLS.saju || FALLBACK_URLS.saju)
-    : '/api/saju',
-
-  lifetimeFortune: isProduction
-    ? (import.meta.env.VITE_SAJU_SERVICE_URL || VERCEL_URLS.saju || FALLBACK_URLS.saju)
-    : '/api/lifetime-fortune',
+  calendar: isLocalEnvironment() ? '/api/calendar' : VERCEL_URLS.calendar,
+  diary: isLocalEnvironment() ? '/api/diaries' : VERCEL_URLS.diary,
+  saju: isLocalEnvironment() ? '/api/saju' : VERCEL_URLS.saju,
+  lifetimeFortune: isLocalEnvironment() ? '/api/lifetime-fortune' : VERCEL_URLS.saju,
 };
 
-// 개발 환경에서는 Vite proxy를 통해 라우팅
-// 프로덕션에서는 Vercel 서비스로 직접 연결
+// API URL 가져오기
 export const getApiUrl = (service: keyof typeof API_ENDPOINTS): string => {
   const url = API_ENDPOINTS[service];
 
-  // 디버깅용 로그 (프로덕션에서도 확인 가능) - v3
+  // 디버깅용 로그 - v6
   if (typeof window !== 'undefined') {
-    console.log(`[API Config v3] Service: ${service}, URL: ${url}`);
-    console.log(`[API Config v3] Mode: ${import.meta.env.MODE}, isProduction: ${isProduction}`);
-    console.log(`[API Config v3] Using Vercel Backend`);
+    console.log(`[API Config v6] Service: ${service}`);
+    console.log(`[API Config v6] URL: ${url}`);
+    console.log(`[API Config v6] Is Local: ${isLocalEnvironment()}`);
+    console.log(`[API Config v6] Hostname: ${window.location.hostname}`);
   }
 
   return url;
