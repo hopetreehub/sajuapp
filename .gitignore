@@ -76,3 +76,5 @@ Thumbs.db
 # Runtime
 .cache/
 .parcel-cache/packages/web/dist/
+
+.vercel

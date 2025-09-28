@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "buildCommand": "cd packages/web && npm run build",
+  "outputDirectory": "packages/web/dist",
+  "rewrites": [
+    {
+      "source": "/api/calendar/(.*)",
+      "destination": "/api/calendar/[...path]"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
+    }
+  ]
+}
