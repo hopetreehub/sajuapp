@@ -191,4 +191,4 @@ export async function calculateSaju(
   }
   
   return response.json();
-}
+}// Force rebuild 2025년 09월 29일 월 오전  2:52:48
