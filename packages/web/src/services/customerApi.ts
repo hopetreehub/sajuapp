@@ -1,41 +1,43 @@
-// 고객 관리 API 서비스
+// 고객 관리 API 서비스 - v6 FINAL
 
-// 프로덕션 URL 직접 설정 - v5 ABSOLUTE FIX
-// 무조건 Vercel URL 사용 (개발 환경에서만 프록시)
+// Vercel 백엔드 URL (절대 경로)
 const VERCEL_API_URL = 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';
 
-function getApiBaseUrl() {
-  // SSR 환경에서는 항상 Vercel URL
+// API Base URL 결정 함수
+function getApiBaseUrl(): string {
+  // 브라우저 환경이 아닌 경우 (SSR 등)
   if (typeof window === 'undefined') {
     return VERCEL_API_URL;
   }
 
   const hostname = window.location.hostname;
 
-  // 로컬 개발 환경에서만 프록시 사용
+  // 로컬 개발 환경
   if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    console.log('[Customer API v5] Local mode - using proxy');
+    console.log('[Customer API v6] 로컬 개발 모드 - 프록시 사용');
     return '/api/calendar';
   }
 
-  // 그 외 모든 환경에서는 Vercel URL 직접 사용
-  console.log('[Customer API v5] Production mode - using Vercel:', VERCEL_API_URL);
+  // 프로덕션 환경 (Cloudflare Pages, Vercel, 기타 모든 배포)
+  console.log('[Customer API v6] 프로덕션 모드 - Vercel API 사용');
+  console.log('[Customer API v6] URL:', VERCEL_API_URL);
   return VERCEL_API_URL;
 }
 
+// API URL 설정
 const API_BASE_URL = getApiBaseUrl();
 
-// 디버깅용 로그 (v5)
+// 초기화 시 로깅
 if (typeof window !== 'undefined') {
-  console.log('========================================');
-  console.log('[Customer API v5] DEBUGGING INFO:');
-  console.log('  - Final URL:', API_BASE_URL);
-  console.log('  - Hostname:', window.location.hostname);
-  console.log('  - Full URL:', window.location.href);
-  console.log('  - Expected:', VERCEL_API_URL);
-  console.log('========================================');
+  console.log('====================================');
+  console.log('[Customer API v6] 초기화 완료');
+  console.log('  현재 호스트:', window.location.hostname);
+  console.log('  사용 URL:', API_BASE_URL);
+  console.log('  Vercel API:', VERCEL_API_URL);
+  console.log('====================================');
 }
 
+// 타입 정의
 export interface Customer {
   id?: number;
   name: string;
@@ -69,7 +71,7 @@ export interface CustomerResponse {
 export async function getCustomers(
   page: number = 1,
   limit: number = 20,
-  search: string = '',
+  search: string = ''
 ): Promise<CustomerListResponse> {
   const params = new URLSearchParams({
     page: page.toString(),
@@ -78,95 +80,120 @@ export async function getCustomers(
   });
 
   const url = `${API_BASE_URL}/customers?${params}`;
-  console.log('[Customer API v5] getCustomers - Fetching URL:', url);
-  console.log('[Customer API v5] CRITICAL: Is this Vercel URL?', url.includes('vercel.app'));
 
-  const response = await fetch(url);
-  console.log('[Customer API v5] Response status:', response.status);
-  console.log('[Customer API v5] Response content-type:', response.headers.get('content-type'));
+  console.log('[Customer API v6] 고객 목록 조회');
+  console.log('  요청 URL:', url);
+  console.log('  Vercel API 사용:', url.includes('vercel.app'));
 
-  if (!response.ok) {
-    const text = await response.text();
-    console.error('[Customer API v5] ERROR! Got HTML instead of JSON:');
-    console.error('[Customer API v5] Response preview:', text.substring(0, 500));
-    throw new Error('고객 목록을 불러오는데 실패했습니다');
+  try {
+    const response = await fetch(url);
+
+    console.log('[Customer API v6] 응답 상태:', response.status);
+    console.log('[Customer API v6] Content-Type:', response.headers.get('content-type'));
+
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('[Customer API v6] 에러 응답:', text.substring(0, 300));
+      throw new Error(`고객 목록을 불러오는데 실패했습니다 (${response.status})`);
+    }
+
+    const data = await response.json();
+    console.log('[Customer API v6] 성공적으로 데이터 수신');
+    return data;
+
+  } catch (error) {
+    console.error('[Customer API v6] 요청 실패:', error);
+    throw error;
   }
-
-  return response.json();
 }
 
 // 고객 상세 조회
 export async function getCustomerById(id: number): Promise<CustomerResponse> {
-  const response = await fetch(`${API_BASE_URL}/customers/${id}`);
+  const url = `${API_BASE_URL}/customers/${id}`;
+  console.log('[Customer API v6] 고객 상세 조회:', url);
+
+  const response = await fetch(url);
   if (!response.ok) {
     throw new Error('고객 정보를 불러오는데 실패했습니다');
   }
-  
+
   return response.json();
 }
 
 // 고객 등록
 export async function createCustomer(customer: Customer): Promise<CustomerResponse> {
-  const response = await fetch(`${API_BASE_URL}/customers`, {
+  const url = `${API_BASE_URL}/customers`;
+  console.log('[Customer API v6] 고객 등록:', url);
+
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(customer),
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || '고객 등록에 실패했습니다');
   }
-  
+
   return response.json();
 }
 
 // 고객 수정
 export async function updateCustomer(
-  id: number, 
-  customer: Customer,
+  id: number,
+  customer: Customer
 ): Promise<CustomerResponse> {
-  const response = await fetch(`${API_BASE_URL}/customers/${id}`, {
+  const url = `${API_BASE_URL}/customers/${id}`;
+  console.log('[Customer API v6] 고객 수정:', url);
+
+  const response = await fetch(url, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(customer),
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || '고객 정보 수정에 실패했습니다');
   }
-  
+
   return response.json();
 }
 
 // 고객 삭제
 export async function deleteCustomer(id: number): Promise<{ success: boolean; message: string }> {
-  const response = await fetch(`${API_BASE_URL}/customers/${id}`, {
+  const url = `${API_BASE_URL}/customers/${id}`;
+  console.log('[Customer API v6] 고객 삭제:', url);
+
+  const response = await fetch(url, {
     method: 'DELETE',
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || '고객 삭제에 실패했습니다');
   }
-  
+
   return response.json();
 }
 
 // 고객 검색 (자동완성용)
 export async function searchCustomers(query: string): Promise<Customer[]> {
   const params = new URLSearchParams({ q: query });
-  const response = await fetch(`${API_BASE_URL}/customers/search?${params}`);
-  
+  const url = `${API_BASE_URL}/customers/search?${params}`;
+  console.log('[Customer API v6] 고객 검색:', url);
+
+  const response = await fetch(url);
+
   if (!response.ok) {
     throw new Error('고객 검색에 실패했습니다');
   }
-  
+
   const result = await response.json();
   return result.data;
 }
@@ -175,20 +202,23 @@ export async function searchCustomers(query: string): Promise<Customer[]> {
 export async function calculateSaju(
   birth_date: string,
   birth_time: string,
-  lunar_solar: 'lunar' | 'solar' = 'solar',
+  lunar_solar: 'lunar' | 'solar' = 'solar'
 ): Promise<any> {
-  const response = await fetch(`${API_BASE_URL}/saju/calculate`, {
+  const url = `${API_BASE_URL}/saju/calculate`;
+  console.log('[Customer API v6] 사주 계산:', url);
+
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ birth_date, birth_time, lunar_solar }),
   });
-  
+
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || '사주 계산에 실패했습니다');
   }
-  
+
   return response.json();
-}// Force rebuild 2025년 09월 29일 월 오전  2:52:48
+}
