@@ -1,16 +1,32 @@
 // 고객 관리 API 서비스
 
-// 프로덕션 URL 직접 설정 (localhost 문제 해결) - v3
-const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-  ? '/api/calendar'  // 로컬 개발 환경
-  : 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';  // Vercel 프로덕션 환경
+// 프로덕션 URL 직접 설정 (localhost 문제 해결) - v4 FIXED
+// Cloudflare Pages는 프록시를 지원하지 않으므로 절대 URL 사용
+function getApiBaseUrl() {
+  if (typeof window === 'undefined') {
+    return 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';
+  }
 
-// 디버깅용 로그 (v3)
+  const hostname = window.location.hostname;
+
+  // 로컬 개발 환경
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    console.log('[Customer API v4] Local development mode');
+    return '/api/calendar';
+  }
+
+  // 프로덕션 환경 (Cloudflare Pages 등)
+  console.log('[Customer API v4] Production mode - using Vercel URL');
+  return 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';
+}
+
+const API_BASE_URL = getApiBaseUrl();
+
+// 디버깅용 로그 (v4)
 if (typeof window !== 'undefined') {
-  console.log('[Customer API v3] Using URL:', API_BASE_URL);
-  console.log('[Customer API v3] Current hostname:', window.location.hostname);
-  console.log('[Customer API v3] Is localhost?:', window.location.hostname === 'localhost');
-  console.log('[Customer API v3] Full URL:', window.location.href);
+  console.log('[Customer API v4] Final URL:', API_BASE_URL);
+  console.log('[Customer API v4] Current hostname:', window.location.hostname);
+  console.log('[Customer API v4] Full URL:', window.location.href);
 }
 
 export interface Customer {
@@ -55,15 +71,15 @@ export async function getCustomers(
   });
 
   const url = `${API_BASE_URL}/customers?${params}`;
-  console.log('[Customer API v3] getCustomers - Fetching URL:', url);
+  console.log('[Customer API v4] getCustomers - Fetching URL:', url);
 
   const response = await fetch(url);
-  console.log('[Customer API v3] getCustomers - Response status:', response.status);
-  console.log('[Customer API v3] getCustomers - Response headers:', response.headers.get('content-type'));
+  console.log('[Customer API v4] getCustomers - Response status:', response.status);
+  console.log('[Customer API v4] getCustomers - Response headers:', response.headers.get('content-type'));
 
   if (!response.ok) {
     const text = await response.text();
-    console.error('[Customer API v3] getCustomers - Error response:', text.substring(0, 200));
+    console.error('[Customer API v4] getCustomers - Error response:', text.substring(0, 200));
     throw new Error('고객 목록을 불러오는데 실패했습니다');
   }
 
