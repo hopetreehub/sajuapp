@@ -1,15 +1,30 @@
 import axios from 'axios';
 
-// 프로덕션 URL 직접 설정 (localhost 문제 해결)
-const baseURL = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-  ? '/api/calendar'  // 로컬 개발 환경
-  : 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';  // Vercel 프로덕션 환경
+// 프로덕션 URL 직접 설정 - v4 FIXED
+function getBaseUrl() {
+  if (typeof window === 'undefined') {
+    return 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';
+  }
 
-// 디버깅용 로그 (v2)
+  const hostname = window.location.hostname;
+
+  // 로컬 개발 환경
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    console.log('[Calendar API v4] Local development mode');
+    return '/api/calendar';
+  }
+
+  // 프로덕션 환경 (Cloudflare Pages)
+  console.log('[Calendar API v4] Production mode - using Vercel URL');
+  return 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';
+}
+
+const baseURL = getBaseUrl();
+
+// 디버깅용 로그 (v4)
 if (typeof window !== 'undefined') {
-  console.log('[Calendar API v2] Using URL:', baseURL);
-  console.log('[Calendar API v2] Current hostname:', window.location.hostname);
-  console.log('[Calendar API v2] Is localhost?:', window.location.hostname === 'localhost');
+  console.log('[Calendar API v4] Final URL:', baseURL);
+  console.log('[Calendar API v4] Current hostname:', window.location.hostname);
 }
 
 // 캘린더 서비스용 axios 인스턴스
