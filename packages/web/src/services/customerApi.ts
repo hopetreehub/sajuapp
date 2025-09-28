@@ -1,32 +1,39 @@
 // 고객 관리 API 서비스
 
-// 프로덕션 URL 직접 설정 (localhost 문제 해결) - v4 FIXED
-// Cloudflare Pages는 프록시를 지원하지 않으므로 절대 URL 사용
+// 프로덕션 URL 직접 설정 - v5 ABSOLUTE FIX
+// 무조건 Vercel URL 사용 (개발 환경에서만 프록시)
+const VERCEL_API_URL = 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';
+
 function getApiBaseUrl() {
+  // SSR 환경에서는 항상 Vercel URL
   if (typeof window === 'undefined') {
-    return 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';
+    return VERCEL_API_URL;
   }
 
   const hostname = window.location.hostname;
 
-  // 로컬 개발 환경
+  // 로컬 개발 환경에서만 프록시 사용
   if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    console.log('[Customer API v4] Local development mode');
+    console.log('[Customer API v5] Local mode - using proxy');
     return '/api/calendar';
   }
 
-  // 프로덕션 환경 (Cloudflare Pages 등)
-  console.log('[Customer API v4] Production mode - using Vercel URL');
-  return 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';
+  // 그 외 모든 환경에서는 Vercel URL 직접 사용
+  console.log('[Customer API v5] Production mode - using Vercel:', VERCEL_API_URL);
+  return VERCEL_API_URL;
 }
 
 const API_BASE_URL = getApiBaseUrl();
 
-// 디버깅용 로그 (v4)
+// 디버깅용 로그 (v5)
 if (typeof window !== 'undefined') {
-  console.log('[Customer API v4] Final URL:', API_BASE_URL);
-  console.log('[Customer API v4] Current hostname:', window.location.hostname);
-  console.log('[Customer API v4] Full URL:', window.location.href);
+  console.log('========================================');
+  console.log('[Customer API v5] DEBUGGING INFO:');
+  console.log('  - Final URL:', API_BASE_URL);
+  console.log('  - Hostname:', window.location.hostname);
+  console.log('  - Full URL:', window.location.href);
+  console.log('  - Expected:', VERCEL_API_URL);
+  console.log('========================================');
 }
 
 export interface Customer {
@@ -71,15 +78,17 @@ export async function getCustomers(
   });
 
   const url = `${API_BASE_URL}/customers?${params}`;
-  console.log('[Customer API v4] getCustomers - Fetching URL:', url);
+  console.log('[Customer API v5] getCustomers - Fetching URL:', url);
+  console.log('[Customer API v5] CRITICAL: Is this Vercel URL?', url.includes('vercel.app'));
 
   const response = await fetch(url);
-  console.log('[Customer API v4] getCustomers - Response status:', response.status);
-  console.log('[Customer API v4] getCustomers - Response headers:', response.headers.get('content-type'));
+  console.log('[Customer API v5] Response status:', response.status);
+  console.log('[Customer API v5] Response content-type:', response.headers.get('content-type'));
 
   if (!response.ok) {
     const text = await response.text();
-    console.error('[Customer API v4] getCustomers - Error response:', text.substring(0, 200));
+    console.error('[Customer API v5] ERROR! Got HTML instead of JSON:');
+    console.error('[Customer API v5] Response preview:', text.substring(0, 500));
     throw new Error('고객 목록을 불러오는데 실패했습니다');
   }
 
