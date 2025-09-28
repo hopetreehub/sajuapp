@@ -1,15 +1,16 @@
 // 고객 관리 API 서비스
 
-// 프로덕션 URL 직접 설정 (localhost 문제 해결)
+// 프로덕션 URL 직접 설정 (localhost 문제 해결) - v3
 const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost'
   ? '/api/calendar'  // 로컬 개발 환경
   : 'https://calendar-j3vjlsr7q-johns-projects-bf5e60f3.vercel.app/api/calendar';  // Vercel 프로덕션 환경
 
-// 디버깅용 로그 (v2)
+// 디버깅용 로그 (v3)
 if (typeof window !== 'undefined') {
-  console.log('[Customer API v2] Using URL:', API_BASE_URL);
-  console.log('[Customer API v2] Current hostname:', window.location.hostname);
-  console.log('[Customer API v2] Is localhost?:', window.location.hostname === 'localhost');
+  console.log('[Customer API v3] Using URL:', API_BASE_URL);
+  console.log('[Customer API v3] Current hostname:', window.location.hostname);
+  console.log('[Customer API v3] Is localhost?:', window.location.hostname === 'localhost');
+  console.log('[Customer API v3] Full URL:', window.location.href);
 }
 
 export interface Customer {
@@ -43,8 +44,8 @@ export interface CustomerResponse {
 
 // 고객 목록 조회
 export async function getCustomers(
-  page: number = 1, 
-  limit: number = 20, 
+  page: number = 1,
+  limit: number = 20,
   search: string = '',
 ): Promise<CustomerListResponse> {
   const params = new URLSearchParams({
@@ -52,12 +53,20 @@ export async function getCustomers(
     limit: limit.toString(),
     search,
   });
-  
-  const response = await fetch(`${API_BASE_URL}/customers?${params}`);
+
+  const url = `${API_BASE_URL}/customers?${params}`;
+  console.log('[Customer API v3] getCustomers - Fetching URL:', url);
+
+  const response = await fetch(url);
+  console.log('[Customer API v3] getCustomers - Response status:', response.status);
+  console.log('[Customer API v3] getCustomers - Response headers:', response.headers.get('content-type'));
+
   if (!response.ok) {
+    const text = await response.text();
+    console.error('[Customer API v3] getCustomers - Error response:', text.substring(0, 200));
     throw new Error('고객 목록을 불러오는데 실패했습니다');
   }
-  
+
   return response.json();
 }
 
