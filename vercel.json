@@ -2,15 +2,5 @@
   "version": 2,
   "buildCommand": "cd packages/web && npm install && npm run build",
   "outputDirectory": "packages/web/dist",
-  "framework": null,
-  "rewrites": [
-    {
-      "source": "/api/calendar/(.*)",
-      "destination": "/api/calendar"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/$1"
-    }
-  ]
+  "framework": null
 }
