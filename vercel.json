@@ -2,32 +2,35 @@
   "version": 2,
   "buildCommand": "cd packages/web && npm install && npm run build",
   "outputDirectory": "packages/web/dist",
-  "framework": null,
+  "framework": "vite",
   "functions": {
     "api/**/*.js": {
       "maxDuration": 30
     }
   },
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/calendar/(.*)",
-      "destination": "/api/calendar"
+      "src": "/api/calendar/(.*)",
+      "dest": "/api/calendar"
     },
     {
-      "source": "/api/customers/(.*)",
-      "destination": "/api/customers"
+      "src": "/api/customers/(.*)",
+      "dest": "/api/customers"
     },
     {
-      "source": "/api/saju/(.*)",
-      "destination": "/api/saju"
+      "src": "/api/saju/(.*)",
+      "dest": "/api/saju"
     },
     {
-      "source": "/api/diaries/(.*)",
-      "destination": "/api/diaries"
+      "src": "/api/diaries/(.*)",
+      "dest": "/api/diaries"
     },
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
