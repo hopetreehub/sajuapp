@@ -75,19 +75,24 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
           }
         } else {
           // 절기가 아닌 날짜만 음력 명절 확인
-          const lunar = solarToLunar(day);
-          let lunarSpecialDay = null;
+          try {
+            const lunar = solarToLunar(day);
+            let lunarSpecialDay = null;
 
-          if (lunar.month === 1 && lunar.day === 1) lunarSpecialDay = '설날';
-          else if (lunar.month === 1 && lunar.day === 15) lunarSpecialDay = '정월대보름';
-          else if (lunar.month === 5 && lunar.day === 5) lunarSpecialDay = '단오';
-          else if (lunar.month === 7 && lunar.day === 7) lunarSpecialDay = '칠석';
-          else if (lunar.month === 7 && lunar.day === 15) lunarSpecialDay = '백중';
-          else if (lunar.month === 8 && lunar.day === 15) lunarSpecialDay = '추석';
-          else if (lunar.month === 9 && lunar.day === 9) lunarSpecialDay = '중양절';
+            if (lunar.month === 1 && lunar.day === 1) lunarSpecialDay = '설날';
+            else if (lunar.month === 1 && lunar.day === 15) lunarSpecialDay = '정월대보름';
+            else if (lunar.month === 5 && lunar.day === 5) lunarSpecialDay = '단오';
+            else if (lunar.month === 7 && lunar.day === 7) lunarSpecialDay = '칠석';
+            else if (lunar.month === 7 && lunar.day === 15) lunarSpecialDay = '백중';
+            else if (lunar.month === 8 && lunar.day === 15) lunarSpecialDay = '추석';
+            else if (lunar.month === 9 && lunar.day === 9) lunarSpecialDay = '중양절';
 
-          if (lunarSpecialDay) {
-            map.set(dateKey, lunarSpecialDay);
+            if (lunarSpecialDay) {
+              map.set(dateKey, lunarSpecialDay);
+            }
+          } catch (error) {
+            // 음력 변환 에러 발생 시 무시하고 계속 진행
+            console.warn('Lunar conversion error for date:', day, error);
           }
         }
       }
