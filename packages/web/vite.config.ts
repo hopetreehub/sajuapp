@@ -71,6 +71,10 @@ export default defineConfig(({ mode }) => {
             'calendar-vendor': ['date-fns', 'date-fns-tz'],
             'ui-vendor': ['@dnd-kit/core', '@dnd-kit/sortable'],
           },
+          // 강제로 새로운 해시 생성 (캐시 무효화)
+          entryFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
+          chunkFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
+          assetFileNames: `assets/[name]-[hash]-${Date.now()}.[ext]`,
         },
       },
     },
