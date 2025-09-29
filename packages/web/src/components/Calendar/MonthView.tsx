@@ -19,7 +19,7 @@ import {
   getDay,
 } from 'date-fns';
 import { CalendarEvent } from '@/services/api';
-import { formatLunarDate, getSpecialLunarDay } from '@/utils/lunarCalendar';
+import { formatLunarDate, getSpecialLunarDay, getSolarTerm, solarToLunar } from '@/utils/lunarCalendar';
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -41,9 +41,9 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   
   // 일기 데이터 가져오기
-  const { diaryDates } = useDiaryData({ 
-    viewMode: 'month', 
-    currentDate, 
+  const { diaryDates } = useDiaryData({
+    viewMode: 'month',
+    currentDate,
   });
 
   const monthDays = useMemo(() => {
@@ -51,9 +51,50 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
     const end = endOfMonth(currentDate);
     const startWeek = startOfWeek(start, { weekStartsOn: 0 });
     const endWeek = endOfWeek(end, { weekStartsOn: 0 });
-    
+
     return eachDayOfInterval({ start: startWeek, end: endWeek });
   }, [currentDate]);
+
+  // 특별한 날짜들을 미리 계산하여 메모이제이션 (절기와 음력 명절 분리)
+  const specialDaysMap = useMemo(() => {
+    const map = new Map<string, string>();
+    const processedSolarTerms = new Set<string>(); // 이미 처리된 절기
+
+    // 현재 월의 날짜만 처리
+    monthDays.forEach(day => {
+      if (isSameMonth(day, currentDate)) {
+        const dateKey = format(day, 'yyyy-MM-dd');
+
+        // 절기는 정확한 날짜에만 표시
+        const solarTerm = getSolarTerm(day);
+        if (solarTerm) {
+          // 같은 절기가 여러 번 나타나지 않도록 체크
+          if (!processedSolarTerms.has(solarTerm)) {
+            processedSolarTerms.add(solarTerm);
+            map.set(dateKey, solarTerm);
+          }
+        } else {
+          // 절기가 아닌 날짜만 음력 명절 확인
+          const lunar = solarToLunar(day);
+          let lunarSpecialDay = null;
+
+          if (lunar.month === 1 && lunar.day === 1) lunarSpecialDay = '설날';
+          else if (lunar.month === 1 && lunar.day === 15) lunarSpecialDay = '정월대보름';
+          else if (lunar.month === 5 && lunar.day === 5) lunarSpecialDay = '단오';
+          else if (lunar.month === 7 && lunar.day === 7) lunarSpecialDay = '칠석';
+          else if (lunar.month === 7 && lunar.day === 15) lunarSpecialDay = '백중';
+          else if (lunar.month === 8 && lunar.day === 15) lunarSpecialDay = '추석';
+          else if (lunar.month === 9 && lunar.day === 9) lunarSpecialDay = '중양절';
+
+          if (lunarSpecialDay) {
+            map.set(dateKey, lunarSpecialDay);
+          }
+        }
+      }
+    });
+
+    return map;
+  }, [monthDays, currentDate]);
 
   const getEventsForDay = (date: Date): CalendarEvent[] => {
     return events.filter(event => {
@@ -140,7 +181,8 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
           const dayTodos = todosForMonth.get(dateKey) || [];
           const incompleteTodos = dayTodos.filter(todo => !todo.completed);
           const completedTodos = dayTodos.filter(todo => todo.completed);
-          
+          const specialDay = specialDaysMap.get(dateKey) || null; // 미리 계산된 맵에서 가져오기
+
           return (
             <div
               key={day.toISOString()}
@@ -186,12 +228,12 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                   {/* 음력 날짜 표시 */}
                   <div className="flex flex-col">
                     <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
-                      음 {formatLunarDate(day, false)}
+                      {formatLunarDate(day, false)}
                     </span>
                     {/* 특별한 음력 날짜 표시 (절기, 명절) */}
-                    {getSpecialLunarDay(day) && (
+                    {specialDay && (
                       <span className="text-[9px] text-hanbok-red font-bold bg-hanbok-red/10 px-1 py-0.5 rounded mt-0.5 truncate">
-                        {getSpecialLunarDay(day)}
+                        {specialDay}
                       </span>
                     )}
                   </div>
