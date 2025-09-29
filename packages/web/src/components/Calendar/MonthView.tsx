@@ -19,7 +19,9 @@ import {
   getDay,
 } from 'date-fns';
 import { CalendarEvent } from '@/services/api';
-import { formatLunarDate, getSpecialLunarDay, getSolarTerm, solarToLunar } from '@/utils/lunarCalendar';
+// 음력 변환 기능 임시 비활성화 (Vercel 배포 문제 해결을 위해)
+// import { formatLunarDate, getSpecialLunarDay, getSolarTerm, solarToLunar } from '@/utils/lunarCalendar';
+import { getSolarTerm } from '@/utils/lunarCalendar';
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -74,7 +76,9 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
             map.set(dateKey, solarTerm);
           }
         } else {
-          // 절기가 아닌 날짜만 음력 명절 확인
+          // 음력 변환 기능 임시 비활성화 (Vercel 배포 문제 해결을 위해)
+          // TODO: korean-lunar-calendar 라이브러리 문제 해결 후 재활성화
+          /*
           try {
             const lunar = solarToLunar(day);
             let lunarSpecialDay = null;
@@ -91,9 +95,9 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
               map.set(dateKey, lunarSpecialDay);
             }
           } catch (error) {
-            // 음력 변환 에러 발생 시 무시하고 계속 진행
             console.warn('Lunar conversion error for date:', day, error);
           }
+          */
         }
       }
     });
