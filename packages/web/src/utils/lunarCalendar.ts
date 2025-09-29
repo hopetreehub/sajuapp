@@ -129,8 +129,8 @@ export const getSolarTerm = (date: Date): string | null => {
   const day = date.getDate();
 
   for (const [term, termDate] of Object.entries(SOLAR_TERMS)) {
-    // ±2일 정도의 오차 허용 (24절기는 매년 1-2일씩 차이날 수 있음)
-    if (termDate.month === month && Math.abs(termDate.day - day) <= 2) {
+    // 정확히 일치하는 날짜만 반환 (중복 표시 방지)
+    if (termDate.month === month && termDate.day === day) {
       return term;
     }
   }

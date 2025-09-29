@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useCallback, ReactNode } fr
 import { ViewMode, UserSettings } from '@/types/calendar';
 import { Todo } from '@/types/todo';
 import { CalendarEvent } from '@/services/api';
-import { format } from 'date-fns';
 
 // Todo 타입을 다시 export 하여 다른 컴포넌트에서 사용할 수 있도록 함
 export type { Todo };
@@ -53,104 +52,7 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
   const [viewMode, setViewMode] = useState<ViewMode>('month');
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
-  const [todos, setTodos] = useState<Todo[]>([
-    { 
-      id: '1', 
-      text: '보고서 작성', 
-      completed: false, 
-      priority: 'high', 
-      date: format(new Date(), 'yyyy-MM-dd'),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    { 
-      id: '2', 
-      text: '장보기', 
-      completed: true, 
-      priority: 'medium', 
-      date: format(new Date(), 'yyyy-MM-dd'),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    { 
-      id: '3', 
-      text: '운동하기', 
-      completed: false, 
-      priority: 'low', 
-      date: format(new Date(), 'yyyy-MM-dd'),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: '4',
-      text: '팀 미팅 준비',
-      completed: false,
-      priority: 'high',
-      date: format(new Date(), 'yyyy-MM-dd'),
-      hasTime: true,
-      startTime: '14:00',
-      endTime: '15:00',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: '5',
-      text: '이메일 확인',
-      completed: true,
-      priority: 'medium',
-      date: format(new Date(), 'yyyy-MM-dd'),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: '6',
-      text: '코드 리뷰',
-      completed: false,
-      priority: 'high',
-      date: format(new Date(new Date().setDate(new Date().getDate() + 1)), 'yyyy-MM-dd'),
-      hasTime: true,
-      startTime: '10:30',
-      endTime: '11:30',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: '7',
-      text: '프로젝트 계획서 작성',
-      completed: false,
-      priority: 'high',
-      date: format(new Date(new Date().setDate(new Date().getDate() + 2)), 'yyyy-MM-dd'),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: '8',
-      text: '책 읽기',
-      completed: false,
-      priority: 'low',
-      date: format(new Date(new Date().setDate(new Date().getDate() + 3)), 'yyyy-MM-dd'),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: '9',
-      text: '병원 예약',
-      completed: false,
-      priority: 'medium',
-      date: format(new Date(new Date().setDate(new Date().getDate() + 5)), 'yyyy-MM-dd'),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-    {
-      id: '10',
-      text: '친구 생일 선물 준비',
-      completed: false,
-      priority: 'medium',
-      date: format(new Date(new Date().setDate(new Date().getDate() + 7)), 'yyyy-MM-dd'),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ]);
+  const [todos, setTodos] = useState<Todo[]>([]);
   
   const [settings] = useState<UserSettings>({
     timezone: 'Asia/Seoul',

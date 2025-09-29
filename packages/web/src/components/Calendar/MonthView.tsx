@@ -5,10 +5,11 @@ import DiaryBookModal from '@/components/DiaryBookModal';
 import EditTodoModal from '@/components/EditTodoModal';
 import { Todo } from '@/contexts/CalendarContext';
 import { TraditionalPattern } from '@/components/WuxingElements';
-import { 
-  startOfMonth, 
-  endOfMonth, 
-  startOfWeek, 
+import DailyFortuneIndicator from './DailyFortuneIndicator';
+import {
+  startOfMonth,
+  endOfMonth,
+  startOfWeek,
   endOfWeek,
   eachDayOfInterval,
   format,
@@ -286,6 +287,11 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                   </div>
                 )}
               </div>
+
+              {/* 일간 운세 표시 */}
+              {isCurrentMonth && (
+                <DailyFortuneIndicator date={day} compact={true} />
+              )}
 
               {/* 할일 미리보기 툴팁 */}
               {hoveredDate && isSameDay(hoveredDate, day) && dayTodos.length > 0 && (

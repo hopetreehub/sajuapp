@@ -6,6 +6,7 @@ import DiaryBookModal from '@/components/DiaryBookModal';
 import EditTodoModal from '@/components/EditTodoModal';
 import { Todo } from '@/contexts/CalendarContext';
 import { ITEM_COLORS } from '@/types/todo';
+import DailyFortuneIndicator from './DailyFortuneIndicator';
 import { 
   startOfWeek, 
   endOfWeek,
