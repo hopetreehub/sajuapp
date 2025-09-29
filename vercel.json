@@ -2,14 +2,10 @@
   "buildCommand": "cd packages/web && npm install && npm run build",
   "outputDirectory": "packages/web/dist",
   "framework": "vite",
-  "routes": [
+  "rewrites": [
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/[^.]+",
-      "dest": "/",
-      "status": 200
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
