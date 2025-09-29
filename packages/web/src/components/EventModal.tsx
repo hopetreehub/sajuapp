@@ -116,7 +116,7 @@ const EventModal: React.FC<EventModalProps> = ({
         location: formData.location,
         type: formData.type,
         color: formData.color,
-        reminder_minutes: formData.reminder_minutes === undefined ? null : formData.reminder_minutes,
+        reminder_minutes: formData.reminder_minutes === undefined ? undefined : formData.reminder_minutes,
       };
       
       console.log('Sending API data:', apiData);

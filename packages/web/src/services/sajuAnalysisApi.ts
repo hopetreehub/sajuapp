@@ -5,10 +5,10 @@
 
 import { SajuRadarCategory, SajuRadarSubcategory } from '@/types/sajuRadar';
 
-// 프로덕션 URL 직접 설정 (localhost 문제 해결)
-const SAJU_ANALYSIS_API_BASE = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-  ? '/api/saju'  // 로컬 개발 환경
-  : 'https://sajuapp-saju.up.railway.app/api/saju';  // 프로덕션 환경 (Railway 또는 대체 URL)
+// API URL 설정 - Vercel 풀스택
+const SAJU_ANALYSIS_API_BASE = import.meta.env.DEV
+  ? '/api/saju'  // 로컬 개발 환경 (Vite 프록시 사용)
+  : '/api/saju';  // 프로덕션 환경 (Vercel 풀스택)
 
 // 디버깅용 로그
 if (typeof window !== 'undefined') {

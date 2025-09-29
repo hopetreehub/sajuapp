@@ -103,6 +103,7 @@ export interface DailyFortune {
   wealthLuck: number; // 재물운 (0-100)
   healthLuck: number; // 건강운 (0-100)
   careerLuck: number; // 직업운 (0-100)
+  studyLuck: number; // 학업운 (0-100)
   message: string; // 오늘의 메시지
   luckyColor?: string; // 행운의 색상
   luckyNumber?: number; // 행운의 숫자

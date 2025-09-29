@@ -13,7 +13,14 @@ export default defineConfig(({ mode }) => {
       host: true,
       strictPort: false, // 임시로 false로 변경하여 테스트
       proxy: {
-        // 캘린더 서비스 (고객 관리 포함)
+        // 고객 관리 서비스
+        '/api/customers': {
+          target: 'http://localhost:4002',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/api\/customers/, '/api'),
+        },
+        // 캘린더 서비스
         '/api/calendar': {
           target: 'http://localhost:4012',
           changeOrigin: true,

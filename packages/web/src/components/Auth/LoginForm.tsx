@@ -108,19 +108,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
     }
   };
 
-  // 데모 계정 로그인
-  const handleDemoLogin = async () => {
-    setFormData({
-      email: 'demo@sajuapp.com',
-      password: 'demo1234',
-      rememberMe: false,
-    });
-    
-    // 잠시 후 자동 로그인
-    setTimeout(() => {
-      handleSubmit(new Event('submit') as any);
-    }, 500);
-  };
 
   return (
     <div className={`max-w-md mx-auto ${className}`}>
@@ -231,29 +218,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
             ) : (
               '로그인'
             )}
-          </button>
-
-          {/* 구분선 */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300 dark:border-gray-600" />
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white dark:bg-gray-800 text-gray-500">또는</span>
-            </div>
-          </div>
-
-          {/* 데모 계정 로그인 버튼 */}
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            disabled={isLoading}
-            className="w-full py-3 px-6 border-2 border-gray-300 dark:border-gray-600 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 disabled:opacity-50"
-          >
-            <div className="flex items-center justify-center space-x-2">
-              <span>🎯</span>
-              <span>데모 계정으로 체험하기</span>
-            </div>
           </button>
 
           {/* 회원가입 링크 */}

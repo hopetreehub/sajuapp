@@ -1,4 +1,4 @@
-export type ViewMode = 'year' | 'month' | 'week' | 'day'
+export type ViewMode = 'year' | 'month' | 'week' | 'day' | 'dayEnhanced'
 
 export interface CalendarEvent {
   id?: string

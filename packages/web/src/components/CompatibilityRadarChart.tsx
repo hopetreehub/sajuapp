@@ -16,8 +16,8 @@ interface CompatibilityRadarChartProps {
 export const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = ({ data }) => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
-  const { theme } = useContext(ThemeContext);
-  const isDark = theme === 'dark';
+  const themeContext = useContext(ThemeContext);
+  const isDark = themeContext?.theme === 'dark';
 
   useEffect(() => {
     if (!chartRef.current || !data) return;
@@ -134,7 +134,7 @@ export const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = (
         chartInstance.current.destroy();
       }
     };
-  }, [data, isDark, theme]);
+  }, [data, isDark, themeContext]);
 
   return (
     <div className="w-full h-[400px] p-4">

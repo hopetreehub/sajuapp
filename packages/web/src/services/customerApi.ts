@@ -1,10 +1,13 @@
 // 고객 관리 API 서비스 - Vercel 풀스택 버전
 
-// API Base URL - 동일 도메인 사용 (Vercel에서는 /api로 라우팅)
+// API Base URL 설정
 function getApiBaseUrl(): string {
-  // 모든 환경에서 동일하게 /api/calendar 사용
-  // Vercel이 자동으로 serverless function으로 라우팅
-  return '/api/calendar';
+  // 개발 환경에서는 Customer 서비스 직접 호출
+  if (import.meta.env.DEV) {
+    return 'http://localhost:4002/api';
+  }
+  // 프로덕션 환경에서는 /api/customers 사용
+  return '/api/customers';
 }
 
 const API_BASE_URL = getApiBaseUrl();
