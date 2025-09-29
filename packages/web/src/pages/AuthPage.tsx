@@ -15,7 +15,8 @@ const AuthPage: React.FC = () => {
 
   // URL 파라미터에서 모드 읽기 (기본값: login)
   const mode = searchParams.get('mode') || 'login';
-  const [currentMode, setCurrentMode] = useState<'login' | 'signup'>(mode as 'login' | 'signup');
+  const validMode = mode === 'signup' || mode === 'login' ? mode : 'login';
+  const [currentMode, setCurrentMode] = useState<'login' | 'signup'>(validMode);
 
   // 이미 로그인된 사용자 처리
   useEffect(() => {
@@ -24,26 +25,15 @@ const AuthPage: React.FC = () => {
     }
   }, [isAuthenticated, user, navigate]);
 
-  // 모드 변경 시 URL 업데이트
-  useEffect(() => {
-    setSearchParams({ mode: currentMode });
-  }, [currentMode, setSearchParams]);
-
-  // URL 파라미터 변경 감지
-  useEffect(() => {
-    const urlMode = searchParams.get('mode') || 'login';
-    if (urlMode !== currentMode && (urlMode === 'login' || urlMode === 'signup')) {
-      setCurrentMode(urlMode as 'login' | 'signup');
-    }
-  }, [searchParams, currentMode]);
-
-  // 모드 전환 핸들러
+  // 모드 전환 핸들러 - URL도 함께 업데이트
   const switchToSignUp = () => {
     setCurrentMode('signup');
+    setSearchParams({ mode: 'signup' }, { replace: true });
   };
 
   const switchToLogin = () => {
     setCurrentMode('login');
+    setSearchParams({ mode: 'login' }, { replace: true });
   };
 
   // 인증 성공 핸들러
