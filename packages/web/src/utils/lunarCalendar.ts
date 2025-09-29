@@ -15,23 +15,28 @@ export interface LunarDate {
 export const solarToLunar = (date: Date): LunarDate => {
   try {
     const calendar = new KoreanLunarCalendar();
-    
+
     calendar.setSolarDate(
       date.getFullYear(),
       date.getMonth() + 1, // JavaScript months are 0-indexed
       date.getDate(),
     );
-    
-    // getLunarYear() 메서드로 음력 정보 가져오기
-    const lunarData = calendar.getLunarYear() as any;
+
+    // 각각의 메서드를 개별 호출
+    const lunarYear = calendar.getLunarYear();
+    const lunarMonth = calendar.getLunarMonth();
+    const lunarDay = calendar.getLunarDay();
+    const isLeapMonth = calendar.getLunarLeapMonth();
+    const zodiac = calendar.getZodiac();
+    const chineseYear = calendar.getChineseYear();
 
     return {
-      year: (typeof lunarData === 'object' && lunarData?.year) || date.getFullYear(),
-      month: (typeof lunarData === 'object' && lunarData?.month) || date.getMonth() + 1,
-      day: (typeof lunarData === 'object' && lunarData?.day) || date.getDate(),
-      isLeapMonth: (typeof lunarData === 'object' && lunarData?.leapMonth) || false,
-      zodiac: (typeof lunarData === 'object' && lunarData?.zodiac) || '',
-      chineseYear: (typeof lunarData === 'object' && lunarData?.GanJi?.year) || '',
+      year: lunarYear || date.getFullYear(),
+      month: lunarMonth || date.getMonth() + 1,
+      day: lunarDay || date.getDate(),
+      isLeapMonth: isLeapMonth || false,
+      zodiac: zodiac || '',
+      chineseYear: chineseYear || '',
     };
   } catch (error) {
     console.error('Error converting solar to lunar:', error);
@@ -53,16 +58,18 @@ export const solarToLunar = (date: Date): LunarDate => {
 export const lunarToSolar = (year: number, month: number, day: number, isLeapMonth: boolean = false): Date => {
   try {
     const calendar = new KoreanLunarCalendar();
-    
+
     calendar.setLunarDate(year, month, day, isLeapMonth);
-    
-    // getSolarYear() 메서드로 양력 정보 가져오기
-    const solarData = calendar.getSolarYear() as any;
+
+    // 각각의 메서드를 개별 호출
+    const solarYear = calendar.getSolarYear();
+    const solarMonth = calendar.getSolarMonth();
+    const solarDay = calendar.getSolarDay();
 
     return new Date(
-      (typeof solarData === 'object' && solarData?.year) || year,
-      ((typeof solarData === 'object' && solarData?.month) || month) - 1, // Convert to 0-indexed
-      (typeof solarData === 'object' && solarData?.day) || day,
+      solarYear || year,
+      (solarMonth || month) - 1, // Convert to 0-indexed
+      solarDay || day,
     );
   } catch (error) {
     console.error('Error converting lunar to solar:', error);
