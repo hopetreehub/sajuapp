@@ -1,23 +1,9 @@
 // 고객 관리 API 서비스 - Vercel 통합 버전
 
-// API Base URL - Vercel에서는 같은 도메인 사용
+// API Base URL - Vercel Functions 사용
 function getApiBaseUrl(): string {
-  // Vercel 배포 시 같은 도메인의 /api 경로 사용
-  if (typeof window === 'undefined') {
-    return '/api/calendar';
-  }
-
-  const hostname = window.location.hostname;
-
-  // 로컬 개발 환경
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    console.log('[Customer API] 로컬 개발 모드');
-    return '/api/calendar';
-  }
-
-  // Vercel 배포 환경 - 같은 도메인 사용
-  console.log('[Customer API] Vercel 배포 모드');
-  return '/api/calendar';
+  // Vercel Functions 경로 사용
+  return '/api';
 }
 
 const API_BASE_URL = getApiBaseUrl();
