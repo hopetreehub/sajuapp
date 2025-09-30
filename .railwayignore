@@ -1,0 +1,15 @@
+# Railway 배포 시 제외할 파일들
+packages/backend/
+packages/web/node_modules/
+packages/web/dist/
+*.log
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+node_modules/
+dist/
+build/
+coverage/
+.nyc_output/
+.cache/
