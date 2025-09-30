@@ -4,9 +4,7 @@
   "description": "Fortune Compass Calendar - Google Calendar-like app with diary features",
   "private": true,
   "workspaces": [
-    "packages/*",
-    "packages/backend/services/*",
-    "packages/backend/api-gateway"
+    "packages/web"
   ],
   "scripts": {
     "dev": "npm run dev:web",

@@ -2,11 +2,10 @@
 nixPkgs = ["nodejs_18"]
 
 [phases.install]
-cmds = ["npm ci --workspace=packages/web"]
+cmds = ["npm install --workspace=packages/web --no-optional"]
 
 [phases.build]
-dependsOn = ["install"]
-cmds = ["npm run build:web"]
+cmds = ["npm run build"]
 
 [start]
-cmd = "npm run start --workspace=packages/web"
+cmd = "npm start"
