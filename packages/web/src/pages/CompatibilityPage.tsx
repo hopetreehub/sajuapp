@@ -11,6 +11,7 @@ import {
   calculateAccurateFutureScore,
   generateDetailedAdvice,
 } from '../utils/compatibilityCalculator';
+import * as SajuCalculator from '../utils/sajuCalculator';
 import { analyzeRelationship, RelationshipAnalysis } from '../utils/detailedCompatibilityCalculator';
 import { analyzePractical, PracticalAnalysis } from '../utils/practicalCompatibilityCalculator';
 import { analyzeDepth, analyzeSpecial, DepthAnalysis, SpecialAnalysis } from '../utils/depthSpecialCompatibilityCalculator';
@@ -38,43 +39,79 @@ export const CompatibilityPage: React.FC = () => {
   const [result, setResult] = useState<CompatibilityResult | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
 
-  const parseAccurateSaju = (sajuData: string | undefined) => {
-    if (!sajuData) {
-      console.error('사주 데이터가 없습니다');
-      return null;
-    }
-    
+  // 고객 선택 시 사주 데이터 계산
+  const calculateSajuForCustomer = (customer: Customer) => {
+    if (!customer.birth_date || !customer.birth_time) return null;
+
     try {
-      const parsed = JSON.parse(sajuData);
-      
-      // 필수 필드 검증
-      const requiredFields = ['year', 'month', 'day', 'time'];
-      for (const field of requiredFields) {
-        if (!parsed[field] || !parsed[field].gan || !parsed[field].ji) {
-          console.error(`사주 데이터가 불완전합니다 - ${field} 필드 누락`);
-          return null;
-        }
-      }
-      
-      // 오행 균형 데이터 확인
-      if (!parsed.ohHaengBalance) {
-        console.warn('오행 균형 데이터가 없습니다. 일부 궁합 계산이 제한됩니다.');
-      }
-      
-      console.log('사주 데이터 파싱 성공:', {
-        name: parsed.fullSaju,
-        year: `${parsed.year.gan}${parsed.year.ji}`,
-        month: `${parsed.month.gan}${parsed.month.ji}`,
-        day: `${parsed.day.gan}${parsed.day.ji}`,
-        time: `${parsed.time.gan}${parsed.time.ji}`,
-        ohHaeng: parsed.ohHaengBalance,
-      });
-      
-      return parsed;
+      const [year, month, day] = customer.birth_date.split('-').map(Number);
+      const [hour, minute] = customer.birth_time.split(':').map(Number);
+
+      const sajuInfo = {
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        lunarSolar: customer.lunar_solar,
+        gender: customer.gender
+      };
+
+      const fourPillars = SajuCalculator.calculateFourPillars(sajuInfo);
+
+      // 오행 균형 계산
+      const ohHaengBalance = SajuCalculator.calculateOhHaengBalance(fourPillars);
+
+      return {
+        year: fourPillars.year,
+        month: fourPillars.month,
+        day: fourPillars.day,
+        time: fourPillars.time,
+        fullSaju: SajuCalculator.formatFourPillars(fourPillars),
+        ohHaengBalance
+      };
     } catch (error) {
-      console.error('사주 데이터 파싱 오류:', error);
+      console.error('사주 계산 오류:', error);
       return null;
     }
+  };
+
+  const parseAccurateSaju = (customer: Customer | null) => {
+    if (!customer) {
+      console.error('고객 데이터가 없습니다');
+      return null;
+    }
+
+    // 먼저 customer.saju_data가 있는지 확인
+    if (customer.saju_data) {
+      try {
+        const parsed = typeof customer.saju_data === 'string'
+          ? JSON.parse(customer.saju_data)
+          : customer.saju_data;
+
+        // 필수 필드 검증
+        const requiredFields = ['year', 'month', 'day', 'time'];
+        let isValid = true;
+        for (const field of requiredFields) {
+          if (!parsed[field] || !parsed[field].gan || !parsed[field].ji) {
+            console.error(`사주 데이터가 불완전합니다 - ${field} 필드 누락`);
+            isValid = false;
+            break;
+          }
+        }
+
+        if (isValid) {
+          console.log('기존 사주 데이터 사용:', parsed);
+          return parsed;
+        }
+      } catch (error) {
+        console.error('사주 데이터 파싱 오류:', error);
+      }
+    }
+
+    // saju_data가 없거나 불완전하면 직접 계산
+    console.log('사주 데이터 재계산:', customer.name);
+    return calculateSajuForCustomer(customer);
   };
 
   const calculateCompatibility = () => {
@@ -86,9 +123,9 @@ export const CompatibilityPage: React.FC = () => {
 
     setIsCalculating(true);
     
-    // 정확한 사주 데이터 파싱
-    const saju1 = parseAccurateSaju(person1.saju_data);
-    const saju2 = parseAccurateSaju(person2.saju_data);
+    // 정확한 사주 데이터 파싱 (없으면 계산)
+    const saju1 = parseAccurateSaju(person1);
+    const saju2 = parseAccurateSaju(person2);
 
     if (!saju1 || !saju2) {
       console.error('사주 데이터 파싱 실패 - 궁합 계산 중단');
