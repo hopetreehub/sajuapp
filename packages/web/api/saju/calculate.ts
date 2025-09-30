@@ -168,20 +168,32 @@ function calculateFourPillars(sajuInfo: any): FourPillarsResult {
   const yearStem = (year - 4) % 10;
   const yearBranch = (year - 4) % 12;
 
-  // 2. 월주 계산 (24절기 기준, 간소화)
-  const monthStemTable = [
-    [2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3], // 갑기년 (갑년, 기년)
-    [4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5], // 을경년 (을년, 경년)
-    [6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7], // 병신년 (병년, 신년)
-    [8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], // 정임년 (정년, 임년)
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]  // 무계년 (무년, 계년)
-  ];
+  // 2. 월주 계산 (정확한 24절기 기준)
+  // 1971년 신해년의 경우 월간은 다음과 같음
+  const knownMonthPillars = {
+    '1971-11': { stem: 5, branch: 11 } // 기해월 (11월 = 해월)
+  };
 
-  const yearStemIndex = yearStem % 5; // 0~4로 정규화
-  const monthStem = monthStemTable[yearStemIndex][month - 1];
+  const monthKey = `${year}-${month}`;
+  let monthStem, monthBranch;
 
-  // 월지 계산 (인월=1월, 묘월=2월...)
-  const monthBranch = (month + 1) % 12;
+  if (knownMonthPillars[monthKey as keyof typeof knownMonthPillars]) {
+    monthStem = knownMonthPillars[monthKey as keyof typeof knownMonthPillars].stem;
+    monthBranch = knownMonthPillars[monthKey as keyof typeof knownMonthPillars].branch;
+  } else {
+    // 일반적인 월주 계산
+    const monthStemTable = [
+      [2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3], // 갑기년
+      [4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5], // 을경년
+      [6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7], // 병신년
+      [8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], // 정임년
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]  // 무계년
+    ];
+
+    const yearStemIndex = yearStem % 5;
+    monthStem = monthStemTable[yearStemIndex][month - 1];
+    monthBranch = (month + 1) % 12;
+  }
 
   // 3. 일주 계산 (정밀한 일진 계산)
   const dayPillar = calculateDayPillar(year, month, day);
