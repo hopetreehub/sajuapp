@@ -16,6 +16,7 @@ import { analyzeRelationship, RelationshipAnalysis } from '../utils/detailedComp
 import { analyzePractical, PracticalAnalysis } from '../utils/practicalCompatibilityCalculator';
 import { analyzeDepth, analyzeSpecial, DepthAnalysis, SpecialAnalysis } from '../utils/depthSpecialCompatibilityCalculator';
 import { EnhancedCompatibilityChart } from '../components/compatibility/EnhancedCompatibilityChart';
+import { interpretationService } from '../services/api';
 
 interface CompatibilityResult {
   totalScore: number;
@@ -39,44 +40,78 @@ export const CompatibilityPage: React.FC = () => {
   const [result, setResult] = useState<CompatibilityResult | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
 
-  // 고객 선택 시 사주 데이터 계산
-  const calculateSajuForCustomer = (customer: Customer) => {
+  // 고객 선택 시 정확한 사주 데이터 계산 (API 사용)
+  const calculateSajuForCustomer = async (customer: Customer) => {
     if (!customer.birth_date || !customer.birth_time) return null;
 
     try {
-      const [year, month, day] = customer.birth_date.split('-').map(Number);
-      const [hour, minute] = customer.birth_time.split(':').map(Number);
+      console.log(`정확한 사주 계산 시작: ${customer.name}`);
 
-      const sajuInfo = {
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        lunarSolar: customer.lunar_solar,
-        gender: customer.gender
+      const sajuData = {
+        birth_date: customer.birth_date,
+        birth_time: customer.birth_time,
+        lunar_solar: customer.lunar_solar
       };
 
-      const fourPillars = SajuCalculator.calculateFourPillars(sajuInfo);
+      // 정확한 사주 계산 API 호출
+      const result = await interpretationService.getComprehensiveInterpretation(sajuData);
 
-      // 오행 균형 계산
-      const ohHaengBalance = SajuCalculator.calculateOhHaengBalance(fourPillars);
+      if (!result || !result.basic) {
+        throw new Error('사주 계산 API 호출 실패');
+      }
+
+      const { basic } = result;
+
+      // API 응답을 호환 가능한 형태로 변환
+      const sajuString = basic.sajuString || '계산 실패';
+      const [yearPart, monthPart, dayPart, timePart] = sajuString.split(' ');
 
       return {
-        year: fourPillars.year,
-        month: fourPillars.month,
-        day: fourPillars.day,
-        time: fourPillars.time,
-        fullSaju: SajuCalculator.formatFourPillars(fourPillars),
-        ohHaengBalance
+        year: { gan: yearPart[0], ji: yearPart[1] },
+        month: { gan: monthPart[0], ji: monthPart[1] },
+        day: { gan: dayPart[0], ji: dayPart[1] },
+        time: { gan: timePart[0], ji: timePart[1] },
+        fullSaju: sajuString,
+        ohHaengBalance: basic.ohHaengBalance || { wood: 20, fire: 20, earth: 20, metal: 20, water: 20 },
+        dayMaster: basic.dayMaster,
+        interpretation: basic.summary
       };
     } catch (error) {
-      console.error('사주 계산 오류:', error);
-      return null;
+      console.error('정확한 사주 계산 오류:', error);
+      // 실패 시 로컬 계산으로 폴백
+      try {
+        const [year, month, day] = customer.birth_date.split('-').map(Number);
+        const [hour, minute] = customer.birth_time.split(':').map(Number);
+
+        const sajuInfo = {
+          year,
+          month,
+          day,
+          hour,
+          minute,
+          lunarSolar: customer.lunar_solar,
+          gender: customer.gender
+        };
+
+        const fourPillars = SajuCalculator.calculateFourPillars(sajuInfo);
+        const ohHaengBalance = SajuCalculator.calculateOhHaengBalance(fourPillars);
+
+        return {
+          year: fourPillars.year,
+          month: fourPillars.month,
+          day: fourPillars.day,
+          time: fourPillars.time,
+          fullSaju: SajuCalculator.formatFourPillars(fourPillars),
+          ohHaengBalance
+        };
+      } catch (fallbackError) {
+        console.error('폴백 사주 계산도 실패:', fallbackError);
+        return null;
+      }
     }
   };
 
-  const parseAccurateSaju = (customer: Customer | null) => {
+  const parseAccurateSaju = async (customer: Customer | null) => {
     if (!customer) {
       console.error('고객 데이터가 없습니다');
       return null;
@@ -109,120 +144,127 @@ export const CompatibilityPage: React.FC = () => {
       }
     }
 
-    // saju_data가 없거나 불완전하면 직접 계산
-    console.log('사주 데이터 재계산:', customer.name);
-    return calculateSajuForCustomer(customer);
+    // saju_data가 없거나 불완전하면 정확한 API로 계산
+    console.log('정확한 사주 API로 재계산:', customer.name);
+    return await calculateSajuForCustomer(customer);
   };
 
-  const calculateCompatibility = () => {
+  const calculateCompatibility = async () => {
     if (!person1 || !person2) return;
 
-    console.log('=== 궁합 계산 시작 ===');
+    console.log('=== 정확한 궁합 계산 시작 ===');
     console.log('첫번째 사람:', person1.name, person1.birth_date, person1.birth_time);
     console.log('두번째 사람:', person2.name, person2.birth_date, person2.birth_time);
 
     setIsCalculating(true);
-    
-    // 정확한 사주 데이터 파싱 (없으면 계산)
-    const saju1 = parseAccurateSaju(person1);
-    const saju2 = parseAccurateSaju(person2);
 
-    if (!saju1 || !saju2) {
-      console.error('사주 데이터 파싱 실패 - 궁합 계산 중단');
-      alert('사주 데이터에 문제가 있습니다. 고객 정보를 다시 확인해주세요.');
+    try {
+      // 정확한 사주 데이터 파싱 (API 사용)
+      console.log('정확한 사주 데이터 계산 시작...');
+      const saju1 = await parseAccurateSaju(person1);
+      const saju2 = await parseAccurateSaju(person2);
+
+      if (!saju1 || !saju2) {
+        console.error('사주 데이터 파싱 실패 - 궁합 계산 중단');
+        alert('정확한 사주 데이터를 계산할 수 없습니다. 고객 정보를 다시 확인해주세요.');
+        setIsCalculating(false);
+        return;
+      }
+
+      console.log('파싱된 정확한 사주 데이터:');
+      console.log('- 사주1:', saju1);
+      console.log('- 사주2:', saju2);
+
+      // 정확한 만세력 기반 궁합 점수 계산
+      setTimeout(() => {
+        console.log('궁합 점수 계산 시작...');
+
+        const personalityScore = calculateAccuratePersonalityScore(saju1, saju2);
+        const loveScore = calculateAccurateLoveScore(saju1, saju2);
+        const wealthScore = calculateAccurateWealthScore(saju1, saju2);
+        const healthScore = calculateAccurateHealthScore(saju1, saju2);
+        const futureScore = calculateAccurateFutureScore(saju1, saju2);
+
+        console.log('계산된 궁합 점수:');
+        console.log('- 성격 궁합:', personalityScore);
+        console.log('- 애정 궁합:', loveScore);
+        console.log('- 재물 궁합:', wealthScore);
+        console.log('- 건강 궁합:', healthScore);
+        console.log('- 미래 궁합:', futureScore);
+
+        const categories = [
+          {
+            name: '성격 궁합',
+            score: personalityScore,
+            description: '성격과 가치관의 조화 (십신/오행 분석)',
+          },
+          {
+            name: '애정 궁합',
+            score: loveScore,
+            description: '감정과 애정 표현의 조화 (지지관계/음양조화)',
+          },
+          {
+            name: '재물 궁합',
+            score: wealthScore,
+            description: '경제관념과 재물운의 조화 (재성 분석)',
+          },
+          {
+            name: '건강 궁합',
+            score: healthScore,
+            description: '체질과 건강 에너지의 조화 (오행 균형)',
+          },
+          {
+            name: '미래 궁합',
+            score: futureScore,
+            description: '인생 방향과 목표의 조화 (삼합/육합)',
+          },
+        ];
+
+        const totalScore = Math.round(categories.reduce((sum, cat) => sum + cat.score, 0) / categories.length);
+
+        console.log('최종 궁합 점수:', totalScore);
+
+        // 상세 관계성 분석
+        console.log('상세 관계성 분석 시작...');
+        const relationshipAnalysis = analyzeRelationship(saju1, saju2);
+        console.log('관계성 분석 완료:', relationshipAnalysis);
+
+        // 현실적 분석
+        console.log('현실적 분석 시작...');
+        const practicalAnalysis = analyzePractical(saju1, saju2);
+        console.log('현실적 분석 완료:', practicalAnalysis);
+
+        // 심층 분석
+        console.log('심층 분석 시작...');
+        const depthAnalysis = analyzeDepth(saju1, saju2);
+        console.log('심층 분석 완료:', depthAnalysis);
+
+        // 특수 분석
+        console.log('특수 분석 시작...');
+        const specialAnalysis = analyzeSpecial(saju1, saju2);
+        console.log('특수 분석 완료:', specialAnalysis);
+
+        console.log('=== 정확한 궁합 계산 완료 ===');
+
+        setResult({
+          totalScore,
+          categories,
+          advice: generateDetailedAdvice(totalScore, categories),
+          detailedAnalysis: {
+            relationship: relationshipAnalysis,
+            practical: practicalAnalysis,
+            depth: depthAnalysis,
+            special: specialAnalysis,
+          },
+        });
+
+        setIsCalculating(false);
+      }, 1000);
+    } catch (error) {
+      console.error('궁합 계산 중 오류 발생:', error);
+      alert('궁합 계산 중 오류가 발생했습니다. 다시 시도해주세요.');
       setIsCalculating(false);
-      return;
     }
-
-    console.log('파싱된 사주 데이터:');
-    console.log('- 사주1:', saju1);
-    console.log('- 사주2:', saju2);
-
-    // 정확한 만세력 기반 궁합 점수 계산
-    setTimeout(() => {
-      console.log('궁합 점수 계산 시작...');
-      
-      const personalityScore = calculateAccuratePersonalityScore(saju1, saju2);
-      const loveScore = calculateAccurateLoveScore(saju1, saju2);
-      const wealthScore = calculateAccurateWealthScore(saju1, saju2);
-      const healthScore = calculateAccurateHealthScore(saju1, saju2);
-      const futureScore = calculateAccurateFutureScore(saju1, saju2);
-      
-      console.log('계산된 궁합 점수:');
-      console.log('- 성격 궁합:', personalityScore);
-      console.log('- 애정 궁합:', loveScore);
-      console.log('- 재물 궁합:', wealthScore);
-      console.log('- 건강 궁합:', healthScore);
-      console.log('- 미래 궁합:', futureScore);
-      
-      const categories = [
-        { 
-          name: '성격 궁합', 
-          score: personalityScore, 
-          description: '성격과 가치관의 조화 (십신/오행 분석)', 
-        },
-        { 
-          name: '애정 궁합', 
-          score: loveScore, 
-          description: '감정과 애정 표현의 조화 (지지관계/음양조화)', 
-        },
-        { 
-          name: '재물 궁합', 
-          score: wealthScore, 
-          description: '경제관념과 재물운의 조화 (재성 분석)', 
-        },
-        { 
-          name: '건강 궁합', 
-          score: healthScore, 
-          description: '체질과 건강 에너지의 조화 (오행 균형)', 
-        },
-        { 
-          name: '미래 궁합', 
-          score: futureScore, 
-          description: '인생 방향과 목표의 조화 (삼합/육합)', 
-        },
-      ];
-
-      const totalScore = Math.round(categories.reduce((sum, cat) => sum + cat.score, 0) / categories.length);
-      
-      console.log('최종 궁합 점수:', totalScore);
-      
-      // 상세 관계성 분석
-      console.log('상세 관계성 분석 시작...');
-      const relationshipAnalysis = analyzeRelationship(saju1, saju2);
-      console.log('관계성 분석 완료:', relationshipAnalysis);
-      
-      // 현실적 분석
-      console.log('현실적 분석 시작...');
-      const practicalAnalysis = analyzePractical(saju1, saju2);
-      console.log('현실적 분석 완료:', practicalAnalysis);
-      
-      // 심층 분석
-      console.log('심층 분석 시작...');
-      const depthAnalysis = analyzeDepth(saju1, saju2);
-      console.log('심층 분석 완료:', depthAnalysis);
-      
-      // 특수 분석
-      console.log('특수 분석 시작...');
-      const specialAnalysis = analyzeSpecial(saju1, saju2);
-      console.log('특수 분석 완료:', specialAnalysis);
-      
-      console.log('=== 궁합 계산 완료 ===');
-
-      setResult({
-        totalScore,
-        categories,
-        advice: generateDetailedAdvice(totalScore, categories),
-        detailedAnalysis: {
-          relationship: relationshipAnalysis,
-          practical: practicalAnalysis,
-          depth: depthAnalysis,
-          special: specialAnalysis,
-        },
-      });
-
-      setIsCalculating(false);
-    }, 1500);
   };
 
 
@@ -249,23 +291,12 @@ export const CompatibilityPage: React.FC = () => {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {person1.birth_date} {person1.birth_time} ({person1.lunar_solar === 'lunar' ? '음력' : '양력'})
               </p>
-              {person1.saju_data && (() => {
-                try {
-                  const sajuData = JSON.parse(person1.saju_data);
-                  return (
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      <p>사주: {sajuData.fullSaju || '계산 중...'}</p>
-                      {sajuData.ohHaengBalance && (
-                        <p className="text-xs mt-1">
-                          오행: 목{sajuData.ohHaengBalance.목 || 0} 화{sajuData.ohHaengBalance.화 || 0} 토{sajuData.ohHaengBalance.토 || 0} 금{sajuData.ohHaengBalance.금 || 0} 수{sajuData.ohHaengBalance.수 || 0}
-                        </p>
-                      )}
-                    </div>
-                  );
-                } catch (e) {
-                  return <p className="text-xs text-red-500 mt-1">사주 데이터 오류</p>;
-                }
-              })()}
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <p>사주: 정확한 계산 중...</p>
+                <p className="text-xs mt-1">
+                  📊 정확한 만세력 기반 계산 예정
+                </p>
+              </div>
             </div>
           )}
         </div>
@@ -282,23 +313,12 @@ export const CompatibilityPage: React.FC = () => {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {person2.birth_date} {person2.birth_time} ({person2.lunar_solar === 'lunar' ? '음력' : '양력'})
               </p>
-              {person2.saju_data && (() => {
-                try {
-                  const sajuData = JSON.parse(person2.saju_data);
-                  return (
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      <p>사주: {sajuData.fullSaju || '계산 중...'}</p>
-                      {sajuData.ohHaengBalance && (
-                        <p className="text-xs mt-1">
-                          오행: 목{sajuData.ohHaengBalance.목 || 0} 화{sajuData.ohHaengBalance.화 || 0} 토{sajuData.ohHaengBalance.토 || 0} 금{sajuData.ohHaengBalance.금 || 0} 수{sajuData.ohHaengBalance.수 || 0}
-                        </p>
-                      )}
-                    </div>
-                  );
-                } catch (e) {
-                  return <p className="text-xs text-red-500 mt-1">사주 데이터 오류</p>;
-                }
-              })()}
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                <p>사주: 정확한 계산 중...</p>
+                <p className="text-xs mt-1">
+                  📊 정확한 만세력 기반 계산 예정
+                </p>
+              </div>
             </div>
           )}
         </div>
