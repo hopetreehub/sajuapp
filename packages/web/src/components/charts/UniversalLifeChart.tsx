@@ -47,7 +47,18 @@ export default function UniversalLifeChart({
   height = 400,
   showControls = true,
 }: UniversalLifeChartProps) {
-  const [activeDimensions, setActiveDimensions] = useState<ChartDimensionType[]>(selectedDimensions);
+  // showControls가 false일 때는 부모 컴포넌트에서 전달된 selectedDimensions를 사용
+  // showControls가 true일 때는 자체 상태 관리
+  const [localDimensions, setLocalDimensions] = useState<ChartDimensionType[]>(selectedDimensions);
+  const activeDimensions = showControls ? localDimensions : selectedDimensions;
+
+  // selectedDimensions prop이 변경될 때 localDimensions도 업데이트
+  React.useEffect(() => {
+    if (!showControls) {
+      setLocalDimensions(selectedDimensions);
+    }
+  }, [selectedDimensions, showControls]);
+
   const [viewMode, setViewMode] = useState<'line' | 'bar' | 'combined'>('combined');
   const [_zoomRange, _setZoomRange] = useState<{ start: number; end: number } | null>(null);
   const chartRef = useRef<ChartJS<'line'>>(null);
@@ -229,7 +240,7 @@ export default function UniversalLifeChart({
 
   // 차원 토글 함수
   const toggleDimension = (dimension: ChartDimensionType) => {
-    setActiveDimensions(prev =>
+    setLocalDimensions(prev =>
       prev.includes(dimension)
         ? prev.filter(d => d !== dimension)
         : [...prev, dimension],
@@ -238,11 +249,11 @@ export default function UniversalLifeChart({
 
   // 전체/개별 차원 선택
   const selectAllDimensions = () => {
-    setActiveDimensions(['geunbon', 'woon', 'haeng', 'hyeong', 'byeon']);
+    setLocalDimensions(['geunbon', 'woon', 'haeng', 'hyeong', 'byeon']);
   };
 
   const _selectSingleDimension = (dimension: ChartDimensionType) => {
-    setActiveDimensions([dimension]);
+    setLocalDimensions([dimension]);
   };
 
   return (

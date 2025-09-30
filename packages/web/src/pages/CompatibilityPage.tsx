@@ -11,7 +11,7 @@ import {
   calculateAccurateFutureScore,
   generateDetailedAdvice,
 } from '../utils/compatibilityCalculator';
-import * as SajuCalculator from '../utils/sajuCalculator';
+import { SajuCalculator } from '../utils/sajuCalculator';
 import { analyzeRelationship, RelationshipAnalysis } from '../utils/detailedCompatibilityCalculator';
 import { analyzePractical, PracticalAnalysis } from '../utils/practicalCompatibilityCalculator';
 import { analyzeDepth, analyzeSpecial, DepthAnalysis, SpecialAnalysis } from '../utils/depthSpecialCompatibilityCalculator';

@@ -179,17 +179,17 @@ export const DEFAULT_CHART_CONFIG: ChartConfig = {
 };
 
 export const DIMENSION_NAMES: Record<ChartDimensionType, string> = {
-  geunbon: '근본',
-  woon: '운',
-  haeng: '행',
-  hyeong: '형',
-  byeon: '변',
+  geunbon: '재물·명예·성공',
+  woon: '의지',
+  haeng: '환경',
+  hyeong: '변화',
+  byeon: '행운',
 };
 
 export const DIMENSION_DESCRIPTIONS: Record<ChartDimensionType, string> = {
-  geunbon: '기질과 성향의 기본 흐름',
-  woon: '행운과 기회의 파동',
-  haeng: '실행력과 의지력의 변화',
-  hyeong: '권위운과 사회적 지위',
-  byeon: '변화와 전환의 시기',
+  geunbon: '재물, 명예, 성공운의 흐름',
+  woon: '의지력과 추진력의 변화',
+  haeng: '환경과 주변 상황의 영향',
+  hyeong: '변화와 전환의 시기',
+  byeon: '행운과 기회의 파동',
 };

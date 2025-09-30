@@ -16,7 +16,7 @@ import { calculateSajuData } from '@/utils/sajuDataCalculator';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 import { fetchLifetimeFortune, calculateCurrentAge, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
 import { generateUniversalLifeChart, getCachedChart, setCachedChart } from '@/services/universalLifeChartApi';
-import { UniversalLifeChartData } from '@/types/universalLifeChart';
+import { UniversalLifeChartData, ChartDimensionType, DIMENSION_NAMES, DEFAULT_CHART_CONFIG } from '@/types/universalLifeChart';
 
 const SajuAnalysisPage: React.FC = () => {
   const navigate = useNavigate();
@@ -29,6 +29,7 @@ const SajuAnalysisPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [showCustomerPanel, setShowCustomerPanel] = useState(true);
   const [activeTab, setActiveTab] = useState<'analysis' | 'chart' | 'hundred-year'>('analysis');
+  const [selectedDimensions, setSelectedDimensions] = useState<ChartDimensionType[]>(['geunbon', 'woon', 'haeng', 'hyeong', 'byeon']);
 
   // 초기 로드 (고객 선택 패널 표시)
   useEffect(() => {
@@ -443,12 +444,75 @@ const SajuAnalysisPage: React.FC = () => {
                     )}
 
                     {activeTab === 'chart' && (
-                      <div>
+                      <div className="space-y-4">
+                        {/* 차원 선택 버튼들 - 인생차트 위에 배치 */}
+                        {universalChart && (
+                          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 p-4">
+                            <div className="flex items-center justify-between mb-3">
+                              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                표시할 운세 차원 선택:
+                              </h4>
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => setSelectedDimensions(['geunbon', 'woon', 'haeng', 'hyeong', 'byeon'])}
+                                  className="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                                >
+                                  전체 선택
+                                </button>
+                                <button
+                                  onClick={() => setSelectedDimensions([])}
+                                  className="px-3 py-1 text-xs bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+                                >
+                                  전체 해제
+                                </button>
+                              </div>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                              {(['geunbon', 'woon', 'haeng', 'hyeong', 'byeon'] as ChartDimensionType[]).map((dimension) => (
+                                <button
+                                  key={dimension}
+                                  onClick={() => {
+                                    setSelectedDimensions(prev =>
+                                      prev.includes(dimension)
+                                        ? prev.filter(d => d !== dimension)
+                                        : [...prev, dimension]
+                                    );
+                                  }}
+                                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                                    selectedDimensions.includes(dimension)
+                                      ? 'text-white shadow-lg transform scale-105'
+                                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                                  }`}
+                                  style={{
+                                    backgroundColor: selectedDimensions.includes(dimension)
+                                      ? DEFAULT_CHART_CONFIG.colors[dimension]
+                                      : undefined,
+                                    boxShadow: selectedDimensions.includes(dimension)
+                                      ? `0 4px 12px ${DEFAULT_CHART_CONFIG.colors[dimension]}40`
+                                      : undefined,
+                                  }}
+                                >
+                                  <span className="flex items-center gap-2">
+                                    {dimension === 'geunbon' && '💰'}
+                                    {dimension === 'woon' && '💪'}
+                                    {dimension === 'haeng' && '🌍'}
+                                    {dimension === 'hyeong' && '🔄'}
+                                    {dimension === 'byeon' && '🍀'}
+                                    {DIMENSION_NAMES[dimension]}
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 인생차트 컴포넌트 */}
                         {universalChart ? (
                           <UniversalLifeChart
                             data={universalChart}
+                            selectedDimensions={selectedDimensions}
                             height={500}
-                            showControls={true}
+                            showControls={false}
                           />
                         ) : (
                           <div className="flex items-center justify-center h-96">
