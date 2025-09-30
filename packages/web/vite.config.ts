@@ -18,7 +18,6 @@ export default defineConfig(({ mode }) => {
           target: 'http://localhost:4002',
           changeOrigin: true,
           secure: false,
-          rewrite: (path) => path.replace(/^\/api\/customers/, '/api'),
         },
         // 캘린더 서비스
         '/api/calendar': {

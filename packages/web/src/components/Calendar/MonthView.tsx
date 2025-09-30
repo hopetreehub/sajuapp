@@ -234,11 +234,11 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                     )}
                   </div>
 
-                  {/* 음력 날짜 표시 */}
+                  {/* 음력 날짜 표시 - 임시 비활성화 */}
                   <div className="flex flex-col">
-                    <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                    {/* <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
                       {formatLunarDate(day, false)}
-                    </span>
+                    </span> */}
                     {/* 특별한 음력 날짜 표시 (절기, 명절) */}
                     {specialDay && (
                       <span className="text-[9px] text-hanbok-red font-bold bg-hanbok-red/10 px-1 py-0.5 rounded mt-0.5 truncate">
