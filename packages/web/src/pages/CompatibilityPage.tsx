@@ -3,6 +3,7 @@ import CustomerSelector from '../components/saju/CustomerSelector';
 import { Customer } from '../services/customerApi';
 import { CompatibilityRadarChart } from '../components/CompatibilityRadarChart';
 import { DetailedAnalysisTabs } from '../components/compatibility/DetailedAnalysisTabs';
+import { SajuDisplay } from '../components/saju/SajuDisplay';
 import {
   calculateAccuratePersonalityScore,
   calculateAccurateLoveScore,
@@ -39,6 +40,8 @@ export const CompatibilityPage: React.FC = () => {
   const [person2, setPerson2] = useState<Customer | null>(null);
   const [result, setResult] = useState<CompatibilityResult | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [saju1, setSaju1] = useState<any>(null);
+  const [saju2, setSaju2] = useState<any>(null);
 
   // 고객 선택 시 정확한 사주 데이터 계산 (API 사용)
   const calculateSajuForCustomer = async (customer: Customer) => {
@@ -161,29 +164,33 @@ export const CompatibilityPage: React.FC = () => {
     try {
       // 정확한 사주 데이터 파싱 (API 사용)
       console.log('정확한 사주 데이터 계산 시작...');
-      const saju1 = await parseAccurateSaju(person1);
-      const saju2 = await parseAccurateSaju(person2);
+      const calculatedSaju1 = await parseAccurateSaju(person1);
+      const calculatedSaju2 = await parseAccurateSaju(person2);
 
-      if (!saju1 || !saju2) {
+      if (!calculatedSaju1 || !calculatedSaju2) {
         console.error('사주 데이터 파싱 실패 - 궁합 계산 중단');
         alert('정확한 사주 데이터를 계산할 수 없습니다. 고객 정보를 다시 확인해주세요.');
         setIsCalculating(false);
         return;
       }
 
+      // 사주 데이터 state에 저장
+      setSaju1(calculatedSaju1);
+      setSaju2(calculatedSaju2);
+
       console.log('파싱된 정확한 사주 데이터:');
-      console.log('- 사주1:', saju1);
-      console.log('- 사주2:', saju2);
+      console.log('- 사주1:', calculatedSaju1);
+      console.log('- 사주2:', calculatedSaju2);
 
       // 정확한 만세력 기반 궁합 점수 계산
       setTimeout(() => {
         console.log('궁합 점수 계산 시작...');
 
-        const personalityScore = calculateAccuratePersonalityScore(saju1, saju2);
-        const loveScore = calculateAccurateLoveScore(saju1, saju2);
-        const wealthScore = calculateAccurateWealthScore(saju1, saju2);
-        const healthScore = calculateAccurateHealthScore(saju1, saju2);
-        const futureScore = calculateAccurateFutureScore(saju1, saju2);
+        const personalityScore = calculateAccuratePersonalityScore(calculatedSaju1, calculatedSaju2);
+        const loveScore = calculateAccurateLoveScore(calculatedSaju1, calculatedSaju2);
+        const wealthScore = calculateAccurateWealthScore(calculatedSaju1, calculatedSaju2);
+        const healthScore = calculateAccurateHealthScore(calculatedSaju1, calculatedSaju2);
+        const futureScore = calculateAccurateFutureScore(calculatedSaju1, calculatedSaju2);
 
         console.log('계산된 궁합 점수:');
         console.log('- 성격 궁합:', personalityScore);
@@ -226,22 +233,22 @@ export const CompatibilityPage: React.FC = () => {
 
         // 상세 관계성 분석
         console.log('상세 관계성 분석 시작...');
-        const relationshipAnalysis = analyzeRelationship(saju1, saju2);
+        const relationshipAnalysis = analyzeRelationship(calculatedSaju1, calculatedSaju2);
         console.log('관계성 분석 완료:', relationshipAnalysis);
 
         // 현실적 분석
         console.log('현실적 분석 시작...');
-        const practicalAnalysis = analyzePractical(saju1, saju2);
+        const practicalAnalysis = analyzePractical(calculatedSaju1, calculatedSaju2);
         console.log('현실적 분석 완료:', practicalAnalysis);
 
         // 심층 분석
         console.log('심층 분석 시작...');
-        const depthAnalysis = analyzeDepth(saju1, saju2);
+        const depthAnalysis = analyzeDepth(calculatedSaju1, calculatedSaju2);
         console.log('심층 분석 완료:', depthAnalysis);
 
         // 특수 분석
         console.log('특수 분석 시작...');
-        const specialAnalysis = analyzeSpecial(saju1, saju2);
+        const specialAnalysis = analyzeSpecial(calculatedSaju1, calculatedSaju2);
         console.log('특수 분석 완료:', specialAnalysis);
 
         console.log('=== 정확한 궁합 계산 완료 ===');
@@ -291,11 +298,12 @@ export const CompatibilityPage: React.FC = () => {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {person1.birth_date} {person1.birth_time} ({person1.lunar_solar === 'lunar' ? '음력' : '양력'})
               </p>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                <p>사주: 정확한 계산 중...</p>
-                <p className="text-xs mt-1">
-                  📊 정확한 만세력 기반 계산 예정
-                </p>
+              <div className="mt-3">
+                <SajuDisplay
+                  sajuString={saju1?.fullSaju}
+                  size="small"
+                  className="bg-white dark:bg-gray-800 rounded-lg p-3"
+                />
               </div>
             </div>
           )}
@@ -313,11 +321,12 @@ export const CompatibilityPage: React.FC = () => {
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 {person2.birth_date} {person2.birth_time} ({person2.lunar_solar === 'lunar' ? '음력' : '양력'})
               </p>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                <p>사주: 정확한 계산 중...</p>
-                <p className="text-xs mt-1">
-                  📊 정확한 만세력 기반 계산 예정
-                </p>
+              <div className="mt-3">
+                <SajuDisplay
+                  sajuString={saju2?.fullSaju}
+                  size="small"
+                  className="bg-white dark:bg-gray-800 rounded-lg p-3"
+                />
               </div>
             </div>
           )}
@@ -344,6 +353,32 @@ export const CompatibilityPage: React.FC = () => {
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">
               {person1?.name} ♥ {person2?.name} 궁합 결과
             </h2>
+
+            {/* 사주 비교 표시 */}
+            {(saju1?.fullSaju || saju2?.fullSaju) && (
+              <div className="mb-6 p-6 bg-gradient-to-r from-blue-50 to-pink-50 dark:from-blue-900/20 dark:to-pink-900/20 rounded-lg">
+                <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">사주팔자 비교</h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-base font-medium mb-2 text-blue-800 dark:text-blue-200">{person1?.name}</h4>
+                    <SajuDisplay
+                      sajuString={saju1?.fullSaju}
+                      size="medium"
+                      className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm"
+                    />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-medium mb-2 text-pink-800 dark:text-pink-200">{person2?.name}</h4>
+                    <SajuDisplay
+                      sajuString={saju2?.fullSaju}
+                      size="medium"
+                      className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className={`text-6xl font-bold ${getScoreColor(result.totalScore)}`}>
               {result.totalScore}점
             </div>
