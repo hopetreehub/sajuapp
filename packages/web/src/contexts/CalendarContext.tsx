@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 import { format } from 'date-fns';
 import { ViewMode, UserSettings } from '@/types/calendar';
 import { Todo } from '@/types/todo';
-import { CalendarEvent } from '@/services/api';
+import { CalendarEvent, todoService, Todo as ApiTodo } from '@/services/api';
 
 // Todo 타입을 다시 export 하여 다른 컴포넌트에서 사용할 수 있도록 함
 export type { Todo };
@@ -54,7 +54,8 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [todos, setTodos] = useState<Todo[]>([]);
-  
+  const [isLoadingTodos, setIsLoadingTodos] = useState(false);
+
   const [settings] = useState<UserSettings>({
     timezone: 'Asia/Seoul',
     weekStartsOn: 0,
@@ -64,6 +65,46 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
     theme: 'light',
     language: 'ko',
   });
+
+  // API Todo를 로컬 Todo 형식으로 변환
+  const convertApiTodoToLocal = (apiTodo: ApiTodo): Todo => ({
+    id: apiTodo.id,
+    text: apiTodo.title,
+    title: apiTodo.title,
+    description: apiTodo.description,
+    completed: apiTodo.completed === 1 || apiTodo.completed === true,
+    priority: apiTodo.priority,
+    date: apiTodo.date,
+    createdAt: apiTodo.created_at,
+    updatedAt: apiTodo.updated_at,
+  });
+
+  // 로컬 Todo를 API Todo 형식으로 변환
+  const convertLocalTodoToApi = (todo: Partial<Todo>) => ({
+    title: todo.text || todo.title || '',
+    description: todo.description,
+    date: todo.date || '',
+    priority: todo.priority || 'medium',
+    completed: todo.completed ? 1 : 0,
+  });
+
+  // 초기 할일 로드
+  useEffect(() => {
+    loadTodos();
+  }, []);
+
+  const loadTodos = async () => {
+    try {
+      setIsLoadingTodos(true);
+      const apiTodos = await todoService.getTodos();
+      const localTodos = apiTodos.map(convertApiTodoToLocal);
+      setTodos(localTodos);
+    } catch (error) {
+      console.error('Failed to load todos:', error);
+    } finally {
+      setIsLoadingTodos(false);
+    }
+  };
 
   const navigatePrevious = useCallback(() => {
     const newDate = new Date(currentDate);
@@ -145,34 +186,73 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
     });
   }, [events]);
 
-  const addTodo = useCallback((todoData: Omit<Todo, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const newTodo: Todo = {
-      ...todoData,
-      id: crypto.randomUUID(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    setTodos(prev => [...prev, newTodo]);
+  const addTodo = useCallback(async (todoData: Omit<Todo, 'id' | 'createdAt' | 'updatedAt'>) => {
+    try {
+      const apiTodoData = convertLocalTodoToApi(todoData);
+      const createdTodo = await todoService.createTodo(apiTodoData);
+      const localTodo = convertApiTodoToLocal(createdTodo);
+      setTodos(prev => [...prev, localTodo]);
+      return localTodo;
+    } catch (error) {
+      console.error('Failed to add todo:', error);
+      // 실패 시 로컬에만 추가 (fallback)
+      const newTodo: Todo = {
+        ...todoData,
+        id: crypto.randomUUID(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      setTodos(prev => [...prev, newTodo]);
+      return newTodo;
+    }
   }, []);
 
-  const updateTodo = useCallback((id: string, updates: Partial<Todo>) => {
-    setTodos(prev => prev.map(todo => 
-      todo.id === id 
-        ? { ...todo, ...updates, updatedAt: new Date() }
-        : todo,
-    ));
+  const updateTodo = useCallback(async (id: string, updates: Partial<Todo>) => {
+    try {
+      const apiUpdates = convertLocalTodoToApi(updates);
+      const updatedTodo = await todoService.updateTodo(id, apiUpdates);
+      const localTodo = convertApiTodoToLocal(updatedTodo);
+      setTodos(prev => prev.map(todo =>
+        todo.id === id ? localTodo : todo,
+      ));
+    } catch (error) {
+      console.error('Failed to update todo:', error);
+      // 실패 시 로컬만 업데이트 (fallback)
+      setTodos(prev => prev.map(todo =>
+        todo.id === id
+          ? { ...todo, ...updates, updatedAt: new Date() }
+          : todo,
+      ));
+    }
   }, []);
 
-  const deleteTodo = useCallback((id: string) => {
-    setTodos(prev => prev.filter(todo => todo.id !== id));
+  const deleteTodo = useCallback(async (id: string) => {
+    try {
+      await todoService.deleteTodo(id);
+      setTodos(prev => prev.filter(todo => todo.id !== id));
+    } catch (error) {
+      console.error('Failed to delete todo:', error);
+      // 실패 시에도 로컬에서 제거
+      setTodos(prev => prev.filter(todo => todo.id !== id));
+    }
   }, []);
 
-  const toggleTodo = useCallback((id: string) => {
-    setTodos(prev => prev.map(todo => 
-      todo.id === id 
-        ? { ...todo, completed: !todo.completed, updatedAt: new Date() }
-        : todo,
-    ));
+  const toggleTodo = useCallback(async (id: string) => {
+    try {
+      const updatedTodo = await todoService.toggleTodo(id);
+      const localTodo = convertApiTodoToLocal(updatedTodo);
+      setTodos(prev => prev.map(todo =>
+        todo.id === id ? localTodo : todo,
+      ));
+    } catch (error) {
+      console.error('Failed to toggle todo:', error);
+      // 실패 시 로컬만 토글 (fallback)
+      setTodos(prev => prev.map(todo =>
+        todo.id === id
+          ? { ...todo, completed: !todo.completed, updatedAt: new Date() }
+          : todo,
+      ));
+    }
   }, []);
 
   const getTodosForDate = useCallback((date: Date) => {
