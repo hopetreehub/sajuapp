@@ -47,6 +47,18 @@ export interface Tag {
   updated_at?: string;
 }
 
+export interface Todo {
+  id: string;
+  customer_id: number;
+  title: string;
+  description?: string;
+  date: string;
+  priority: 'low' | 'medium' | 'high';
+  completed: number | boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export const eventService = {
   // Get all events
   getEvents: async (params?: {
@@ -220,7 +232,7 @@ export const interpretationService = {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(sajuData)
+        body: JSON.stringify(sajuData),
       });
 
       const result = await response.json();
@@ -235,9 +247,9 @@ export const interpretationService = {
             yongshin: '화',
             gyeokguk: '정격',
             summary: interpretation,
-            sajuString: sajuString, // 추가: 완전한 사주 문자열
-            ohHaengBalance: ohHaengBalance // 추가: 오행 균형
-          }
+            sajuString, // 추가: 완전한 사주 문자열
+            ohHaengBalance, // 추가: 오행 균형
+          },
         };
       } else {
         throw new Error('사주 계산 실패');
@@ -253,8 +265,8 @@ export const interpretationService = {
           gyeokguk: '분석중',
           summary: '사주 계산 중 오류가 발생했습니다.',
           sajuString: '계산 실패',
-          ohHaengBalance: { wood: 20, fire: 20, earth: 20, metal: 20, water: 20 }
-        }
+          ohHaengBalance: { wood: 20, fire: 20, earth: 20, metal: 20, water: 20 },
+        },
       };
     }
   },
@@ -267,7 +279,7 @@ export const interpretationService = {
       dayMasterStrength: '중화',
       yongshin: '화',
       gyeokguk: '정격',
-      summary: response.data.data.interpretation
+      summary: response.data.data.interpretation,
     };
   },
 
@@ -279,7 +291,7 @@ export const interpretationService = {
       johooNeeds: { fire: 30, water: 20 },
       monthlyDetails: {},
       recommendations: ['적극적인 활동', '새로운 시작'],
-      careerGuidance: ['창의적 분야', '리더십 발휘']
+      careerGuidance: ['창의적 분야', '리더십 발휘'],
     };
   },
 
@@ -290,7 +302,7 @@ export const interpretationService = {
       harmfulSpirits: ['겁살', '망신살'],
       dominantInfluence: '길신이 우세',
       mitigation: ['선행 쌓기', '정직한 생활'],
-      activation: ['학습과 연구', '예술 활동']
+      activation: ['학습과 연구', '예술 활동'],
     };
   },
 
@@ -301,7 +313,7 @@ export const interpretationService = {
       strengths: ['리더십', '창의성', '추진력'],
       weaknesses: ['성급함', '완벽주의'],
       developmentAreas: ['인내심', '협력'],
-      recommendations: ['팀워크 향상', '감정 조절']
+      recommendations: ['팀워크 향상', '감정 조절'],
     };
   },
 
@@ -311,7 +323,7 @@ export const interpretationService = {
       currentYear: { overall: 75, career: 80, health: 70 },
       monthlyTrends: [],
       luckyElements: ['화', '토'],
-      cautionPeriods: ['7월', '12월']
+      cautionPeriods: ['7월', '12월'],
     };
   },
 
@@ -322,7 +334,7 @@ export const interpretationService = {
       avoidCareers: ['반복 업무', '단순 노동'],
       careerTiming: '30대 중반 이후 큰 성과',
       successFactors: ['리더십', '창의성', '소통능력'],
-      workEnvironment: '자율적이고 창의적인 환경'
+      workEnvironment: '자율적이고 창의적인 환경',
     };
   },
 
@@ -333,7 +345,7 @@ export const interpretationService = {
       relationshipPattern: '적극적이고 주도적',
       challenges: ['성급함', '고집'],
       advice: ['상대방 배려', '소통 강화'],
-      timing: '30대 초반이 길한 시기'
+      timing: '30대 초반이 길한 시기',
     };
   },
 
@@ -344,7 +356,7 @@ export const interpretationService = {
       vulnerabilities: ['심장', '소화기'],
       preventiveCare: ['규칙적 운동', '스트레스 관리'],
       seasonalCare: { spring: '간 건강', summer: '심장 건강' },
-      lifestyle: ['규칙적 생활', '균형 잡힌 식단']
+      lifestyle: ['규칙적 생활', '균형 잡힌 식단'],
     };
   },
 };
@@ -432,6 +444,44 @@ export const diaryService = {
       params,
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
+    return response.data;
+  },
+};
+
+// Todo service for Calendar backend
+export const todoService = {
+  // Get all todos
+  getTodos: async (): Promise<Todo[]> => {
+    const response = await axios.get('http://localhost:4012/api/calendar/todos');
+    return response.data;
+  },
+
+  // Get todos by date
+  getTodosByDate: async (date: string): Promise<Todo[]> => {
+    const response = await axios.get(`http://localhost:4012/api/calendar/todos/${date}`);
+    return response.data;
+  },
+
+  // Create todo
+  createTodo: async (todo: Omit<Todo, 'id' | 'created_at' | 'updated_at' | 'customer_id'>): Promise<Todo> => {
+    const response = await axios.post('http://localhost:4012/api/calendar/todos', todo);
+    return response.data;
+  },
+
+  // Update todo
+  updateTodo: async (id: string, todo: Partial<Todo>): Promise<Todo> => {
+    const response = await axios.put(`http://localhost:4012/api/calendar/todos/${id}`, todo);
+    return response.data;
+  },
+
+  // Delete todo
+  deleteTodo: async (id: string): Promise<void> => {
+    await axios.delete(`http://localhost:4012/api/calendar/todos/${id}`);
+  },
+
+  // Toggle todo completion
+  toggleTodo: async (id: string): Promise<Todo> => {
+    const response = await axios.patch(`http://localhost:4012/api/calendar/todos/${id}/toggle`);
     return response.data;
   },
 };
