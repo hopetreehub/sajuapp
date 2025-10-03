@@ -94,24 +94,45 @@ const createTables = async (): Promise<void> => {
     )
   `
 
+  const createTodosTableQuery = `
+    CREATE TABLE IF NOT EXISTS todos (
+      id TEXT PRIMARY KEY,
+      customer_id INTEGER NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT,
+      date TEXT NOT NULL,
+      priority TEXT DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high')),
+      completed INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `
+
   const createIndexesQuery = `
-    CREATE INDEX IF NOT EXISTS idx_events_user_date 
+    CREATE INDEX IF NOT EXISTS idx_events_user_date
     ON calendar_events(user_id, start_datetime);
-    
+
     CREATE INDEX IF NOT EXISTS idx_events_date_range
     ON calendar_events(start_datetime, end_datetime);
-    
+
     CREATE INDEX IF NOT EXISTS idx_diary_user_date
     ON diary_entries(user_id, date);
-    
+
     CREATE INDEX IF NOT EXISTS idx_users_email
     ON users(email);
+
+    CREATE INDEX IF NOT EXISTS idx_todos_customer_date
+    ON todos(customer_id, date);
+
+    CREATE INDEX IF NOT EXISTS idx_todos_completed
+    ON todos(completed);
   `
 
   try {
     await db.exec(createUsersTableQuery)
     await db.exec(createEventsTableQuery)
     await db.exec(createDiaryTableQuery)
+    await db.exec(createTodosTableQuery)
     await db.exec(createTagTable)
     await db.exec(createEventTagTable)
     await db.exec(createIndexesQuery)

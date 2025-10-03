@@ -14,6 +14,7 @@ const events_sqlite_1 = __importDefault(require("./routes/events-sqlite"));
 const health_sqlite_1 = __importDefault(require("./routes/health-sqlite"));
 const tags_1 = __importDefault(require("./routes/tags"));
 const customers_1 = __importDefault(require("./routes/customers"));
+const todos_1 = __importDefault(require("./routes/todos"));
 const sqlite_connection_1 = require("./database/sqlite-connection");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -67,6 +68,7 @@ app.use('/health', health_sqlite_1.default);
 app.use('/api/calendar/events', events_sqlite_1.default);
 app.use('/api/calendar/tags', tags_1.default);
 app.use('/api/calendar/customers', customers_1.default);
+app.use('/api/calendar/todos', todos_1.default);
 // Error handling
 app.use(errorHandler_1.errorHandler);
 // 404 handler

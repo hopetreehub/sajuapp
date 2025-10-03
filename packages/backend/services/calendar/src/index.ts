@@ -9,6 +9,7 @@ import eventsRouter from './routes/events-sqlite'
 import healthRouter from './routes/health-sqlite'
 import tagsRouter from './routes/tags'
 import customersRouter from './routes/customers'
+import todosRouter from './routes/todos'
 import { initDatabase } from './database/sqlite-connection'
 
 dotenv.config()
@@ -68,6 +69,7 @@ app.use('/health', healthRouter)
 app.use('/api/calendar/events', eventsRouter)
 app.use('/api/calendar/tags', tagsRouter)
 app.use('/api/calendar/customers', customersRouter)
+app.use('/api/calendar/todos', todosRouter)
 
 // Error handling
 app.use(errorHandler)
