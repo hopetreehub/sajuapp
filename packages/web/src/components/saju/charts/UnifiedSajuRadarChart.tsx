@@ -273,8 +273,21 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
         },
       },
     });
-    
-    // 옵션 병합 (깊은 병합)
+
+    // 현재 표시 중인 모든 데이터의 최대값 계산
+    const allCurrentValues: number[] = [];
+    allCurrentValues.push(...(timeFrameData.base || []));
+    if (selectedTimeFrame !== 'base' && timeFrameData[selectedTimeFrame]) {
+      allCurrentValues.push(...(timeFrameData[selectedTimeFrame] || []));
+    }
+
+    // 동적 스케일 계산: 최대값에서 10 더한 값을 10 단위로 올림
+    const maxDataValue = Math.max(...allCurrentValues, 50); // 최소 50은 보장
+    const dynamicMax = Math.ceil(maxDataValue / 10) * 10 + 10; // 10 단위 올림 + 여유 10
+
+    console.log(`[차트 스케일] 최대값: ${maxDataValue}, 동적 max: ${dynamicMax}`);
+
+    // 옵션 병합 (깊은 병합) + 동적 스케일 적용
     return {
       ...baseOptions,
       ...customOptions,
@@ -293,9 +306,14 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
       scales: {
         ...baseOptions?.scales,
         ...customOptions.scales,
+        r: {
+          ...baseOptions?.scales?.r,
+          ...customOptions.scales?.r,
+          max: dynamicMax, // 동적 최대값 적용
+        },
       },
     };
-  }, [enhancedChartConfig, isDarkMode, selectedTimeFrame]);
+  }, [enhancedChartConfig, isDarkMode, selectedTimeFrame, timeFrameData]);
 
   const totalScore = scoreValues.reduce((sum, score) => sum + score, 0);
   const averageScore = (totalScore / data.items.length).toFixed(1);
