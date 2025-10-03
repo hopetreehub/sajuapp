@@ -17,7 +17,7 @@ interface CalendarEvent {
 }
 
 // 임시 이벤트 데이터 (메모리에 저장)
-let events: CalendarEvent[] = [
+const events: CalendarEvent[] = [
   {
     id: '1',
     title: '운명나침반 데모 이벤트',
@@ -30,7 +30,7 @@ let events: CalendarEvent[] = [
     color: '#3B82F6',
     reminder_minutes: 15,
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   },
   {
     id: '2',
@@ -44,8 +44,8 @@ let events: CalendarEvent[] = [
     color: '#10B981',
     reminder_minutes: 30,
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }
+    updated_at: new Date().toISOString(),
+  },
 ];
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
@@ -106,7 +106,7 @@ function handleGetEvents(req: VercelRequest, res: VercelResponse) {
   return res.status(200).json({
     success: true,
     data: filteredEvents,
-    total: filteredEvents.length
+    total: filteredEvents.length,
   });
 }
 
@@ -120,12 +120,12 @@ function handleCreateEvent(req: VercelRequest, res: VercelResponse) {
     location,
     type,
     color,
-    reminder_minutes
+    reminder_minutes,
   } = req.body;
 
   if (!title || !start_time || !end_time) {
     return res.status(400).json({
-      error: 'Title, start_time, and end_time are required'
+      error: 'Title, start_time, and end_time are required',
     });
   }
 
@@ -141,14 +141,14 @@ function handleCreateEvent(req: VercelRequest, res: VercelResponse) {
     color: color || '#3B82F6',
     reminder_minutes: reminder_minutes || null,
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   };
 
   events.push(newEvent);
 
   return res.status(201).json({
     success: true,
-    data: newEvent
+    data: newEvent,
   });
 }
 
@@ -169,12 +169,12 @@ function handleUpdateEvent(req: VercelRequest, res: VercelResponse) {
   events[eventIndex] = {
     ...events[eventIndex],
     ...updates,
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   };
 
   return res.status(200).json({
     success: true,
-    data: events[eventIndex]
+    data: events[eventIndex],
   });
 }
 
@@ -195,6 +195,6 @@ function handleDeleteEvent(req: VercelRequest, res: VercelResponse) {
 
   return res.status(200).json({
     success: true,
-    data: deletedEvent
+    data: deletedEvent,
   });
 }

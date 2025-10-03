@@ -9,13 +9,13 @@ interface Customer {
   gender: 'male' | 'female';
   lunar_solar: 'lunar' | 'solar';
   notes?: string;
-  saju_data?: any;
+  saju_data?: unknown;
   created_at: string;
   updated_at: string;
 }
 
 // 임시 고객 데이터 (메모리에 저장)
-let customers: Customer[] = [
+const customers: Customer[] = [
   {
     id: '1',
     name: '박준수',
@@ -25,8 +25,8 @@ let customers: Customer[] = [
     lunar_solar: 'solar',
     notes: '사주 상담 고객',
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  },
+    updated_at: new Date().toISOString(),
+  },,
   {
     id: '2',
     name: '이정미',
@@ -36,8 +36,8 @@ let customers: Customer[] = [
     lunar_solar: 'lunar',
     notes: '궁합 상담 고객',
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }
+    updated_at: new Date().toISOString(),
+  },
 ];
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
@@ -84,7 +84,7 @@ function handleGetCustomers(req: VercelRequest, res: VercelResponse) {
     }
     return res.status(200).json({
       success: true,
-      data: customer
+      data: customer,
     });
   }
 
@@ -92,7 +92,7 @@ function handleGetCustomers(req: VercelRequest, res: VercelResponse) {
   return res.status(200).json({
     success: true,
     data: customers,
-    total: customers.length
+    total: customers.length,
   });
 }
 
@@ -103,12 +103,12 @@ function handleCreateCustomer(req: VercelRequest, res: VercelResponse) {
     birth_time,
     gender,
     lunar_solar,
-    notes
+    notes,
   } = req.body;
 
   if (!name || !birth_date || !birth_time || !gender || !lunar_solar) {
     return res.status(400).json({
-      error: 'Name, birth_date, birth_time, gender, and lunar_solar are required'
+      error: 'Name, birth_date, birth_time, gender, and lunar_solar are required',
     });
   }
 
@@ -121,14 +121,14 @@ function handleCreateCustomer(req: VercelRequest, res: VercelResponse) {
     lunar_solar,
     notes: notes || '',
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   };
 
   customers.push(newCustomer);
 
   return res.status(201).json({
     success: true,
-    data: newCustomer
+    data: newCustomer,
   });
 }
 
@@ -149,12 +149,12 @@ function handleUpdateCustomer(req: VercelRequest, res: VercelResponse) {
   customers[customerIndex] = {
     ...customers[customerIndex],
     ...updates,
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   };
 
   return res.status(200).json({
     success: true,
-    data: customers[customerIndex]
+    data: customers[customerIndex],
   });
 }
 
@@ -175,6 +175,6 @@ function handleDeleteCustomer(req: VercelRequest, res: VercelResponse) {
 
   return res.status(200).json({
     success: true,
-    data: deletedCustomer
+    data: deletedCustomer,
   });
 }

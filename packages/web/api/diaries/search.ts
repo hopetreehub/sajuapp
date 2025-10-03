@@ -15,7 +15,7 @@ interface DiaryEntry {
 }
 
 // 임시 다이어리 데이터 (메모리에 저장) - 실제로는 데이터베이스에서 가져와야 함
-let diaries: DiaryEntry[] = [
+const diaries: DiaryEntry[] = [
   {
     id: '1',
     user_id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
@@ -25,7 +25,7 @@ let diaries: DiaryEntry[] = [
     weather: '☀️',
     tags: ['프로젝트', '시작'],
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   },
   {
     id: '2',
@@ -36,8 +36,8 @@ let diaries: DiaryEntry[] = [
     weather: '⛅',
     tags: ['친구', '즐거움'],
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }
+    updated_at: new Date().toISOString(),
+  },
 ];
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
@@ -76,7 +76,7 @@ function handleSearchDiaries(req: VercelRequest, res: VercelResponse, userId: st
     const searchTerm = q.toLowerCase();
     filteredDiaries = filteredDiaries.filter(diary =>
       diary.content.toLowerCase().includes(searchTerm) ||
-      (diary.tags && diary.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
+      (diary.tags && diary.tags.some(tag => tag.toLowerCase().includes(searchTerm))),
     );
   }
 

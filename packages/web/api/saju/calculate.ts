@@ -50,7 +50,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     // 필수 필드 검증
     if (!birth_date || !birth_time || !lunar_solar) {
       return res.status(400).json({
-        error: 'Missing required fields: birth_date, birth_time, lunar_solar'
+        error: 'Missing required fields: birth_date, birth_time, lunar_solar',
       });
     }
 
@@ -64,7 +64,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       day: birthDate.getDate(),
       hour,
       minute,
-      lunarSolar: lunar_solar
+      lunarSolar: lunar_solar,
     };
 
     // 사주 계산
@@ -82,8 +82,8 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         ohHaengBalance,
         interpretation,
         sajuString,
-        calculatedAt: new Date().toISOString()
-      }
+        calculatedAt: new Date().toISOString(),
+      },
     });
 
   } catch (error) {
@@ -128,7 +128,7 @@ function calculateDayPillar(year: number, month: number, day: number) {
     '1971-11-17': { stem: 2, branch: 6 }, // 병오일
     '2000-01-01': { stem: 2, branch: 4 }, // 병진일
     '2024-01-01': { stem: 8, branch: 2 }, // 임인일
-    '1900-01-31': { stem: 0, branch: 0 }  // 갑자일 (만세력 기준)
+    '1900-01-31': { stem: 0, branch: 0 },  // 갑자일 (만세력 기준)
   };
 
   const dateKey = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
@@ -148,13 +148,22 @@ function calculateDayPillar(year: number, month: number, day: number) {
 
   return {
     stem: (stem + 10) % 10,
-    branch: (branch + 12) % 12
+    branch: (branch + 12) % 12,
   };
 }
 
 // 정확한 만세력 계산 시스템
-function calculateFourPillars(sajuInfo: any): FourPillarsResult {
-  let { year, month, day, hour, lunarSolar } = sajuInfo;
+function calculateFourPillars(sajuInfo: unknown): FourPillarsResult {
+  const sajuData = sajuInfo as {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    lunarSolar: 'lunar' | 'solar';
+  };
+
+  let { year, month, day } = sajuData;
+  const { hour, lunarSolar } = sajuData;
 
   // 음력인 경우 양력으로 변환
   if (lunarSolar === 'lunar') {
@@ -171,7 +180,7 @@ function calculateFourPillars(sajuInfo: any): FourPillarsResult {
   // 2. 월주 계산 (정확한 24절기 기준)
   // 1971년 신해년의 경우 월간은 다음과 같음
   const knownMonthPillars = {
-    '1971-11': { stem: 5, branch: 11 } // 기해월 (11월 = 해월)
+    '1971-11': { stem: 5, branch: 11 }, // 기해월 (11월 = 해월)
   };
 
   const monthKey = `${year}-${month}`;
@@ -187,7 +196,7 @@ function calculateFourPillars(sajuInfo: any): FourPillarsResult {
       [4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5], // 을경년
       [6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7], // 병신년
       [8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9], // 정임년
-      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1]  // 무계년
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1],  // 무계년
     ];
 
     const yearStemIndex = yearStem % 5;
@@ -206,7 +215,7 @@ function calculateFourPillars(sajuInfo: any): FourPillarsResult {
     [2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3], // 을경일
     [4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5], // 병신일
     [6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7], // 정임일
-    [8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]  // 무계일
+    [8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9],  // 무계일
   ];
 
   // 시간대별 지지 계산 (23-01시=자시, 01-03시=축시, 03-05시=인시...)
@@ -221,20 +230,20 @@ function calculateFourPillars(sajuInfo: any): FourPillarsResult {
   return {
     year: {
       heaven: heavenlyStems[safeStem(yearStem)],
-      earth: earthlyBranches[safeBranch(yearBranch)]
+      earth: earthlyBranches[safeBranch(yearBranch)],
     },
     month: {
       heaven: heavenlyStems[safeStem(monthStem)],
-      earth: earthlyBranches[safeBranch(monthBranch)]
+      earth: earthlyBranches[safeBranch(monthBranch)],
     },
     day: {
       heaven: heavenlyStems[safeStem(dayStem)],
-      earth: earthlyBranches[safeBranch(dayBranch)]
+      earth: earthlyBranches[safeBranch(dayBranch)],
     },
     time: {
       heaven: heavenlyStems[safeStem(hourStem)],
-      earth: earthlyBranches[safeBranch(hourBranch)]
-    }
+      earth: earthlyBranches[safeBranch(hourBranch)],
+    },
   };
 }
 
@@ -245,7 +254,7 @@ function calculateOhHaengBalance(fourPillars: FourPillarsResult): OhHaengBalance
     '병': 'fire', '정': 'fire',
     '무': 'earth', '기': 'earth',
     '경': 'metal', '신': 'metal',
-    '임': 'water', '계': 'water'
+    '임': 'water', '계': 'water',
   };
 
   // 지지 오행 매핑 (주요 오행)
@@ -261,7 +270,7 @@ function calculateOhHaengBalance(fourPillars: FourPillarsResult): OhHaengBalance
     '신': ['metal', 'water'],
     '유': ['metal'],
     '술': ['earth', 'fire', 'metal'],
-    '해': ['water', 'wood']
+    '해': ['water', 'wood'],
   };
 
   // 오행 점수 초기화
@@ -270,7 +279,7 @@ function calculateOhHaengBalance(fourPillars: FourPillarsResult): OhHaengBalance
     fire: 0,
     earth: 0,
     metal: 0,
-    water: 0
+    water: 0,
   };
 
   // 사주팔자에서 오행 점수 계산
@@ -313,7 +322,7 @@ function generateSajuInterpretation(fourPillars: FourPillarsResult, ohHaengBalan
     fire: '화(火) 기운이 강하신 분입니다. 열정적이고 활발하며, 리더십이 뛰어납니다.',
     earth: '토(土) 기운이 강하신 분입니다. 안정적이고 신뢰할 수 있으며, 포용력이 뛰어납니다.',
     metal: '금(金) 기운이 강하신 분입니다. 의지가 강하고 정의로우며, 결단력이 뛰어납니다.',
-    water: '수(水) 기운이 강하신 분입니다. 지혜롭고 적응력이 뛰어나며, 깊이 있는 사고를 합니다.'
+    water: '수(水) 기운이 강하신 분입니다. 지혜롭고 적응력이 뛰어나며, 깊이 있는 사고를 합니다.',
   };
 
   return interpretations[dominantElement as keyof typeof interpretations];

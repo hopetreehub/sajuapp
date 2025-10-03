@@ -15,7 +15,7 @@ export interface DiaryEntry {
 }
 
 // 임시 다이어리 데이터 (메모리에 저장)
-let diaries: DiaryEntry[] = [
+const diaries: DiaryEntry[] = [
   {
     id: '1',
     user_id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
@@ -25,7 +25,7 @@ let diaries: DiaryEntry[] = [
     weather: '☀️',
     tags: ['프로젝트', '시작'],
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   },
   {
     id: '2',
@@ -36,8 +36,8 @@ let diaries: DiaryEntry[] = [
     weather: '⛅',
     tags: ['친구', '즐거움'],
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }
+    updated_at: new Date().toISOString(),
+  },
 ];
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
@@ -100,14 +100,14 @@ function handleGetDiaries(req: VercelRequest, res: VercelResponse, userId: strin
   // 날짜 범위로 필터링
   if (startDate && endDate) {
     filteredDiaries = filteredDiaries.filter(diary =>
-      diary.date >= startDate && diary.date <= endDate
+      diary.date >= startDate && diary.date <= endDate,
     );
   }
 
   // 월별 필터링
   if (month) {
     filteredDiaries = filteredDiaries.filter(diary =>
-      diary.date.startsWith(month)
+      diary.date.startsWith(month),
     );
   }
 
@@ -129,7 +129,7 @@ function handleCreateDiary(req: VercelRequest, res: VercelResponse, userId: stri
 
   if (!date || !content) {
     return res.status(400).json({
-      error: 'Date and content are required'
+      error: 'Date and content are required',
     });
   }
 
@@ -143,7 +143,7 @@ function handleCreateDiary(req: VercelRequest, res: VercelResponse, userId: stri
     tags: tags || [],
     images: images || [],
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   };
 
   diaries.push(newDiary);
@@ -160,7 +160,7 @@ function handleUpdateDiary(req: VercelRequest, res: VercelResponse, userId: stri
   }
 
   const diaryIndex = diaries.findIndex(diary =>
-    diary.id === id && diary.user_id === userId
+    diary.id === id && diary.user_id === userId,
   );
 
   if (diaryIndex === -1) {
@@ -170,7 +170,7 @@ function handleUpdateDiary(req: VercelRequest, res: VercelResponse, userId: stri
   diaries[diaryIndex] = {
     ...diaries[diaryIndex],
     ...updates,
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   };
 
   return res.status(200).json(diaries[diaryIndex]);
@@ -184,7 +184,7 @@ function handleDeleteDiary(req: VercelRequest, res: VercelResponse, userId: stri
   }
 
   const diaryIndex = diaries.findIndex(diary =>
-    diary.id === id && diary.user_id === userId
+    diary.id === id && diary.user_id === userId,
   );
 
   if (diaryIndex === -1) {
@@ -195,6 +195,6 @@ function handleDeleteDiary(req: VercelRequest, res: VercelResponse, userId: stri
 
   return res.status(200).json({
     success: true,
-    data: deletedDiary
+    data: deletedDiary,
   });
 }

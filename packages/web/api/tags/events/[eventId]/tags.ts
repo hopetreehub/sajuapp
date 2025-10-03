@@ -11,14 +11,14 @@ interface Tag {
 }
 
 // 임시 태그 데이터 (실제로는 tags.ts와 공유해야 함)
-let tags: Tag[] = [
+const tags: Tag[] = [
   {
     id: '1',
     name: '업무',
     color: '#FF6B6B',
     user_id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   },
   {
     id: '2',
@@ -26,7 +26,7 @@ let tags: Tag[] = [
     color: '#4ECDC4',
     user_id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   },
   {
     id: '3',
@@ -34,14 +34,14 @@ let tags: Tag[] = [
     color: '#45B7D1',
     user_id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }
+    updated_at: new Date().toISOString(),
+  },
 ];
 
 // 이벤트-태그 관계 (임시 데이터)
 let eventTags: { eventId: string; tagId: string }[] = [
   { eventId: '1', tagId: '1' },
-  { eventId: '2', tagId: '2' }
+  { eventId: '2', tagId: '2' },
 ];
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
@@ -89,7 +89,7 @@ function handleGetEventTags(req: VercelRequest, res: VercelResponse, eventId: st
 
   // 태그 정보 가져오기
   const eventTagsData = tags.filter(tag =>
-    tagIds.includes(tag.id) && tag.user_id === userId
+    tagIds.includes(tag.id) && tag.user_id === userId,
   );
 
   return res.status(200).json(eventTagsData);
@@ -100,7 +100,7 @@ function handleAddTagsToEvent(req: VercelRequest, res: VercelResponse, eventId: 
 
   if (!tagIds || !Array.isArray(tagIds)) {
     return res.status(400).json({
-      error: 'tagIds array is required'
+      error: 'tagIds array is required',
     });
   }
 
@@ -111,7 +111,7 @@ function handleAddTagsToEvent(req: VercelRequest, res: VercelResponse, eventId: 
 
   if (validTagIds.length === 0) {
     return res.status(400).json({
-      error: 'No valid tags found'
+      error: 'No valid tags found',
     });
   }
 
@@ -121,7 +121,7 @@ function handleAddTagsToEvent(req: VercelRequest, res: VercelResponse, eventId: 
   // 새로운 관계 추가
   const newEventTags = validTagIds.map(tagId => ({
     eventId,
-    tagId
+    tagId,
   }));
 
   eventTags.push(...newEventTags);
@@ -148,7 +148,7 @@ function handleRemoveTagFromEvent(req: VercelRequest, res: VercelResponse, event
   // 이벤트-태그 관계 제거
   const initialLength = eventTags.length;
   eventTags = eventTags.filter(et =>
-    !(et.eventId === eventId && et.tagId === tagId)
+    !(et.eventId === eventId && et.tagId === tagId),
   );
 
   if (eventTags.length === initialLength) {
@@ -157,6 +157,6 @@ function handleRemoveTagFromEvent(req: VercelRequest, res: VercelResponse, event
 
   return res.status(200).json({
     success: true,
-    message: 'Tag removed from event'
+    message: 'Tag removed from event',
   });
 }

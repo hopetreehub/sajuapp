@@ -11,14 +11,14 @@ export interface Tag {
 }
 
 // 임시 태그 데이터 (메모리에 저장)
-let tags: Tag[] = [
+const tags: Tag[] = [
   {
     id: '1',
     name: '업무',
     color: '#FF6B6B',
     user_id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   },
   {
     id: '2',
@@ -26,7 +26,7 @@ let tags: Tag[] = [
     color: '#4ECDC4',
     user_id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   },
   {
     id: '3',
@@ -34,14 +34,14 @@ let tags: Tag[] = [
     color: '#45B7D1',
     user_id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
-  }
+    updated_at: new Date().toISOString(),
+  },
 ];
 
 // 이벤트-태그 관계 (임시 데이터)
 let eventTags: { eventId: string; tagId: string }[] = [
   { eventId: '1', tagId: '1' },
-  { eventId: '2', tagId: '2' }
+  { eventId: '2', tagId: '2' },
 ];
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
@@ -81,7 +81,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 function handleGetTags(req: VercelRequest, res: VercelResponse, userId: string) {
   const { id } = req.query;
 
-  let filteredTags = tags.filter(tag => tag.user_id === userId);
+  const filteredTags = tags.filter(tag => tag.user_id === userId);
 
   // 특정 태그 조회
   if (id) {
@@ -101,18 +101,18 @@ function handleCreateTag(req: VercelRequest, res: VercelResponse, userId: string
 
   if (!name || !color) {
     return res.status(400).json({
-      error: 'Name and color are required'
+      error: 'Name and color are required',
     });
   }
 
   // 같은 이름의 태그가 이미 있는지 확인
   const existingTag = tags.find(tag =>
-    tag.user_id === userId && tag.name === name
+    tag.user_id === userId && tag.name === name,
   );
 
   if (existingTag) {
     return res.status(400).json({
-      error: 'Tag with this name already exists'
+      error: 'Tag with this name already exists',
     });
   }
 
@@ -122,7 +122,7 @@ function handleCreateTag(req: VercelRequest, res: VercelResponse, userId: string
     color,
     user_id: userId,
     created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   };
 
   tags.push(newTag);
@@ -139,7 +139,7 @@ function handleUpdateTag(req: VercelRequest, res: VercelResponse, userId: string
   }
 
   const tagIndex = tags.findIndex(tag =>
-    tag.id === id && tag.user_id === userId
+    tag.id === id && tag.user_id === userId,
   );
 
   if (tagIndex === -1) {
@@ -149,7 +149,7 @@ function handleUpdateTag(req: VercelRequest, res: VercelResponse, userId: string
   tags[tagIndex] = {
     ...tags[tagIndex],
     ...updates,
-    updated_at: new Date().toISOString()
+    updated_at: new Date().toISOString(),
   };
 
   return res.status(200).json(tags[tagIndex]);
@@ -163,7 +163,7 @@ function handleDeleteTag(req: VercelRequest, res: VercelResponse, userId: string
   }
 
   const tagIndex = tags.findIndex(tag =>
-    tag.id === id && tag.user_id === userId
+    tag.id === id && tag.user_id === userId,
   );
 
   if (tagIndex === -1) {
@@ -177,6 +177,6 @@ function handleDeleteTag(req: VercelRequest, res: VercelResponse, userId: string
 
   return res.status(200).json({
     success: true,
-    data: deletedTag
+    data: deletedTag,
   });
 }
