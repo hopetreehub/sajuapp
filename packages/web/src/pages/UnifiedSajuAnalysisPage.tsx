@@ -6,6 +6,7 @@ import SajuSubcategoryTabs from '@/components/saju/SajuSubcategoryTabs';
 import UnifiedSajuRadarChart from '@/components/saju/charts/UnifiedSajuRadarChart';
 import CustomerSelector from '@/components/saju/CustomerSelector';
 import { Customer, getCustomerById } from '@/services/customerApi';
+import { calculateSajuData } from '@/utils/sajuDataCalculator';
 
 export default function UnifiedSajuAnalysisPage() {
   const [selectedCategory, setSelectedCategory] = useState('jubon');
@@ -58,9 +59,10 @@ export default function UnifiedSajuAnalysisPage() {
       console.log('[데이터 로드 시작] 고객 ID:', customerId);
       const response = await getCustomerById(customerId);
       console.log('[API 응답]', response.data);
-      
+      const customer = response.data;
+
       // saju_data가 문자열인 경우 JSON 파싱
-      let sajuData = response.data.saju_data;
+      let sajuData = customer.saju_data;
       if (typeof sajuData === 'string') {
         try {
           sajuData = JSON.parse(sajuData);
@@ -70,8 +72,25 @@ export default function UnifiedSajuAnalysisPage() {
           sajuData = null;
         }
       }
+
+      // saju_data가 없으면 고객 정보로 계산
+      if (!sajuData) {
+        console.log('[사주 데이터 없음] 고객 정보로 계산 시작');
+        const sajuBirthInfo = {
+          year: parseInt(customer.birth_date.split('-')[0]),
+          month: parseInt(customer.birth_date.split('-')[1]),
+          day: parseInt(customer.birth_date.split('-')[2]),
+          hour: parseInt(customer.birth_time.split(':')[0]),
+          minute: parseInt(customer.birth_time.split(':')[1]),
+          gender: customer.gender,
+          isLunar: customer.lunar_solar === 'lunar',
+        };
+        sajuData = calculateSajuData(sajuBirthInfo);
+        console.log('[사주 데이터 계산 완료]', sajuData);
+      }
+
       console.log('[사주 데이터 수신]', sajuData);
-      
+
       setCustomerSajuData(sajuData);
       // 전역 사주 데이터 설정 (모든 차트에 반영)
       setGlobalSajuData(sajuData);
