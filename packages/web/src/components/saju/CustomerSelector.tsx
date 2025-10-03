@@ -20,7 +20,6 @@ export default function CustomerSelector({
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [showNoCustomersPrompt, setShowNoCustomersPrompt] = useState(false);
 
   const loadCustomers = useCallback(async () => {
     try {
@@ -37,15 +36,6 @@ export default function CustomerSelector({
   useEffect(() => {
     loadCustomers();
   }, [loadCustomers]);
-
-  // 고객 데이터가 없을 때 프롬프트 표시
-  useEffect(() => {
-    if (!loading && customers.length === 0 && !selectedCustomer) {
-      setShowNoCustomersPrompt(true);
-    } else {
-      setShowNoCustomersPrompt(false);
-    }
-  }, [loading, customers.length, selectedCustomer]);
 
   const handleSelect = (customer: Customer) => {
     // console.log('[CustomerSelector] 고객 선택됨:', customer);
@@ -74,36 +64,8 @@ export default function CustomerSelector({
     setIsOpen(false); // 드롭다운 닫기
   };
 
-  // 고객이 없을 때 설정 페이지로 안내하는 UI
-  if (showNoCustomersPrompt && !isOpen) {
-    return (
-      <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
-        <div className="text-center space-y-4">
-          <div className="text-5xl mb-3">🔮</div>
-          <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
-            운세를 확인하려면 설정이 필요합니다
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400">
-            생년월일시 정보를 입력하여 맞춤 운세를 받아보세요
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
-            <button
-              onClick={() => navigate('/settings')}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium rounded-lg transition-all transform hover:scale-105 shadow-lg"
-            >
-              ⚙️ 설정하러 가기
-            </button>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="px-6 py-3 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-purple-600 dark:text-purple-400 font-medium rounded-lg border-2 border-purple-300 dark:border-purple-600 transition-all"
-            >
-              ➕ 새 고객 등록
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // 고객이 없을 때도 정상적인 UI를 유지하고 안내 메시지만 추가
+  const hasNoCustomers = !loading && customers.length === 0 && !selectedCustomer;
 
   return (
     <div className="relative">
@@ -171,8 +133,12 @@ export default function CustomerSelector({
             {loading ? (
               <div className="p-4 text-center text-gray-500">로딩 중...</div>
             ) : customers.length === 0 ? (
-              <div className="p-4 text-center text-gray-500">
-                등록된 고객이 없습니다
+              <div className="p-6 text-center space-y-4">
+                <div className="text-4xl">🔮</div>
+                <div className="text-gray-600 dark:text-gray-400">
+                  <p className="font-medium mb-2">등록된 고객이 없습니다</p>
+                  <p className="text-sm">위의 "새 고객 등록" 버튼을 클릭하여<br/>첫 고객을 등록해보세요</p>
+                </div>
               </div>
             ) : (
               <div className="divide-y dark:divide-gray-700">
@@ -180,7 +146,7 @@ export default function CustomerSelector({
                   <button
                     key={customer.id}
                     onClick={() => handleSelect(customer)}
-                    className="w-full px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 
+                    className="w-full px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700
                              transition-colors text-left"
                   >
                     <div className="flex justify-between items-center">
@@ -189,8 +155,8 @@ export default function CustomerSelector({
                           {customer.name}
                         </div>
                         <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {customer.birth_date} {customer.birth_time} · 
-                          {customer.lunar_solar === 'lunar' ? '음력' : '양력'} · 
+                          {customer.birth_date} {customer.birth_time} ·
+                          {customer.lunar_solar === 'lunar' ? '음력' : '양력'} ·
                           {customer.gender === 'male' ? '남' : '여'}
                         </div>
                       </div>
