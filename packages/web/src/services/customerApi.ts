@@ -1,7 +1,7 @@
 // 고객 관리 API 서비스 - Vercel 풀스택 버전
 
 // API Base URL 설정
-const API_BASE_URL = import.meta.env.DEV ? '/api' : '/api/customers';
+const API_BASE_URL = '/api/customers';
 
 // 초기화 로깅
 if (typeof window !== 'undefined') {
@@ -43,7 +43,7 @@ export interface CustomerResponse {
 export async function getCustomers(
   page: number = 1,
   limit: number = 20,
-  search: string = ''
+  search: string = '',
 ): Promise<CustomerListResponse> {
   const params = new URLSearchParams({
     page: page.toString(),
@@ -51,7 +51,7 @@ export async function getCustomers(
     search,
   });
 
-  const url = import.meta.env.DEV ? `${API_BASE_URL}/customers?${params}` : `${API_BASE_URL}?${params}`;
+  const url = `${API_BASE_URL}?${params}`;
   console.log('[Customer API] 고객 목록 조회:', url);
 
   try {
@@ -70,7 +70,7 @@ export async function getCustomers(
 
 // 고객 상세 조회
 export async function getCustomerById(id: number): Promise<CustomerResponse> {
-  const url = import.meta.env.DEV ? `${API_BASE_URL}/customers/${id}` : `${API_BASE_URL}/${id}`;
+  const url = `${API_BASE_URL}/${id}`;
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -82,7 +82,7 @@ export async function getCustomerById(id: number): Promise<CustomerResponse> {
 
 // 고객 등록
 export async function createCustomer(customer: Customer): Promise<CustomerResponse> {
-  const url = import.meta.env.DEV ? `${API_BASE_URL}/customers` : API_BASE_URL;
+  const url = API_BASE_URL;
 
   const response = await fetch(url, {
     method: 'POST',
@@ -103,9 +103,9 @@ export async function createCustomer(customer: Customer): Promise<CustomerRespon
 // 고객 수정
 export async function updateCustomer(
   id: number,
-  customer: Customer
+  customer: Customer,
 ): Promise<CustomerResponse> {
-  const url = import.meta.env.DEV ? `${API_BASE_URL}/customers/${id}` : `${API_BASE_URL}/${id}`;
+  const url = `${API_BASE_URL}/${id}`;
 
   const response = await fetch(url, {
     method: 'PUT',
@@ -125,7 +125,7 @@ export async function updateCustomer(
 
 // 고객 삭제
 export async function deleteCustomer(id: number): Promise<{ success: boolean; message: string }> {
-  const url = import.meta.env.DEV ? `${API_BASE_URL}/customers/${id}` : `${API_BASE_URL}/${id}`;
+  const url = `${API_BASE_URL}/${id}`;
 
   const response = await fetch(url, {
     method: 'DELETE',
@@ -142,7 +142,7 @@ export async function deleteCustomer(id: number): Promise<{ success: boolean; me
 // 고객 검색
 export async function searchCustomers(query: string): Promise<Customer[]> {
   const params = new URLSearchParams({ q: query });
-  const url = import.meta.env.DEV ? `${API_BASE_URL}/customers/search?${params}` : `${API_BASE_URL}/search?${params}`;
+  const url = `${API_BASE_URL}/search?${params}`;
 
   const response = await fetch(url);
 
@@ -158,7 +158,7 @@ export async function searchCustomers(query: string): Promise<Customer[]> {
 export async function calculateSaju(
   birth_date: string,
   birth_time: string,
-  lunar_solar: 'lunar' | 'solar' = 'solar'
+  lunar_solar: 'lunar' | 'solar' = 'solar',
 ): Promise<any> {
   const url = import.meta.env.DEV ? `${API_BASE_URL}/saju/calculate` : '/api/saju/calculate';
 

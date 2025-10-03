@@ -6,6 +6,7 @@ interface Customer {
   name: string;
   birth_date: string;
   birth_time: string;
+  phone: string;
   gender: 'male' | 'female';
   lunar_solar: 'lunar' | 'solar';
   notes?: string;
@@ -21,17 +22,19 @@ const customers: Customer[] = [
     name: '박준수',
     birth_date: '1990-05-15',
     birth_time: '14:30',
+    phone: '010-1234-5678',
     gender: 'male',
     lunar_solar: 'solar',
     notes: '사주 상담 고객',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
-  },,
+  },
   {
     id: '2',
     name: '이정미',
     birth_date: '1988-11-22',
     birth_time: '09:15',
+    phone: '010-9876-5432',
     gender: 'female',
     lunar_solar: 'lunar',
     notes: '궁합 상담 고객',

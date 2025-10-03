@@ -173,7 +173,7 @@ export default function CustomerManagementPage({ embedded = false }: CustomerMan
                     </td>
                   </tr>
                 ) : (
-                  customers.map((customer, index) => (
+                  customers.filter(customer => customer !== null && customer !== undefined).map((customer, index) => (
                     <tr key={customer.id} className="border-b dark:border-gray-700">
                       <td className="px-4 py-3 text-gray-900 dark:text-white">
                         {(currentPage - 1) * 20 + index + 1}
