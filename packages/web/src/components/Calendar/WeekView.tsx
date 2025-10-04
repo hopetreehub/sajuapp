@@ -6,9 +6,8 @@ import DiaryBookModal from '@/components/DiaryBookModal';
 import EditTodoModal from '@/components/EditTodoModal';
 import { Todo } from '@/contexts/CalendarContext';
 import { ITEM_COLORS } from '@/types/todo';
-import DailyFortuneIndicator from './DailyFortuneIndicator';
-import { 
-  startOfWeek, 
+import {
+  startOfWeek,
   endOfWeek,
   eachDayOfInterval,
   format,
@@ -31,8 +30,21 @@ interface WeekViewProps {
   onDiaryClick?: (date: Date) => void
 }
 
-export default function WeekView({ events, onCreateEvent, onDateClick, onEditEvent, onDeleteEvent, highlightedEventId: _highlightedEventId }: WeekViewProps) {
-  const { currentDate, getTodosForDate, addTodo, deleteTodo, toggleTodo } = useCalendar();
+export default function WeekView({
+  events,
+  onCreateEvent,
+  onDateClick,
+  onEditEvent,
+  onDeleteEvent,
+  highlightedEventId: _highlightedEventId,
+}: WeekViewProps) {
+  const {
+    currentDate,
+    getTodosForDate,
+    addTodo,
+    deleteTodo,
+    toggleTodo,
+  } = useCalendar();
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedHour, setSelectedHour] = useState<number | undefined>();
@@ -41,9 +53,9 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   
   // 일기 데이터 가져오기
-  const { diaryDates } = useDiaryData({ 
-    viewMode: 'week', 
-    currentDate, 
+  const { diaryDates } = useDiaryData({
+    viewMode: 'week',
+    currentDate,
   });
 
   const weekDays = useMemo(() => {
@@ -111,6 +123,26 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
   const currentMinute = new Date().getMinutes();
   const currentTimePosition = (currentHour * 60 + currentMinute) / (24 * 60) * 100;
 
+  // 종일 일정 필터링
+  const allDayEventsByDate = useMemo(() => {
+    const map = new Map<string, CalendarEvent[]>();
+    weekDays.forEach(day => {
+      const dateKey = format(day, 'yyyy-MM-dd');
+      const dayAllDayEvents = events.filter(event => {
+        if (!event.all_day || !event.start_time) return false;
+        try {
+          const eventStart = new Date(event.start_time);
+          if (isNaN(eventStart.getTime())) return false;
+          return isSameDay(eventStart, day);
+        } catch {
+          return false;
+        }
+      });
+      map.set(dateKey, dayAllDayEvents);
+    });
+    return map;
+  }, [events, weekDays]);
+
   return (
     <div className="h-full flex flex-col bg-background">
       {/* Header with weekdays */}
@@ -121,10 +153,10 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
         {weekDays.map((day) => {
           const dayOfWeek = day.getDay();
           const isCurrentDay = isToday(day);
-          
+
           return (
-            <div 
-              key={day.toISOString()} 
+            <div
+              key={day.toISOString()}
               className={`
                 p-3 text-center border-l border-border
                 ${isCurrentDay ? 'bg-primary/10' : ''}
@@ -152,6 +184,55 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
           );
         })}
       </div>
+
+      {/* All-day events section */}
+      {Array.from(allDayEventsByDate.values()).some(events => events.length > 0) && (
+        <div className="grid grid-cols-8 border-b border-border bg-muted/30">
+          <div className="p-2 text-center text-xs font-semibold text-muted-foreground border-r border-border">
+            종일
+          </div>
+          {weekDays.map(day => {
+            const dateKey = format(day, 'yyyy-MM-dd');
+            const dayAllDayEvents = allDayEventsByDate.get(dateKey) || [];
+
+            return (
+              <div key={`allday-${day.toISOString()}`} className="p-1 border-l border-border">
+                {dayAllDayEvents.map(event => (
+                  <div
+                    key={event.id}
+                    className="text-xs p-1 mb-1 rounded truncate cursor-pointer hover:opacity-80 group flex items-center justify-between"
+                    style={{
+                      backgroundColor: ITEM_COLORS.event.background,
+                      color: ITEM_COLORS.event.text,
+                      borderLeft: `2px solid ${ITEM_COLORS.event.border}`,
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEditEvent(event);
+                    }}
+                  >
+                    <span className="truncate">{event.title}</span>
+                    {onDeleteEvent && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm(`"${event.title}" 일정을 삭제하시겠습니까?`)) {
+                            onDeleteEvent(event.id!);
+                          }
+                        }}
+                        className="opacity-60 hover:opacity-100 text-red-500 hover:text-red-700 transition-opacity ml-1 flex-shrink-0 text-sm font-bold"
+                        title="일정 삭제"
+                      >
+                        ×
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Time grid */}
       <div className="flex-1 overflow-auto">
@@ -305,14 +386,15 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
           </div>
 
           {/* 할일 섹션 */}
-          <div className="mt-4 grid grid-cols-8 gap-px bg-border">
-            {/* 할일 헤더 */}
-            <div className="bg-muted p-3 text-center text-sm font-semibold text-muted-foreground">
-              할일
-            </div>
-            
-            {/* 각 요일의 시간이 지정되지 않은 할일 및 일기 */}
-            {weekDays.map(day => {
+          <div className="mt-4 border-t border-border">
+            <div className="grid grid-cols-8 bg-border gap-px">
+              {/* 할일 헤더 */}
+              <div className="bg-muted p-3 text-center text-sm font-semibold text-muted-foreground">
+                할일
+              </div>
+
+              {/* 각 요일의 시간이 지정되지 않은 할일 및 일기 */}
+              {weekDays.map(day => {
               const dayTodos = getUntimedTodosForDate(day);
               const isCurrentDay = isToday(day);
               
@@ -384,6 +466,7 @@ export default function WeekView({ events, onCreateEvent, onDateClick, onEditEve
                 </div>
               );
             })}
+            </div>
           </div>
         </div>
       </div>
