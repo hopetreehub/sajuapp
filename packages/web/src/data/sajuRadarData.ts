@@ -1033,22 +1033,156 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
     ],
   },
 
-  // 8. 주능 (동적으로 백엔드에서 로드)
+  // 8. 주능 (능력과 잠재력)
   {
     id: 'juneung',
     name: '주능',
     icon: '⚡',
     description: '능력과 잠재력 분석',
-    subcategories: [], // 동적으로 로드됨
+    subcategories: [
+      {
+        id: 'leadership',
+        name: '리더십',
+        items: [
+          { id: 'tongsolyeok', name: '통솔력', baseScore: getSajuScore('통솔력', 72) },
+          { id: 'gyeoldan', name: '결단력', baseScore: getSajuScore('결단력', 70) },
+          { id: 'chaekimgam', name: '책임감', baseScore: getSajuScore('책임감', 75) },
+          { id: 'yeonghyangyeok', name: '영향력', baseScore: getSajuScore('영향력', 68) },
+          { id: 'seondeuk', name: '선득력', baseScore: getSajuScore('선득력', 65) },
+        ],
+      },
+      {
+        id: 'creativity',
+        name: '창의력',
+        items: [
+          { id: 'sangsangyeok', name: '상상력', baseScore: getSajuScore('상상력', 70) },
+          { id: 'hyeoksin', name: '혁신성', baseScore: getSajuScore('혁신성', 68) },
+          { id: 'yesulgam', name: '예술감', baseScore: getSajuScore('예술감', 65) },
+          { id: 'dokchasung', name: '독창성', baseScore: getSajuScore('독창성', 72) },
+          { id: 'munje_haegyeol', name: '문제해결', baseScore: getSajuScore('문제해결', 75) },
+        ],
+      },
+      {
+        id: 'communication',
+        name: '소통능력',
+        items: [
+          { id: 'uisasotong', name: '의사소통', baseScore: getSajuScore('의사소통', 70) },
+          { id: 'gyeongcheong', name: '경청', baseScore: getSajuScore('경청', 72) },
+          { id: 'seoldeuk', name: '설득', baseScore: getSajuScore('설득', 68) },
+          { id: 'gonggam', name: '공감', baseScore: getSajuScore('공감', 75) },
+          { id: 'pyohyeon', name: '표현력', baseScore: getSajuScore('표현력', 70) },
+        ],
+      },
+      {
+        id: 'learning',
+        name: '학습능력',
+        items: [
+          { id: 'ihae', name: '이해력', baseScore: getSajuScore('이해력', 72) },
+          { id: 'giok', name: '기억력', baseScore: getSajuScore('기억력', 70) },
+          { id: 'bunseok', name: '분석력', baseScore: getSajuScore('분석력', 75) },
+          { id: 'jeongriryeok', name: '정리력', baseScore: getSajuScore('정리력', 68) },
+          { id: 'jeokung', name: '적응력', baseScore: getSajuScore('적응력', 70) },
+        ],
+      },
+      {
+        id: 'business',
+        name: '사업능력',
+        items: [
+          { id: 'gyeongyeong', name: '경영', baseScore: getSajuScore('경영', 68) },
+          { id: 'jaemukanri', name: '재무관리', baseScore: getSajuScore('재무관리', 70) },
+          { id: 'marketing', name: '마케팅', baseScore: getSajuScore('마케팅', 65) },
+          { id: 'network', name: '네트워킹', baseScore: getSajuScore('네트워킹', 72) },
+          { id: 'hyeopsang', name: '협상력', baseScore: getSajuScore('협상력', 70) },
+        ],
+      },
+      {
+        id: 'expertise',
+        name: '전문성',
+        items: [
+          { id: 'gisul', name: '기술력', baseScore: getSajuScore('기술력', 72) },
+          { id: 'jeonmunjisik', name: '전문지식', baseScore: getSajuScore('전문지식', 75) },
+          { id: 'silmuneung', name: '실무능력', baseScore: getSajuScore('실무능력', 70) },
+          { id: 'janyeomseong', name: '장인정신', baseScore: getSajuScore('장인정신', 68) },
+          { id: 'baljeonyeok', name: '발전성', baseScore: getSajuScore('발전성', 70) },
+        ],
+      },
+    ],
   },
 
-  // 9. 주흉 (동적으로 백엔드에서 로드)
+  // 9. 주흉 (위험과 주의사항)
   {
     id: 'juhyung',
     name: '주흉',
     icon: '⚠️',
     description: '위험과 주의사항 분석',
-    subcategories: [], // 동적으로 로드됨
+    subcategories: [
+      {
+        id: 'health_risk',
+        name: '건강주의',
+        items: [
+          { id: 'jilbyeong', name: '질병', baseScore: getSajuScore('질병', 35) },
+          { id: 'sangcheo', name: '상처', baseScore: getSajuScore('상처', 40) },
+          { id: 'manse', name: '만성질환', baseScore: getSajuScore('만성질환', 38) },
+          { id: 'stress', name: '스트레스', baseScore: getSajuScore('스트레스', 45) },
+          { id: 'jeongsin_geongang', name: '정신건강', baseScore: getSajuScore('정신건강', 42) },
+        ],
+      },
+      {
+        id: 'financial_risk',
+        name: '재물주의',
+        items: [
+          { id: 'jaemul_sonshil', name: '재물손실', baseScore: getSajuScore('재물손실', 40) },
+          { id: 'sagijosa', name: '사기조심', baseScore: getSajuScore('사기조심', 35) },
+          { id: 'tumanja', name: '투자주의', baseScore: getSajuScore('투자주의', 38) },
+          { id: 'bojeung', name: '보증주의', baseScore: getSajuScore('보증주의', 32) },
+          { id: 'daechul', name: '대출주의', baseScore: getSajuScore('대출주의', 36) },
+        ],
+      },
+      {
+        id: 'relationship_risk',
+        name: '관계주의',
+        items: [
+          { id: 'bunjaeng', name: '분쟁', baseScore: getSajuScore('분쟁', 38) },
+          { id: 'galdeung', name: '갈등', baseScore: getSajuScore('갈등', 40) },
+          { id: 'ohaejosa', name: '오해조심', baseScore: getSajuScore('오해조심', 42) },
+          { id: 'baesinjosa', name: '배신주의', baseScore: getSajuScore('배신주의', 35) },
+          { id: 'ibyeol', name: '이별', baseScore: getSajuScore('이별', 38) },
+        ],
+      },
+      {
+        id: 'accident_risk',
+        name: '사고주의',
+        items: [
+          { id: 'gyotong_sago', name: '교통사고', baseScore: getSajuScore('교통사고', 36) },
+          { id: 'sanchae', name: '산업재해', baseScore: getSajuScore('산업재해', 38) },
+          { id: 'hwajae', name: '화재', baseScore: getSajuScore('화재', 34) },
+          { id: 'susang', name: '수상사고', baseScore: getSajuScore('수상사고', 35) },
+          { id: 'nolakjosa', name: '낙상주의', baseScore: getSajuScore('낙상주의', 40) },
+        ],
+      },
+      {
+        id: 'legal_risk',
+        name: '법률주의',
+        items: [
+          { id: 'sosong', name: '소송', baseScore: getSajuScore('소송', 38) },
+          { id: 'gyeyakjosa', name: '계약주의', baseScore: getSajuScore('계약주의', 42) },
+          { id: 'beobjeok_分쟁', name: '법적분쟁', baseScore: getSajuScore('법적분쟁', 36) },
+          { id: 'semuwijosa', name: '세무주의', baseScore: getSajuScore('세무주의', 40) },
+          { id: 'gyujejosa', name: '규제주의', baseScore: getSajuScore('규제주의', 38) },
+        ],
+      },
+      {
+        id: 'career_risk',
+        name: '사업주의',
+        items: [
+          { id: 'silpae', name: '실패위험', baseScore: getSajuScore('실패위험', 40) },
+          { id: 'dongeopjosa', name: '동업주의', baseScore: getSajuScore('동업주의', 35) },
+          { id: 'hwakjang_josa', name: '확장주의', baseScore: getSajuScore('확장주의', 38) },
+          { id: 'gyeoyeok_josa', name: '계역변경', baseScore: getSajuScore('계역변경', 42) },
+          { id: 'gyeongjaeng', name: '경쟁압박', baseScore: getSajuScore('경쟁압박', 40) },
+        ],
+      },
+    ],
   },
 ];
 
