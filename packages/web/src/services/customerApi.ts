@@ -58,10 +58,22 @@ export async function getCustomers(
     const response = await fetch(url);
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[Customer API] 응답 에러:', errorText);
       throw new Error(`고객 목록을 불러오는데 실패했습니다 (${response.status})`);
     }
 
-    return await response.json();
+    const result = await response.json();
+    console.log('[Customer API] 응답 데이터:', result);
+
+    // API 응답을 CustomerListResponse 형식으로 변환
+    return {
+      success: result.success,
+      data: result.data || [],
+      total: result.total || result.data?.length || 0,
+      page: page,
+      totalPages: Math.ceil((result.total || result.data?.length || 0) / limit),
+    };
   } catch (error) {
     console.error('[Customer API] 요청 실패:', error);
     throw error;
@@ -70,7 +82,9 @@ export async function getCustomers(
 
 // 고객 상세 조회
 export async function getCustomerById(id: number): Promise<CustomerResponse> {
-  const url = `${API_BASE_URL}/${id}`;
+  const url = `${API_BASE_URL}?id=${id}`;
+  console.log('[Customer API] 고객 상세 조회:', url);
+
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -105,7 +119,8 @@ export async function updateCustomer(
   id: number,
   customer: Customer,
 ): Promise<CustomerResponse> {
-  const url = `${API_BASE_URL}/${id}`;
+  const url = `${API_BASE_URL}?id=${id}`;
+  console.log('[Customer API] 고객 수정:', url);
 
   const response = await fetch(url, {
     method: 'PUT',
@@ -125,7 +140,8 @@ export async function updateCustomer(
 
 // 고객 삭제
 export async function deleteCustomer(id: number): Promise<{ success: boolean; message: string }> {
-  const url = `${API_BASE_URL}/${id}`;
+  const url = `${API_BASE_URL}?id=${id}`;
+  console.log('[Customer API] 고객 삭제:', url);
 
   const response = await fetch(url, {
     method: 'DELETE',
