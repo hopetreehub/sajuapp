@@ -40,6 +40,7 @@ cd packages/web && npx vite --port 4000
 cd packages/backend/services/calendar && PORT=4012 npm start
 cd packages/backend/services/diary && PORT=4004 npm start
 cd packages/backend/services/saju-analysis && PORT=4015 npm start
+cd packages/backend/services/customer && CUSTOMER_SERVICE_PORT=4016 npm start
 
 # 포트 충돌 시 해결
 netstat -ano | findstr ":40"

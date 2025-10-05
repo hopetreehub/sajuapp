@@ -15,7 +15,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         // 고객 관리 서비스
         '/api/customers': {
-          target: 'http://localhost:4002',
+          target: 'http://localhost:4016',
           changeOrigin: true,
           secure: false,
         },
