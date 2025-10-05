@@ -38,14 +38,6 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
   const [imageViewerOpen, setImageViewerOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // 디버깅: 모달 상태 변화 로그
-  console.log('📔 DiaryBookModal 렌더링:', {
-    isOpen,
-    date: format(date, 'yyyy-MM-dd'),
-    currentDate: format(currentDate, 'yyyy-MM-dd'),
-    content: `${content.slice(0, 50)  }...`,
-    contentLength: content.length,
-  });
 
   // 오늘과 어제의 운세 조언 생성
   const todayAdvice = generateDiaryAdvice(currentDate);
@@ -88,29 +80,17 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
     setWordCount(content.length);
   }, [content]);
 
-  // todayEntry 변경 시 이미지 상태 동기화 (디버그 로그 포함)
+  // todayEntry 변경 시 이미지 상태 동기화
   useEffect(() => {
     if (todayEntry) {
-      console.log('✅ todayEntry 변경 감지:', {
-        date: todayEntry.date,
-        hasImages: !!todayEntry.images,
-        imageCount: todayEntry.images?.length || 0,
-        images: todayEntry.images,
-      });
-
       // 기존 상태와 비교해서 다를 경우에만 업데이트
       const existingImageStr = JSON.stringify(images);
       const newImageStr = JSON.stringify(todayEntry.images || []);
 
       if (existingImageStr !== newImageStr) {
-        console.log('🔄 이미지 상태 업데이트:', {
-          기존: images.length,
-          새로운: todayEntry.images?.length || 0,
-        });
         setImages(todayEntry.images || []);
       }
     } else {
-      console.log('📝 새 일기 작성 모드 - 이미지 초기화');
       if (images.length > 0) {
         setImages([]);
       }
@@ -126,21 +106,12 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
       // 오늘 일기 조회
       try {
         const todayDiary = await diaryService.getDiaryByDate(todayStr);
-        console.log('📖 일기 로드 성공:', {
-          date: todayStr,
-          hasContent: !!todayDiary.content,
-          hasImages: !!todayDiary.images,
-          imageCount: todayDiary.images?.length || 0,
-          imagesFirstChar: todayDiary.images?.[0]?.substring(0, 30) || 'none',
-        });
-
         setTodayEntry(todayDiary);
         setContent(todayDiary.content || '');  // 기존 일기가 있으면 내용 로드
         setSelectedMood(todayDiary.mood || '😊');
         setImages(todayDiary.images || []);
       } catch (error: any) {
         if (error.response?.status === 404) {
-          console.log('📄 일기 없음 - 새 일기 모드');
           setTodayEntry(null);
           // 새 일기 모드: 아무것도 초기화하지 않음
           // 사용자가 입력 중이던 내용 모두 유지
@@ -198,21 +169,10 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
     try {
       const dateStr = format(currentDate, 'yyyy-MM-dd');
       
-      // 이미지 크기 검증 및 디버그 정보
+      // 이미지 처리
       let processedImages: string[] | undefined = undefined;
       if (images.length > 0) {
-        processedImages = [];
-        for (const img of images) {
-          // Base64 크기 확인
-          const sizeMB = (img.length * 3) / 4 / (1024 * 1024);
-          console.log(`이미지 크기: ${sizeMB.toFixed(2)}MB`);
-          
-          // 크기가 너무 크면 재압축
-          if (sizeMB > 1) {
-            console.warn(`이미지가 1MB를 초과합니다. 현재: ${sizeMB.toFixed(2)}MB`);
-          }
-          processedImages.push(img);
-        }
+        processedImages = images;
       }
       
       const diaryData = {
@@ -224,25 +184,14 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
         tags: [] as string[],
       };
 
-      console.log('저장할 일기 데이터:', {
-        date: dateStr,
-        contentLength: content.length,
-        mood: selectedMood,
-        imageCount: processedImages?.length || 0,
-        totalDataSize: `${JSON.stringify(diaryData).length / 1024  }KB`,
-      });
-
       let savedEntry: DiaryEntry;
-      
+
       if (todayEntry?.id) {
-        console.log('기존 일기 업데이트:', todayEntry.id);
         savedEntry = await diaryService.updateDiary(todayEntry.id, diaryData);
       } else {
-        console.log('새 일기 생성');
         savedEntry = await diaryService.createDiary(diaryData);
       }
 
-      console.log('저장 성공:', savedEntry);
       setTodayEntry(savedEntry);
       
       if (onSave) {
@@ -417,13 +366,6 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
         // 압축된 이미지 크기 확인 (Base64는 원본의 약 1.33배)
         const compressedSizeBytes = (compressedImage.length * 3) / 4;
         const compressedSizeMB = compressedSizeBytes / (1024 * 1024);
-        const compressionRatio = ((1 - compressedSizeBytes / file.size) * 100).toFixed(1);
-        const format = compressedImage.startsWith('data:image/webp') ? 'WebP' : 'JPEG';
-        
-        console.log(`✅ 이미지 압축 완료: ${file.name}`);
-        console.log(`📐 포맷: ${format} | 원본: ${(file.size / (1024 * 1024)).toFixed(2)}MB → 압축: ${compressedSizeMB.toFixed(2)}MB`);
-        console.log(`📈 압축률: ${compressionRatio}% 감소`);
-        
         newImages.push(compressedImage);
       }
       
@@ -605,15 +547,7 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
                 <div className="diary-content">
                   <textarea
                     value={content}
-                    onChange={(e) => {
-                      const newContent = e.target.value;
-                      console.log('📝 Content 변경:', { 
-                        길이: newContent.length, 
-                        trim길이: newContent.trim().length,
-                        내용: newContent,
-                      });
-                      setContent(newContent);
-                    }}
+                    onChange={(e) => setContent(e.target.value)}
                     placeholder="오늘 하루는 어땠나요? 마음속 이야기를 자유롭게 적어보세요..."
                     className="w-full h-64 p-0 border-none bg-transparent resize-none focus:outline-none text-gray-700 dark:text-gray-300 placeholder-amber-400 dark:placeholder-gray-500 leading-relaxed"
                     style={{ 
@@ -753,15 +687,7 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
           <div className="flex justify-end items-center mt-4">
             <div className="flex gap-2">
               <button
-                onClick={() => {
-                  console.log('💾 저장 버튼 클릭:', { 
-                    content길이: content.length,
-                    trim길이: content.trim().length,
-                    isLoading,
-                    조건: content.trim() && !isLoading,
-                  });
-                  handleSave();
-                }}
+                onClick={handleSave}
                 disabled={!content.trim() || isLoading}
                 className={`
                   px-6 py-2 rounded-lg font-medium transition-colors
