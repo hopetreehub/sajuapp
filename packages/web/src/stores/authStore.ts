@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 // 임시 타입 정의 (추후 별도 파일로 분리)
-interface User {
+export interface User {
   id: string
   email: string
   name: string
@@ -9,7 +9,7 @@ interface User {
   referredBy?: string
 }
 
-interface SignUpData {
+export interface SignUpData {
   email: string
   password: string
   name: string
@@ -19,7 +19,7 @@ interface SignUpData {
   agreedToMarketing?: boolean
 }
 
-interface _LoginData {
+export interface LoginData {
   email: string
   password: string
 }

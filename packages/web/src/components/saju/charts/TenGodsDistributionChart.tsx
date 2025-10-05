@@ -41,7 +41,7 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
   height = 400,
   className = '',
   chartType = 'bar',
-  _showCategory = false,
+  showCategory: _showCategory = false,
 }) => {
   const [viewMode, setViewMode] = useState<'individual' | 'category'>('individual');
   
@@ -192,10 +192,17 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
                 const percentage = analysis.total > 0 ?
                   ((value / analysis.total) * 100).toFixed(1) : '0.0';
 
+                const bgColor = Array.isArray(dataset.backgroundColor)
+                  ? dataset.backgroundColor[originalIndex] as string
+                  : dataset.backgroundColor as string;
+                const borderColor = Array.isArray(dataset.borderColor)
+                  ? dataset.borderColor[originalIndex] as string
+                  : dataset.borderColor as string;
+
                 return {
                   text: `${label} (${percentage}%)`,
-                  fillStyle: dataset.backgroundColor?.[originalIndex] as string || '#000',
-                  strokeStyle: dataset.borderColor?.[originalIndex] as string || '#000',
+                  fillStyle: bgColor || '#000',
+                  strokeStyle: borderColor || '#000',
                   lineWidth: 2,
                   hidden: false,
                   index: originalIndex,

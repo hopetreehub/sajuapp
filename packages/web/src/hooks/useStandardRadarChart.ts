@@ -65,21 +65,21 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
     if (!options.calculator) {
       // 계산기가 없는 경우 기본 데이터만 사용
       return {
-        base: Object.values(options.baseData),
-        today: Object.values(options.baseData),
-        month: Object.values(options.baseData),
-        year: Object.values(options.baseData),
+        base: Object.values(options.baseData) as number[],
+        today: Object.values(options.baseData) as number[],
+        month: Object.values(options.baseData) as number[],
+        year: Object.values(options.baseData) as number[],
       };
     }
 
     // 계산기가 있는 경우 시간대별 변화 적용
     const timeframes = options.calculator.calculateTimeFrameVariations(options.baseData);
-    
+
     return {
-      base: Object.values(timeframes.base),
-      today: Object.values(timeframes.today),
-      month: Object.values(timeframes.month),
-      year: Object.values(timeframes.year),
+      base: Object.values(timeframes.base) as number[],
+      today: Object.values(timeframes.today) as number[],
+      month: Object.values(timeframes.month) as number[],
+      year: Object.values(timeframes.year) as number[],
     };
   }, [options.baseData, options.calculator]);
 
@@ -146,8 +146,8 @@ export const useStandardRadarChart = (options: UseStandardRadarChartOptions) => 
   // 차트 데이터 생성
   const chartData: StandardRadarChartData = useMemo(() => {
     return {
-      labels: enhancedChartConfig.data.labels,
-      datasets: enhancedChartConfig.data.datasets,
+      labels: (enhancedChartConfig.data.labels || []) as string[],
+      datasets: enhancedChartConfig.data.datasets as StandardRadarChartData['datasets'],
     };
   }, [enhancedChartConfig]);
 

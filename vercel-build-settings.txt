@@ -1,0 +1,94 @@
+# Vercel 프로젝트 빌드 설정 수정 방법
+
+## 🔧 Vercel 대시보드에서 설정 변경
+
+### 1. 프로젝트 설정 페이지로 이동
+1. Vercel 대시보드에서 `sajuapp-web` 프로젝트 클릭
+2. 상단 탭에서 "Settings" 클릭
+3. 왼쪽 메뉴에서 "General" 선택
+
+### 2. Build & Development Settings 수정
+
+**Build Command** (빌드 명령어):
+```
+npm install --prefix packages/web && npm run build --prefix packages/web
+```
+
+**Install Command** (설치 명령어):
+```
+npm install --prefix packages/web
+```
+
+**Output Directory** (출력 디렉토리):
+```
+packages/web/dist
+```
+
+**Root Directory** (루트 디렉토리):
+```
+./
+```
+(비워두거나 루트를 의미하는 ./ 입력)
+
+### 3. 저장 및 재배포
+
+1. "Save" 버튼 클릭
+2. "Deployments" 탭으로 이동
+3. "Redeploy" 버튼 클릭
+4. 또는 자동으로 새 배포가 트리거됨
+
+## 🚨 현재 문제
+
+**에러**: `sh: line 1: cd: packages/web: No such file or directory`
+
+**원인**:
+- Vercel이 오래된 커밋(36f4690)을 사용 중
+- 해당 커밋에는 `cd packages/web` 명령어가 있음
+- 최신 커밋(9eec506, 93643be)에는 수정된 명령어가 있음
+
+**해결**:
+1. Vercel Settings에서 Build Command 직접 수정, 또는
+2. 최신 커밋으로 재배포 트리거
+
+## ✅ 올바른 빌드 명령어
+
+```bash
+npm install --prefix packages/web && npm run build --prefix packages/web
+```
+
+이 명령어는:
+- 루트 디렉토리에서 실행
+- `--prefix packages/web`로 해당 디렉토리 지정
+- `cd` 명령 불필요
+
+## 📝 vercel.json 최신 버전 확인
+
+최신 커밋의 vercel.json:
+```json
+{
+  "buildCommand": "npm install --prefix packages/web && npm run build --prefix packages/web",
+  "outputDirectory": "packages/web/dist",
+  "installCommand": "npm install --prefix packages/web",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+```
+
+## 🎯 즉시 해결 방법
+
+**옵션 1: Settings에서 Override (가장 빠름)**
+1. Settings > General > Build & Development Settings
+2. Build Command Override 활성화
+3. 위의 올바른 명령어 입력
+4. Save → Redeploy
+
+**옵션 2: 최신 커밋으로 재배포**
+1. Deployments 탭
+2. 최신 커밋(93643be) 찾기
+3. 해당 커밋의 "..." 메뉴 클릭
+4. "Redeploy" 선택
