@@ -76,11 +76,12 @@ function getFortuneLevel(score: number): FortuneLevel {
  * 오행 관계에 따른 점수 계산
  */
 function calculateElementScore(userElement: string, dayElement: string): number {
+  type ElementKey = keyof typeof ELEMENT_RELATIONS.생;
   if (userElement === dayElement) return 75; // 같은 오행
-  if (ELEMENT_RELATIONS.생[userElement] === dayElement) return 85; // 상생
-  if (ELEMENT_RELATIONS.생[dayElement] === userElement) return 90; // 일간이 사용자를 생조
-  if (ELEMENT_RELATIONS.극[userElement] === dayElement) return 45; // 사용자가 일간을 극
-  if (ELEMENT_RELATIONS.극[dayElement] === userElement) return 35; // 일간이 사용자를 극
+  if (ELEMENT_RELATIONS.생[userElement as ElementKey] === dayElement) return 85; // 상생
+  if (ELEMENT_RELATIONS.생[dayElement as ElementKey] === userElement) return 90; // 일간이 사용자를 생조
+  if (ELEMENT_RELATIONS.극[userElement as ElementKey] === dayElement) return 45; // 사용자가 일간을 극
+  if (ELEMENT_RELATIONS.극[dayElement as ElementKey] === userElement) return 35; // 일간이 사용자를 극
   return 60; // 기본 점수
 }
 
@@ -158,6 +159,7 @@ export function calculateDailyFortune(birthInfo: SajuBirthInfo, targetDate: Date
   const wealthLuck = Math.min(100, Math.max(0, baseScore + ((yearNum + personalSeed) % 31) - 15));
   const healthLuck = Math.min(100, Math.max(0, baseScore + ((dayNum * monthNum + personalSeed) % 31) - 15));
   const careerLuck = Math.min(100, Math.max(0, baseScore + ((dayNum + monthNum + personalSeed) % 31) - 15));
+  const studyLuck = Math.min(100, Math.max(0, baseScore + ((yearNum + dayNum + personalSeed) % 31) - 15));
   
   // 행운의 색상과 숫자 (날짜와 개인 정보 기반)
   const colorIndex = (dayNum + personalSeed) % LUCKY_COLORS.length;
@@ -170,6 +172,7 @@ export function calculateDailyFortune(birthInfo: SajuBirthInfo, targetDate: Date
     wealthLuck,
     healthLuck,
     careerLuck,
+    studyLuck,
     message: generateFortuneMessage(totalLuck, userElement, dayElement),
     luckyColor: LUCKY_COLORS[colorIndex],
     luckyNumber: LUCKY_NUMBERS[numberIndex],

@@ -70,8 +70,8 @@ function calculateSipsin(dayGan: string, targetGan: string): string {
     '임': '양', '계': '음',
   };
   
-  const dayYinYang = ganYinYang[dayGan];
-  const targetYinYang = ganYinYang[targetGan];
+  const dayYinYang = ganYinYang[dayGan as keyof typeof ganYinYang];
+  const targetYinYang = ganYinYang[targetGan as keyof typeof ganYinYang];
   const sameYinYang = dayYinYang === targetYinYang;
   
   if (dayElement === targetElement) {
@@ -98,7 +98,9 @@ function calculateBranchRelationScore(branches1: string[], branches2: string[]):
   for (const b1 of branches1) {
     for (const b2 of branches2) {
       // 육합 체크
-      if (BRANCH_COMBINE[b1 + b2] || BRANCH_COMBINE[b2 + b1]) {
+      const key1 = (b1 + b2) as keyof typeof BRANCH_COMBINE;
+      const key2 = (b2 + b1) as keyof typeof BRANCH_COMBINE;
+      if (BRANCH_COMBINE[key1] || BRANCH_COMBINE[key2]) {
         score += 15;
       }
       
@@ -130,19 +132,19 @@ function calculateElementBalance(saju1: SajuData, saju2: SajuData): number {
   let score = 60; // 기본 점수
   
   // 상생 관계 점수
-  const elements = ['목', '화', '토', '금', '수'];
+  const elements = ['목', '화', '토', '금', '수'] as const;
   for (const elem of elements) {
-    const nextElem = STEM_RELATIONSHIPS.상생[elem];
+    const nextElem = STEM_RELATIONSHIPS.상생[elem as keyof typeof STEM_RELATIONSHIPS.상생];
     if (balance1[elem] > 25 && balance2[nextElem] > 25) {
       score += 15; // 강한 상생
     } else if (balance1[elem] > 15 && balance2[nextElem] > 15) {
       score += 8; // 보통 상생
     }
   }
-  
+
   // 상극 관계 감점
   for (const elem of elements) {
-    const clashElem = STEM_RELATIONSHIPS.상극[elem];
+    const clashElem = STEM_RELATIONSHIPS.상극[elem as keyof typeof STEM_RELATIONSHIPS.상극];
     if (balance1[elem] > 30 && balance2[clashElem] > 30) {
       score -= 10; // 강한 상극
     }
@@ -273,7 +275,7 @@ export function calculateAccurateHealthScore(saju1: SajuData, saju2: SajuData): 
   
   // 상생 관계가 많으면 건강에 좋음
   for (const elem of elements) {
-    const nextElem = STEM_RELATIONSHIPS.상생[elem];
+    const nextElem = STEM_RELATIONSHIPS.상생[elem as keyof typeof STEM_RELATIONSHIPS.상생];
     if (balance1[elem] > 15 && balance2[nextElem] > 15) {
       score += 3;
     }

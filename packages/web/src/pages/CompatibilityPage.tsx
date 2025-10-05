@@ -12,7 +12,7 @@ import {
   calculateAccurateFutureScore,
   generateDetailedAdvice,
 } from '../utils/compatibilityCalculator';
-import { SajuCalculator } from '../utils/sajuCalculator';
+import { SajuCalculator, formatFourPillars, calculateOhHaengBalance } from '../utils/sajuCalculator';
 import { analyzeRelationship, RelationshipAnalysis } from '../utils/detailedCompatibilityCalculator';
 import { analyzePractical, PracticalAnalysis } from '../utils/practicalCompatibilityCalculator';
 import { analyzeDepth, analyzeSpecial, DepthAnalysis, SpecialAnalysis } from '../utils/depthSpecialCompatibilityCalculator';
@@ -91,19 +91,19 @@ export const CompatibilityPage: React.FC = () => {
           day,
           hour,
           minute,
-          lunarSolar: customer.lunar_solar,
+          isLunar: customer.lunar_solar === 'lunar',
           gender: customer.gender,
         };
 
         const fourPillars = SajuCalculator.calculateFourPillars(sajuInfo);
-        const ohHaengBalance = SajuCalculator.calculateOhHaengBalance(fourPillars);
+        const ohHaengBalance = calculateOhHaengBalance(fourPillars);
 
         return {
           year: fourPillars.year,
           month: fourPillars.month,
           day: fourPillars.day,
-          time: fourPillars.time,
-          fullSaju: SajuCalculator.formatFourPillars(fourPillars),
+          time: fourPillars.hour,
+          fullSaju: formatFourPillars(fourPillars),
           ohHaengBalance,
         };
       } catch (fallbackError) {

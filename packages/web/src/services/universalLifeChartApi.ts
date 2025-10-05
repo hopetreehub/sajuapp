@@ -6,6 +6,7 @@ import {
   PersonalInfo,
   SajuComponents,
   LifeChartRequest,
+  ChartDataPoint,
   // LifeChartResponse,
   ExportOptions,
 } from '@/types/universalLifeChart';
@@ -268,7 +269,7 @@ export const generateChartSummary = (chartData: UniversalLifeChartData) => {
 
   // 각 차원별 평균값 계산
   const dimensionAverages = Object.entries(data).reduce((acc, [key, points]) => {
-    const average = points.reduce((sum, point) => sum + point.value, 0) / points.length;
+    const average = points.reduce((sum: number, point: ChartDataPoint) => sum + point.value, 0) / points.length;
     acc[key] = Number(average.toFixed(2));
     return acc;
   }, {} as Record<string, number>);
@@ -282,8 +283,8 @@ export const generateChartSummary = (chartData: UniversalLifeChartData) => {
 
   // 최고/최저 시기 찾기
   const extremes = Object.entries(data).reduce((acc, [key, points]) => {
-    const maxPoint = points.reduce((max, point) => point.value > max.value ? point : max);
-    const minPoint = points.reduce((min, point) => point.value < min.value ? point : min);
+    const maxPoint = points.reduce((max: ChartDataPoint, point: ChartDataPoint) => point.value > max.value ? point : max);
+    const minPoint = points.reduce((min: ChartDataPoint, point: ChartDataPoint) => point.value < min.value ? point : min);
 
     acc[key] = {
       max: { age: maxPoint.age, value: Number(maxPoint.value.toFixed(2)) },

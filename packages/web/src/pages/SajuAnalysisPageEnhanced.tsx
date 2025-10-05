@@ -4,7 +4,7 @@ import SajuInputForm from '@/components/saju/SajuInputForm';
 import { FiveElementsBalanceChart } from '@/components/saju/charts/FiveElementsBalanceChart';
 import { TenGodsDistributionChart } from '@/components/saju/charts/TenGodsDistributionChart';
 // import SixAreaChart from '@/components/saju/charts/SixAreaChart';
-import HundredYearChart from '@/components/Charts/HundredYearChart';
+import HundredYearChart from '@/components/charts/HundredYearChart';
 import ChartNavigation from '@/components/Common/ChartNavigation';
 import UserSelectionPanel from '@/components/User/UserSelectionPanel';
 import LifeChartButton from '@/components/saju/LifeChartButton';
@@ -138,6 +138,9 @@ const SajuAnalysisPageEnhanced: React.FC = () => {
 
   // SajuAnalysisResult를 SajuData로 변환
   const convertToSajuData = (result: SajuAnalysisResult): SajuData => {
+    // dayMaster는 일주의 천간 (사주팔자가 있으면 추출, 없으면 기본값)
+    const dayMaster = fourPillars?.day.heavenly || '갑';
+
     return {
       birthInfo: result.birthInfo,
       fourPillars: result.fourPillars,
@@ -146,6 +149,7 @@ const SajuAnalysisPageEnhanced: React.FC = () => {
       tenGods: result.tenGods,
       totalScore: result.totalScore,
       averageScore: result.averageScore,
+      dayMaster,
     };
   };
 
@@ -182,18 +186,18 @@ const SajuAnalysisPageEnhanced: React.FC = () => {
             {showUserPanel && (
               <div className="mb-6">
                 <UserSelectionPanel
+                  currentUser={currentUser}
                   onUserSelect={handleUserSelect}
                   onUserChange={handleUserChange}
-                  showAddButton={true}
+                  alwaysShowAddButton={true}
                 />
               </div>
             )}
 
             {/* 사주 입력 폼 */}
             {!currentUser && (
-              <SajuInputForm 
-                onSubmit={handleFormSubmit} 
-                isLoading={loading} 
+              <SajuInputForm
+                onSubmit={handleFormSubmit}
               />
             )}
 
@@ -216,16 +220,16 @@ const SajuAnalysisPageEnhanced: React.FC = () => {
                 {fourPillars && (
                   <div className="grid grid-cols-4 gap-2">
                     {['년주', '월주', '일주', '시주'].map((label, index) => {
-                      const pillar = index === 0 ? fourPillars.yearPillar :
-                                     index === 1 ? fourPillars.monthPillar :
-                                     index === 2 ? fourPillars.dayPillar :
-                                     fourPillars.hourPillar;
+                      const pillar = index === 0 ? fourPillars.year :
+                                     index === 1 ? fourPillars.month :
+                                     index === 2 ? fourPillars.day :
+                                     fourPillars.hour;
                       return (
                         <div key={label} className="text-center">
                           <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">{label}</div>
                           <div className="bg-gray-100 dark:bg-gray-700 rounded px-2 py-1">
-                            <div className="text-lg font-bold text-gray-900 dark:text-white">{pillar.gan}</div>
-                            <div className="text-lg font-bold text-gray-900 dark:text-white">{pillar.ji}</div>
+                            <div className="text-lg font-bold text-gray-900 dark:text-white">{pillar.heavenly}</div>
+                            <div className="text-lg font-bold text-gray-900 dark:text-white">{pillar.earthly}</div>
                           </div>
                         </div>
                       );
