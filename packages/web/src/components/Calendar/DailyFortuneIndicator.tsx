@@ -43,7 +43,7 @@ const DailyFortuneIndicator: React.FC<DailyFortuneIndicatorProps> = ({ date, com
             className="h-full rounded-full transition-all"
             style={{
               width: `${dailyFortune.totalLuck}%`,
-              backgroundColor: fortuneInfo.color
+              backgroundColor: fortuneInfo.color,
             }}
           />
         </div>
