@@ -30,7 +30,7 @@ const isSameBirthInfo = (info1: SajuBirthInfo | null, info2: SajuBirthInfo | nul
     info1.hour === info2.hour &&
     info1.minute === info2.minute &&
     info1.isLunar === info2.isLunar &&
-    info1.isMale === info2.isMale
+    info1.gender === info2.gender
   );
 };
 

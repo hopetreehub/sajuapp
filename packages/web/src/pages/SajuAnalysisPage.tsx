@@ -4,7 +4,7 @@ import SajuInputForm from '@/components/saju/SajuInputForm';
 import { FiveElementsBalanceChart } from '@/components/saju/charts/FiveElementsBalanceChart';
 import { TenGodsDistributionChart } from '@/components/saju/charts/TenGodsDistributionChart';
 // import SixAreaChart from '@/components/saju/charts/SixAreaChart'; // 현재 사용하지 않음
-import HundredYearChart from '@/components/Charts/HundredYearChart';
+import HundredYearChart from '@/components/charts/HundredYearChart';
 import ChartNavigation from '@/components/Common/ChartNavigation';
 import CustomerSelector from '@/components/saju/CustomerSelector';
 import UniversalLifeChart from '@/components/charts/UniversalLifeChart';

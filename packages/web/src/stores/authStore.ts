@@ -82,12 +82,13 @@ export const useAuthStore = create<AuthState>((set) => ({
       
       // 임시로 성공 처리 - name 필드 추가
       const userName = email?.split('@')[0] || 'User';
-      set({ 
-        isAuthenticated: true, 
-        user: { 
-          email, 
+      set({
+        isAuthenticated: true,
+        user: {
+          email,
           name: userName,
           id: Date.now().toString(), // 임시 ID
+          createdAt: new Date().toISOString(),
         }, 
         isLoading: false, 
       });
