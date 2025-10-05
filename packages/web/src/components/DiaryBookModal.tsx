@@ -44,59 +44,7 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
   const yesterdayAdvice = generateDiaryAdvice(subDays(currentDate, 1));
   const yesterday = subDays(currentDate, 1);
 
-  // 날짜 변경 시 일기 조회
-  useEffect(() => {
-    if (isOpen) {
-      setCurrentDate(date);
-      // 초기 상태 설정은 loadDiaries에서 처리
-      loadDiaries(date);
-    }
-  }, [isOpen, date, loadDiaries]);
-
-  // currentDate 변경 시 일기 조회
-  useEffect(() => {
-    if (isOpen && currentDate) {
-      loadDiaries(currentDate);
-    }
-  }, [currentDate, isOpen, loadDiaries]);
-
-  // 자동 저장 (3초 후)
-  useEffect(() => {
-    if (!content.trim() || !todayEntry) return;
-
-    const timer = setTimeout(() => {
-      if (content !== todayEntry?.content ||
-          selectedMood !== todayEntry?.mood ||
-          JSON.stringify(images) !== JSON.stringify(todayEntry?.images || [])) {
-        autoSave();
-      }
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [content, selectedMood, images, todayEntry, autoSave]);
-
-  // 글자 수 계산
-  useEffect(() => {
-    setWordCount(content.length);
-  }, [content]);
-
-  // todayEntry 변경 시 이미지 상태 동기화
-  useEffect(() => {
-    if (todayEntry) {
-      // 기존 상태와 비교해서 다를 경우에만 업데이트
-      const existingImageStr = JSON.stringify(images);
-      const newImageStr = JSON.stringify(todayEntry.images || []);
-
-      if (existingImageStr !== newImageStr) {
-        setImages(todayEntry.images || []);
-      }
-    } else {
-      if (images.length > 0) {
-        setImages([]);
-      }
-    }
-  }, [todayEntry, images]);
-
+  // 함수 선언 (useEffect보다 먼저)
   const loadDiaries = useCallback(async (targetDate: Date) => {
     setIsLoading(true);
     try {
@@ -161,6 +109,59 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
       setIsAutoSaving(false);
     }
   }, [content, currentDate, selectedMood, images, todayEntry]);
+
+  // 날짜 변경 시 일기 조회
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentDate(date);
+      // 초기 상태 설정은 loadDiaries에서 처리
+      loadDiaries(date);
+    }
+  }, [isOpen, date, loadDiaries]);
+
+  // currentDate 변경 시 일기 조회
+  useEffect(() => {
+    if (isOpen && currentDate) {
+      loadDiaries(currentDate);
+    }
+  }, [currentDate, isOpen, loadDiaries]);
+
+  // 자동 저장 (3초 후)
+  useEffect(() => {
+    if (!content.trim() || !todayEntry) return;
+
+    const timer = setTimeout(() => {
+      if (content !== todayEntry?.content ||
+          selectedMood !== todayEntry?.mood ||
+          JSON.stringify(images) !== JSON.stringify(todayEntry?.images || [])) {
+        autoSave();
+      }
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [content, selectedMood, images, todayEntry, autoSave]);
+
+  // 글자 수 계산
+  useEffect(() => {
+    setWordCount(content.length);
+  }, [content]);
+
+  // todayEntry 변경 시 이미지 상태 동기화
+  useEffect(() => {
+    if (todayEntry) {
+      // 기존 상태와 비교해서 다를 경우에만 업데이트
+      const existingImageStr = JSON.stringify(images);
+      const newImageStr = JSON.stringify(todayEntry.images || []);
+
+      if (existingImageStr !== newImageStr) {
+        setImages(todayEntry.images || []);
+      }
+    } else {
+      if (images.length > 0) {
+        setImages([]);
+      }
+    }
+  }, [todayEntry, images]);
 
   const handleSave = async () => {
     if (!content.trim()) return;
