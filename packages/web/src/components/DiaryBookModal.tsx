@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { format, addDays, subDays, isToday } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { diaryService, DiaryEntry } from '@/services/api';
@@ -97,11 +97,11 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
         imageCount: todayEntry.images?.length || 0,
         images: todayEntry.images,
       });
-      
+
       // 기존 상태와 비교해서 다를 경우에만 업데이트
       const existingImageStr = JSON.stringify(images);
       const newImageStr = JSON.stringify(todayEntry.images || []);
-      
+
       if (existingImageStr !== newImageStr) {
         console.log('🔄 이미지 상태 업데이트:', {
           기존: images.length,
@@ -115,9 +115,9 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
         setImages([]);
       }
     }
-  }, [todayEntry]);
+  }, [todayEntry, images]);
 
-  const loadDiaries = async (targetDate: Date) => {
+  const loadDiaries = useCallback(async (targetDate: Date) => {
     setIsLoading(true);
     try {
       const todayStr = format(targetDate, 'yyyy-MM-dd');
