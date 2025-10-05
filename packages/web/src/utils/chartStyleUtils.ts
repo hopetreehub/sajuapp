@@ -23,7 +23,7 @@ export interface EnhancedRadarOptions {
 export interface TimeFrameData {
   label: string;
   values: number[];
-  timeFrame: 'base' | 'today' | 'thisMonth' | 'thisYear';
+  timeFrame: 'base' | 'today' | 'month' | 'year';
 }
 
 export class ChartStyleUtils {

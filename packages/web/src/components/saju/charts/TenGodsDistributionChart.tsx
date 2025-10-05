@@ -184,22 +184,23 @@ export const TenGodsDistributionChart: React.FC<TenGodsDistributionChartProps> =
             const datasets = chart.data.datasets;
             if (datasets.length > 0) {
               const dataset = datasets[0];
-              return chart.data.labels?.map((label, index) => {
+              return chart.data.labels?.filter((label, index) => {
                 const value = dataset.data[index] as number;
-                if (value === 0) return null;
-                
-                const percentage = analysis.total > 0 ? 
+                return value > 0;
+              }).map((label, originalIndex) => {
+                const value = dataset.data[originalIndex] as number;
+                const percentage = analysis.total > 0 ?
                   ((value / analysis.total) * 100).toFixed(1) : '0.0';
-                
+
                 return {
                   text: `${label} (${percentage}%)`,
-                  fillStyle: dataset.backgroundColor?.[index] as string || '#000',
-                  strokeStyle: dataset.borderColor?.[index] as string || '#000',
+                  fillStyle: dataset.backgroundColor?.[originalIndex] as string || '#000',
+                  strokeStyle: dataset.borderColor?.[originalIndex] as string || '#000',
                   lineWidth: 2,
                   hidden: false,
-                  index,
+                  index: originalIndex,
                 };
-              }).filter(Boolean) || [];
+              }) || [];
             }
             return [];
           },

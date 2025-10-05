@@ -6,6 +6,7 @@ export interface DiaryEntry {
   content: string;
   mood?: string;
   tags?: string[];
+  images?: string[];
   created_at?: string;
   updated_at?: string;
 }
@@ -72,5 +73,5 @@ export const diaryService = {
     } else {
       return this.createEntry({ date, content, mood });
     }
-  }
+  },
 };

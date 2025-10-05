@@ -237,7 +237,7 @@ export const TwelveEarthlyBranchesChart: React.FC<TwelveEarthlyBranchesChartProp
             font: {
               family: 'Noto Sans KR, sans-serif',
               size: 11,
-              weight: '500',
+              weight: 500,
             },
             color: isDarkMode ? '#E5E7EB' : '#1F2937',
             padding: 10,

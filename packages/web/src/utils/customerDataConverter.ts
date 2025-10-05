@@ -97,14 +97,14 @@ export function getCacheKey(
  * 고객 정보로부터 이름 추출
  */
 export function getCustomerName(
-  data: Customer | UserProfile | null,
+  data: Customer | UserProfile | null | undefined,
 ): string {
   if (!data) return '미선택';
-  
+
   if ('name' in data) {
     return data.name;
   }
-  
+
   return '사용자';
 }
 
@@ -112,10 +112,10 @@ export function getCustomerName(
  * 고객 정보로부터 생년월일 문자열 생성
  */
 export function getCustomerBirthDateString(
-  data: Customer | UserProfile | null,
+  data: Customer | UserProfile | null | undefined,
 ): string {
   if (!data) return '';
-  
+
   if ('birth_date' in data) {
     // Customer 타입
     const date = new Date(data.birth_date);
