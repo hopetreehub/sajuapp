@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { useCalendar } from '@/contexts/CalendarContext';
 import { format, isSameDay } from 'date-fns';
 import { CalendarEvent } from '@/services/api';
@@ -25,30 +25,8 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
   const [customerSajuData, setCustomerSajuData] = useState<SajuData | null>(null);
   const [personalSajuData, setPersonalSajuData] = useState<SajuData | null>(null);
   const [dataSource, setDataSource] = useState<'personal' | 'customer' | 'sample'>('sample');
-  
-  // 설정 페이지의 개인 사주 정보 읽기
-  useEffect(() => {
-    loadPersonalSajuData();
-    
-    // 설정 변경 이벤트 리스너
-    const handlePersonalInfoUpdate = () => {
-      loadPersonalSajuData();
-    };
-    
-    window.addEventListener('personalInfoUpdated', handlePersonalInfoUpdate);
-    
-    // 고객 데이터는 개인 사주가 없을 때만 로드
-    const lastCustomerId = localStorage.getItem('lastSelectedCustomerId');
-    if (lastCustomerId && !personalSajuData) {
-      loadCustomerData(parseInt(lastCustomerId));
-    }
-    
-    return () => {
-      window.removeEventListener('personalInfoUpdated', handlePersonalInfoUpdate);
-    };
-  }, []);
-  
-  const loadPersonalSajuData = () => {
+
+  const loadPersonalSajuData = useCallback(() => {
     const personalInfo = getPersonalInfoFromStorage();
     if (isPersonalInfoValid(personalInfo)) {
       const sajuData = convertPersonalInfoToSaju(personalInfo!);
@@ -57,9 +35,9 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
         setDataSource('personal');
       }
     }
-  };
-  
-  const loadCustomerData = async (customerId: number) => {
+  }, []);
+
+  const loadCustomerData = useCallback(async (customerId: number) => {
     try {
       const response = await getCustomerById(customerId);
       setSelectedCustomer(response.data);
@@ -72,7 +50,29 @@ export default function DayViewEnhanced({ events, onCreateEvent, onEditEvent }: 
     } catch (error) {
       console.error('Error loading customer data:', error);
     }
-  };
+  }, [personalSajuData]);
+
+  // 설정 페이지의 개인 사주 정보 읽기
+  useEffect(() => {
+    loadPersonalSajuData();
+
+    // 설정 변경 이벤트 리스너
+    const handlePersonalInfoUpdate = () => {
+      loadPersonalSajuData();
+    };
+
+    window.addEventListener('personalInfoUpdated', handlePersonalInfoUpdate);
+
+    // 고객 데이터는 개인 사주가 없을 때만 로드
+    const lastCustomerId = localStorage.getItem('lastSelectedCustomerId');
+    if (lastCustomerId && !personalSajuData) {
+      loadCustomerData(parseInt(lastCustomerId));
+    }
+
+    return () => {
+      window.removeEventListener('personalInfoUpdated', handlePersonalInfoUpdate);
+    };
+  }, [loadPersonalSajuData, loadCustomerData, personalSajuData]);
 
   const dayEvents = useMemo(() => {
     return events.filter(event => {

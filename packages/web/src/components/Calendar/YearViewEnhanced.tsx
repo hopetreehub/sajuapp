@@ -125,14 +125,14 @@ export default function YearViewEnhanced({ _events, _onCreateEvent, _onEditEvent
       const stats = getMonthStatistics(currentYear, month);
       totalMemos += stats.total;
       completedMemos += stats.completed;
-      
+
       Object.entries(stats.byType).forEach(([type, count]) => {
         typeCount[type as MemoType] += count;
       });
     }
 
     return { totalMemos, completedMemos, typeCount };
-  }, [currentYear, getMemosByMonth]);
+  }, [currentYear, getMonthStatistics]);
 
   return (
     <div className="h-full overflow-auto bg-background p-4">

@@ -59,29 +59,29 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
       // 초기 상태 설정은 loadDiaries에서 처리
       loadDiaries(date);
     }
-  }, [isOpen, date]);
+  }, [isOpen, date, loadDiaries]);
 
   // currentDate 변경 시 일기 조회
   useEffect(() => {
     if (isOpen && currentDate) {
       loadDiaries(currentDate);
     }
-  }, [currentDate]);
+  }, [currentDate, isOpen, loadDiaries]);
 
   // 자동 저장 (3초 후)
   useEffect(() => {
     if (!content.trim() || !todayEntry) return;
 
     const timer = setTimeout(() => {
-      if (content !== todayEntry?.content || 
-          selectedMood !== todayEntry?.mood || 
+      if (content !== todayEntry?.content ||
+          selectedMood !== todayEntry?.mood ||
           JSON.stringify(images) !== JSON.stringify(todayEntry?.images || [])) {
         autoSave();
       }
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [content, selectedMood, images]);
+  }, [content, selectedMood, images, todayEntry, autoSave]);
 
   // 글자 수 계산
   useEffect(() => {
@@ -133,7 +133,7 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
           imageCount: todayDiary.images?.length || 0,
           imagesFirstChar: todayDiary.images?.[0]?.substring(0, 30) || 'none',
         });
-        
+
         setTodayEntry(todayDiary);
         setContent(todayDiary.content || '');  // 기존 일기가 있으면 내용 로드
         setSelectedMood(todayDiary.mood || '😊');
@@ -161,11 +161,11 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const autoSave = async () => {
+  const autoSave = useCallback(async () => {
     if (!content.trim()) return;
-    
+
     setIsAutoSaving(true);
     try {
       const dateStr = format(currentDate, 'yyyy-MM-dd');
@@ -189,7 +189,7 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
     } finally {
       setIsAutoSaving(false);
     }
-  };
+  }, [content, currentDate, selectedMood, images, todayEntry]);
 
   const handleSave = async () => {
     if (!content.trim()) return;

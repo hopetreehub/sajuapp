@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { diaryService, DiaryEntry } from '@/services/api';
@@ -32,14 +32,7 @@ export default function DiaryModal({ isOpen, onClose, date, onSave }: DiaryModal
   const [error, setError] = useState<string | null>(null);
   const [_isAutoSaving, _setIsAutoSaving] = useState(false);
 
-  // 날짜가 변경되거나 모달이 열릴 때 기존 일기 조회
-  useEffect(() => {
-    if (isOpen && date) {
-      fetchDiary();
-    }
-  }, [date, isOpen]);
-
-  const fetchDiary = async () => {
+  const fetchDiary = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -61,7 +54,14 @@ export default function DiaryModal({ isOpen, onClose, date, onSave }: DiaryModal
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [date]);
+
+  // 날짜가 변경되거나 모달이 열릴 때 기존 일기 조회
+  useEffect(() => {
+    if (isOpen && date) {
+      fetchDiary();
+    }
+  }, [date, isOpen, fetchDiary]);
 
   const handleSave = async () => {
     if (!content.trim()) return;
