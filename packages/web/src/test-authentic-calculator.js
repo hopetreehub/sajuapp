@@ -18,7 +18,7 @@ function runAuthenticSajuTest() {
     year: { gan: '신', ji: '해' },  // 신해
     month: { gan: '기', ji: '해' }, // 기해
     day: { gan: '병', ji: '오' },   // 병오
-    time: { gan: '경', ji: '인' }   // 경인
+    time: { gan: '경', ji: '인' },   // 경인
   };
 
   const 박준수결과 = AuthenticSajuCalculator.calculateAuthenticLifeChart(박준수사주, 1971);
@@ -39,7 +39,7 @@ function runAuthenticSajuTest() {
     year: { gan: '병', ji: '진' },  // 병진
     month: { gan: '정', ji: '유' }, // 정유
     day: { gan: '신', ji: '미' },   // 신미
-    time: { gan: '계', ji: '사' }   // 계사
+    time: { gan: '계', ji: '사' },   // 계사
   };
 
   const 정비제결과 = AuthenticSajuCalculator.calculateAuthenticLifeChart(정비제사주, 1976);
@@ -74,14 +74,14 @@ function runAuthenticSajuTest() {
 
   // 박준수: 용신이 목화라면 목화운에서 높은 점수 기대
   const 박준수용신운년도들 = 박준수결과.연도별점수.filter(년도 =>
-    박준수결과.개인정보.용신.용신.includes(년도.상세.오행)
+    박준수결과.개인정보.용신.용신.includes(년도.상세.오행),
   );
   const 박준수용신평균 = 박준수용신운년도들.length > 0 ?
     박준수용신운년도들.reduce((sum, 년도) => sum + 년도.총점, 0) / 박준수용신운년도들.length : 0;
 
   // 정비제: 용신이 수목이라면 수목운에서 높은 점수 기대
   const 정비제용신운년도들 = 정비제결과.연도별점수.filter(년도 =>
-    정비제결과.개인정보.용신.용신.includes(년도.상세.오행)
+    정비제결과.개인정보.용신.용신.includes(년도.상세.오행),
   );
   const 정비제용신평균 = 정비제용신운년도들.length > 0 ?
     정비제용신운년도들.reduce((sum, 년도) => sum + 년도.총점, 0) / 정비제용신운년도들.length : 0;

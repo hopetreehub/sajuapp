@@ -61,20 +61,16 @@ const SajuAnalysisPage: React.FC = () => {
 
   // 인생차트 로드 함수
   const loadUniversalChart = async (customerId: number) => {
-    console.log('📊 인생차트 로드 시작:', customerId);
     try {
       // 캐시된 차트 확인
       const cached = getCachedChart(customerId);
       if (cached) {
-        console.log('✅ 캐시된 차트 사용');
         setUniversalChart(cached);
         return;
       }
 
       // 새 차트 생성
-      console.log('🔄 새 차트 생성 중...');
       const chartData = await generateUniversalLifeChart(customerId);
-      console.log('✅ 차트 생성 완료:', chartData);
       setUniversalChart(chartData);
       setCachedChart(customerId, chartData);
     } catch (error) {
@@ -94,7 +90,7 @@ const SajuAnalysisPage: React.FC = () => {
     
     // console.log('=== 사주 계산 결과 ===');
     // console.log('입력:', info);
-    // console.log('사주:', formatFourPillarsDetailed(calculatedPillars));
+    // 
 
     // 100년 인생운세 계산 추가
     fetchLifetimeFortune({
@@ -475,7 +471,7 @@ const SajuAnalysisPage: React.FC = () => {
                                     setSelectedDimensions(prev =>
                                       prev.includes(dimension)
                                         ? prev.filter(d => d !== dimension)
-                                        : [...prev, dimension]
+                                        : [...prev, dimension],
                                     );
                                   }}
                                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${

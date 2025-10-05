@@ -38,7 +38,7 @@ const AuthPage: React.FC = () => {
 
   // 인증 성공 핸들러
   const handleAuthSuccess = () => {
-    console.log('인증 성공!');
+
     // 페이지 이동은 각 컴포넌트에서 처리
   };
 

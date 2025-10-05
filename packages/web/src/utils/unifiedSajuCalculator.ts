@@ -398,7 +398,7 @@ export function calculateSaju(birthInfo: SajuBirthInfo): SajuCalculationResult {
   
   if (isLunar) {
     // TODO: 음력-양력 변환 구현
-    console.warn('Lunar calendar conversion not yet implemented');
+
   }
   
   // 서머타임 처리

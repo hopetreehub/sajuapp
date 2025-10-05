@@ -62,13 +62,7 @@ export default function DiaryPage() {
 
   const handleSave = () => {
     // Save diary entry
-    console.log({
-      date: selectedDate,
-      content,
-      mood,
-      tags,
-      todos,
-    });
+
     // Show success message
     alert('다이어리가 저장되었습니다!');
   };

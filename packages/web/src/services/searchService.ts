@@ -120,7 +120,7 @@ const searchEvents = async (options: SearchOptions): Promise<SearchResult[]> => 
       .slice(0, options.limit || 10);
   } catch (error) {
     if (error instanceof Error && error.message === 'Events search timeout') {
-      console.warn('Events search timed out');
+
     } else {
       console.error('Failed to search events:', error);
     }
@@ -199,7 +199,7 @@ const searchDiaries = async (options: SearchOptions): Promise<SearchResult[]> =>
       .slice(0, options.limit || 10);
   } catch (error) {
     if (error instanceof Error && error.message === 'Diaries search timeout') {
-      console.warn('Diaries search timed out');
+
     } else {
       console.error('Failed to search diaries:', error);
     }
@@ -263,7 +263,7 @@ export const searchService = {
         if (result.status === 'fulfilled') {
           results.push(...result.value);
         } else {
-          console.warn(`Search failed for category ${index}:`, result.reason);
+
         }
       });
 
@@ -273,7 +273,7 @@ export const searchService = {
           const todoResults = searchTodos(todos, options);
           results.push(...todoResults);
         } catch (error) {
-          console.warn('Todo search failed:', error);
+
         }
       }
 
@@ -282,8 +282,8 @@ export const searchService = {
       // 성능 로깅 (개발 모드에서만)
       if (process.env.NODE_ENV === 'development') {
         const endTime = performance.now();
-        console.log(`Search completed in ${(endTime - startTime).toFixed(2)}ms for query: "${options.query}"`);
-        console.log(`Found ${finalResults.length} results`);
+
+
       }
 
       return finalResults;

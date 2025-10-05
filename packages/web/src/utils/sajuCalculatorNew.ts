@@ -249,7 +249,7 @@ export function calculateCompleteSaju(
 ) {
   // TODO: 음력 변환 로직 추가 필요
   if (isLunar) {
-    console.warn('음력 변환은 아직 구현되지 않았습니다.');
+
   }
   
   const yearPillar = calculateYearPillar(year, month, day);
@@ -312,18 +312,11 @@ export function calculateCompleteSaju(
 
 // 테스트 함수
 export function testSajuCalculation() {
-  console.log('=== 사주 계산 테스트 ===');
-  
+
   // 1971년 11월 17일 04시 테스트
   const result1 = calculateCompleteSaju(1971, 11, 17, 4);
-  console.log('1971년 11월 17일 04시:');
-  console.log('사주:', result1.fullSaju);
-  console.log('년주:', result1.year.combined);
-  console.log('월주:', result1.month.combined);
-  console.log('일주:', result1.day.combined);
-  console.log('시주:', result1.time.combined);
-  console.log('---');
-  
+
+
   // 다른 테스트 케이스들
   const testCases = [
     { year: 1984, month: 2, day: 4, hour: 12, desc: '1984년 갑자년 입춘일' },
@@ -333,8 +326,7 @@ export function testSajuCalculation() {
   
   testCases.forEach(tc => {
     const result = calculateCompleteSaju(tc.year, tc.month, tc.day, tc.hour);
-    console.log(`${tc.desc}:`);
-    console.log('사주:', result.fullSaju);
-    console.log('---');
+
+
   });
 }

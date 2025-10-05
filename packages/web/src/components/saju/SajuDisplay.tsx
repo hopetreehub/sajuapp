@@ -9,7 +9,7 @@ interface SajuDisplayProps {
 export const SajuDisplay: React.FC<SajuDisplayProps> = ({
   sajuString,
   size = 'medium',
-  className = ''
+  className = '',
 }) => {
   if (!sajuString || sajuString === '계산 실패' || sajuString === '계산 중...') {
     return (
@@ -37,21 +37,21 @@ export const SajuDisplay: React.FC<SajuDisplayProps> = ({
           container: 'text-sm',
           pillar: 'px-2 py-1',
           char: 'text-base',
-          label: 'text-xs'
+          label: 'text-xs',
         };
       case 'large':
         return {
           container: 'text-lg',
           pillar: 'px-4 py-3',
           char: 'text-2xl',
-          label: 'text-sm'
+          label: 'text-sm',
         };
       default: // medium
         return {
           container: 'text-base',
           pillar: 'px-3 py-2',
           char: 'text-xl',
-          label: 'text-xs'
+          label: 'text-xs',
         };
     }
   };

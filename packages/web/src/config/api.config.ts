@@ -29,10 +29,8 @@ export const getApiUrl = (service: keyof typeof API_ENDPOINTS): string => {
 
   // 디버깅용 로그 - v6
   if (typeof window !== 'undefined') {
-    console.log(`[API Config v6] Service: ${service}`);
-    console.log(`[API Config v6] URL: ${url}`);
-    console.log(`[API Config v6] Is Local: ${isLocalEnvironment()}`);
-    console.log(`[API Config v6] Hostname: ${window.location.hostname}`);
+
+
   }
 
   return url;

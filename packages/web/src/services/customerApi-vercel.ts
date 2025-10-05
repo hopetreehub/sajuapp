@@ -42,7 +42,7 @@ export interface CustomerResponse {
 export async function getCustomers(
   page: number = 1,
   limit: number = 20,
-  search: string = ''
+  search: string = '',
 ): Promise<CustomerListResponse> {
   const params = new URLSearchParams({
     page: page.toString(),
@@ -51,7 +51,6 @@ export async function getCustomers(
   });
 
   const url = `${API_BASE_URL}/customers?${params}`;
-  console.log('[Customer API] 고객 목록 조회:', url);
 
   try {
     const response = await fetch(url);
@@ -102,7 +101,7 @@ export async function createCustomer(customer: Customer): Promise<CustomerRespon
 // 고객 수정
 export async function updateCustomer(
   id: number,
-  customer: Customer
+  customer: Customer,
 ): Promise<CustomerResponse> {
   const url = `${API_BASE_URL}/customers/${id}`;
 
@@ -157,7 +156,7 @@ export async function searchCustomers(query: string): Promise<Customer[]> {
 export async function calculateSaju(
   birth_date: string,
   birth_time: string,
-  lunar_solar: 'lunar' | 'solar' = 'solar'
+  lunar_solar: 'lunar' | 'solar' = 'solar',
 ): Promise<any> {
   const url = `${API_BASE_URL}/saju/calculate`;
 

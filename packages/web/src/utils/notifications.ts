@@ -30,7 +30,7 @@ export type NotificationPermission = 'default' | 'granted' | 'denied'
  */
 export const requestNotificationPermission = async (): Promise<boolean> => {
   if (!('Notification' in window)) {
-    console.warn('This browser does not support notifications');
+
     return false;
   }
   
@@ -63,7 +63,7 @@ export const hasNotificationPermission = (): boolean => {
  */
 export const showNotification = (options: NotificationOptions): Notification | null => {
   if (!hasNotificationPermission()) {
-    console.warn('Notification permission not granted');
+
     return null;
   }
   
@@ -106,14 +106,14 @@ export const scheduleNotification = (
   const delay = targetTime - now;
   
   if (delay <= 0) {
-    console.warn('Cannot schedule notification for past time');
+
     return null;
   }
   
   // 최대 24시간 후까지만 스케줄링 (브라우저 제한)
   const maxDelay = 24 * 60 * 60 * 1000; // 24시간
   if (delay > maxDelay) {
-    console.warn('Cannot schedule notification more than 24 hours in advance');
+
     return null;
   }
   
@@ -126,8 +126,7 @@ export const scheduleNotification = (
       ...options,
     });
   }, delay);
-  
-  console.log(`Notification scheduled for ${time.toLocaleString()}, delay: ${delay}ms`);
+
   return timeoutId;
 };
 
@@ -137,7 +136,7 @@ export const scheduleNotification = (
 export const cancelScheduledNotification = (timeoutId: number): void => {
   if (timeoutId) {
     clearTimeout(timeoutId);
-    console.log(`Cancelled scheduled notification ${timeoutId}`);
+
   }
 };
 
@@ -281,14 +280,13 @@ export const initializeNotifications = async (): Promise<void> => {
   // 권한 요청
   const hasPermission = await requestNotificationPermission();
   if (!hasPermission) {
-    console.warn('Notification permission denied');
+
     return;
   }
   
   // 일기 리마인더 스케줄링
   scheduleDiaryReminder();
-  
-  console.log('Notifications initialized');
+
 };
 
 /**

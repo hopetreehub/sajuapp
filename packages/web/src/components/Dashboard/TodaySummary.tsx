@@ -22,7 +22,7 @@ const safeFormatDate = (dateValue: string | Date, formatString: string, fallback
     const date = typeof dateValue === 'string' ? new Date(dateValue) : dateValue;
     
     if (!isValid(date)) {
-      console.warn('Invalid date value:', dateValue);
+
       return fallback;
     }
     

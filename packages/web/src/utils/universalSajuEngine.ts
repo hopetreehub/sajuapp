@@ -54,20 +54,15 @@ export class UniversalSajuEngine {
     const currentAge = currentYear - birthYear + 1;
 
     if (DEBUG_MODE) {
-      console.log('🔮 UniversalSajuEngine v7.0 - 사주 기반 개인별 점수 계산 시작');
-      console.log('📅 생년:', birthYear);
-      console.log('🎯 사주:', sajuData);
+
+
     }
 
     // 실제 사주 기반 점수 계산 사용
     const scoreResult = calculateLifeChartScore(sajuData, birthYear);
 
     if (DEBUG_MODE) {
-      console.log('📊 계산된 점수 결과:', {
-        baseScore: scoreResult.baseScore,
-        pattern: scoreResult.pattern,
-        characteristics: scoreResult.keyCharacteristics,
-      });
+
     }
 
     // 5차원 차트 데이터 생성 (실제 점수 기반)

@@ -10,8 +10,6 @@ const baseURL = getBaseUrl();
 
 // 디버깅용 로그
 if (typeof window !== 'undefined') {
-  console.log('[Calendar API] Vercel 풀스택 모드');
-  console.log('[Calendar API] URL:', baseURL);
 }
 
 // 캘린더 서비스용 axios 인스턴스

@@ -8,12 +8,7 @@ export class SixAreaProcessor {
    * 사주 데이터를 6대 영역 점수로 변환
    */
   static calculateSixAreaScores(sajuData: SajuData): SixAreaScores {
-    console.log('🔮 [SixAreaProcessor] 실제 사주 데이터 사용:', {
-      tenGods: sajuData.tenGods,
-      fiveElements: sajuData.fiveElements,
-      dayMaster: sajuData.dayMaster,
-    });
-    
+
     const { fiveElements, tenGods } = sajuData;
     
     // 근본 (Foundation) - 일간의 힘, 비견/겁재
@@ -42,10 +37,8 @@ export class SixAreaProcessor {
       luck,
       environment,
     };
-    
-    console.log('📊 [SixAreaProcessor] 계산된 6대 영역 점수:', result);
-    console.log('✅ [SixAreaProcessor] Math.random() 제거 완료 - 순수 실제 데이터만 사용');
-    
+
+
     return result;
   }
 

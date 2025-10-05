@@ -91,7 +91,7 @@ export default function WeekView({
         const eventHour = getHours(eventStart);
         return isSameDay(eventStart, date) && eventHour === hour;
       } catch (error) {
-        console.warn('Invalid event date:', event.start_time, error);
+
         return false;
       }
     });
@@ -107,7 +107,7 @@ export default function WeekView({
         const [todoHour] = todo.startTime.split(':').map(Number);
         return todoHour === hour;
       } catch (error) {
-        console.warn('Invalid todo time:', todo.startTime, error);
+
         return false;
       }
     });
@@ -333,7 +333,7 @@ export default function WeekView({
                               </div>
                             );
                           } catch (error) {
-                            console.warn('Error rendering event:', event, error);
+
                             return null;
                           }
                         })}

@@ -25,7 +25,7 @@ export function convertCustomerToLifetimeRequest(
         ? JSON.parse(customer.saju_data)
         : customer.saju_data;
     } catch (e) {
-      console.warn('사주 데이터 파싱 실패:', e);
+
     }
   }
 

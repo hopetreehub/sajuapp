@@ -118,24 +118,21 @@ const EventModal: React.FC<EventModalProps> = ({
         color: formData.color,
         reminder_minutes: formData.reminder_minutes === undefined ? undefined : formData.reminder_minutes,
       };
-      
-      console.log('Sending API data:', apiData);
-      
+
       let savedEvent: CalendarEvent;
       
       if (event?.id) {
-        console.log('Updating event with ID:', event.id);
+
         savedEvent = await eventService.updateEvent(event.id, apiData);
         // Add tags to the saved event object
         savedEvent.tags = selectedTags;
       } else {
-        console.log('Creating new event...');
+
         savedEvent = await eventService.createEvent(apiData as any);
         // Add tags to the saved event object
         savedEvent.tags = selectedTags;
       }
-      
-      console.log('Event saved successfully:', savedEvent);
+
       onSave(savedEvent);
       onClose();
     } catch (error: any) {

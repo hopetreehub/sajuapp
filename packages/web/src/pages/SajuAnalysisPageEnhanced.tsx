@@ -54,7 +54,7 @@ const SajuAnalysisPageEnhanced: React.FC = () => {
       
       // 캐시 확인
       if (lifeChartCache.current.has(cacheKey)) {
-        console.log('📦 캐시에서 인생차트 데이터 로드');
+
         setLifetimeFortune(lifeChartCache.current.get(cacheKey)!);
         return;
       }
@@ -65,8 +65,7 @@ const SajuAnalysisPageEnhanced: React.FC = () => {
       // 캐시 저장
       lifeChartCache.current.set(cacheKey, response);
       setLifetimeFortune(response);
-      console.log('✅ 인생차트 로드 완료:', user.name);
-      
+
     } catch (error: any) {
       setLifeChartError(error.message || '인생차트 로드 실패');
       console.error('❌ 인생차트 로드 실패:', error);
@@ -109,10 +108,7 @@ const SajuAnalysisPageEnhanced: React.FC = () => {
     // 정확한 사주 계산
     const calculatedPillars = SajuCalculator.calculateFourPillars(info);
     setFourPillars(calculatedPillars);
-    
-    console.log('=== 사주 계산 결과 ===');
-    console.log('입력:', info);
-    console.log('사주:', formatFourPillarsDetailed(calculatedPillars));
+
 
     // 시뮬레이션: 1초 대기 후 결과 생성
     setTimeout(() => {

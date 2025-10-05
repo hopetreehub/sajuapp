@@ -293,12 +293,10 @@ function findCorrectBaseIndex(targetYear: number, targetMonth: number, targetDay
 
 // 테스트 함수
 export function testAccurateSaju() {
-  console.log('=== 정확한 사주 계산 테스트 (1971년 11월 17일 기준) ===\n');
-  
+
   // 1971년 11월 17일 = 병오일로 역산하여 기준점 찾기
   const correctBaseIndex = findCorrectBaseIndex(1971, 11, 17, '병오');
-  console.log('📊 역산된 1900년 1월 1일 기준 인덱스:', correctBaseIndex, `(${SIXTY_CYCLE[correctBaseIndex]}일)`);
-  
+
   // 수정된 기준으로 다시 계산
   const baseJD = getJulianDay(1900, 1, 1);
   const targetJD = getJulianDay(1971, 11, 17);
@@ -308,30 +306,20 @@ export function testAccurateSaju() {
   if (resultIndex < 0) resultIndex += 60;
   
   const calculatedDay = SIXTY_CYCLE[resultIndex];
-  console.log('✅ 검증: 1971년 11월 17일 일주:', calculatedDay, calculatedDay === '병오' ? '✅ 정확!' : '❌');
-  
+
   // 1971년 11월 17일 04시 전체 사주 계산 (정확한 목표: 신해 기해 병오 경인)
-  console.log('\n🎯 1971년 11월 17일 04시 정확한 사주 계산:');
+
   const result1971 = calculateCompleteSaju(1971, 11, 17, 4, 0);
-  console.log('년주:', result1971.year, result1971.year === '신해' ? '✅' : '❌');
-  console.log('월주:', result1971.month, result1971.month === '기해' ? '✅' : '❌');
-  console.log('일주:', result1971.day, result1971.day === '병오' ? '✅' : '❌');
-  console.log('시주:', result1971.hour, result1971.hour === '경인' ? '✅' : '❌');
-  console.log('🎯 최종 사주:', result1971.fullSaju);
-  console.log('🎯 목표 사주: 신해 기해 병오 경인');
-  
+
+
   const isCorrect = result1971.fullSaju === '신해 기해 병오 경인';
-  console.log(isCorrect ? '🎉 완벽 일치!' : '⚠️  조정 필요');
-  
+
   // 추가 테스트 케이스
-  console.log('\n📋 추가 검증 테스트:');
-  
+
   const test1984 = calculateCompleteSaju(1984, 2, 4, 12, 0);
-  console.log('1984년 2월 4일 12시 (입춘일):', test1984.fullSaju);
-  
+
   const test2000 = calculateCompleteSaju(2000, 1, 1, 0, 0);
-  console.log('2000년 1월 1일 00시:', test2000.fullSaju);
-  
+
   return {
     target: result1971,
     correctBaseIndex,

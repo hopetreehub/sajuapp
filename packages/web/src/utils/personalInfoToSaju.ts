@@ -32,14 +32,6 @@ export function convertPersonalInfoToSaju(personalInfo: PersonalInfo): SajuData 
       minute,
       isLunar: personalInfo.calendarType === 'lunar',
     });
-    
-    console.log('사주 계산 결과:', {
-      입력: `${year}년 ${month}월 ${day}일 ${hour}시 ${minute}분`,
-      년주: fourPillars.year.combined,
-      월주: fourPillars.month.combined,
-      일주: fourPillars.day.combined,
-      시주: fourPillars.hour.combined,
-    });
 
     // 오행 균형 계산
     const ohHaengBalance: Record<OhHaeng, number> = {
@@ -93,9 +85,7 @@ export function convertPersonalInfoToSaju(personalInfo: PersonalInfo): SajuData 
       ohHaengBalance,
       fullSaju: `${fourPillars.year.combined} ${fourPillars.month.combined} ${fourPillars.day.combined} ${fourPillars.hour.combined}`,
     };
-    
-    console.log('최종 SajuData:', sajuData);
-    
+
     return sajuData;
   } catch (error) {
     console.error('PersonalInfo를 SajuData로 변환 중 오류:', error);
@@ -129,8 +119,7 @@ export function isPersonalInfoValid(info: PersonalInfo | null): boolean {
 
 // 테스트 함수
 export function testSajuCalculation(): void {
-  console.log('=== PersonalInfo → SajuData 변환 테스트 ===');
-  
+
   const testInfo: PersonalInfo = {
     birthDate: '1971-11-17',
     birthTime: '04:00',
@@ -140,9 +129,6 @@ export function testSajuCalculation(): void {
   };
   
   const result = convertPersonalInfoToSaju(testInfo);
-  console.log('테스트 입력:', testInfo);
-  console.log('변환 결과:', result);
-  console.log('기대값: 신해 기해 병오 경인');
-  console.log('실제값:', result?.fullSaju);
-  console.log('검증:', result?.fullSaju === '신해 기해 병오 경인' ? '✅ 정확' : '❌ 오류');
+
+
 }

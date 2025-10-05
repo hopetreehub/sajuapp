@@ -155,14 +155,6 @@ export class SajuCalculator {
       console.error('Invalid month index:', monthIndex);
       return { heavenly: '갑', earthly: '자', combined: '갑자' };
     }
-    
-    console.log('월주 계산:', {
-      양력: `${year}년 ${month}월 ${day}일`,
-      절기월: solarMonth,
-      년간: yearStem,
-      월주: monthStem,
-    });
-    
     return {
       heavenly: monthStem[0],
       earthly: monthStem[1], 
@@ -284,8 +276,6 @@ export class SajuCalculator {
    * 테스트용 함수 - 두 개의 기준 케이스 검증
    */
   public static testReferenceCases(): void {
-    console.log('=== 사주 계산 테스트 ===');
-    
     // 테스트 케이스 1: 1971년 11월 17일 04시
     const test1: SajuBirthInfo = {
       year: 1971,
@@ -297,16 +287,6 @@ export class SajuCalculator {
     };
     
     const result1 = this.calculateFourPillars(test1);
-    console.log('\n테스트 1: 1971년 11월 17일 04시');
-    console.log('결과:', formatFourPillarsDetailed(result1));
-    console.log('기대값: 신해년 기해월 병오일 경인시');
-    console.log('검증:', 
-      result1.year.combined === '신해' && 
-      result1.month.combined === '기해' && 
-      result1.day.combined === '병오' && 
-      result1.hour.combined === '경인' ? '✅ 정확' : '❌ 오류',
-    );
-    
     // 테스트 케이스 2: 1976년 9월 16일 09시 40분
     const test2: SajuBirthInfo = {
       year: 1976,
@@ -318,15 +298,6 @@ export class SajuCalculator {
     };
     
     const result2 = this.calculateFourPillars(test2);
-    console.log('\n테스트 2: 1976년 9월 16일 09시 40분');
-    console.log('결과:', formatFourPillarsDetailed(result2));
-    console.log('기대값: 병진년 정유월 신미일 계사시');
-    console.log('검증:', 
-      result2.year.combined === '병진' && 
-      result2.month.combined === '정유' && 
-      result2.day.combined === '신미' && 
-      result2.hour.combined === '계사' ? '✅ 정확' : '❌ 오류',
-    );
   }
 }
 
@@ -356,6 +327,6 @@ export function calculateOhHaengBalance(fourPillars: FourPillarsResult) {
     fire: 20,
     earth: 20,
     metal: 20,
-    water: 20
+    water: 20,
   };
 }

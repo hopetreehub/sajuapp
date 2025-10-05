@@ -1191,33 +1191,28 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
  */
 export async function loadDynamicSajuCategories(): Promise<void> {
   try {
-    console.log('🔄 동적 사주 카테고리 데이터 로드 시작...');
 
     // 백엔드에서 데이터 가져오기
     const backendCategories = await getSajuCategories();
-    console.log('📥 백엔드에서 받은 카테고리:', backendCategories);
 
     // 기존 SAJU_RADAR_CATEGORIES에서 주능과 주흉 인덱스 찾기
     const juneungIndex = SAJU_RADAR_CATEGORIES.findIndex(cat => cat.id === 'juneung');
     const juhyungIndex = SAJU_RADAR_CATEGORIES.findIndex(cat => cat.id === 'juhyung');
 
-    console.log(`📌 주능 인덱스: ${juneungIndex}, 주흉 인덱스: ${juhyungIndex}`);
-
     // 백엔드에서 가져온 데이터로 업데이트
     backendCategories.forEach(backendCat => {
       if (backendCat.id === 'juneung' && juneungIndex !== -1) {
         SAJU_RADAR_CATEGORIES[juneungIndex].subcategories = backendCat.subcategories;
-        console.log(`✅ 주능 카테고리 업데이트: ${backendCat.subcategories.length}개 중항목`);
-        console.log('주능 서브카테고리:', backendCat.subcategories);
+
+
       } else if (backendCat.id === 'juhyung' && juhyungIndex !== -1) {
         SAJU_RADAR_CATEGORIES[juhyungIndex].subcategories = backendCat.subcategories;
-        console.log(`✅ 주흉 카테고리 업데이트: ${backendCat.subcategories.length}개 중항목`);
-        console.log('주흉 서브카테고리:', backendCat.subcategories);
+
+
       }
     });
 
-    console.log('🎉 동적 사주 카테고리 데이터 로드 완료!');
-    console.log('최종 SAJU_RADAR_CATEGORIES:', SAJU_RADAR_CATEGORIES);
+
   } catch (error) {
     console.error('❌ 동적 사주 카테고리 데이터 로드 실패:', error);
     // 로드 실패 시에도 기존 정적 데이터는 유지됨

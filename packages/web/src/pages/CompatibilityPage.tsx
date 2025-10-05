@@ -48,12 +48,11 @@ export const CompatibilityPage: React.FC = () => {
     if (!customer.birth_date || !customer.birth_time) return null;
 
     try {
-      console.log(`정확한 사주 계산 시작: ${customer.name}`);
 
       const sajuData = {
         birth_date: customer.birth_date,
         birth_time: customer.birth_time,
-        lunar_solar: customer.lunar_solar
+        lunar_solar: customer.lunar_solar,
       };
 
       // 정확한 사주 계산 API 호출
@@ -77,7 +76,7 @@ export const CompatibilityPage: React.FC = () => {
         fullSaju: sajuString,
         ohHaengBalance: basic.ohHaengBalance || { wood: 20, fire: 20, earth: 20, metal: 20, water: 20 },
         dayMaster: basic.dayMaster,
-        interpretation: basic.summary
+        interpretation: basic.summary,
       };
     } catch (error) {
       console.error('정확한 사주 계산 오류:', error);
@@ -93,7 +92,7 @@ export const CompatibilityPage: React.FC = () => {
           hour,
           minute,
           lunarSolar: customer.lunar_solar,
-          gender: customer.gender
+          gender: customer.gender,
         };
 
         const fourPillars = SajuCalculator.calculateFourPillars(sajuInfo);
@@ -105,7 +104,7 @@ export const CompatibilityPage: React.FC = () => {
           day: fourPillars.day,
           time: fourPillars.time,
           fullSaju: SajuCalculator.formatFourPillars(fourPillars),
-          ohHaengBalance
+          ohHaengBalance,
         };
       } catch (fallbackError) {
         console.error('폴백 사주 계산도 실패:', fallbackError);
@@ -139,7 +138,7 @@ export const CompatibilityPage: React.FC = () => {
         }
 
         if (isValid) {
-          console.log('기존 사주 데이터 사용:', parsed);
+
           return parsed;
         }
       } catch (error) {
@@ -148,22 +147,19 @@ export const CompatibilityPage: React.FC = () => {
     }
 
     // saju_data가 없거나 불완전하면 정확한 API로 계산
-    console.log('정확한 사주 API로 재계산:', customer.name);
+
     return await calculateSajuForCustomer(customer);
   };
 
   const calculateCompatibility = async () => {
     if (!person1 || !person2) return;
 
-    console.log('=== 정확한 궁합 계산 시작 ===');
-    console.log('첫번째 사람:', person1.name, person1.birth_date, person1.birth_time);
-    console.log('두번째 사람:', person2.name, person2.birth_date, person2.birth_time);
 
     setIsCalculating(true);
 
     try {
       // 정확한 사주 데이터 파싱 (API 사용)
-      console.log('정확한 사주 데이터 계산 시작...');
+
       const calculatedSaju1 = await parseAccurateSaju(person1);
       const calculatedSaju2 = await parseAccurateSaju(person2);
 
@@ -178,13 +174,9 @@ export const CompatibilityPage: React.FC = () => {
       setSaju1(calculatedSaju1);
       setSaju2(calculatedSaju2);
 
-      console.log('파싱된 정확한 사주 데이터:');
-      console.log('- 사주1:', calculatedSaju1);
-      console.log('- 사주2:', calculatedSaju2);
 
       // 정확한 만세력 기반 궁합 점수 계산
       setTimeout(() => {
-        console.log('궁합 점수 계산 시작...');
 
         const personalityScore = calculateAccuratePersonalityScore(calculatedSaju1, calculatedSaju2);
         const loveScore = calculateAccurateLoveScore(calculatedSaju1, calculatedSaju2);
@@ -192,12 +184,6 @@ export const CompatibilityPage: React.FC = () => {
         const healthScore = calculateAccurateHealthScore(calculatedSaju1, calculatedSaju2);
         const futureScore = calculateAccurateFutureScore(calculatedSaju1, calculatedSaju2);
 
-        console.log('계산된 궁합 점수:');
-        console.log('- 성격 궁합:', personalityScore);
-        console.log('- 애정 궁합:', loveScore);
-        console.log('- 재물 궁합:', wealthScore);
-        console.log('- 건강 궁합:', healthScore);
-        console.log('- 미래 궁합:', futureScore);
 
         const categories = [
           {
@@ -229,29 +215,21 @@ export const CompatibilityPage: React.FC = () => {
 
         const totalScore = Math.round(categories.reduce((sum, cat) => sum + cat.score, 0) / categories.length);
 
-        console.log('최종 궁합 점수:', totalScore);
-
         // 상세 관계성 분석
-        console.log('상세 관계성 분석 시작...');
+
         const relationshipAnalysis = analyzeRelationship(calculatedSaju1, calculatedSaju2);
-        console.log('관계성 분석 완료:', relationshipAnalysis);
 
         // 현실적 분석
-        console.log('현실적 분석 시작...');
+
         const practicalAnalysis = analyzePractical(calculatedSaju1, calculatedSaju2);
-        console.log('현실적 분석 완료:', practicalAnalysis);
 
         // 심층 분석
-        console.log('심층 분석 시작...');
+
         const depthAnalysis = analyzeDepth(calculatedSaju1, calculatedSaju2);
-        console.log('심층 분석 완료:', depthAnalysis);
 
         // 특수 분석
-        console.log('특수 분석 시작...');
-        const specialAnalysis = analyzeSpecial(calculatedSaju1, calculatedSaju2);
-        console.log('특수 분석 완료:', specialAnalysis);
 
-        console.log('=== 정확한 궁합 계산 완료 ===');
+        const specialAnalysis = analyzeSpecial(calculatedSaju1, calculatedSaju2);
 
         setResult({
           totalScore,

@@ -21,16 +21,14 @@ export const generateUniversalLifeChart = async (
   _options: Partial<LifeChartRequest> = {},
 ): Promise<UniversalLifeChartData> => {
   try {
-    console.log('🔍 고객 정보 조회 중...', customerId);
+
     // 1. 고객 정보 조회
     const response = await getCustomerById(customerId);
-    console.log('📋 API 응답:', response);
 
     if (!response.success || !response.data) {
       throw new Error('고객 정보를 찾을 수 없습니다');
     }
     const customer = response.data;
-    console.log('👤 고객 정보:', customer);
 
     // 2. 사주 데이터 파싱
     let sajuData: SajuComponents;
@@ -70,13 +68,6 @@ export const generateUniversalLifeChart = async (
       sajuData,
       personalInfo,
     );
-
-    console.log(`✅ ${customer.name}님의 인생차트 생성 완료:`, {
-      startYear: chartData.timeline.startYear,
-      endYear: chartData.timeline.endYear,
-      currentAge: chartData.timeline.currentAge,
-      dimensionCount: Object.keys(chartData.chartData).length,
-    });
 
     return chartData;
 

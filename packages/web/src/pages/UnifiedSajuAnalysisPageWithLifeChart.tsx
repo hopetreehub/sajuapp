@@ -89,17 +89,14 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
 
       // 캐시 무효화를 위해 이전 데이터 초기화
       setLifetimeFortune(null);
-      console.log('🔄 인생차트 로드 시작:', customer.name);
 
       const request = convertCustomerToLifetimeRequest(customer);
-      console.log('📤 인생운세 요청 데이터:', request);
-      console.log('  - 사주 데이터 포함 여부:', request.sajuData ? '✅' : '❌');
+
 
       const response = await fetchLifetimeFortune(request);
       
       setLifetimeFortune(response);
-      console.log('✅ 인생차트 로드 완료:', customer.name);
-      
+
     } catch (error: any) {
       setLifeChartError(error.message || '인생차트 로드 실패');
       console.error('❌ 인생차트 로드 실패:', error);
@@ -110,27 +107,25 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
 
   const loadCustomerSajuData = async (customerId: number) => {
     try {
-      console.log('[데이터 로드 시작] 고객 ID:', customerId);
+
       const response = await getCustomerById(customerId);
-      console.log('[API 응답]', response.data);
-      
+
       // saju_data가 문자열인 경우 JSON 파싱
       let sajuData = response.data.saju_data;
       if (typeof sajuData === 'string') {
         try {
           sajuData = JSON.parse(sajuData);
-          console.log('[사주 데이터 파싱 완료]', sajuData);
+
         } catch (e) {
           console.error('[사주 데이터 파싱 실패]', e);
           sajuData = null;
         }
       }
-      console.log('[사주 데이터 수신]', sajuData);
-      
+
       setCustomerSajuData(sajuData);
       // 전역 사주 데이터 설정 (모든 차트에 반영)
       setGlobalSajuData(sajuData);
-      console.log('[전역 사주 데이터 설정 완료]', sajuData);
+
     } catch (error) {
       console.error('[에러] 고객 사주 데이터 로딩 실패:', error);
       setGlobalSajuData(null);
@@ -280,7 +275,6 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
         {/* 통합 레이더차트 */}
         {chartData && (
           <div className="mb-8">
-            {console.log('[차트 렌더링] customerSajuData:', customerSajuData)}
             <UnifiedSajuRadarChart
               data={chartData}
               birthDate={birthDate}

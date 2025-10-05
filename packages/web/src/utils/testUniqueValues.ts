@@ -80,14 +80,8 @@ export function testUniqueValues() {
   const parkUniqueValue = calculateUniqueValue(PARK_SAJU);
   const jungUniqueValue = calculateUniqueValue(JUNG_SAJU);
 
-  console.log('🔍 개인별 고유값 테스트 결과:');
-  console.log(`박준수님 (신해 기해 병오 경인): ${parkUniqueValue}`);
-  console.log(`정비제님 (병진 정유 신미 계사): ${jungUniqueValue}`);
-  console.log(`차이값: ${Math.abs(parkUniqueValue - jungUniqueValue)}`);
-  console.log(`차이율: ${(Math.abs(parkUniqueValue - jungUniqueValue) / Math.max(parkUniqueValue, jungUniqueValue) * 100).toFixed(2)}%`);
 
   // 각 구성요소별 차이 확인
-  console.log('\n📊 구성요소별 분석:');
 
   // 박준수님 분석
   const parkGapja = ((CHEONGAN_MAP[PARK_SAJU.year.gan] - 1) * 12 + (JIJI_MAP[PARK_SAJU.year.ji] - 1)) % 60;
@@ -109,8 +103,6 @@ export function testUniqueValues() {
     jungElements[JIJI_OHHAENG[ji]]++;
   });
 
-  console.log(`박준수님 - 갑자패턴: ${parkGapja}, 오행분포: ${JSON.stringify(parkElements)}`);
-  console.log(`정비제님 - 갑자패턴: ${jungGapja}, 오행분포: ${JSON.stringify(jungElements)}`);
 
   return { parkUniqueValue, jungUniqueValue };
 }
@@ -118,5 +110,5 @@ export function testUniqueValues() {
 // 브라우저 콘솔에서 실행 가능하도록 window 객체에 추가
 if (typeof window !== 'undefined') {
   (window as any).testUniqueValues = testUniqueValues;
-  console.log('🚀 테스트 함수 등록 완료: window.testUniqueValues() 호출하여 테스트 실행');
+
 }

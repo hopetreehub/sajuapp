@@ -128,13 +128,12 @@ const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate, 
   // localStorage에서 데이터 불러오기 및 Store 동기화
   React.useEffect(() => {
     if (!birthInfo) {
-      console.log('[TodayFortuneSection] birthInfo가 없음, localStorage 확인...');
+
       const savedPersonalInfo = localStorage.getItem('sajuapp-personal-info');
 
       if (savedPersonalInfo) {
         try {
           const personalInfo = JSON.parse(savedPersonalInfo);
-          console.log('[TodayFortuneSection] localStorage에서 데이터 발견:', personalInfo);
 
           // localStorage 데이터를 SajuBirthInfo 형식으로 변환
           if (personalInfo.birthDate && personalInfo.birthTime) {
@@ -152,29 +151,27 @@ const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate, 
               name: personalInfo.gender === 'male' ? '사용자(남)' : '사용자(여)',
             };
 
-            console.log('[TodayFortuneSection] Store에 저장할 사주 정보:', sajuBirthInfo);
             setBirthInfo(sajuBirthInfo);
           }
         } catch (error) {
           console.error('[TodayFortuneSection] localStorage 파싱 오류:', error);
         }
       } else {
-        console.log('[TodayFortuneSection] localStorage에도 데이터 없음');
+
       }
     } else {
-      console.log('[TodayFortuneSection] birthInfo 존재:', birthInfo);
+
     }
   }, [birthInfo, setBirthInfo]);
 
   // 디버깅: Store 데이터 확인
-  console.log('[TodayFortuneSection] 현재 birthInfo:', birthInfo);
-  console.log('[TodayFortuneSection] 현재 user:', user);
+
 
   // fortuneStore를 사용한 운세 데이터 가져오기
   const { calculateFortune } = useFortuneStore();
   const dailyFortune: DailyFortune | null = useMemo(() => {
     if (!birthInfo) {
-      console.log('[TodayFortuneSection] No birthInfo available');
+
       return null;
     }
 

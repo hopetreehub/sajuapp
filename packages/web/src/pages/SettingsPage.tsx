@@ -92,11 +92,9 @@ export default function SettingsPage() {
         };
 
         setBirthInfo(sajuBirthInfo);
-        console.log('[설정페이지] 사주 정보 저장됨:', sajuBirthInfo);
 
         // Store에 제대로 저장되었는지 확인
         const savedBirthInfo = useSajuSettingsStore.getState().birthInfo;
-        console.log('[설정페이지] Store에 저장된 정보:', savedBirthInfo);
 
         // 사주 정보가 저장되었음을 다른 컴포넌트들에게 알림
         window.dispatchEvent(new CustomEvent('personalInfoUpdated', {
@@ -119,12 +117,7 @@ export default function SettingsPage() {
           }
         }
       }, 2000);
-      
-      console.log('Settings saved successfully:', {
-        personalInfo: activeTab === 'general' ? personalInfo : 'not updated',
-        localSettings,
-      });
-      
+
     } catch (error) {
       console.error('Failed to save settings:', error);
       setSaveStatus('error');

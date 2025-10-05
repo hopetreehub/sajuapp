@@ -12,8 +12,8 @@ const SAJU_ANALYSIS_API_BASE = import.meta.env.DEV
 
 // 디버깅용 로그
 if (typeof window !== 'undefined') {
-  console.log('[Saju API] Using URL:', SAJU_ANALYSIS_API_BASE);
-  console.log('[Saju API] Current hostname:', window.location.hostname);
+
+
 }
 
 export interface ApiCategoryResponse {
@@ -99,8 +99,7 @@ export interface SajuBirthInfo {
  */
 export async function fetchSajuCategories(): Promise<ApiCategoryResponse> {
   try {
-    console.log('🔮 백엔드 사주 카테고리 데이터 요청...');
-    
+
     const response = await fetch(`${SAJU_ANALYSIS_API_BASE}/categories`, {
       method: 'GET',
       headers: {
@@ -113,7 +112,6 @@ export async function fetchSajuCategories(): Promise<ApiCategoryResponse> {
     }
 
     const data: ApiCategoryResponse = await response.json();
-    console.log('✅ 사주 카테고리 데이터 수신 완료:', data);
 
     return data;
   } catch (error) {
@@ -127,8 +125,7 @@ export async function fetchSajuCategories(): Promise<ApiCategoryResponse> {
  */
 export async function fetchComprehensiveScores(birthInfo: SajuBirthInfo): Promise<ComprehensiveScoreResponse> {
   try {
-    console.log('🎯 종합 점수 분석 요청...', birthInfo);
-    
+
     const response = await fetch(`${SAJU_ANALYSIS_API_BASE}/scores/comprehensive`, {
       method: 'POST',
       headers: {
@@ -142,7 +139,6 @@ export async function fetchComprehensiveScores(birthInfo: SajuBirthInfo): Promis
     }
 
     const data: ComprehensiveScoreResponse = await response.json();
-    console.log('✅ 종합 점수 데이터 수신 완료:', data);
 
     return data;
   } catch (error) {
@@ -276,7 +272,7 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5분
  */
 export function getCachedCategories(): SajuRadarCategory[] | null {
   if (cachedCategories && (Date.now() - cacheTimestamp) < CACHE_DURATION) {
-    console.log('💾 캐시된 사주 카테고리 데이터 사용');
+
     return cachedCategories;
   }
   return null;
@@ -288,7 +284,7 @@ export function getCachedCategories(): SajuRadarCategory[] | null {
 export function setCachedCategories(categories: SajuRadarCategory[]): void {
   cachedCategories = categories;
   cacheTimestamp = Date.now();
-  console.log('💾 사주 카테고리 데이터 캐시 저장');
+
 }
 
 /**

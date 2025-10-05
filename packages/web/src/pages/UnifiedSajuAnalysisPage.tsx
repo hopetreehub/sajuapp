@@ -56,9 +56,9 @@ export default function UnifiedSajuAnalysisPage() {
 
   const loadCustomerSajuData = async (customerId: number) => {
     try {
-      console.log('[데이터 로드 시작] 고객 ID:', customerId);
+
       const response = await getCustomerById(customerId);
-      console.log('[API 응답]', response.data);
+
       const customer = response.data;
 
       // saju_data가 문자열인 경우 JSON 파싱
@@ -66,7 +66,7 @@ export default function UnifiedSajuAnalysisPage() {
       if (typeof sajuData === 'string') {
         try {
           sajuData = JSON.parse(sajuData);
-          console.log('[사주 데이터 파싱 완료]', sajuData);
+
         } catch (e) {
           console.error('[사주 데이터 파싱 실패]', e);
           sajuData = null;
@@ -75,7 +75,7 @@ export default function UnifiedSajuAnalysisPage() {
 
       // saju_data가 없으면 고객 정보로 계산
       if (!sajuData) {
-        console.log('[사주 데이터 없음] 고객 정보로 계산 시작');
+
         const sajuBirthInfo = {
           year: parseInt(customer.birth_date.split('-')[0]),
           month: parseInt(customer.birth_date.split('-')[1]),
@@ -86,15 +86,13 @@ export default function UnifiedSajuAnalysisPage() {
           isLunar: customer.lunar_solar === 'lunar',
         };
         sajuData = calculateSajuData(sajuBirthInfo);
-        console.log('[사주 데이터 계산 완료]', sajuData);
-      }
 
-      console.log('[사주 데이터 수신]', sajuData);
+      }
 
       setCustomerSajuData(sajuData);
       // 전역 사주 데이터 설정 (모든 차트에 반영)
       setGlobalSajuData(sajuData);
-      console.log('[전역 사주 데이터 설정 완료]', sajuData);
+
     } catch (error) {
       console.error('[에러] 고객 사주 데이터 로딩 실패:', error);
       setGlobalSajuData(null);
@@ -219,7 +217,6 @@ export default function UnifiedSajuAnalysisPage() {
         {/* 통합 레이더차트 */}
         {chartData && (
           <div className="mb-8">
-            {console.log('[차트 렌더링] customerSajuData:', customerSajuData)}
             <UnifiedSajuRadarChart
               data={chartData}
               birthDate={birthDate}

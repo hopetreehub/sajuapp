@@ -51,13 +51,13 @@ export const useFortuneStore = create<FortuneState>()(
           isSameBirthInfo(state.lastBirthInfo, birthInfo) &&
           state.dailyFortune
         ) {
-          console.log('[FortuneStore] 캐시된 운세 데이터 반환:', dateKey);
+
           return state.dailyFortune;
         }
 
         // 새로운 운세 계산
         try {
-          console.log('[FortuneStore] 새로운 운세 계산:', { birthInfo, date: dateKey });
+
           const fortune = calculateDailyFortune(birthInfo, date);
 
           // 상태 업데이트
@@ -67,7 +67,6 @@ export const useFortuneStore = create<FortuneState>()(
             lastBirthInfo: birthInfo,
           });
 
-          console.log('[FortuneStore] 운세 계산 완료 및 저장:', fortune);
           return fortune;
         } catch (error) {
           console.error('[FortuneStore] 운세 계산 실패:', error);
@@ -76,7 +75,7 @@ export const useFortuneStore = create<FortuneState>()(
       },
 
       clearCache: () => {
-        console.log('[FortuneStore] 캐시 초기화');
+
         set({
           dailyFortune: null,
           lastCalculatedDate: null,

@@ -204,9 +204,8 @@ export class AuthenticSajuCalculator {
     birthYear: number,
   ): AuthenticLifeChart {
     if (this.DEBUG) {
-      console.log('🔮 정통 사주학 계산 시작');
-      console.log('📅 사주 팔자:', sajuPalja);
-      console.log('🎂 출생년도:', birthYear);
+
+
     }
 
     // 1. 격국 분석
@@ -225,10 +224,8 @@ export class AuthenticSajuCalculator {
     const 통계 = this.calculateStatistics(연도별점수, 용신);
 
     if (this.DEBUG) {
-      console.log('✅ 격국 분석 완료:', 격국);
-      console.log('✅ 용신 선정 완료:', 용신);
-      console.log('📊 대운 수:', 대운목록.length);
-      console.log('📈 평균 점수:', 통계.평균점수);
+
+
     }
 
     return {
@@ -290,11 +287,8 @@ export class AuthenticSajuCalculator {
     }
 
     if (this.DEBUG) {
-      console.log('🏛️ 격국 분석:');
-      console.log(`   일간: ${일간}(${일간오행}) | 월령: ${월령}(${계절})`);
-      console.log('   오행분포:', 오행분포);
-      console.log(`   월령지원: ${월령지원} | 일간강약: ${일간강약}`);
-      console.log(`   격국유형: ${격국유형}`);
+
+
     }
 
     return {
@@ -362,11 +356,8 @@ export class AuthenticSajuCalculator {
     }
 
     if (this.DEBUG) {
-      console.log('⭐ 용신 선정:');
-      console.log(`   용신: [${용신.join(', ')}]`);
-      console.log(`   기신: [${기신.join(', ')}]`);
-      console.log('   용신점수:', 용신점수);
-      console.log(`   선정이유: ${기신원인}`);
+
+
     }
 
     return { 용신, 기신, 희신, 기신원인, 용신점수 };
@@ -438,10 +429,10 @@ export class AuthenticSajuCalculator {
     }
 
     if (this.DEBUG) {
-      console.log('🌊 대운 계산:');
-      console.log(`   순역행: ${순역행}`);
+
+
       대운목록.slice(0, 3).forEach(대운 => {
-        console.log(`   ${대운.cycle * 10}-${대운.cycle * 10 + 9}세: ${대운.천간}${대운.지지}(${대운.오행}) ${대운.점수}점`);
+
       });
     }
 
@@ -700,26 +691,18 @@ export class AuthenticSajuCalculator {
    * 디버그용 테스트 실행
    */
   public static runTestCases(): void {
-    console.log('🧪 === 정통 사주학 테스트 케이스 실행 ===');
 
     // 박준수 테스트
-    console.log('\n👤 박준수 (신해기해병오경인) 테스트:');
+
     const 박준수사주 = this.createParkJunSooTestCase();
     const 박준수결과 = this.calculateAuthenticLifeChart(박준수사주, 1971);
 
-    console.log('용신:', 박준수결과.개인정보.용신.용신);
-    console.log('40세 점수:', 박준수결과.연도별점수[40]?.총점);
-    console.log('50세 점수:', 박준수결과.연도별점수[50]?.총점);
 
     // 정비제 테스트
-    console.log('\n👤 정비제 (병진정유신미계사) 테스트:');
+
     const 정비제사주 = this.createJeongBiJeTestCase();
     const 정비제결과 = this.calculateAuthenticLifeChart(정비제사주, 1976);
 
-    console.log('용신:', 정비제결과.개인정보.용신.용신);
-    console.log('40세 점수:', 정비제결과.연도별점수[40]?.총점);
-    console.log('50세 점수:', 정비제결과.연도별점수[50]?.총점);
 
-    console.log('\n✅ 테스트 완료');
   }
 }

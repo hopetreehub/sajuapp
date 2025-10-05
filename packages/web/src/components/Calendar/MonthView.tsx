@@ -95,7 +95,7 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
               map.set(dateKey, lunarSpecialDay);
             }
           } catch (error) {
-            console.warn('Lunar conversion error for date:', day, error);
+
           }
           */
         }

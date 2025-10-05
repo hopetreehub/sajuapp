@@ -6,8 +6,8 @@
 // import { BaziCalculator } from 'bazi-calculator-by-alvamind';
 
 export function testAccurateBazi() {
-  console.log('=== BaZi Calculator 테스트 (현재 비활성화) ===');
-  console.log('bazi-calculator-by-alvamind 패키지가 설치되지 않았습니다.');
+
+
   return null;
 }
 
@@ -30,6 +30,6 @@ export function convertToKorean(str: string): string {
 }
 
 export function runBaziTest() {
-  console.log('BaZi 패키지 테스트 건너뜀 (패키지 없음)');
+
   return null;
 }

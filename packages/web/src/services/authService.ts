@@ -262,7 +262,7 @@ export const authAPI = {
         });
         
         if (!referralResult.success) {
-          console.warn('추천인 적용 실패 (회원가입은 계속 진행):', referralResult.error);
+
         }
       }
 

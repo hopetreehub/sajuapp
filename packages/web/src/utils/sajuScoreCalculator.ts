@@ -546,24 +546,21 @@ export function calculateSajuScore(
   // 사주 데이터 유효성 검증
   if (!sajuData || !sajuData.year?.gan || !sajuData.month?.gan || 
       !sajuData.day?.gan || !sajuData.time?.gan) {
-    console.log('[경고] 유효하지 않은 사주 데이터 - 랜덤 점수 사용');
+
     return Math.floor(Math.random() * 30) + 40; // 40-70점
   }
   
   // 디버그 로그
-  console.log(`[사주 점수 계산] 항목: ${itemName}, 사주: ${sajuData.fullSaju}`);
-  
+
   // 1. 항목의 오행 속성 가져오기
   const itemOhhaeng = ITEM_OHHAENG_MAPPING[itemName] || [];
   
   if (itemOhhaeng.length === 0) {
-    console.log(`[경고] ${itemName} 항목이 오행 매핑에 없음 - 랜덤 점수 사용`);
+
     // 매핑되지 않은 항목은 랜덤 범위 점수
     return Math.floor(Math.random() * 30) + 40; // 40-70점
   }
-  
-  console.log(`[오행 매핑] ${itemName} → [${itemOhhaeng.join(', ')}]`);
-  
+
   // 2. 사주의 오행 분포 계산
   const userOhhaeng: OhHaeng[] = [];
   
@@ -614,7 +611,7 @@ export function calculateSajuScore(
   
   // 점수 범위 제한 (20-85)
   const finalScore = Math.max(20, Math.min(85, Math.round(score)));
-  console.log(`[최종 점수] ${itemName}: ${finalScore}점 (계산값: ${score})`);
+
   return finalScore;
 }
 

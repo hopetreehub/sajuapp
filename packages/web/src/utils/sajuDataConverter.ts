@@ -163,7 +163,6 @@ export function resolveSajuData(
   resolution: string;
   confidence: number;
 } {
-  console.log('🔍 사주 데이터 해결 시작');
 
   let backendStandard: StandardSajuData | null = null;
   let frontendStandard: StandardSajuData | null = null;
@@ -174,9 +173,9 @@ export function resolveSajuData(
       const backendResult = convertBackendToStandard(backendSaju);
       if (backendResult.isValid) {
         backendStandard = backendResult.standardSaju;
-        console.log('✅ Backend 사주 변환 성공:', backendStandard);
+
       } else {
-        console.warn('⚠️ Backend 사주 데이터 유효하지 않음:', backendResult.warnings);
+
       }
     } catch (error) {
       console.error('❌ Backend 사주 변환 실패:', error);
@@ -189,9 +188,9 @@ export function resolveSajuData(
       const frontendResult = convertFrontendToStandard(frontendSaju);
       if (frontendResult.isValid) {
         frontendStandard = frontendResult.standardSaju;
-        console.log('✅ Frontend 사주 변환 성공:', frontendStandard);
+
       } else {
-        console.warn('⚠️ Frontend 사주 데이터 유효하지 않음:', frontendResult.warnings);
+
       }
     } catch (error) {
       console.error('❌ Frontend 사주 변환 실패:', error);
@@ -202,11 +201,9 @@ export function resolveSajuData(
   if (backendStandard && frontendStandard) {
     const validation = validateSajuConsistency(backendStandard, frontendStandard);
 
-    console.log(`🔍 사주 일치도: ${validation.confidence}%`);
-    console.log('차이점:', validation.differences);
 
     if (validation.isMatch) {
-      console.log('✅ 사주 완전 일치 - Backend 데이터 사용');
+
       return {
         finalSaju: backendStandard,
         resolution: '사주 완전 일치 - Backend 데이터 사용',
@@ -215,21 +212,21 @@ export function resolveSajuData(
     } else {
       switch (validation.recommendation) {
         case 'use_backend':
-          console.log('📤 Backend 데이터 우선 사용 (일치도 높음)');
+
           return {
             finalSaju: backendStandard,
             resolution: `Backend 우선 사용 (일치도: ${validation.confidence}%)`,
             confidence: validation.confidence,
           };
         case 'use_frontend':
-          console.log('🔄 Frontend 재계산 데이터 사용 (일치도 중간)');
+
           return {
             finalSaju: frontendStandard,
             resolution: `Frontend 재계산 사용 (일치도: ${validation.confidence}%)`,
             confidence: validation.confidence,
           };
         default:
-          console.log('⚠️ 사주 심각한 불일치 - Backend 데이터 강제 사용');
+
           return {
             finalSaju: backendStandard,
             resolution: `심각한 불일치로 Backend 강제 사용 (일치도: ${validation.confidence}%)`,
@@ -241,7 +238,7 @@ export function resolveSajuData(
 
   // Backend만 있는 경우
   if (backendStandard) {
-    console.log('📤 Backend 데이터만 사용 가능');
+
     return {
       finalSaju: backendStandard,
       resolution: 'Backend 데이터만 사용',
@@ -251,7 +248,7 @@ export function resolveSajuData(
 
   // Frontend만 있는 경우
   if (frontendStandard) {
-    console.log('🔄 Frontend 재계산 데이터만 사용 가능');
+
     return {
       finalSaju: frontendStandard,
       resolution: 'Frontend 재계산 데이터만 사용',
@@ -293,10 +290,5 @@ export function convertToUniversalSajuFormat(standardSaju: StandardSajuData) {
  * 디버깅용 사주 데이터 출력
  */
 export function debugSajuData(saju: StandardSajuData, label: string) {
-  console.log(`🔍 ${label} 사주:`, {
-    년주: saju.year.combined,
-    월주: saju.month.combined,
-    일주: saju.day.combined,
-    시주: saju.time.combined,
-  });
+
 }

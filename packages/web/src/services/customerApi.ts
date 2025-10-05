@@ -5,8 +5,8 @@ const API_BASE_URL = '/api/customers';
 
 // 초기화 로깅
 if (typeof window !== 'undefined') {
-  console.log('[Customer API] Vercel 풀스택 모드');
-  console.log('[Customer API] Base URL:', API_BASE_URL);
+
+
 }
 
 // 타입 정의
@@ -52,7 +52,6 @@ export async function getCustomers(
   });
 
   const url = `${API_BASE_URL}?${params}`;
-  console.log('[Customer API] 고객 목록 조회:', url);
 
   try {
     const response = await fetch(url);
@@ -64,14 +63,13 @@ export async function getCustomers(
     }
 
     const result = await response.json();
-    console.log('[Customer API] 응답 데이터:', result);
 
     // API 응답을 CustomerListResponse 형식으로 변환
     return {
       success: result.success,
       data: result.data || [],
       total: result.total || result.data?.length || 0,
-      page: page,
+      page,
       totalPages: Math.ceil((result.total || result.data?.length || 0) / limit),
     };
   } catch (error) {
@@ -83,7 +81,6 @@ export async function getCustomers(
 // 고객 상세 조회
 export async function getCustomerById(id: number): Promise<CustomerResponse> {
   const url = `${API_BASE_URL}?id=${id}`;
-  console.log('[Customer API] 고객 상세 조회:', url);
 
   const response = await fetch(url);
 
@@ -120,7 +117,6 @@ export async function updateCustomer(
   customer: Customer,
 ): Promise<CustomerResponse> {
   const url = `${API_BASE_URL}?id=${id}`;
-  console.log('[Customer API] 고객 수정:', url);
 
   const response = await fetch(url, {
     method: 'PUT',
@@ -141,7 +137,6 @@ export async function updateCustomer(
 // 고객 삭제
 export async function deleteCustomer(id: number): Promise<{ success: boolean; message: string }> {
   const url = `${API_BASE_URL}?id=${id}`;
-  console.log('[Customer API] 고객 삭제:', url);
 
   const response = await fetch(url, {
     method: 'DELETE',
