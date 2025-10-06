@@ -166,10 +166,10 @@ const PersonalityAnalysisPage: React.FC = () => {
           <>
             {/* 성향 분석 차트 */}
             <div className="mb-8">
-              <PersonalityAnalysisChart 
-                traits={personalityTraits}
-                birthDate={formatBirthDate() || undefined}
-              />
+              {/* TODO: PersonalityAnalysisChart component not available */}
+              <div className="text-center py-8 text-gray-500">
+                성향 분석 차트 (개발 중)
+              </div>
             </div>
 
             {/* 성향별 상세 설명 */}

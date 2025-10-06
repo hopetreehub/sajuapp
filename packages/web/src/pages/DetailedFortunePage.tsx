@@ -196,10 +196,10 @@ const DetailedFortunePage: React.FC = () => {
           <>
             {/* 17대 운세 차트 */}
             <div className="mb-8">
-              <SeventeenFortuneChart 
-                scores={fortuneScores}
-                birthDate={formatBirthDate() || undefined}
-              />
+              {/* TODO: SeventeenFortuneChart component not available */}
+              <div className="text-center py-8 text-gray-500">
+                17대 운세 차트 (개발 중)
+              </div>
             </div>
 
             {/* 운세별 상세 설명 */}

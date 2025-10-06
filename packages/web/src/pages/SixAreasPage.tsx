@@ -126,11 +126,10 @@ const SixAreasPage: React.FC = () => {
 
         {/* 6대 영역 차트 */}
         <div className="mb-8">
-          <SixAreaChart 
-            scores={analysisResult.sixAreas}
-            birthDate={formatBirthDate(currentUser.birthInfo)}
-            sajuData={sajuData}
-          />
+          {/* TODO: SixAreaChart component not available */}
+          <div className="text-center py-8 text-gray-500">
+            6대 영역 차트 (개발 중)
+          </div>
         </div>
 
         {/* 차트 네비게이션 */}
