@@ -25,10 +25,10 @@ interface Course {
 
 interface CourseManagementProps {
   courses: Course[]
-  
+  onRefresh?: () => Promise<void>
 }
 
-export default function CourseManagement({ courses }: CourseManagementProps) {
+export default function CourseManagement({ courses, onRefresh: _onRefresh }: CourseManagementProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCategory, setFilterCategory] = useState('all');

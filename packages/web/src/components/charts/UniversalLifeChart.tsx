@@ -146,7 +146,7 @@ export default function UniversalLifeChart({
               text: `${DIMENSION_NAMES[dim]} (${DIMENSION_DESCRIPTIONS[dim]})`,
               fillStyle: DEFAULT_CHART_CONFIG.colors[dim],
               strokeStyle: DEFAULT_CHART_CONFIG.colors[dim],
-              pointStyle: 'circle',
+              pointStyle: 'circle' as const,
               datasetIndex: index,
             }));
           },
@@ -187,7 +187,7 @@ export default function UniversalLifeChart({
       annotation: {
         annotations: {
           currentAge: {
-            type: 'line',
+            type: 'line' as const,
             xMin: data.timeline.currentAge,
             xMax: data.timeline.currentAge,
             borderColor: '#3B82F6',
@@ -196,7 +196,7 @@ export default function UniversalLifeChart({
             label: {
               content: `현재 ${data.timeline.currentAge}세`,
               enabled: true,
-              position: 'top',
+              position: 'start' as const,
               backgroundColor: '#3B82F6',
               color: '#ffffff',
               font: {
@@ -206,7 +206,7 @@ export default function UniversalLifeChart({
             },
           },
           zeroLine: {
-            type: 'line',
+            type: 'line' as const,
             yMin: 0,
             yMax: 0,
             borderColor: '#6B7280',
@@ -215,7 +215,7 @@ export default function UniversalLifeChart({
             label: {
               content: '중립선',
               enabled: true,
-              position: 'start',
+              position: 'start' as const,
               color: '#6B7280',
             },
           },
@@ -307,7 +307,7 @@ export default function UniversalLifeChart({
                 전체 선택
               </button>
               <button
-                onClick={() => setActiveDimensions([])}
+                onClick={() => setLocalDimensions([])}
                 className="px-3 py-1 text-sm bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
               >
                 전체 해제
