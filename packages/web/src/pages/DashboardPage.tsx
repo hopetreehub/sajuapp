@@ -342,6 +342,7 @@ export default function DashboardPage() {
       {/* 모달들 */}
       {showEventModal && (
         <EventModal
+          isOpen={showEventModal}
           onClose={() => setShowEventModal(false)}
           onSave={(event) => {
 
@@ -350,9 +351,10 @@ export default function DashboardPage() {
           }}
         />
       )}
-      
+
       {showDiaryModal && (
         <DiaryModal
+          isOpen={showDiaryModal}
           date={new Date()}
           onClose={() => setShowDiaryModal(false)}
           onSave={() => {

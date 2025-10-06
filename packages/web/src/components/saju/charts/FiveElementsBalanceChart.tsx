@@ -106,11 +106,18 @@ export const FiveElementsBalanceChart: React.FC<FiveElementsBalanceChartProps> =
                 const value = dataset.data[index] as number;
                 const total = (dataset.data as number[]).reduce((sum, val) => sum + val, 0);
                 const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0.0';
-                
+
+                const bgColor = Array.isArray(dataset.backgroundColor)
+                  ? dataset.backgroundColor[index] as string
+                  : dataset.backgroundColor as string;
+                const borderColor = Array.isArray(dataset.borderColor)
+                  ? dataset.borderColor[index] as string
+                  : dataset.borderColor as string;
+
                 return {
                   text: `${label} (${percentage}%)`,
-                  fillStyle: dataset.backgroundColor?.[index] as string || '#000',
-                  strokeStyle: dataset.borderColor?.[index] as string || '#000',
+                  fillStyle: bgColor || '#000',
+                  strokeStyle: borderColor || '#000',
                   lineWidth: 2,
                   hidden: false,
                   index,

@@ -170,7 +170,7 @@ export default function CalendarPage() {
     }
     
     // 3. 이벤트 하이라이트
-    setHighlightedEventId(firstEvent.id);
+    setHighlightedEventId(firstEvent.id || null);
     
     // 4. 3초 후 하이라이트 제거
     setTimeout(() => {
@@ -202,9 +202,17 @@ export default function CalendarPage() {
       onDiaryClick: handleDiaryClick, // 일기 클릭 핸들러 추가
     };
 
+    const yearViewProps = {
+      _events: viewProps.events,
+      _onCreateEvent: viewProps.onCreateEvent,
+      _onDateClick: viewProps.onDateClick,
+      _onEditEvent: viewProps.onEditEvent,
+      _highlightedEventId: viewProps.highlightedEventId,
+    };
+
     switch (viewMode) {
       case 'year':
-        return <YearViewEnhanced {...viewProps} />;
+        return <YearViewEnhanced {...yearViewProps} />;
       case 'month':
         return <MonthView {...viewProps} />;
       case 'week':
