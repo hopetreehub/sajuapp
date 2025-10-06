@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import SeventeenFortuneChart from '@/components/saju/charts/SeventeenFortuneChart';
+// import SeventeenFortuneChart from '@/components/saju/charts/SeventeenFortuneChart'; // TODO: File not available
 import ChartNavigation from '@/components/Common/ChartNavigation';
 import { SeventeenFortuneScores, SajuBirthInfo } from '@/types/saju';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';

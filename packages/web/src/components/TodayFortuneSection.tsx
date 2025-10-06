@@ -8,6 +8,8 @@ import { DailyFortune } from '@/types/saju';
 
 interface TodayFortuneSectionProps {
   currentDate: Date
+  onDiaryClick?: (date: Date) => void
+  hasDiary?: boolean
 }
 
 interface FortuneCardProps {

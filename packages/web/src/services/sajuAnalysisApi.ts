@@ -3,7 +3,7 @@
  * 백엔드 사주 분석 서비스와 연동
  */
 
-import { SajuRadarCategory, SajuRadarSubcategory } from '@/types/sajuRadar';
+import { SajuRadarCategory, SajuSubcategory } from '@/types/sajuRadar';
 
 // API URL 설정 - Vercel 풀스택
 const SAJU_ANALYSIS_API_BASE = import.meta.env.DEV
@@ -155,7 +155,7 @@ export function transformApiDataToRadarCategories(apiData: ApiCategoryResponse['
 
   // 주능 (positive) 카테고리 변환
   if (apiData.positive) {
-    const positiveSubcategories: SajuRadarSubcategory[] = Object.entries(apiData.positive).map(([categoryName, categoryData]) => ({
+    const positiveSubcategories: SajuSubcategory[] = Object.entries(apiData.positive).map(([categoryName, categoryData]) => ({
       id: categoryName.toLowerCase().replace(/\s+/g, '_'),
       name: categoryName,
       items: categoryData.items.map((item, index) => ({
@@ -176,7 +176,7 @@ export function transformApiDataToRadarCategories(apiData: ApiCategoryResponse['
 
   // 주흉 (negative) 카테고리 변환  
   if (apiData.negative) {
-    const negativeSubcategories: SajuRadarSubcategory[] = Object.entries(apiData.negative).map(([categoryName, categoryData]) => ({
+    const negativeSubcategories: SajuSubcategory[] = Object.entries(apiData.negative).map(([categoryName, categoryData]) => ({
       id: categoryName.toLowerCase().replace(/\s+/g, '_'),
       name: categoryName,
       items: categoryData.items.map((item, index) => ({
@@ -209,7 +209,7 @@ export function transformComprehensiveScoreToRadarCategories(
 
   // 주능 (positive) 카테고리 변환
   if (scoreData.positive_scores) {
-    const positiveSubcategories: SajuRadarSubcategory[] = Object.entries(scoreData.positive_scores).map(([categoryName, categoryData]) => ({
+    const positiveSubcategories: SajuSubcategory[] = Object.entries(scoreData.positive_scores).map(([categoryName, categoryData]) => ({
       id: categoryName.toLowerCase().replace(/\s+/g, '_'),
       name: categoryName,
       items: categoryData.items.map((item, index) => ({
@@ -234,7 +234,7 @@ export function transformComprehensiveScoreToRadarCategories(
 
   // 주흉 (negative) 카테고리 변환  
   if (scoreData.negative_scores) {
-    const negativeSubcategories: SajuRadarSubcategory[] = Object.entries(scoreData.negative_scores).map(([categoryName, categoryData]) => ({
+    const negativeSubcategories: SajuSubcategory[] = Object.entries(scoreData.negative_scores).map(([categoryName, categoryData]) => ({
       id: categoryName.toLowerCase().replace(/\s+/g, '_'),
       name: categoryName,
       items: categoryData.items.map((item, index) => ({

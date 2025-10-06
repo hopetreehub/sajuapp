@@ -247,7 +247,7 @@ export class AuthenticSajuCalculator {
     const 일간 = saju.day.gan;
     const 일간오행 = CHEON_GAN_OH_HAENG[일간];
     const 월령 = saju.month.ji;
-    const 계절 = 지지계절[월령];
+    const 계절 = 지지계절[월령] as '봄' | '여름' | '가을' | '겨울';
 
     // 오행 분포 계산
     const 오행분포: Record<OhHaeng, number> = { '목': 0, '화': 0, '토': 0, '금': 0, '수': 0 };

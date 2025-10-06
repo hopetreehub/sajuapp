@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import SixAreaChart from '@/components/saju/charts/SixAreaChart';
+// import SixAreaChart from '@/components/saju/charts/SixAreaChart'; // TODO: File not available
 import ChartNavigation from '@/components/Common/ChartNavigation';
 import { SajuAnalysisResult, SajuBirthInfo } from '@/types/saju';
 import { UserProfile } from '@/types/user';

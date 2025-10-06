@@ -32,7 +32,7 @@ const StandardTimeFrameSelector: React.FC<StandardTimeFrameSelectorProps> = ({
           disabled={disabled.includes(key)}
           className={`${CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.base} ${
             selected === key
-              ? CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.active[active]
+              ? CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.active[active as keyof typeof CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.active]
               : CHART_DESIGN_SYSTEM.BUTTON_STYLES.timeFrame.inactive
           } ${
             disabled.includes(key) 

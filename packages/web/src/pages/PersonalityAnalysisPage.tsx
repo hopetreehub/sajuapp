@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PersonalityAnalysisChart from '@/components/saju/charts/PersonalityAnalysisChart';
+// import PersonalityAnalysisChart from '@/components/saju/charts/PersonalityAnalysisChart'; // TODO: File not available
 import ChartNavigation from '@/components/Common/ChartNavigation';
 import { PersonalityTraits, SajuBirthInfo } from '@/types/saju';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
