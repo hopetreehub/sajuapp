@@ -106,12 +106,11 @@ export default function DiaryNotebookModal({ isOpen, onClose, date, onSave }: Di
 
     setIsSaving(true);
     try {
-      await diaryService.saveDiary({
-        date: format(today, 'yyyy-MM-dd'),
-        content: todayEntry.content,
-        mood: todayEntry.mood,
-        images: todayEntry.images,
-      });
+      await diaryService.saveDiary(
+        format(today, 'yyyy-MM-dd'),
+        todayEntry.content,
+        todayEntry.mood
+      );
       
       onSave?.();
       onClose();

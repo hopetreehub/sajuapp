@@ -131,9 +131,8 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
 
       result.base = data.items.map(item => {
         try {
-          const score = calculateTimeBasedScore(item.name, sajuData, 'base');
-
-          return score;
+          // base는 baseScore 사용 (시간대별 계산 불필요)
+          return item.baseScore;
         } catch (error) {
           console.error(`[점수 계산 오류] ${item.name}:`, error);
           return item.baseScore;

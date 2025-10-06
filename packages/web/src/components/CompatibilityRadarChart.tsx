@@ -90,7 +90,7 @@ export const CompatibilityRadarChart: React.FC<CompatibilityRadarChartProps> = (
             callbacks: {
               label(context) {
                 const label = context.dataset.label || '';
-                const value = context.parsed.r || context.parsed.y;
+                const value = context.parsed.r || (context.parsed as any).y || 0;
                 return `${label}: ${Math.round(value)}점`;
               },
             },
