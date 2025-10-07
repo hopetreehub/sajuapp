@@ -245,9 +245,13 @@ export class FiveElementsCalculator {
     const yearSeed = today.getFullYear();
 
     // 시드 기반 유사 랜덤 함수 (같은 날은 같은 값)
+    // 양수/음수 균형잡힌 변화값 생성 (-25 ~ +25)
     const seededRandom = (seed: number, index: number) => {
-      const x = Math.sin(seed + index * 100) * 10000;
-      return (x - Math.floor(x)) * 51 - 25; // -25 ~ +25
+      // 간단한 해시 함수로 0~1 범위의 유사 랜덤값 생성
+      const combined = seed * 9301 + index * 49297;
+      const randomValue = (combined % 233280) / 233280;
+      // 0~1을 -25~+25로 변환
+      return Math.round((randomValue * 50) - 25);
     };
 
     const todayVariations = {
