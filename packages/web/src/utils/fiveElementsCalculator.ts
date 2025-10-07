@@ -235,26 +235,59 @@ export class FiveElementsCalculator {
 
   // 시간대별 변화 계산
   static calculateTimeFrameVariations(baseElements: FiveElementsData): TimeFrameElements {
-    // 시간대별 변화 계수 (계절, 시기적 특성 반영)
-    const variations = {
-      today: { wood: 1.1, fire: 1.3, earth: 0.9, metal: 0.8, water: 1.2 },
-      month: { wood: 0.9, fire: 1.1, earth: 1.2, metal: 1.1, water: 0.9 },
-      year: { wood: 1.2, fire: 0.8, earth: 1.3, metal: 1.0, water: 1.1 },
+    // 시간대별 독립적인 변화값 (기본운과 무관하게 ±25 범위로 변동)
+    // 오늘/이달/올해가 기본운보다 높을 수도, 낮을 수도 있음
+
+    // 현재 날짜 기반 시드로 일관된 변화값 생성
+    const today = new Date();
+    const daySeed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    const monthSeed = today.getFullYear() * 100 + (today.getMonth() + 1);
+    const yearSeed = today.getFullYear();
+
+    // 시드 기반 유사 랜덤 함수 (같은 날은 같은 값)
+    const seededRandom = (seed: number, index: number) => {
+      const x = Math.sin(seed + index * 100) * 10000;
+      return (x - Math.floor(x)) * 51 - 25; // -25 ~ +25
     };
 
-    const applyVariation = (elements: FiveElementsData, multipliers: any): FiveElementsData => ({
-      wood: Math.min(100, Math.max(0, Math.round(elements.wood * multipliers.wood))),
-      fire: Math.min(100, Math.max(0, Math.round(elements.fire * multipliers.fire))),
-      earth: Math.min(100, Math.max(0, Math.round(elements.earth * multipliers.earth))),
-      metal: Math.min(100, Math.max(0, Math.round(elements.metal * multipliers.metal))),
-      water: Math.min(100, Math.max(0, Math.round(elements.water * multipliers.water))),
+    const todayVariations = {
+      wood: seededRandom(daySeed, 1),
+      fire: seededRandom(daySeed, 2),
+      earth: seededRandom(daySeed, 3),
+      metal: seededRandom(daySeed, 4),
+      water: seededRandom(daySeed, 5),
+    };
+
+    const monthVariations = {
+      wood: seededRandom(monthSeed, 1),
+      fire: seededRandom(monthSeed, 2),
+      earth: seededRandom(monthSeed, 3),
+      metal: seededRandom(monthSeed, 4),
+      water: seededRandom(monthSeed, 5),
+    };
+
+    const yearVariations = {
+      wood: seededRandom(yearSeed, 1),
+      fire: seededRandom(yearSeed, 2),
+      earth: seededRandom(yearSeed, 3),
+      metal: seededRandom(yearSeed, 4),
+      water: seededRandom(yearSeed, 5),
+    };
+
+    // 변화값을 기본운에 더하기 (배수 방식 아님!)
+    const applyVariation = (elements: FiveElementsData, changes: any): FiveElementsData => ({
+      wood: Math.min(100, Math.max(0, Math.round(elements.wood + changes.wood))),
+      fire: Math.min(100, Math.max(0, Math.round(elements.fire + changes.fire))),
+      earth: Math.min(100, Math.max(0, Math.round(elements.earth + changes.earth))),
+      metal: Math.min(100, Math.max(0, Math.round(elements.metal + changes.metal))),
+      water: Math.min(100, Math.max(0, Math.round(elements.water + changes.water))),
     });
 
     return {
       base: { ...baseElements },
-      today: applyVariation(baseElements, variations.today),
-      month: applyVariation(baseElements, variations.month),
-      year: applyVariation(baseElements, variations.year),
+      today: applyVariation(baseElements, todayVariations),
+      month: applyVariation(baseElements, monthVariations),
+      year: applyVariation(baseElements, yearVariations),
     };
   }
 
