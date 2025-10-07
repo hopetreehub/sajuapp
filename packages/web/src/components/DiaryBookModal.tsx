@@ -363,10 +363,10 @@ export default function DiaryBookModal({ isOpen, onClose, date, onSave }: DiaryB
         
         // 압축 및 WebP 변환
         const compressedImage = await compressAndConvertImage(file);
-        
+
         // 압축된 이미지 크기 확인 (Base64는 원본의 약 1.33배)
-        const compressedSizeBytes = (compressedImage.length * 3) / 4;
-        const compressedSizeMB = compressedSizeBytes / (1024 * 1024);
+        const _compressedSizeBytes = (compressedImage.length * 3) / 4;
+        const _compressedSizeMB = _compressedSizeBytes / (1024 * 1024);
         newImages.push(compressedImage);
       }
       

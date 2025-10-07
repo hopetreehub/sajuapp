@@ -109,7 +109,7 @@ export default function DiaryNotebookModal({ isOpen, onClose, date, onSave }: Di
       await diaryService.saveDiary(
         format(today, 'yyyy-MM-dd'),
         todayEntry.content,
-        todayEntry.mood
+        todayEntry.mood,
       );
       
       onSave?.();
