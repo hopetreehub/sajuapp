@@ -172,6 +172,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
           },
         } : undefined,
         calculatedAt: new Date().toISOString(),
+        apiVersion: '2.0.0-accurate', // 정확한 계산기 버전
       },
     });
 
