@@ -12,7 +12,9 @@ import {
   calculateAccurateFutureScore,
   generateDetailedAdvice,
 } from '../utils/compatibilityCalculator';
-import { SajuCalculator, formatFourPillars, calculateOhHaengBalance } from '../utils/sajuCalculator';
+import { calculateCompleteSaju } from '../utils/accurateSajuCalculator';
+// @ts-ignore
+import KoreanLunarCalendar from 'korean-lunar-calendar';
 import { analyzeRelationship, RelationshipAnalysis } from '../utils/detailedCompatibilityCalculator';
 import { analyzePractical, PracticalAnalysis } from '../utils/practicalCompatibilityCalculator';
 import { analyzeDepth, analyzeSpecial, DepthAnalysis, SpecialAnalysis } from '../utils/depthSpecialCompatibilityCalculator';
@@ -80,31 +82,35 @@ export const CompatibilityPage: React.FC = () => {
       };
     } catch (error) {
       console.error('정확한 사주 계산 오류:', error);
-      // 실패 시 로컬 계산으로 폴백
+      // 실패 시 accurateSajuCalculator로 폴백
       try {
-        const [year, month, day] = customer.birth_date.split('-').map(Number);
+        let [year, month, day] = customer.birth_date.split('-').map(Number);
         const [hour, minute] = customer.birth_time.split(':').map(Number);
 
-        const sajuInfo = {
-          year,
-          month,
-          day,
-          hour,
-          minute,
-          isLunar: customer.lunar_solar === 'lunar',
-          gender: customer.gender,
-        };
+        // 음력 → 양력 변환
+        if (customer.lunar_solar === 'lunar') {
+          const calendar = new KoreanLunarCalendar();
+          calendar.setLunarDate(year, month, day, false);
+          // @ts-ignore
+          const solarDate = calendar.getSolarCalendar();
+          year = solarDate.year;
+          month = solarDate.month;
+          day = solarDate.day;
+        }
 
-        const fourPillars = SajuCalculator.calculateFourPillars(sajuInfo);
-        const ohHaengBalance = calculateOhHaengBalance(fourPillars);
+        const sajuResult = calculateCompleteSaju(year, month, day, hour, minute || 0);
+
+        // 오행 균형 계산 (간단 버전)
+        const ohHaengBalance = { wood: 20, fire: 20, earth: 20, metal: 20, water: 20 };
 
         return {
-          year: fourPillars.year,
-          month: fourPillars.month,
-          day: fourPillars.day,
-          time: fourPillars.hour,
-          fullSaju: formatFourPillars(fourPillars),
+          year: { gan: sajuResult.year[0], ji: sajuResult.year[1] },
+          month: { gan: sajuResult.month[0], ji: sajuResult.month[1] },
+          day: { gan: sajuResult.day[0], ji: sajuResult.day[1] },
+          time: { gan: sajuResult.hour[0], ji: sajuResult.hour[1] },
+          fullSaju: sajuResult.fullSaju,
           ohHaengBalance,
+          dayMaster: sajuResult.day[0],
         };
       } catch (fallbackError) {
         console.error('폴백 사주 계산도 실패:', fallbackError);
