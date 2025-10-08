@@ -322,7 +322,9 @@ export function calculateSajuData(birthInfo: SajuBirthInfo): SajuData {
     month,
     day,
     birthInfo.hour,
-    birthInfo.minute || 0
+    birthInfo.minute || 0,
+    undefined, // applySummerTime
+    birthInfo.useTrueSolarTime // applyTrueSolarTime
   );
 
   // 사주팔자를 FourPillars 형식으로 변환

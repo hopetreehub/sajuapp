@@ -12,6 +12,7 @@ interface PersonalInfo {
   calendarType: 'solar' | 'lunar'
   gender: 'male' | 'female' | ''
   birthPlace: string
+  useTrueSolarTime?: boolean // 진태양시 보정 옵션
 }
 
 export default function SettingsPage() {
@@ -89,6 +90,7 @@ export default function SettingsPage() {
           isLunar: personalInfo.calendarType === 'lunar',
           isMale: personalInfo.gender === 'male',
           name: personalInfo.gender === 'male' ? '사용자(남)' : '사용자(여)',
+          useTrueSolarTime: personalInfo.useTrueSolarTime || false,
         };
 
         setBirthInfo(sajuBirthInfo);
@@ -250,6 +252,30 @@ export default function SettingsPage() {
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                         더 정확한 시간 계산을 위해 출생지를 입력할 수 있습니다
                       </p>
+                    </div>
+
+                    {/* 진태양시 보정 옵션 */}
+                    <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+                      <label className="flex items-start cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={personalInfo.useTrueSolarTime || false}
+                          onChange={(e) => setPersonalInfo({...personalInfo, useTrueSolarTime: e.target.checked})}
+                          className="mt-1 mr-3 w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                        />
+                        <div className="flex-1">
+                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            진태양시(真太陽時) 보정 적용
+                          </span>
+                          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                            한국 표준시와 실제 태양시의 차이(약 30분)를 보정합니다.
+                            전통 사주학에서 권장하는 방법입니다.
+                          </p>
+                          <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                            💡 예: 09:15 입력 시 → 08:45로 자동 보정되어 시주 계산
+                          </p>
+                        </div>
+                      </label>
                     </div>
 
                     <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">

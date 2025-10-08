@@ -1,8 +1,8 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 import {
-  calculateCompleteSaju
+  calculateCompleteSaju,
 } from '../../src/utils/accurateSajuCalculator';
-// @ts-ignore
+// @ts-expect-error - korean-lunar-calendar has no type definitions
 import KoreanLunarCalendar from 'korean-lunar-calendar';
 
 // 사주 계산 관련 인터페이스
@@ -10,6 +10,7 @@ interface SajuCalculationRequest {
   birth_date: string;
   birth_time: string;
   lunar_solar: 'lunar' | 'solar';
+  use_true_solar_time?: boolean; // 진태양시 보정 옵션
 }
 
 interface FourPillarsResult {
@@ -62,7 +63,12 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { birth_date, birth_time, lunar_solar }: SajuCalculationRequest = req.body;
+    const {
+      birth_date,
+      birth_time,
+      lunar_solar,
+      use_true_solar_time,
+    }: SajuCalculationRequest = req.body;
 
     // 필수 필드 검증
     if (!birth_date || !birth_time || !lunar_solar) {
@@ -96,7 +102,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         month = solarDate.month;
         day = solarDate.day;
 
-        console.log(`음력 변환: ${lunarYear}-${lunarMonth}-${lunarDay} → 양력 ${year}-${month}-${day}`);
+        // Lunar to solar conversion successful
       } catch (error) {
         return res.status(400).json({
           error: 'Lunar calendar conversion failed',
@@ -119,6 +125,8 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       day,
       hour,
       minute || 0,
+      undefined, // applySummerTime
+      use_true_solar_time, // applyTrueSolarTime
     );
 
     // 사주팔자를 API 형식으로 변환
@@ -153,6 +161,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         interpretation,
         sajuString: sajuResult.fullSaju,
         summerTimeApplied: sajuResult.summerTimeApplied,
+        trueSolarTimeApplied: sajuResult.trueSolarTimeApplied,
         inputCalendar: lunar_solar,
         convertedDate: lunar_solar === 'lunar' ? {
           solar: { year, month, day },
@@ -214,8 +223,9 @@ function calculateOhHaengBalance(fourPillars: FourPillarsResult): OhHaengBalance
   });
 
   // 백분율로 변환 (총 8개 기준)
-  Object.keys(balance).forEach(key => {
-    balance[key as keyof OhHaengBalance] = Math.round((balance[key as keyof OhHaengBalance] / 8) * 100);
+  Object.keys(balance).forEach((key) => {
+    const ohhaengKey = key as keyof OhHaengBalance;
+    balance[ohhaengKey] = Math.round((balance[ohhaengKey] / 8) * 100);
   });
 
   return balance;

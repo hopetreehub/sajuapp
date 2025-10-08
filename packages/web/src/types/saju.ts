@@ -9,6 +9,7 @@ export interface SajuBirthInfo {
   isLeapMonth?: boolean; // 윤달 여부 (음력일 때만 사용)
   name?: string;
   gender?: 'male' | 'female';
+  useTrueSolarTime?: boolean; // 진태양시 보정 적용 여부
 }
 
 export interface FourPillars {
