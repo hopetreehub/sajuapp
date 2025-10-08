@@ -162,6 +162,11 @@ export const CompatibilityPage: React.FC = () => {
       return null;
     }
 
+    // 임시: DB에 저장된 사주는 구버전일 수 있으므로 항상 새로 계산
+    // customer.saju_data 무시하고 직접 계산
+    return await calculateSajuForCustomer(customer);
+
+    /* 임시 비활성화: DB 사주 데이터 사용
     // 먼저 customer.saju_data가 있는지 확인
     if (customer.saju_data) {
       try {
@@ -192,6 +197,7 @@ export const CompatibilityPage: React.FC = () => {
     // saju_data가 없거나 불완전하면 정확한 API로 계산
 
     return await calculateSajuForCustomer(customer);
+    */
   };
 
   const calculateCompatibility = async () => {
