@@ -103,30 +103,31 @@ export function calculateMonthPillar(year: number, month: number, day: number): 
   let solarMonth = month;
   
   // 절기 기준 월 보정 (입춘부터 시작)
+  // 절기월: 1=인월, 2=묘월, 3=진월, 4=사월, 5=오월, 6=미월, 7=신월, 8=유월, 9=술월, 10=해월, 11=자월, 12=축월
   if (month === 1) {
-    solarMonth = day >= 4 ? 1 : 12; // 입춘 이후면 인월, 이전이면 축월
+    solarMonth = day >= 6 ? 12 : 11; // 소한(1/6) 이후면 축월, 이전이면 자월
   } else if (month === 2) {
-    solarMonth = day >= 4 ? 2 : 1; // 우수 이후면 묘월, 이전이면 인월
+    solarMonth = day >= 4 ? 1 : 12; // 입춘(2/4) 이후면 인월, 이전이면 축월
   } else if (month === 3) {
-    solarMonth = day >= 6 ? 3 : 2; // 경칩 이후면 진월, 이전이면 묘월
+    solarMonth = day >= 6 ? 2 : 1; // 우수~경칩(3/6) 이후면 묘월, 이전이면 인월
   } else if (month === 4) {
-    solarMonth = day >= 5 ? 4 : 3; // 청명 이후면 사월, 이전이면 진월
+    solarMonth = day >= 5 ? 3 : 2; // 청명(4/5) 이후면 진월, 이전이면 묘월
   } else if (month === 5) {
-    solarMonth = day >= 13 ? 5 : 4; // 입하 이후면 오월, 이전이면 사월 (1971년 기준 조정)
+    solarMonth = day >= 6 ? 4 : 3; // 곡우~입하(5/6) 이후면 사월, 이전이면 진월
   } else if (month === 6) {
-    solarMonth = day >= 21 ? 6 : 5; // 하지 이후면 미월, 이전이면 오월
+    solarMonth = day >= 6 ? 5 : 4; // 소만~망종(6/6) 이후면 오월, 이전이면 사월
   } else if (month === 7) {
-    solarMonth = day >= 7 ? 7 : 6; // 소서 이후면 신월, 이전이면 미월
+    solarMonth = day >= 7 ? 6 : 5; // 소서(7/7) 이후면 미월, 이전이면 오월
   } else if (month === 8) {
-    solarMonth = day >= 8 ? 8 : 7; // 처서 이후면 유월, 이전이면 신월
+    solarMonth = day >= 8 ? 7 : 6; // 대서~입추(8/8) 이후면 신월, 이전이면 미월
   } else if (month === 9) {
-    solarMonth = 8; // 9월은 유월 (백로~추분~한로 전까지)
+    solarMonth = day >= 8 ? 8 : 7; // 백로~추분(9/8) 이후면 유월, 이전이면 신월
   } else if (month === 10) {
-    solarMonth = day >= 8 ? 9 : 8; // 한로(10/8) 이후면 술월, 이전이면 유월  
+    solarMonth = day >= 8 ? 9 : 8; // 한로(10/8) 이후면 술월, 이전이면 유월
   } else if (month === 11) {
-    solarMonth = day >= 22 ? 11 : 10; // 소설 이후면 해월, 이전이면 술월
+    solarMonth = day >= 8 ? 10 : 9; // 상강~입동(11/8) 이후면 해월, 이전이면 술월
   } else if (month === 12) {
-    solarMonth = day >= 7 ? 1 : 12; // 대설 이후면 다음해 인월, 이전이면 축월
+    solarMonth = day >= 7 ? 11 : 10; // 대설(12/7) 이후면 자월, 이전이면 해월
   }
   
   // 월간 계산 (전통 테이블 사용)
