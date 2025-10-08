@@ -549,37 +549,43 @@ export function calculateSajuScore(
   itemName: string,
   sajuData: SajuData,
 ): number {
-  // 기본 점수 (50점에서 시작)
-  let score = 50;
-  
   // 사주 데이터 유효성 검증
-  if (!sajuData || !sajuData.year?.gan || !sajuData.month?.gan || 
+  if (!sajuData || !sajuData.year?.gan || !sajuData.month?.gan ||
       !sajuData.day?.gan || !sajuData.time?.gan) {
-
     return Math.floor(Math.random() * 30) + 40; // 40-70점
   }
-  
-  // 디버그 로그
 
   // 1. 항목의 오행 속성 가져오기
   const itemOhhaeng = ITEM_OHHAENG_MAPPING[itemName] || [];
-  
-  if (itemOhhaeng.length === 0) {
 
+  if (itemOhhaeng.length === 0) {
     // 매핑되지 않은 항목은 랜덤 범위 점수
     return Math.floor(Math.random() * 30) + 40; // 40-70점
   }
 
-  // 2. 사주의 오행 분포 계산
+  // 2. 사주 고유값 계산 (개인별 차별화를 위한 시드)
+  const sajuUniqueValue = getSajuUniqueValue(sajuData);
+
+  // 3. 항목명 기반 시드 생성
+  const itemSeed = itemName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+
+  // 4. 사주 + 항목 조합으로 개인별 고유 기본 점수 생성 (40-60 범위)
+  const combinedSeed = (sajuUniqueValue + itemSeed * 1000) % 100000;
+  const personalBaseScore = 40 + (combinedSeed % 21); // 40-60점 범위
+
+  // 기본 점수를 개인화된 점수로 시작
+  let score = personalBaseScore;
+
+  // 5. 사주의 오행 분포 계산
   const userOhhaeng: OhHaeng[] = [];
-  
+
   try {
     // 천간 오행
     userOhhaeng.push(CHEONGAN_OHHAENG[sajuData.year.gan]);
     userOhhaeng.push(CHEONGAN_OHHAENG[sajuData.month.gan]);
     userOhhaeng.push(CHEONGAN_OHHAENG[sajuData.day.gan]);
     userOhhaeng.push(CHEONGAN_OHHAENG[sajuData.time.gan]);
-    
+
     // 지지 오행
     userOhhaeng.push(JIJI_OHHAENG[sajuData.year.ji]);
     userOhhaeng.push(JIJI_OHHAENG[sajuData.month.ji]);
@@ -589,35 +595,38 @@ export function calculateSajuScore(
     console.error('[오행 분포 계산 오류]', error);
     return Math.floor(Math.random() * 30) + 40; // 40-70점
   }
-  
-  // 3. 오행 균형 점수 계산
+
+  // 6. 개인별 가중치 계수 (사주마다 다른 영향력)
+  const personalWeight = 1 + ((sajuUniqueValue % 20) - 10) / 100; // 0.9 ~ 1.1
+
+  // 7. 오행 균형 점수 계산 (개인별 가중치 적용)
   itemOhhaeng.forEach(itemOh => {
     const count = userOhhaeng.filter(oh => oh === itemOh).length;
-    
-    // 오행이 많을수록 가산점
-    score += count * 5; // 각 오행당 5점
-    
-    // 상생 관계 체크
+
+    // 오행이 많을수록 가산점 (개인별 차별화)
+    score += count * 5 * personalWeight;
+
+    // 상생 관계 체크 (개인별 차별화)
     userOhhaeng.forEach(userOh => {
       if (OHHAENG_RELATIONS.상생[userOh] === itemOh) {
-        score += 8; // 상생 관계 가산점
+        score += 8 * personalWeight; // 상생 관계 가산점
       }
       if (OHHAENG_RELATIONS.상극[userOh] === itemOh) {
-        score -= 5; // 상극 관계 감점
+        score -= 5 * personalWeight; // 상극 관계 감점
       }
     });
   });
-  
-  // 4. 오행 균형도 반영
+
+  // 8. 오행 균형도 반영
   const balanceBonus = calculateBalanceBonus(sajuData.ohHaengBalance, itemOhhaeng);
-  score += balanceBonus;
-  
-  // 5. 일주 천간 특별 가산점
+  score += balanceBonus * personalWeight;
+
+  // 9. 일주 천간 특별 가산점
   const dayGanOhhaeng = CHEONGAN_OHHAENG[sajuData.day.gan];
   if (itemOhhaeng.includes(dayGanOhhaeng)) {
-    score += 10; // 일주와 같은 오행 가산점
+    score += 10 * personalWeight; // 일주와 같은 오행 가산점
   }
-  
+
   // 점수 범위 제한 (20-85)
   const finalScore = Math.max(20, Math.min(85, Math.round(score)));
 
