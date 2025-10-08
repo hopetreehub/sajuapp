@@ -65,7 +65,11 @@ export const CompatibilityPage: React.FC = () => {
         day = solarDate.day;
       }
 
-      const sajuResult = calculateCompleteSaju(year, month, day, hour, minute || 0);
+      // 전역 설정에서 진태양시 옵션 읽기
+      const savedInfo = localStorage.getItem('personalInfo');
+      const useTrueSolarTime = savedInfo ? JSON.parse(savedInfo).useTrueSolarTime : false;
+
+      const sajuResult = calculateCompleteSaju(year, month, day, hour, minute || 0, undefined, useTrueSolarTime);
 
       // 오행 균형 계산 (간단 버전)
       const ohHaengBalance = { wood: 20, fire: 20, earth: 20, metal: 20, water: 20 };
