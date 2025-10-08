@@ -2,6 +2,8 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import {
   calculateCompleteSaju
 } from '../../src/utils/accurateSajuCalculator';
+// @ts-ignore
+import KoreanLunarCalendar from 'korean-lunar-calendar';
 
 // 사주 계산 관련 인터페이스
 interface SajuCalculationRequest {
@@ -69,21 +71,46 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // 음력 변환 경고 (현재는 음력 직접 지원 안함)
-    if (lunar_solar === 'lunar') {
-      return res.status(400).json({
-        error: 'Lunar calendar conversion is not yet supported. Please use solar calendar.',
-        message: '음력 변환은 아직 지원하지 않습니다. 양력 날짜를 사용해주세요.',
-      });
-    }
-
     // 날짜 파싱
-    const birthDate = new Date(birth_date);
     const [hour, minute] = birth_time.split(':').map(Number);
 
-    const year = birthDate.getFullYear();
-    const month = birthDate.getMonth() + 1;
-    const day = birthDate.getDate();
+    let year: number;
+    let month: number;
+    let day: number;
+
+    // 음력 변환 처리
+    if (lunar_solar === 'lunar') {
+      try {
+        // birth_date 파싱 (YYYY-MM-DD 형식)
+        const birthDate = new Date(birth_date);
+        const lunarYear = birthDate.getFullYear();
+        const lunarMonth = birthDate.getMonth() + 1;
+        const lunarDay = birthDate.getDate();
+
+        // 음력 → 양력 변환
+        const calendar = new KoreanLunarCalendar();
+        calendar.setLunarDate(lunarYear, lunarMonth, lunarDay, false); // 윤달 아님 (기본)
+
+        const solarDate = calendar.getSolarCalendar();
+        year = solarDate.year;
+        month = solarDate.month;
+        day = solarDate.day;
+
+        console.log(`음력 변환: ${lunarYear}-${lunarMonth}-${lunarDay} → 양력 ${year}-${month}-${day}`);
+      } catch (error) {
+        return res.status(400).json({
+          error: 'Lunar calendar conversion failed',
+          message: '음력 변환에 실패했습니다. 날짜를 확인해주세요.',
+          details: error instanceof Error ? error.message : 'Unknown error',
+        });
+      }
+    } else {
+      // 양력 날짜 직접 사용
+      const birthDate = new Date(birth_date);
+      year = birthDate.getFullYear();
+      month = birthDate.getMonth() + 1;
+      day = birthDate.getDate();
+    }
 
     // 정확한 사주 계산 (accurateSajuCalculator 사용)
     const sajuResult = calculateCompleteSaju(
@@ -126,6 +153,15 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         interpretation,
         sajuString: sajuResult.fullSaju,
         summerTimeApplied: sajuResult.summerTimeApplied,
+        inputCalendar: lunar_solar,
+        convertedDate: lunar_solar === 'lunar' ? {
+          solar: { year, month, day },
+          lunar: {
+            year: new Date(birth_date).getFullYear(),
+            month: new Date(birth_date).getMonth() + 1,
+            day: new Date(birth_date).getDate(),
+          },
+        } : undefined,
         calculatedAt: new Date().toISOString(),
       },
     });
