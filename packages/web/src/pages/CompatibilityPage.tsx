@@ -45,10 +45,46 @@ export const CompatibilityPage: React.FC = () => {
   const [saju1, setSaju1] = useState<any>(null);
   const [saju2, setSaju2] = useState<any>(null);
 
-  // 고객 선택 시 정확한 사주 데이터 계산 (API 사용)
+  // 고객 선택 시 정확한 사주 데이터 계산 (로컬 계산 우선)
   const calculateSajuForCustomer = async (customer: Customer) => {
     if (!customer.birth_date || !customer.birth_time) return null;
 
+    // 임시: API가 구버전이므로 로컬 계산 직접 사용
+    try {
+      let [year, month, day] = customer.birth_date.split('-').map(Number);
+      const [hour, minute] = customer.birth_time.split(':').map(Number);
+
+      // 음력 → 양력 변환
+      if (customer.lunar_solar === 'lunar') {
+        const calendar = new KoreanLunarCalendar();
+        calendar.setLunarDate(year, month, day, false);
+        // @ts-ignore
+        const solarDate = calendar.getSolarCalendar();
+        year = solarDate.year;
+        month = solarDate.month;
+        day = solarDate.day;
+      }
+
+      const sajuResult = calculateCompleteSaju(year, month, day, hour, minute || 0);
+
+      // 오행 균형 계산 (간단 버전)
+      const ohHaengBalance = { wood: 20, fire: 20, earth: 20, metal: 20, water: 20 };
+
+      return {
+        year: { gan: sajuResult.year[0], ji: sajuResult.year[1] },
+        month: { gan: sajuResult.month[0], ji: sajuResult.month[1] },
+        day: { gan: sajuResult.day[0], ji: sajuResult.day[1] },
+        time: { gan: sajuResult.hour[0], ji: sajuResult.hour[1] },
+        fullSaju: sajuResult.fullSaju,
+        ohHaengBalance,
+        dayMaster: sajuResult.day[0],
+      };
+    } catch (error) {
+      console.error('로컬 사주 계산 오류:', error);
+      return null;
+    }
+
+    /* 임시 비활성화: API가 구버전
     try {
 
       const sajuData = {
@@ -117,6 +153,7 @@ export const CompatibilityPage: React.FC = () => {
         return null;
       }
     }
+    */
   };
 
   const parseAccurateSaju = async (customer: Customer | null) => {
