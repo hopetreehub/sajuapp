@@ -1,13 +1,23 @@
-import { 
-  SajuBirthInfo, 
-  SajuData, 
-  FiveElements, 
-  TenGods, 
+import {
+  SajuBirthInfo,
+  SajuData,
+  FiveElements,
+  TenGods,
   SixAreaScores,
   PersonalityTraits,
   SeventeenFortuneScores,
 } from '@/types/saju';
-import { SajuCalculator, FourPillarsResult } from './sajuCalculator';
+import { calculateCompleteSaju } from './accurateSajuCalculator';
+// @ts-ignore
+import KoreanLunarCalendar from 'korean-lunar-calendar';
+
+// 사주팔자 타입 정의
+interface FourPillarsResult {
+  year: { heavenly: string; earthly: string };
+  month: { heavenly: string; earthly: string };
+  day: { heavenly: string; earthly: string };
+  hour: { heavenly: string; earthly: string };
+}
 
 // 천간의 오행 속성
 const HEAVENLY_STEM_ELEMENTS: Record<string, keyof FiveElements> = {
@@ -289,51 +299,70 @@ function calculateAverageScore(sixAreas: SixAreaScores): number {
   return values.reduce((sum, val) => sum + val, 0) / values.length;
 }
 
-// 사주 데이터 형식 변환
-function convertFourPillarsFormat(fourPillars: FourPillarsResult) {
-  return {
-    year: { 
-      heavenly: fourPillars.year.heavenly, 
-      earthly: fourPillars.year.earthly, 
-    },
-    month: { 
-      heavenly: fourPillars.month.heavenly, 
-      earthly: fourPillars.month.earthly, 
-    },
-    day: { 
-      heavenly: fourPillars.day.heavenly, 
-      earthly: fourPillars.day.earthly, 
-    },
-    hour: { 
-      heavenly: fourPillars.hour.heavenly, 
-      earthly: fourPillars.hour.earthly, 
-    },
-  };
-}
-
 // 통합 사주 데이터 계산 함수
 export function calculateSajuData(birthInfo: SajuBirthInfo): SajuData {
-  // 사주 계산
-  const fourPillars = SajuCalculator.calculateFourPillars(birthInfo);
-  
+  // 음력 → 양력 변환
+  let year = birthInfo.year;
+  let month = birthInfo.month;
+  let day = birthInfo.day;
+
+  if (birthInfo.isLunar) {
+    const calendar = new KoreanLunarCalendar();
+    calendar.setLunarDate(birthInfo.year, birthInfo.month, birthInfo.day, false);
+    // @ts-ignore - korean-lunar-calendar 라이브러리 타입 정의 누락
+    const solarDate = calendar.getSolarCalendar();
+    year = solarDate.year;
+    month = solarDate.month;
+    day = solarDate.day;
+  }
+
+  // 정확한 사주 계산 (accurateSajuCalculator 사용)
+  const sajuResult = calculateCompleteSaju(
+    year,
+    month,
+    day,
+    birthInfo.hour,
+    birthInfo.minute || 0
+  );
+
+  // 사주팔자를 FourPillars 형식으로 변환
+  const fourPillars = {
+    year: {
+      heavenly: sajuResult.year[0],
+      earthly: sajuResult.year[1],
+    },
+    month: {
+      heavenly: sajuResult.month[0],
+      earthly: sajuResult.month[1],
+    },
+    day: {
+      heavenly: sajuResult.day[0],
+      earthly: sajuResult.day[1],
+    },
+    hour: {
+      heavenly: sajuResult.hour[0],
+      earthly: sajuResult.hour[1],
+    },
+  };
+
   // 오행 계산
   const fiveElements = calculateFiveElements(fourPillars);
-  
+
   // 십성 계산
   const tenGods = calculateTenGods(fourPillars);
-  
+
   // 6대 영역 계산
   const sixAreas = calculateSixAreas(fiveElements, tenGods);
-  
+
   // 성격 특성 계산
   const personalityTraits = calculatePersonalityTraits(fiveElements, tenGods);
-  
+
   // 17대 운세 계산
   const seventeenFortunes = calculateSeventeenFortunes(fiveElements, tenGods);
-  
+
   return {
     birthInfo,
-    fourPillars: convertFourPillarsFormat(fourPillars),
+    fourPillars,
     fiveElements,
     tenGods,
     sixAreas,
