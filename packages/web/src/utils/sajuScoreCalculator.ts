@@ -480,58 +480,67 @@ export function calculateTimeBasedScore(
   // 항목의 오행 속성
   const itemOhhaeng = ITEM_OHHAENG_MAPPING[itemName] || [];
   if (itemOhhaeng.length === 0) return baseScore;
-  
-  // 1. 기본 보정값 (평균적으로 양수가 되도록)
-  let modifier = 8;
+
+  // 1. 항목별로 다른 시드 생성 (날짜 + 항목명 + 시간프레임)
+  // 각 항목이 독립적으로 변화하여 차트 형태가 달라짐
+  const dateSeed = currentYear * 10000 + currentMonth * 100 + currentDay;
+  const itemSeed = itemName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const timeFrameSeed = timeFrame === 'today' ? 1 : timeFrame === 'month' ? 100 : 10000;
+  const combinedSeed = dateSeed + itemSeed * 100 + timeFrameSeed;
+
+  // LCG 해시로 항목별 독립적인 변화값 생성 (-15 ~ +25 범위)
+  // 일부 항목은 올라가고, 일부는 내려가서 차트 형태가 변함
+  const seededValue = (combinedSeed * 9301 + 49297) % 233280;
+  const variation = (seededValue / 233280) * 40 - 15; // -15 ~ +25 (균형 및 폭 확대)
+
+  // 기본 점수에 변화값 적용
+  let timeBasedScore = baseScore + variation;
   
   let currentGan: CheonGan;
   let currentJi: JiJi;
   let currentOhhaeng: OhHaeng;
   
-  // 2. 시간대별 천간지지 계산
+  // 2. 시간대별 천간지지 계산 및 사주 기반 보너스
   switch (timeFrame) {
     case 'today':
-      // 오늘의 일진
       currentGan = CHEONGAN[Math.abs((currentDay - 1) % 10)];
       currentJi = JIJI[Math.abs((currentDay - 1) % 12)];
       currentOhhaeng = CHEONGAN_OHHAENG[currentGan];
-      
-      // 시간 보정
-      modifier += calculateHourlyBonus(itemOhhaeng, currentHour);
+
+      // 시간 보정 (항목별 차별화) - 가중치 강화
+      timeBasedScore += calculateHourlyBonus(itemOhhaeng, currentHour) * 0.4;
       break;
-      
+
     case 'month':
-      // 이번 달의 월주
       currentGan = CHEONGAN[Math.abs((currentMonth - 1) % 10)];
       currentJi = JIJI[Math.abs((currentMonth - 1) % 12)];
       currentOhhaeng = CHEONGAN_OHHAENG[currentGan];
-      
-      // 계절 보정
-      modifier += calculateSeasonalBonus(itemOhhaeng, currentMonth);
+
+      // 계절 보정 (항목별 차별화) - 가중치 강화
+      timeBasedScore += calculateSeasonalBonus(itemOhhaeng, currentMonth) * 0.4;
       break;
-      
+
     case 'year':
-      // 올해의 년주
       currentGan = CHEONGAN[Math.abs((currentYear - 1984) % 10)];
       currentJi = JIJI[Math.abs((currentYear - 1984) % 12)];
       currentOhhaeng = CHEONGAN_OHHAENG[currentGan];
       break;
-      
+
     default:
       return baseScore;
   }
-  
-  // 3. 천간지지 일치 보너스 (큰 가산점)
-  modifier += calculateExactMatchBonus(sajuData, currentGan, currentJi, timeFrame as any);
-  
-  // 4. 오행 관계 점수 (균형있게 조정)
-  modifier += calculateOhhaengRelation(itemOhhaeng, currentOhhaeng, timeFrame as any);
-  
-  // 5. 랜덤 요소 (약간의 변동성)
-  modifier += (Math.random() - 0.5) * 8;
-  
-  // 6. 최종 점수 계산 (20-90 범위)
-  const finalScore = Math.round(baseScore + modifier);
+
+  // 3. 천간지지 일치 보너스 (사주와 현재 시점 일치 시 큰 보너스) - 가중치 강화
+  const exactBonus = calculateExactMatchBonus(sajuData, currentGan, currentJi, timeFrame as any);
+  timeBasedScore += exactBonus * 0.6;
+
+  // 4. 오행 관계 점수 (상생상극 반영으로 항목별 차별화) - 가중치 강화
+  const relationScore = calculateOhhaengRelation(itemOhhaeng, currentOhhaeng, timeFrame as any);
+  timeBasedScore += relationScore * 0.5;
+
+  // 5. 최종 점수 계산 (20-90 범위)
+  const finalScore = Math.round(timeBasedScore);
+
   return Math.max(20, Math.min(90, finalScore));
 }
 

@@ -14,7 +14,7 @@ import {
 import { Radar, Bar } from 'react-chartjs-2';
 import { SajuRadarData, TimeFrame, TimeFrameWeights } from '@/types/sajuRadar';
 import { CHART_DESIGN_SYSTEM, getTimeFrameColors, getChartOptions } from '@/constants/chartDesignSystem';
-import { calculateTimeBasedScore, SajuData } from '@/utils/sajuScoreCalculator';
+import { calculateTimeBasedScore, calculateSajuScore, SajuData } from '@/utils/sajuScoreCalculator';
 import { ChartStyleUtils, TimeFrameData } from '@/utils/chartStyleUtils';
 
 ChartJS.register(
@@ -128,18 +128,17 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     
     // 기본 데이터 - 사주 데이터가 있으면 동적 계산, 없으면 정적 값 사용
     if (isValidSajuData(sajuData)) {
-
+      // 사주 기반 기본 점수 계산
       result.base = data.items.map(item => {
         try {
-          // base는 baseScore 사용 (시간대별 계산 불필요)
-          return item.baseScore;
+          return calculateSajuScore(item.name, sajuData);
         } catch (error) {
-          console.error(`[점수 계산 오류] ${item.name}:`, error);
+          console.error(`[기본 점수 계산 오류] ${item.name}:`, error);
           return item.baseScore;
         }
       });
     } else {
-
+      // 사주 데이터가 없으면 고정값 사용
       result.base = data.items.map(item => item.baseScore);
     }
     
