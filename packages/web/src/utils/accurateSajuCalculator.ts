@@ -242,30 +242,43 @@ function checkNeedsSummerTime(year: number, month: number, day: number): boolean
 
 // 전체 사주 계산 (서머타임 자동 적용)
 export function calculateCompleteSaju(
-  year: number, 
-  month: number, 
-  day: number, 
-  hour: number, 
+  year: number,
+  month: number,
+  day: number,
+  hour: number,
   minute: number = 0,
   applySummerTime?: boolean,
+  applyTrueSolarTime?: boolean, // 진태양시 보정 옵션 추가
 ) {
   // 서머타임 자동 감지 (명시적으로 지정하지 않은 경우)
   const needsSummerTime = applySummerTime !== undefined ? applySummerTime : checkNeedsSummerTime(year, month, day);
-  
+
   let adjustedHour = hour;
+  let adjustedMinute = minute;
+
+  // 진태양시 보정 (한국 경도 127도 기준, 표준시 경도 135도와 8도 차이 = 약 30분)
+  if (applyTrueSolarTime) {
+    adjustedMinute -= 30;
+    if (adjustedMinute < 0) {
+      adjustedMinute += 60;
+      adjustedHour -= 1;
+    }
+  }
+
+  // 서머타임 보정
   if (needsSummerTime) {
     // 1987년 9월 30일 같은 특수 케이스는 -1.5시간 보정
     if (year === 1987 && month === 9 && day === 30) {
-      adjustedHour = hour - 1.5; // 진시→묘시 보정
+      adjustedHour = adjustedHour - 1.5; // 진시→묘시 보정
     } else {
-      adjustedHour = hour - 1; // 일반 서머타임 -1시간 보정
+      adjustedHour = adjustedHour - 1; // 일반 서머타임 -1시간 보정
     }
   }
   
   const yearPillar = calculateYearPillar(year, month, day);
   const monthPillar = calculateMonthPillar(year, month, day);
   const dayPillar = calculateDayPillar(year, month, day);
-  const hourPillar = calculateHourPillar(dayPillar[0], adjustedHour, minute);
+  const hourPillar = calculateHourPillar(dayPillar[0], adjustedHour, adjustedMinute);
   
   return {
     year: yearPillar,
@@ -273,7 +286,8 @@ export function calculateCompleteSaju(
     day: dayPillar,
     hour: hourPillar,
     fullSaju: `${yearPillar} ${monthPillar} ${dayPillar} ${hourPillar}`,
-    summerTimeApplied: applySummerTime && adjustedHour !== hour,
+    summerTimeApplied: needsSummerTime,
+    trueSolarTimeApplied: applyTrueSolarTime || false,
   };
 }
 
