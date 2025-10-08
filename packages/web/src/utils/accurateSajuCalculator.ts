@@ -28,8 +28,8 @@ const TIME_BRANCHES = [
   { name: '진', start: 7, end: 9 },    // 07:00 ~ 09:00
   { name: '사', start: 9, end: 11 },   // 09:00 ~ 11:00
   { name: '오', start: 11, end: 13 },  // 11:00 ~ 13:00
-  { name: '미', start: 13, end: 15.5 },  // 13:00 ~ 15:30
-  { name: '신', start: 15.5, end: 17 },  // 15:30 ~ 17:00
+  { name: '미', start: 13, end: 15 },  // 13:00 ~ 15:00
+  { name: '신', start: 15, end: 17 },  // 15:00 ~ 17:00
   { name: '유', start: 17, end: 19 },  // 17:00 ~ 19:00
   { name: '술', start: 19, end: 21 },  // 19:00 ~ 21:00
   { name: '해', start: 21, end: 23 },   // 21:00 ~ 23:00
