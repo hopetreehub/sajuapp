@@ -328,6 +328,88 @@ const ITEM_OHHAENG_MAPPING: Record<string, OhHaeng[]> = {
   // 오늘의 운세 카테고리
   '연애운': ['화', '목'],
   '애정운': ['화', '수'],
+
+  // 주능 - 리더십
+  '통솔력': ['화', '금'],
+  '결단력': ['금', '화'],
+  '책임감': ['토', '금'],
+  '영향력': ['화', '목'],
+  '선득력': ['화', '목'],
+
+  // 주능 - 창의력
+  '상상력': ['목', '화'],
+  '혁신성': ['목', '금'],
+  '예술감': ['목', '화'],
+  '독창성': ['목', '화'],
+  '문제해결': ['수', '금'],
+
+  // 주능 - 소통능력
+  '의사소통': ['목', '화'],
+  '경청': ['수', '목'],
+  '설득': ['화', '목'],
+  '표현력': ['화', '목'],
+
+  // 주능 - 학습능력
+  '이해력': ['수', '목'],
+  '기억력': ['수', '토'],
+  '분석력': ['수', '금'],
+  '정리력': ['금', '토'],
+  '적응력': ['수', '목'],
+
+  // 주능 - 사업능력
+  '경영': ['금', '토'],
+  '재무관리': ['금', '토'],
+  '마케팅': ['화', '목'],
+  '네트워킹': ['화', '목'],
+  '협상력': ['금', '화'],
+
+  // 주능 - 전문성
+  '기술력': ['금', '수'],
+  '전문지식': ['수', '금'],
+  '실무능력': ['토', '금'],
+  '장인정신': ['토', '금'],
+  '발전성': ['목', '화'],
+
+  // 주흉 - 건강주의
+  '질병': ['수', '토'],
+  '상처': ['금', '화'],
+  '만성질환': ['토', '수'],
+  '정신건강': ['수', '화'],
+
+  // 주흉 - 재물주의
+  '재물손실': ['금', '수'],
+  '사기조심': ['수', '금'],
+  '투자주의': ['수', '금'],
+  '보증주의': ['토', '금'],
+  '대출주의': ['금', '수'],
+
+  // 주흉 - 관계주의
+  '분쟁': ['화', '금'],
+  '갈등': ['화', '금'],
+  '오해조심': ['화', '수'],
+  '배신주의': ['금', '수'],
+  '이별': ['수', '금'],
+
+  // 주흉 - 사고주의
+  '교통사고': ['금', '화'],
+  '산업재해': ['금', '토'],
+  '화재': ['화', '금'],
+  '수상사고': ['수', '목'],
+  '낙상주의': ['토', '목'],
+
+  // 주흉 - 법률주의
+  '소송': ['금', '화'],
+  '계약주의': ['금', '토'],
+  '법적분쟁': ['금', '화'],
+  '세무주의': ['금', '토'],
+  '규제주의': ['금', '토'],
+
+  // 주흉 - 사업주의
+  '실패위험': ['수', '금'],
+  '동업주의': ['화', '금'],
+  '확장주의': ['목', '화'],
+  '계역변경': ['수', '목'],
+  '경쟁압박': ['금', '화'],
 };
 
 // 오행 상생상극 관계 점수
@@ -459,7 +541,104 @@ function calculateHourlyBonus(itemOhhaeng: OhHaeng[], hour: number): number {
   return bonus;
 }
 
-// 시간대별 점수 계산을 위한 헬퍼 함수 (완전 개선된 버전)
+/**
+ * 대운 사이클 계산 헬퍼 함수
+ * 사주 데이터에서 현재 나이/날짜에 해당하는 대운 사이클 번호를 계산
+ */
+function getCurrentDaeunCycle(sajuData: SajuData, birthYear: number, currentDate: Date): number {
+  const currentYear = currentDate.getFullYear();
+  const age = currentYear - birthYear;
+  return Math.floor(age / 10); // 10년 단위 대운
+}
+
+/**
+ * 다층 점수 통합 계산 함수 (NEW!)
+ * 기본자질 + 대운 + 세운 + 월운 + 일운을 시간대별 가중치로 조합
+ */
+export function calculateMultiLayerScore(
+  itemName: string,
+  sajuData: SajuData,
+  timeFrame: 'base' | 'today' | 'month' | 'year',
+  targetDate?: Date,
+  birthYear?: number,
+): number {
+  const now = targetDate || new Date();
+
+  // 1. 각 계층 점수 계산
+  const baseScore = calculateSajuScore(itemName, sajuData);
+
+  // 대운 점수 (birthYear 필요) - 기본값 낮춤
+  let daeunScore = 40; // 기본값
+  if (birthYear) {
+    const daeunCycle = getCurrentDaeunCycle(sajuData, birthYear, now);
+    daeunScore = calculateDaeunScore(sajuData, daeunCycle);
+  }
+
+  // 세운 점수 - 기본값 낮춤
+  const seunScore = calculateSeunScore(sajuData, now.getFullYear());
+
+  // 월운 점수 - 기본값 낮춤
+  const monthScore = calculateMonthScore(sajuData, now.getFullYear(), now.getMonth() + 1);
+
+  // 일운 점수 - 기본값 낮춤
+  const dayScore = calculateDayScore(sajuData, now);
+
+  // 2. 시간대별 가중치 정의
+  interface LayerWeights {
+    base: number;
+    daeun: number;
+    seun: number;
+    month: number;
+    day: number;
+  }
+
+  const weights: Record<'base' | 'today' | 'month' | 'year', LayerWeights> = {
+    base: {
+      base: 0.70,  // 기본자질 70%
+      daeun: 0.20, // 대운 20%
+      seun: 0.05,  // 세운 5%
+      month: 0.03, // 월운 3%
+      day: 0.02,   // 일운 2%
+    },
+    year: {
+      base: 0.30,  // 기본자질 30%
+      daeun: 0.30, // 대운 30%
+      seun: 0.30,  // 세운 30%
+      month: 0.05, // 월운 5%
+      day: 0.05,   // 일운 5%
+    },
+    month: {
+      base: 0.25,  // 기본자질 25%
+      daeun: 0.20, // 대운 20%
+      seun: 0.15,  // 세운 15%
+      month: 0.30, // 월운 30%
+      day: 0.10,   // 일운 10%
+    },
+    today: {
+      base: 0.20,  // 기본자질 20%
+      daeun: 0.15, // 대운 15%
+      seun: 0.10,  // 세운 10%
+      month: 0.20, // 월운 20%
+      day: 0.35,   // 일운 35%
+    },
+  };
+
+  const currentWeights = weights[timeFrame];
+
+  // 3. 가중 평균 계산
+  const finalScore = (
+    baseScore * currentWeights.base +
+    daeunScore * currentWeights.daeun +
+    seunScore * currentWeights.seun +
+    monthScore * currentWeights.month +
+    dayScore * currentWeights.day
+  );
+
+  // 4. 최종 점수 범위 제한 (20-90)
+  return Math.max(20, Math.min(90, Math.round(finalScore)));
+}
+
+// 기존 함수 유지 (하위 호환성)
 export function calculateTimeBasedScore(
   itemName: string,
   sajuData: SajuData,
@@ -467,16 +646,16 @@ export function calculateTimeBasedScore(
   targetDate?: Date,
 ): number {
   const baseScore = calculateSajuScore(itemName, sajuData);
-  
+
   // 기본 점수에서 시작
-  
+
   // 현재 날짜/시간 정보 (타겟 날짜가 있으면 해당 날짜 사용)
   const now = targetDate || new Date();
   const currentYear = now.getFullYear();
   const currentMonth = now.getMonth() + 1;
   const currentDay = now.getDate();
   const currentHour = now.getHours();
-  
+
   // 항목의 오행 속성
   const itemOhhaeng = ITEM_OHHAENG_MAPPING[itemName] || [];
   if (itemOhhaeng.length === 0) return baseScore;
@@ -495,11 +674,11 @@ export function calculateTimeBasedScore(
 
   // 기본 점수에 변화값 적용
   let timeBasedScore = baseScore + variation;
-  
+
   let currentGan: CheonGan;
   let currentJi: JiJi;
   let currentOhhaeng: OhHaeng;
-  
+
   // 2. 시간대별 천간지지 계산 및 사주 기반 보너스
   switch (timeFrame) {
     case 'today':
@@ -569,9 +748,9 @@ export function calculateSajuScore(
   // 3. 항목명 기반 시드 생성
   const itemSeed = itemName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
 
-  // 4. 사주 + 항목 조합으로 개인별 고유 기본 점수 생성 (40-60 범위)
+  // 4. 사주 + 항목 조합으로 개인별 고유 기본 점수 생성 (20-40 범위로 대폭 낮춤)
   const combinedSeed = (sajuUniqueValue + itemSeed * 1000) % 100000;
-  const personalBaseScore = 40 + (combinedSeed % 21); // 40-60점 범위
+  const personalBaseScore = 20 + (combinedSeed % 21); // 20-40점 범위
 
   // 기본 점수를 개인화된 점수로 시작
   let score = personalBaseScore;
@@ -599,20 +778,20 @@ export function calculateSajuScore(
   // 6. 개인별 가중치 계수 (사주마다 다른 영향력)
   const personalWeight = 1 + ((sajuUniqueValue % 20) - 10) / 100; // 0.9 ~ 1.1
 
-  // 7. 오행 균형 점수 계산 (개인별 가중치 적용)
+  // 7. 오행 균형 점수 계산 (개인별 가중치 적용) - 가중치 감소로 차별화 강화
   itemOhhaeng.forEach(itemOh => {
     const count = userOhhaeng.filter(oh => oh === itemOh).length;
 
-    // 오행이 많을수록 가산점 (개인별 차별화)
-    score += count * 5 * personalWeight;
+    // 오행이 많을수록 가산점 (가중치 감소: 5→3)
+    score += count * 3 * personalWeight;
 
-    // 상생 관계 체크 (개인별 차별화)
+    // 상생 관계 체크 (가중치 감소: 8→5, 5→3)
     userOhhaeng.forEach(userOh => {
       if (OHHAENG_RELATIONS.상생[userOh] === itemOh) {
-        score += 8 * personalWeight; // 상생 관계 가산점
+        score += 5 * personalWeight; // 상생 관계 가산점 감소
       }
       if (OHHAENG_RELATIONS.상극[userOh] === itemOh) {
-        score -= 5 * personalWeight; // 상극 관계 감점
+        score -= 3 * personalWeight; // 상극 관계 감점 감소
       }
     });
   });
@@ -621,14 +800,14 @@ export function calculateSajuScore(
   const balanceBonus = calculateBalanceBonus(sajuData.ohHaengBalance, itemOhhaeng);
   score += balanceBonus * personalWeight;
 
-  // 9. 일주 천간 특별 가산점
+  // 9. 일주 천간 특별 가산점 (가중치 감소: 10→6)
   const dayGanOhhaeng = CHEONGAN_OHHAENG[sajuData.day.gan];
   if (itemOhhaeng.includes(dayGanOhhaeng)) {
-    score += 10 * personalWeight; // 일주와 같은 오행 가산점
+    score += 6 * personalWeight; // 일주와 같은 오행 가산점 감소
   }
 
-  // 점수 범위 제한 (20-85)
-  const finalScore = Math.max(20, Math.min(85, Math.round(score)));
+  // 점수 범위 제한 (20-70으로 대폭 축소)
+  const finalScore = Math.max(20, Math.min(70, Math.round(score)));
 
   return finalScore;
 }
@@ -1042,24 +1221,24 @@ function calculateDaeunScore(saju: any, cycle: number): number {
   const daeunGan = CHEONGAN[daeunGanIndex];
   const daeunJi = JIJI[daeunJiIndex];
 
-  let score = 50;
+  let score = 40; // 기본값 50→40으로 낮춤
 
   // 3. 일간과 대운 천간의 십신 관계 (복잡한 상호작용)
   const dayElement = CHEONGAN_OHHAENG[saju.day.gan as CheonGan];
   const daeunElement = CHEONGAN_OHHAENG[daeunGan];
 
-  // 상생 관계 (강한 길운) - 영향력 대폭 확대
+  // 상생 관계 (길운) - 영향력 조정 (45→30, 35→25)
   if (ELEMENT_GENERATION[daeunElement] === dayElement) {
-    score += 45; // 정인, 편인 관계 - 강화
+    score += 30; // 정인, 편인 관계
   } else if (ELEMENT_GENERATION[dayElement] === daeunElement) {
-    score += 35; // 식신, 상관 관계 - 강화
+    score += 25; // 식신, 상관 관계
   }
 
-  // 상극 관계 (흉운 가능성) - 영향력 대폭 확대
+  // 상극 관계 (흉운 가능성) - 영향력 조정 (50→35, 40→30)
   if (ELEMENT_CONFLICT[daeunElement] === dayElement) {
-    score -= 50; // 정관, 편관의 강한 극 - 강화
+    score -= 35; // 정관, 편관의 강한 극
   } else if (ELEMENT_CONFLICT[dayElement] === daeunElement) {
-    score -= 40; // 일간이 극하는 재성 - 강화
+    score -= 30; // 일간이 극하는 재성
   }
 
   // 같은 오행 (비견, 겁재)
@@ -1100,7 +1279,8 @@ function calculateDaeunScore(saju: any, cycle: number): number {
   const seasonalBonus = calculateSeasonalDaeun(monthJi, daeunJi);
   score += seasonalBonus;
 
-  return Math.max(10, Math.min(90, score));
+  // 대운 점수 범위 축소 (10-90 → 20-80)
+  return Math.max(20, Math.min(80, score));
 }
 
 /**
@@ -1182,7 +1362,7 @@ function calculateSeunScore(saju: any, year: number): number {
   const yearGan = CHEONGAN[ganIndex];
   const yearJi = JIJI[jiIndex];
 
-  let score = 50;
+  let score = 40; // 기본값 50→40으로 낮춤
 
   // 천간 관계
   if (CHEONGAN_HARMONY[saju.day.gan] === yearGan) {
@@ -1208,7 +1388,107 @@ function calculateSeunScore(saju: any, year: number): number {
     score -= 12;
   }
 
-  return Math.max(0, Math.min(100, score));
+  // 세운 점수 범위 축소 (0-100 → 20-80)
+  return Math.max(20, Math.min(80, score));
+}
+
+/**
+ * 월운 점수 계산 (새로 추가)
+ */
+function calculateMonthScore(saju: any, year: number, month: number): number {
+  // 월별 천간지지 계산 (연도와 월을 조합)
+  const ganIndex = ((year - 4) * 12 + (month - 1)) % 10;
+  const jiIndex = (month - 1) % 12;
+
+  const monthGan = CHEONGAN[ganIndex];
+  const monthJi = JIJI[jiIndex];
+
+  let score = 40; // 기본값 50→40으로 낮춤
+
+  // 천간 관계 (세운보다 약간 강하게)
+  if (CHEONGAN_HARMONY[saju.day.gan] === monthGan) {
+    score += 18;
+  }
+
+  // 지지 관계
+  if (JIJI_SIX_HARMONY[saju.day.ji] === monthJi) {
+    score += 15;
+  }
+  if (JIJI_CONFLICT[saju.day.ji] === monthJi) {
+    score -= 20;
+  }
+
+  // 오행 관계
+  const dayElement = CHEONGAN_OHHAENG[saju.day.gan as CheonGan];
+  const monthElement = CHEONGAN_OHHAENG[monthGan];
+
+  if (ELEMENT_GENERATION[monthElement] === dayElement) {
+    score += 12;
+  }
+  if (ELEMENT_CONFLICT[monthElement] === dayElement) {
+    score -= 15;
+  }
+
+  // 계절성 보너스 추가
+  const seasonalStrength = (SEASONAL_OHHAENG_STRENGTH as any)[month] || {};
+  const monthOhhaeng = JIJI_OHHAENG[monthJi];
+  const seasonBonus = seasonalStrength[monthOhhaeng] || 0;
+  score += seasonBonus * 0.3;
+
+  // 월운 점수 범위 축소 (0-100 → 20-80)
+  return Math.max(20, Math.min(80, score));
+}
+
+/**
+ * 일운 점수 계산 (새로 추가)
+ * 간지력 기반 일진 계산
+ */
+function calculateDayScore(saju: any, targetDate: Date): number {
+  // 간지력 계산 (1984년 1월 1일 = 갑자일 기준)
+  const baseDate = new Date(1984, 0, 1);
+  const daysDiff = Math.floor((targetDate.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24));
+
+  const ganIndex = Math.abs(daysDiff % 10);
+  const jiIndex = Math.abs(daysDiff % 12);
+
+  const dayGan = CHEONGAN[ganIndex];
+  const dayJi = JIJI[jiIndex];
+
+  let score = 40; // 기본값 50→40으로 낮춤
+
+  // 천간 관계 (일진이므로 더 강하게)
+  if (CHEONGAN_HARMONY[saju.day.gan] === dayGan) {
+    score += 20;
+  }
+
+  // 지지 관계
+  if (JIJI_SIX_HARMONY[saju.day.ji] === dayJi) {
+    score += 18;
+  }
+  if (JIJI_CONFLICT[saju.day.ji] === dayJi) {
+    score -= 22;
+  }
+
+  // 오행 관계
+  const sajuDayElement = CHEONGAN_OHHAENG[saju.day.gan as CheonGan];
+  const currentDayElement = CHEONGAN_OHHAENG[dayGan];
+
+  if (ELEMENT_GENERATION[currentDayElement] === sajuDayElement) {
+    score += 15;
+  }
+  if (ELEMENT_CONFLICT[currentDayElement] === sajuDayElement) {
+    score -= 18;
+  }
+
+  // 시간대 영향 추가
+  const currentHour = targetDate.getHours();
+  const hourlyStrength = (HOURLY_OHHAENG_STRENGTH as any)[currentHour] || {};
+  const currentDayOhhaeng = CHEONGAN_OHHAENG[dayGan];
+  const hourBonus = hourlyStrength[currentDayOhhaeng] || 0;
+  score += hourBonus * 0.5;
+
+  // 일운 점수 범위 축소 (0-100 → 20-80)
+  return Math.max(20, Math.min(80, score));
 }
 
 /**

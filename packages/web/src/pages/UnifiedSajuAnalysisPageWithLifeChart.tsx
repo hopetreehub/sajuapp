@@ -59,14 +59,17 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
     }
   }, [selectedCustomer]);
 
-  // 컴포넌트 마운트 시 동적 카테고리 데이터 로드
+  // 컴포넌트 마운트 시 동적 카테고리 데이터 로드 (현재 비활성화 - 백엔드 API 없음)
   useEffect(() => {
     const loadCategories = async () => {
       if (!categoriesLoaded && !isLoadingCategories) {
         setIsLoadingCategories(true);
         try {
-          await loadDynamicSajuCategories();
-          // 업데이트된 카테고리 가져오기
+          // 백엔드 API가 없으므로 동적 로딩 비활성화
+          // await loadDynamicSajuCategories();
+
+          // 정적 데이터만 사용
+          console.log('[카테고리 로드] 정적 데이터 사용 (백엔드 API 비활성화)');
           const updatedCategories = getSajuRadarCategories();
           setCategories([...updatedCategories]); // 새 배열로 상태 업데이트
           setCategoriesLoaded(true);

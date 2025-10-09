@@ -14,7 +14,7 @@ import {
 import { Radar, Bar } from 'react-chartjs-2';
 import { SajuRadarData, TimeFrame, TimeFrameWeights } from '@/types/sajuRadar';
 import { CHART_DESIGN_SYSTEM, getTimeFrameColors, getChartOptions } from '@/constants/chartDesignSystem';
-import { calculateTimeBasedScore, calculateSajuScore, SajuData } from '@/utils/sajuScoreCalculator';
+import { calculateMultiLayerScore, calculateSajuScore, SajuData } from '@/utils/sajuScoreCalculator';
 import { ChartStyleUtils, TimeFrameData } from '@/utils/chartStyleUtils';
 
 ChartJS.register(
@@ -111,11 +111,22 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     return Math.max(20, Math.min(maxLimit, Math.round(finalScore)));
   };
 
-  // 시간대별 데이터 메모이제이션 (ChartStyleUtils 호환 형식으로 변경)
+  // 생년 추출 (birthDate에서)
+  const birthYear = useMemo(() => {
+    if (!birthDate) return undefined;
+    try {
+      const match = birthDate.match(/(\d{4})/);
+      return match ? parseInt(match[1], 10) : undefined;
+    } catch {
+      return undefined;
+    }
+  }, [birthDate]);
+
+  // 시간대별 데이터 메모이제이션 (다층 점수 시스템 적용)
   const timeFrameData = useMemo(() => {
 
     const result: { [key in TimeFrame]?: number[] } = {};
-    
+
     // 사주 데이터 유효성 검증
     const isValidSajuData = (data: any): data is SajuData => {
       if (!data) return false;
@@ -125,71 +136,67 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
              data.time?.gan && data.time?.ji &&
              data.ohHaengBalance;
     };
-    
-    // 기본 데이터 - 사주 데이터가 있으면 동적 계산, 없으면 정적 값 사용
+
+    // 사주 데이터가 있으면 다층 점수 시스템 사용
     if (isValidSajuData(sajuData)) {
-      // 사주 기반 기본 점수 계산
+      // 기본 데이터 - 다층 점수 (base 모드)
       result.base = data.items.map(item => {
         try {
-          return calculateSajuScore(item.name, sajuData);
+          return calculateMultiLayerScore(item.name, sajuData, 'base', undefined, birthYear);
         } catch (error) {
           console.error(`[기본 점수 계산 오류] ${item.name}:`, error);
           return item.baseScore;
         }
       });
-    } else {
-      // 사주 데이터가 없으면 고정값 사용
-      result.base = data.items.map(item => item.baseScore);
-    }
-    
-    // 사주 데이터가 있으면 사주 기반 계산, 없으면 랜덤 변동성
-    if (isValidSajuData(sajuData)) {
-      // 오늘: 사주 기반 일운 계산
+
+      // 오늘: 다층 점수 (today 모드 - 일운 35% 가중)
       result.today = data.items.map(item => {
         try {
-          return calculateTimeBasedScore(item.name, sajuData, 'today');
+          return calculateMultiLayerScore(item.name, sajuData, 'today', undefined, birthYear);
         } catch (error) {
           console.error(`[오늘 점수 계산 오류] ${item.name}:`, error);
           return generateTimeBasedScore(item.baseScore, 1.0, 25);
         }
       });
-      
-      // 이번달: 사주 기반 월운 계산
+
+      // 이번달: 다층 점수 (month 모드 - 월운 30% 가중)
       result.month = data.items.map(item => {
         try {
-          return calculateTimeBasedScore(item.name, sajuData, 'month');
+          return calculateMultiLayerScore(item.name, sajuData, 'month', undefined, birthYear);
         } catch (error) {
           console.error(`[이번달 점수 계산 오류] ${item.name}:`, error);
           return generateTimeBasedScore(item.baseScore, 1.0, 18);
         }
       });
-      
-      // 올해: 사주 기반 세운 계산
+
+      // 올해: 다층 점수 (year 모드 - 대운/세운 각 30% 가중)
       result.year = data.items.map(item => {
         try {
-          return calculateTimeBasedScore(item.name, sajuData, 'year');
+          return calculateMultiLayerScore(item.name, sajuData, 'year', undefined, birthYear);
         } catch (error) {
           console.error(`[올해 점수 계산 오류] ${item.name}:`, error);
           return generateTimeBasedScore(item.baseScore, 1.0, 12);
         }
       });
     } else {
-      // 사주 데이터가 없으면 기존 랜덤 방식
-      result.today = data.items.map(item => 
+      // 사주 데이터가 없으면 고정값/랜덤 방식
+      result.base = data.items.map(item => item.baseScore);
+
+      result.today = data.items.map(item =>
         generateTimeBasedScore(item.baseScore, 1.0, 25),
       );
-      
-      result.month = data.items.map(item => 
+
+      result.month = data.items.map(item =>
         generateTimeBasedScore(item.baseScore, 1.0, 18),
       );
-      
-      result.year = data.items.map(item => 
+
+      result.year = data.items.map(item =>
         generateTimeBasedScore(item.baseScore, 1.0, 12),
       );
     }
-    
+
     return result;
-  }, [data.items, sajuData]);
+  }, [data.items, sajuData, birthYear]);
 
   // ChartStyleUtils용 TimeFrameData 배열 생성
   const chartTimeFrameDatasets = useMemo((): TimeFrameData[] => {

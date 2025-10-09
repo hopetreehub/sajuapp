@@ -19,8 +19,11 @@ function getSajuScore(itemName: string, defaultScore: number): number {
   try {
     // 전역 사주 데이터가 있으면 사용, 없으면 샘플 데이터 사용
     const sajuData = globalSajuData || generateSampleSajuData();
-    return calculateSajuScore(itemName, sajuData);
-  } catch {
+    const score = calculateSajuScore(itemName, sajuData);
+
+    return score;
+  } catch (error) {
+    console.error(`[getSajuScore ERROR] ${itemName}:`, error);
     return defaultScore; // 에러 시 기본값 사용
   }
 }
@@ -1191,7 +1194,6 @@ export const SAJU_RADAR_CATEGORIES: SajuRadarCategory[] = [
  */
 export async function loadDynamicSajuCategories(): Promise<void> {
   try {
-
     // 백엔드에서 데이터 가져오기
     const backendCategories = await getSajuCategories();
 
@@ -1203,15 +1205,10 @@ export async function loadDynamicSajuCategories(): Promise<void> {
     backendCategories.forEach(backendCat => {
       if (backendCat.id === 'juneung' && juneungIndex !== -1) {
         SAJU_RADAR_CATEGORIES[juneungIndex].subcategories = backendCat.subcategories;
-
-
       } else if (backendCat.id === 'juhyung' && juhyungIndex !== -1) {
         SAJU_RADAR_CATEGORIES[juhyungIndex].subcategories = backendCat.subcategories;
-
-
       }
     });
-
 
   } catch (error) {
     console.error('❌ 동적 사주 카테고리 데이터 로드 실패:', error);
