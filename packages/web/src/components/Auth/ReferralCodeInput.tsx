@@ -154,39 +154,6 @@ const ReferralCodeInput: React.FC<ReferralCodeInputProps> = ({
 
   return (
     <div className={`space-y-4 ${className}`}>
-      
-      {/* 웰컴 혜택 섹션 (항상 표시) */}
-      {!hasUserReferralCode && (
-        <div className="bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 p-6 rounded-xl border border-yellow-200 dark:border-yellow-700">
-          <div className="text-center">
-            <span className="text-3xl mb-3 block">🎉</span>
-            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">
-              {WELCOME_CODE_MESSAGES.TITLE}
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-              {WELCOME_CODE_MESSAGES.SUBTITLE}
-            </p>
-            <div className="inline-flex items-center space-x-2 bg-green-100 dark:bg-green-900/20 px-3 py-2 rounded-lg border border-green-200 dark:border-green-700 mb-4">
-              <span className="text-green-600">✅</span>
-              <span className="text-green-700 dark:text-green-400 text-sm font-medium">
-                {WELCOME_CODE_MESSAGES.AUTO_APPLIED}
-              </span>
-            </div>
-            <div className="text-sm text-gray-600 dark:text-gray-300 space-y-2">
-              <p className="font-medium mb-2">{WELCOME_CODE_MESSAGES.DESCRIPTION}</p>
-              {WELCOME_CODE_MESSAGES.BENEFITS.map((benefit, index) => (
-                <div key={index} className="flex items-center justify-center space-x-2">
-                  <span className="text-yellow-500">✨</span>
-                  <span className="text-xs">{benefit}</span>
-                </div>
-              ))}
-            </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
-              {WELCOME_CODE_MESSAGES.CTA_MESSAGE}
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* 사용자 추천 코드 확인 결과 */}
       {hasUserReferralCode && referralValidation?.isValid && (
