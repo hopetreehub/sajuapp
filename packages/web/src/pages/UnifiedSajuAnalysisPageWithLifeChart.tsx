@@ -10,6 +10,7 @@ import LifeChartButton from '@/components/saju/LifeChartButton';
 import HundredYearChart from '@/components/charts/HundredYearChartFixed';
 import HealthRadarChart from '@/components/saju/charts/HealthRadarChart';
 import WealthRadarChart from '@/components/saju/charts/WealthRadarChart';
+import RelationshipRadarChart from '@/components/saju/charts/RelationshipRadarChart';
 import { fetchLifetimeFortune, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
 import { convertCustomerToLifetimeRequest } from '@/utils/customerDataConverter';
 import '@/utils/testUniqueValues'; // 개인별 고유값 테스트 함수 로드
@@ -242,6 +243,17 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
         {selectedCustomer && customerSajuData && (
           <div id="wealth-system-chart" className="mb-8">
             <WealthRadarChart
+              sajuData={customerSajuData}
+              birthYear={new Date(selectedCustomer.birth_date).getFullYear()}
+              birthDate={birthDate}
+            />
+          </div>
+        )}
+
+        {/* 🤝 7대 인간관계운 시스템 차트 - 고객 선택 및 사주 데이터 로드 시 표시 */}
+        {selectedCustomer && customerSajuData && (
+          <div id="relationship-system-chart" className="mb-8">
+            <RelationshipRadarChart
               sajuData={customerSajuData}
               birthYear={new Date(selectedCustomer.birth_date).getFullYear()}
               birthDate={birthDate}
