@@ -57,9 +57,9 @@ export const HEALTH_SYSTEMS: HealthSystem[] = [
       { ageRange: '0-20', factor: 1.2, concerns: ['성장 발육'] },
       { ageRange: '21-40', factor: 1.0, concerns: ['자세 교정'] },
       { ageRange: '41-60', factor: 0.9, concerns: ['골다공증', '관절염'] },
-      { ageRange: '61+', factor: 0.7, concerns: ['골절 위험', '퇴행성 관절염'] }
+      { ageRange: '61+', factor: 0.7, concerns: ['골절 위험', '퇴행성 관절염'] },
     ],
-    keywords: ['뼈 건강', '관절 통증', '척추', '골밀도', '자세']
+    keywords: ['뼈 건강', '관절 통증', '척추', '골밀도', '자세'],
   },
   {
     id: 'muscular',
@@ -73,9 +73,9 @@ export const HEALTH_SYSTEMS: HealthSystem[] = [
       { ageRange: '0-20', factor: 1.1, concerns: ['근육 발달'] },
       { ageRange: '21-40', factor: 1.3, concerns: ['근력 강화'] },
       { ageRange: '41-60', factor: 1.0, concerns: ['근육 손실 예방'] },
-      { ageRange: '61+', factor: 0.8, concerns: ['근감소증', '유연성 저하'] }
+      { ageRange: '61+', factor: 0.8, concerns: ['근감소증', '유연성 저하'] },
     ],
-    keywords: ['근력', '체력', '운동', '피로', '근육통']
+    keywords: ['근력', '체력', '운동', '피로', '근육통'],
   },
   {
     id: 'circulatory',
@@ -89,9 +89,9 @@ export const HEALTH_SYSTEMS: HealthSystem[] = [
       { ageRange: '0-20', factor: 1.2, concerns: ['선천성 심장 질환'] },
       { ageRange: '21-40', factor: 1.0, concerns: ['고혈압 예방'] },
       { ageRange: '41-60', factor: 0.8, concerns: ['심혈관 질환', '고지혈증'] },
-      { ageRange: '61+', factor: 0.6, concerns: ['동맥경화', '심부전'] }
+      { ageRange: '61+', factor: 0.6, concerns: ['동맥경화', '심부전'] },
     ],
-    keywords: ['심장', '혈압', '혈액순환', '부정맥', '심혈관']
+    keywords: ['심장', '혈압', '혈액순환', '부정맥', '심혈관'],
   },
   {
     id: 'respiratory',
@@ -105,9 +105,9 @@ export const HEALTH_SYSTEMS: HealthSystem[] = [
       { ageRange: '0-20', factor: 1.1, concerns: ['천식', '알레르기'] },
       { ageRange: '21-40', factor: 1.0, concerns: ['호흡기 감염'] },
       { ageRange: '41-60', factor: 0.9, concerns: ['만성 기관지염', '폐 기능 저하'] },
-      { ageRange: '61+', factor: 0.7, concerns: ['폐렴', 'COPD'] }
+      { ageRange: '61+', factor: 0.7, concerns: ['폐렴', 'COPD'] },
     ],
-    keywords: ['폐', '호흡', '기관지', '산소', '천식']
+    keywords: ['폐', '호흡', '기관지', '산소', '천식'],
   },
   {
     id: 'digestive',
@@ -121,9 +121,9 @@ export const HEALTH_SYSTEMS: HealthSystem[] = [
       { ageRange: '0-20', factor: 1.0, concerns: ['성장기 영양'] },
       { ageRange: '21-40', factor: 1.1, concerns: ['위염', '과민성 장 증후군'] },
       { ageRange: '41-60', factor: 0.9, concerns: ['역류성 식도염', '간 기능'] },
-      { ageRange: '61+', factor: 0.8, concerns: ['소화 흡수 저하', '변비'] }
+      { ageRange: '61+', factor: 0.8, concerns: ['소화 흡수 저하', '변비'] },
     ],
-    keywords: ['소화', '위장', '간', '식욕', '복통']
+    keywords: ['소화', '위장', '간', '식욕', '복통'],
   },
   {
     id: 'nervous',
@@ -137,9 +137,9 @@ export const HEALTH_SYSTEMS: HealthSystem[] = [
       { ageRange: '0-20', factor: 1.3, concerns: ['뇌 발달'] },
       { ageRange: '21-40', factor: 1.1, concerns: ['스트레스 관리'] },
       { ageRange: '41-60', factor: 0.9, concerns: ['기억력 저하', '수면 장애'] },
-      { ageRange: '61+', factor: 0.7, concerns: ['치매', '파킨슨병'] }
+      { ageRange: '61+', factor: 0.7, concerns: ['치매', '파킨슨병'] },
     ],
-    keywords: ['뇌', '신경', '집중력', '기억력', '두통']
+    keywords: ['뇌', '신경', '집중력', '기억력', '두통'],
   },
   {
     id: 'endocrine',
@@ -153,9 +153,9 @@ export const HEALTH_SYSTEMS: HealthSystem[] = [
       { ageRange: '0-20', factor: 1.2, concerns: ['성장 호르몬'] },
       { ageRange: '21-40', factor: 1.0, concerns: ['갑상선 기능'] },
       { ageRange: '41-60', factor: 0.9, concerns: ['폐경기', '호르몬 불균형'] },
-      { ageRange: '61+', factor: 0.8, concerns: ['호르몬 저하', '당뇨'] }
+      { ageRange: '61+', factor: 0.8, concerns: ['호르몬 저하', '당뇨'] },
     ],
-    keywords: ['호르몬', '갑상선', '대사', '피로', '체중']
+    keywords: ['호르몬', '갑상선', '대사', '피로', '체중'],
   },
   {
     id: 'excretory',
@@ -169,9 +169,9 @@ export const HEALTH_SYSTEMS: HealthSystem[] = [
       { ageRange: '0-20', factor: 1.0, concerns: ['요로 감염'] },
       { ageRange: '21-40', factor: 1.0, concerns: ['신장 기능'] },
       { ageRange: '41-60', factor: 0.9, concerns: ['전립선', '요실금'] },
-      { ageRange: '61+', factor: 0.7, concerns: ['신부전', '배뇨 장애'] }
+      { ageRange: '61+', factor: 0.7, concerns: ['신부전', '배뇨 장애'] },
     ],
-    keywords: ['신장', '방광', '배뇨', '부종', '요로']
+    keywords: ['신장', '방광', '배뇨', '부종', '요로'],
   },
   {
     id: 'integumentary',
@@ -185,9 +185,9 @@ export const HEALTH_SYSTEMS: HealthSystem[] = [
       { ageRange: '0-20', factor: 1.2, concerns: ['아토피', '여드름'] },
       { ageRange: '21-40', factor: 1.0, concerns: ['피부 트러블'] },
       { ageRange: '41-60', factor: 0.8, concerns: ['피부 노화', '탈모'] },
-      { ageRange: '61+', factor: 0.7, concerns: ['피부 건조', '색소 침착'] }
+      { ageRange: '61+', factor: 0.7, concerns: ['피부 건조', '색소 침착'] },
     ],
-    keywords: ['피부', '모발', '탈모', '여드름', '습진']
+    keywords: ['피부', '모발', '탈모', '여드름', '습진'],
   },
   {
     id: 'mental',
@@ -201,9 +201,9 @@ export const HEALTH_SYSTEMS: HealthSystem[] = [
       { ageRange: '0-20', factor: 1.1, concerns: ['정서 발달', 'ADHD'] },
       { ageRange: '21-40', factor: 1.2, concerns: ['스트레스', '불안'] },
       { ageRange: '41-60', factor: 1.0, concerns: ['우울증', '중년 위기'] },
-      { ageRange: '61+', factor: 0.9, concerns: ['고독감', '인지 저하'] }
+      { ageRange: '61+', factor: 0.9, concerns: ['고독감', '인지 저하'] },
     ],
-    keywords: ['정신', '스트레스', '우울', '불안', '감정']
+    keywords: ['정신', '스트레스', '우울', '불안', '감정'],
   },
   {
     id: 'reproductive',
@@ -217,9 +217,9 @@ export const HEALTH_SYSTEMS: HealthSystem[] = [
       { ageRange: '0-20', factor: 0.8, concerns: ['사춘기 발달'] },
       { ageRange: '21-40', factor: 1.2, concerns: ['생식 건강', '임신'] },
       { ageRange: '41-60', factor: 0.9, concerns: ['폐경', '갱년기'] },
-      { ageRange: '61+', factor: 0.6, concerns: ['호르몬 결핍'] }
+      { ageRange: '61+', factor: 0.6, concerns: ['호르몬 결핍'] },
     ],
-    keywords: ['생식', '호르몬', '갱년기', '생리', '임신']
+    keywords: ['생식', '호르몬', '갱년기', '생리', '임신'],
   },
   {
     id: 'appearance',
@@ -233,10 +233,10 @@ export const HEALTH_SYSTEMS: HealthSystem[] = [
       { ageRange: '0-20', factor: 1.3, concerns: ['성장', '체형 형성'] },
       { ageRange: '21-40', factor: 1.0, concerns: ['체중 관리'] },
       { ageRange: '41-60', factor: 0.8, concerns: ['체형 변화', '비만'] },
-      { ageRange: '61+', factor: 0.7, concerns: ['체력 저하', '자세 변형'] }
+      { ageRange: '61+', factor: 0.7, concerns: ['체력 저하', '자세 변형'] },
     ],
-    keywords: ['체형', '외모', '체중', '비만', '자세']
-  }
+    keywords: ['체형', '외모', '체중', '비만', '자세'],
+  },
 ];
 
 /**
@@ -246,23 +246,23 @@ export const HEALTH_CATEGORIES = {
   structural: {
     name: '구조/운동 시스템',
     systems: ['skeletal', 'muscular', 'appearance'],
-    color: '#8B7FD8' // 보라색
+    color: '#8B7FD8', // 보라색
   },
   vital: {
     name: '생명 유지 시스템',
     systems: ['circulatory', 'respiratory', 'digestive'],
-    color: '#EF4444' // 빨강
+    color: '#EF4444', // 빨강
   },
   regulatory: {
     name: '조절/통제 시스템',
     systems: ['nervous', 'endocrine', 'excretory'],
-    color: '#3B82F6' // 파랑
+    color: '#3B82F6', // 파랑
   },
   protective: {
     name: '보호/심리 시스템',
     systems: ['integumentary', 'mental', 'reproductive'],
-    color: '#10B981' // 녹색
-  }
+    color: '#10B981', // 녹색
+  },
 };
 
 /**
@@ -273,7 +273,7 @@ export const OHHAENG_HEALTH_WEAKNESS = {
   화: ['심장', '소장', '혈액순환', '정신'],
   토: ['위', '비장', '소화', '근심'],
   금: ['폐', '대장', '피부', '호흡기'],
-  수: ['신장', '방광', '생식기', '뼈', '귀']
+  수: ['신장', '방광', '생식기', '뼈', '귀'],
 };
 
 /**
@@ -284,5 +284,5 @@ export const OHHAENG_HEALTH_STRENGTH = {
   화: ['활력', '순환', '면역력'],
   토: ['안정성', '소화력', '체력'],
   금: ['호흡력', '피부 재생', '면역'],
-  수: ['지구력', '정화력', '생식력']
+  수: ['지구력', '정화력', '생식력'],
 };

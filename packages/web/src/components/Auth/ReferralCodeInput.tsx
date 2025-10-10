@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useAuthStore } from '@/stores/authStore';
-import { WELCOME_CODE_MESSAGES, COMPANY_WELCOME_CODE } from '@/constants/referral';
+import { COMPANY_WELCOME_CODE } from '@/constants/referral';
 
 interface ReferralCodeInputProps {
   className?: string

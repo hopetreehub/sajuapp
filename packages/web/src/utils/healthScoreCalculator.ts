@@ -13,13 +13,12 @@ import {
   HealthSystem,
   OhHaeng,
   OHHAENG_HEALTH_WEAKNESS,
-  OHHAENG_HEALTH_STRENGTH
 } from '@/data/healthSystemData';
 import {
   SajuData,
   CHEONGAN_OHHAENG,
   JIJI_OHHAENG,
-  calculateMultiLayerScore
+  calculateMultiLayerScore,
 } from './sajuScoreCalculator';
 
 export interface HealthScoreResult {
@@ -61,14 +60,14 @@ export interface ComprehensiveHealthReport {
 export function calculateHealthScores(
   sajuData: SajuData,
   birthYear: number,
-  targetDate?: Date
+  targetDate?: Date,
 ): ComprehensiveHealthReport {
   const now = targetDate || new Date();
   const currentAge = now.getFullYear() - birthYear;
 
   // 1. 각 건강 시스템별 점수 계산
   const systemScores: HealthScoreResult[] = HEALTH_SYSTEMS.map(system =>
-    calculateSingleHealthScore(system, sajuData, currentAge, birthYear, now)
+    calculateSingleHealthScore(system, sajuData, currentAge, birthYear, now),
   );
 
   // 2. 전체 건강 통계 계산
@@ -98,15 +97,15 @@ export function calculateHealthScores(
       averageScore: Math.round(averageScore),
       trend,
       riskSystems,
-      strongSystems
+      strongSystems,
     },
     systems: systemScores,
     ageFactors: {
       currentAge,
       ageGroup,
-      generalConcerns
+      generalConcerns,
     },
-    recommendations
+    recommendations,
   };
 }
 
@@ -118,7 +117,7 @@ function calculateSingleHealthScore(
   sajuData: SajuData,
   currentAge: number,
   birthYear: number,
-  targetDate: Date
+  targetDate: Date,
 ): HealthScoreResult {
   // 1. 사주의 오행 분포 분석
   const userElements = getUserElements(sajuData);
@@ -127,7 +126,7 @@ function calculateSingleHealthScore(
   const elementScore = calculateElementRelation(
     [system.primaryElement, system.secondaryElement],
     userElements,
-    sajuData
+    sajuData,
   );
 
   // 3. 기본 건강 점수 (오행 관계 기반)
@@ -137,7 +136,7 @@ function calculateSingleHealthScore(
   const weaknessPoint = checkElementWeakness(
     sajuData,
     system.primaryElement,
-    system.secondaryElement
+    system.secondaryElement,
   );
   baseScore -= weaknessPoint;
 
@@ -145,7 +144,7 @@ function calculateSingleHealthScore(
   const strengthPoint = checkElementStrength(
     sajuData,
     system.primaryElement,
-    system.secondaryElement
+    system.secondaryElement,
   );
   baseScore += strengthPoint;
 
@@ -155,13 +154,13 @@ function calculateSingleHealthScore(
 
   // 7. 시간대별 점수 계산 (다층 점수 시스템 활용)
   const todayScore = Math.round(
-    calculateMultiLayerScore(system.name, sajuData, 'today', targetDate, birthYear) * ageFactor
+    calculateMultiLayerScore(system.name, sajuData, 'today', targetDate, birthYear) * ageFactor,
   );
   const monthScore = Math.round(
-    calculateMultiLayerScore(system.name, sajuData, 'month', targetDate, birthYear) * ageFactor
+    calculateMultiLayerScore(system.name, sajuData, 'month', targetDate, birthYear) * ageFactor,
   );
   const yearScore = Math.round(
-    calculateMultiLayerScore(system.name, sajuData, 'year', targetDate, birthYear) * ageFactor
+    calculateMultiLayerScore(system.name, sajuData, 'year', targetDate, birthYear) * ageFactor,
   );
 
   // 8. 위험도 평가
@@ -172,7 +171,7 @@ function calculateSingleHealthScore(
     system,
     ageAdjusted,
     currentAge,
-    sajuData
+    sajuData,
   );
 
   // 점수 범위 제한 (20-90)
@@ -189,7 +188,7 @@ function calculateSingleHealthScore(
     secondaryElement: system.secondaryElement,
     riskLevel,
     ageAdjusted,
-    recommendations
+    recommendations,
   };
 }
 
@@ -198,7 +197,7 @@ function calculateSingleHealthScore(
  */
 function getUserElements(sajuData: SajuData): Record<OhHaeng, number> {
   const elements: Record<OhHaeng, number> = {
-    목: 0, 화: 0, 토: 0, 금: 0, 수: 0
+    목: 0, 화: 0, 토: 0, 금: 0, 수: 0,
   };
 
   // 천간 오행
@@ -222,7 +221,7 @@ function getUserElements(sajuData: SajuData): Record<OhHaeng, number> {
 function calculateElementRelation(
   systemElements: OhHaeng[],
   userElements: Record<OhHaeng, number>,
-  sajuData: SajuData
+  sajuData: SajuData,
 ): number {
   let score = 40; // 기본값
 
@@ -258,7 +257,7 @@ function calculateElementRelation(
  */
 function getGeneratingElements(element: OhHaeng): OhHaeng[] {
   const generation: Record<OhHaeng, OhHaeng> = {
-    목: '수', 화: '목', 토: '화', 금: '토', 수: '금'
+    목: '수', 화: '목', 토: '화', 금: '토', 수: '금',
   };
   return [generation[element]];
 }
@@ -268,7 +267,7 @@ function getGeneratingElements(element: OhHaeng): OhHaeng[] {
  */
 function getConflictingElements(element: OhHaeng): OhHaeng[] {
   const conflict: Record<OhHaeng, OhHaeng> = {
-    목: '금', 화: '수', 토: '목', 금: '화', 수: '토'
+    목: '금', 화: '수', 토: '목', 금: '화', 수: '토',
   };
   return [conflict[element]];
 }
@@ -279,14 +278,14 @@ function getConflictingElements(element: OhHaeng): OhHaeng[] {
 function checkElementWeakness(
   sajuData: SajuData,
   primary: OhHaeng,
-  secondary: OhHaeng
+  secondary: OhHaeng,
 ): number {
   let weaknessPoint = 0;
 
-  // 취약 장기 체크
-  const weakOrgans = [
+  // 취약 장기 체크 (추후 권장사항 생성 시 활용 예정)
+  const _weakOrgans = [
     ...(OHHAENG_HEALTH_WEAKNESS[primary] || []),
-    ...(OHHAENG_HEALTH_WEAKNESS[secondary] || [])
+    ...(OHHAENG_HEALTH_WEAKNESS[secondary] || []),
   ];
 
   // 사주에 해당 오행이 부족하면 취약점 증가
@@ -313,7 +312,7 @@ function checkElementWeakness(
 function checkElementStrength(
   sajuData: SajuData,
   primary: OhHaeng,
-  secondary: OhHaeng
+  secondary: OhHaeng,
 ): number {
   let strengthPoint = 0;
 
@@ -367,7 +366,7 @@ function parseAgeRange(range: string): [number, number] {
 function evaluateRiskLevel(
   score: number,
   age: number,
-  system: HealthSystem
+  system: HealthSystem,
 ): 'low' | 'medium' | 'high' {
   // 점수 기반 기본 위험도
   let baseRisk: 'low' | 'medium' | 'high' = 'low';
@@ -398,7 +397,7 @@ function generateSystemRecommendations(
   system: HealthSystem,
   score: number,
   age: number,
-  sajuData: SajuData
+  sajuData: SajuData,
 ): string[] {
   const recommendations: string[] = [];
 
@@ -477,7 +476,7 @@ function getGeneralConcernsByAge(age: number): string[] {
 function generateRecommendations(
   scores: HealthScoreResult[],
   age: number,
-  sajuData: SajuData
+  sajuData: SajuData,
 ): { immediate: string[]; longTerm: string[] } {
   const immediate: string[] = [];
   const longTerm: string[] = [];
@@ -519,7 +518,7 @@ function generateRecommendations(
  */
 export function convertToChartData(
   healthReport: ComprehensiveHealthReport,
-  timeFrame: 'base' | 'today' | 'month' | 'year' = 'base'
+  timeFrame: 'base' | 'today' | 'month' | 'year' = 'base',
 ): {
   labels: string[];
   scores: number[];
