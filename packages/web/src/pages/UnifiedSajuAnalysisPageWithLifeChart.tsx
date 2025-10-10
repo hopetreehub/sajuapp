@@ -9,6 +9,7 @@ import { Customer, getCustomerById } from '@/services/customerApi';
 import LifeChartButton from '@/components/saju/LifeChartButton';
 import HundredYearChart from '@/components/charts/HundredYearChartFixed';
 import HealthRadarChart from '@/components/saju/charts/HealthRadarChart';
+import WealthRadarChart from '@/components/saju/charts/WealthRadarChart';
 import { fetchLifetimeFortune, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
 import { convertCustomerToLifetimeRequest } from '@/utils/customerDataConverter';
 import '@/utils/testUniqueValues'; // 개인별 고유값 테스트 함수 로드
@@ -230,6 +231,17 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
         {selectedCustomer && customerSajuData && (
           <div id="health-system-chart" className="mb-8">
             <HealthRadarChart
+              sajuData={customerSajuData}
+              birthYear={new Date(selectedCustomer.birth_date).getFullYear()}
+              birthDate={birthDate}
+            />
+          </div>
+        )}
+
+        {/* 💰 9대 재물운 시스템 차트 - 고객 선택 및 사주 데이터 로드 시 표시 */}
+        {selectedCustomer && customerSajuData && (
+          <div id="wealth-system-chart" className="mb-8">
+            <WealthRadarChart
               sajuData={customerSajuData}
               birthYear={new Date(selectedCustomer.birth_date).getFullYear()}
               birthDate={birthDate}
