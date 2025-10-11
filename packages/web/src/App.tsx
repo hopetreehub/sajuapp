@@ -17,6 +17,7 @@ import SearchPage from '@/pages/SearchPage';
 import TestApi from '@/pages/TestApi';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
+import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import { CalendarProvider } from '@/contexts/CalendarContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { YearlyMemoProvider } from '@/contexts/YearlyMemoContext';
@@ -37,28 +38,31 @@ function App() {
               <Header />
               <main className="flex-1">
                 <Routes>
-                <Route path="/" element={<CalendarPage />} />
-                <Route path="/calendar" element={<Navigate to="/" replace />} />
+                {/* 공개 라우트 - 로그인 없이 접근 가능 */}
                 <Route path="/auth" element={<AuthPage />} />
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/admin" element={<AdminDashboardPage />} />
-                <Route path="/fortune" element={<FortunePage />} />
-                <Route path="/saju" element={<UnifiedSajuAnalysisPageWithLifeChart />} />
-                <Route path="/customers" element={<CustomerManagementPage />} />
-                <Route path="/test-api" element={<TestApi />} />
+
+                {/* 보호된 라우트 - 로그인 필요 */}
+                <Route path="/" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
+                <Route path="/calendar" element={<Navigate to="/" replace />} />
+                <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+                <Route path="/admin" element={<ProtectedRoute><AdminDashboardPage /></ProtectedRoute>} />
+                <Route path="/fortune" element={<ProtectedRoute><FortunePage /></ProtectedRoute>} />
+                <Route path="/saju" element={<ProtectedRoute><UnifiedSajuAnalysisPageWithLifeChart /></ProtectedRoute>} />
+                <Route path="/customers" element={<ProtectedRoute><CustomerManagementPage /></ProtectedRoute>} />
+                <Route path="/test-api" element={<ProtectedRoute><TestApi /></ProtectedRoute>} />
                 {/* 기존 사주 서브페이지들은 통합 시스템으로 교체됨 */}
-                <Route path="/saju/six-areas" element={<div className="p-8 text-center">6대 영역 분석이 통합 시스템으로 이전되었습니다. <a href="/saju" className="text-purple-600">새로운 사주분석</a>으로 이동하세요.</div>} />
-                <Route path="/saju/detailed" element={<div className="p-8 text-center">17대 세부운세가 통합 시스템으로 이전되었습니다. <a href="/saju" className="text-purple-600">새로운 사주분석</a>으로 이동하세요.</div>} />
-                <Route path="/saju/personality" element={<div className="p-8 text-center">7대 성향 분석이 통합 시스템으로 이전되었습니다. <a href="/saju" className="text-purple-600">새로운 사주분석</a>으로 이동하세요.</div>} />
-                <Route path="/saju-chart" element={<SajuChartPage />} />
-                <Route path="/saju/interpretation" element={<InterpretationPage />} />
-                <Route path="/diary" element={<DiaryPage />} />
-                <Route path="/diary/:date" element={<DiaryPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/search" element={<SearchPage />} />
+                <Route path="/saju/six-areas" element={<ProtectedRoute><div className="p-8 text-center">6대 영역 분석이 통합 시스템으로 이전되었습니다. <a href="/saju" className="text-purple-600">새로운 사주분석</a>으로 이동하세요.</div></ProtectedRoute>} />
+                <Route path="/saju/detailed" element={<ProtectedRoute><div className="p-8 text-center">17대 세부운세가 통합 시스템으로 이전되었습니다. <a href="/saju" className="text-purple-600">새로운 사주분석</a>으로 이동하세요.</div></ProtectedRoute>} />
+                <Route path="/saju/personality" element={<ProtectedRoute><div className="p-8 text-center">7대 성향 분석이 통합 시스템으로 이전되었습니다. <a href="/saju" className="text-purple-600">새로운 사주분석</a>으로 이동하세요.</div></ProtectedRoute>} />
+                <Route path="/saju-chart" element={<ProtectedRoute><SajuChartPage /></ProtectedRoute>} />
+                <Route path="/saju/interpretation" element={<ProtectedRoute><InterpretationPage /></ProtectedRoute>} />
+                <Route path="/diary" element={<ProtectedRoute><DiaryPage /></ProtectedRoute>} />
+                <Route path="/diary/:date" element={<ProtectedRoute><DiaryPage /></ProtectedRoute>} />
+                <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+                <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
                 {/* 추가 예정 페이지 */}
-                <Route path="/compatibility" element={<CompatibilityPage />} />
-                <Route path="/learning/:courseId" element={<LearningPage />} />
+                <Route path="/compatibility" element={<ProtectedRoute><CompatibilityPage /></ProtectedRoute>} />
+                <Route path="/learning/:courseId" element={<ProtectedRoute><LearningPage /></ProtectedRoute>} />
               </Routes>
             </main>
             <Footer />
