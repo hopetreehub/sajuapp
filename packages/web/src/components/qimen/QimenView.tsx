@@ -9,11 +9,13 @@
 import React, { useState, useEffect } from 'react';
 import { calculateQimenChart } from '@/utils/qimenCalculator';
 import type { QimenChart, Palace } from '@/types/qimen';
+import type { Customer } from '@/services/customerApi';
 import QimenChart3x3 from './QimenChart';
 import PalaceDetail from './PalaceDetail';
 import TimeSelector from './TimeSelector';
 import BeginnerGuide from './BeginnerGuide';
 import SimpleSummary from './SimpleSummary';
+import CustomerSelector from '../saju/CustomerSelector';
 
 export default function QimenView() {
   // 상태 관리
@@ -23,19 +25,32 @@ export default function QimenView() {
   const [loading, setLoading] = useState(true);
   const [showGuide, setShowGuide] = useState(false);
   const [showSimpleSummary, setShowSimpleSummary] = useState(true);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
 
-  // 차트 계산
+  // 차트 계산 (고객 정보 포함)
   useEffect(() => {
     try {
       setLoading(true);
-      const newChart = calculateQimenChart({ dateTime: selectedDate });
+
+      // 고객 생년월일이 있으면 활용
+      const birthInfo = selectedCustomer ? {
+        year: parseInt(selectedCustomer.birth_date.split('-')[0]),
+        month: parseInt(selectedCustomer.birth_date.split('-')[1]),
+        day: parseInt(selectedCustomer.birth_date.split('-')[2]),
+        hour: selectedCustomer.birth_time ? parseInt(selectedCustomer.birth_time.split(':')[0]) : undefined,
+      } : undefined;
+
+      const newChart = calculateQimenChart({
+        dateTime: selectedDate,
+        birthInfo,
+      });
       setChart(newChart);
     } catch (error) {
       console.error('귀문둔갑 계산 에러:', error);
     } finally {
       setLoading(false);
     }
-  }, [selectedDate]);
+  }, [selectedDate, selectedCustomer]);
 
   // 시간 변경 핸들러
   const handleTimeChange = (newDate: Date) => {
@@ -80,6 +95,20 @@ export default function QimenView() {
           <p className="text-gray-600 dark:text-gray-300 text-lg mb-4">
             奇門遁甲 - 시간과 방위의 길흉 판단
           </p>
+
+          {/* 고객 선택 */}
+          <div className="max-w-2xl mx-auto mb-6">
+            <CustomerSelector
+              selectedCustomer={selectedCustomer}
+              onSelect={setSelectedCustomer}
+              showAddButton={true}
+            />
+            {selectedCustomer && (
+              <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                💡 {selectedCustomer.name}님의 생년월일({selectedCustomer.birth_date})을 기반으로 맞춤 해석을 제공합니다
+              </div>
+            )}
+          </div>
 
           {/* 간단 요약 토글 */}
           <button
