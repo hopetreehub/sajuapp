@@ -15,6 +15,7 @@ import { CompatibilityPage } from '@/pages/CompatibilityPage';
 import LearningPage from '@/pages/LearningPage';
 import SearchPage from '@/pages/SearchPage';
 import TestApi from '@/pages/TestApi';
+import QimenView from '@/components/qimen/QimenView';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
@@ -63,6 +64,8 @@ function App() {
                 {/* 추가 예정 페이지 */}
                 <Route path="/compatibility" element={<ProtectedRoute><CompatibilityPage /></ProtectedRoute>} />
                 <Route path="/learning/:courseId" element={<ProtectedRoute><LearningPage /></ProtectedRoute>} />
+                {/* 귀문둔갑 */}
+                <Route path="/qimen" element={<ProtectedRoute><QimenView /></ProtectedRoute>} />
               </Routes>
             </main>
             <Footer />

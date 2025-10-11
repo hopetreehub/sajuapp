@@ -23,6 +23,7 @@ const Header: React.FC = () => {
   const navItems = [
     { path: '/', label: '캘린더', icon: '📅' },
     { path: '/saju', label: '사주분석', icon: '🔮' },
+    { path: '/qimen', label: '귀문둔갑', icon: '⚡' },
     { path: '/compatibility', label: '궁합', icon: '💑' },
     { path: '/settings', label: '설정', icon: '⚙️' },
   ];
