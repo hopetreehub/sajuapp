@@ -69,7 +69,19 @@ const HealthRadarChart: React.FC<HealthRadarChartProps> = ({
 
   // 건강 점수 계산
   const healthReport = useMemo<ComprehensiveHealthReport>(() => {
-    return calculateHealthScores(sajuData, birthYear);
+    const report = calculateHealthScores(sajuData, birthYear);
+
+    // 🔍 디버깅: 점수 변화 확인
+    console.log('=== 건강 점수 계산 결과 ===');
+    report.systems.slice(0, 3).forEach(system => {
+      console.log(`${system.systemName}:`);
+      console.log(`  기본: ${system.baseScore}`);
+      console.log(`  오늘: ${system.todayScore} (차이: ${system.todayScore - system.baseScore})`);
+      console.log(`  이달: ${system.monthScore} (차이: ${system.monthScore - system.baseScore})`);
+      console.log(`  올해: ${system.yearScore} (차이: ${system.yearScore - system.baseScore})`);
+    });
+
+    return report;
   }, [sajuData, birthYear]);
 
   // 차트 데이터 준비

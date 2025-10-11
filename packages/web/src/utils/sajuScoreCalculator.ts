@@ -805,8 +805,8 @@ export function calculateSajuScore(
     score += 6 * personalWeight; // 일주와 같은 오행 가산점 감소
   }
 
-  // 점수 범위 제한 (20-70으로 대폭 축소)
-  const finalScore = Math.max(20, Math.min(70, Math.round(score)));
+  // 점수 범위 제한 (20-55로 조정하여 시간대 보너스가 더 효과적으로 작용하도록 함)
+  const finalScore = Math.max(20, Math.min(55, Math.round(score)));
 
   return finalScore;
 }
@@ -1703,10 +1703,11 @@ export function calculateTimeBonus(
   const dayScore = calculateDayScore(sajuData, targetDate);
 
   // 2. 중간값 40을 기준으로 보너스 계산 (40 이상이면 +, 40 미만이면 -)
-  const daeunBonus = (daeunScore - 40) * 0.5;  // -10 ~ +20
-  const seunBonus = (seunScore - 40) * 0.5;    // -10 ~ +20
-  const monthBonus = (monthScore - 40) * 0.5;  // -10 ~ +20
-  const dayBonus = (dayScore - 40) * 0.5;      // -10 ~ +20
+  // 보너스 범위를 확대하기 위해 계수를 0.5 → 1.0으로 변경
+  const daeunBonus = (daeunScore - 40) * 1.0;  // -20 ~ +40
+  const seunBonus = (seunScore - 40) * 1.0;    // -20 ~ +40
+  const monthBonus = (monthScore - 40) * 1.0;  // -20 ~ +40
+  const dayBonus = (dayScore - 40) * 1.0;      // -20 ~ +40
 
   // 3. 시간대별 가중치 적용
   switch (timeFrame) {
@@ -1772,6 +1773,6 @@ export function calculateTimeBonus(
   const exactBonus = calculateExactMatchBonus(sajuData, currentGan, currentJi, timeFrame);
   bonus += exactBonus * 0.15; // 가중치 15%
 
-  // 6. 최종 보너스 범위 제한 (-20 ~ +20)
-  return Math.max(-20, Math.min(20, Math.round(bonus)));
+  // 6. 최종 보너스 범위 제한 (-30 ~ +30으로 확대)
+  return Math.max(-30, Math.min(30, Math.round(bonus)));
 }
