@@ -1673,3 +1673,105 @@ function analyzeLifePattern(scores: number[]): any {
     trend,
   };
 }
+
+/**
+ * 시간대별 보너스 점수 계산 (NEW - 근본 해결)
+ * baseScore에 더할 보너스를 반환 (-20 ~ +20)
+ *
+ * 기존 문제: calculateMultiLayerScore가 독립적인 점수들의 가중평균을 계산하여
+ *           시간대 점수가 기본 점수보다 낮아지는 문제 발생
+ *
+ * 해결 방법: 시간대 영향을 "보너스"로 계산하여 baseScore에 더함
+ *           → todayScore = baseScore + calculateTimeBonus('today')
+ *           → 이렇게 하면 시간대 점수가 기본 점수보다 높아질 수 있음
+ */
+export function calculateTimeBonus(
+  primaryElement: OhHaeng,
+  secondaryElement: OhHaeng,
+  sajuData: SajuData,
+  timeFrame: 'today' | 'month' | 'year',
+  targetDate: Date,
+  birthYear: number
+): number {
+  let bonus = 0;
+
+  // 1. 시간대별 운세 점수 계산
+  const daeunCycle = getCurrentDaeunCycle(sajuData, birthYear, targetDate);
+  const daeunScore = calculateDaeunScore(sajuData, daeunCycle);
+  const seunScore = calculateSeunScore(sajuData, targetDate.getFullYear());
+  const monthScore = calculateMonthScore(sajuData, targetDate.getFullYear(), targetDate.getMonth() + 1);
+  const dayScore = calculateDayScore(sajuData, targetDate);
+
+  // 2. 중간값 40을 기준으로 보너스 계산 (40 이상이면 +, 40 미만이면 -)
+  const daeunBonus = (daeunScore - 40) * 0.5;  // -10 ~ +20
+  const seunBonus = (seunScore - 40) * 0.5;    // -10 ~ +20
+  const monthBonus = (monthScore - 40) * 0.5;  // -10 ~ +20
+  const dayBonus = (dayScore - 40) * 0.5;      // -10 ~ +20
+
+  // 3. 시간대별 가중치 적용
+  switch (timeFrame) {
+    case 'today':
+      // 오늘: 일운 35%, 월운 20%, 대운 15%, 세운 10%
+      bonus = dayBonus * 0.35 + monthBonus * 0.20 + daeunBonus * 0.15 + seunBonus * 0.10;
+      break;
+    case 'month':
+      // 이달: 월운 30%, 대운 20%, 세운 15%, 일운 10%
+      bonus = monthBonus * 0.30 + daeunBonus * 0.20 + seunBonus * 0.15 + dayBonus * 0.10;
+      break;
+    case 'year':
+      // 올해: 세운 30%, 대운 30%, 월운 5%, 일운 5%
+      bonus = seunBonus * 0.30 + daeunBonus * 0.30 + monthBonus * 0.05 + dayBonus * 0.05;
+      break;
+  }
+
+  // 4. 오행 관계 보너스 추가
+  const currentYear = targetDate.getFullYear();
+  const currentMonth = targetDate.getMonth() + 1;
+  const currentDay = targetDate.getDate();
+
+  let currentGan: CheonGan;
+  let currentJi: JiJi;
+  let currentOhhaeng: OhHaeng;
+
+  switch (timeFrame) {
+    case 'today':
+      currentGan = CHEONGAN[Math.abs((currentDay - 1) % 10)];
+      currentJi = JIJI[Math.abs((currentDay - 1) % 12)];
+      currentOhhaeng = CHEONGAN_OHHAENG[currentGan];
+      break;
+    case 'month':
+      currentGan = CHEONGAN[Math.abs((currentMonth - 1) % 10)];
+      currentJi = JIJI[Math.abs((currentMonth - 1) % 12)];
+      currentOhhaeng = CHEONGAN_OHHAENG[currentGan];
+      break;
+    case 'year':
+      currentGan = CHEONGAN[Math.abs((currentYear - 1984) % 10)];
+      currentJi = JIJI[Math.abs((currentYear - 1984) % 12)];
+      currentOhhaeng = CHEONGAN_OHHAENG[currentGan];
+      break;
+  }
+
+  // 주요 오행과 보조 오행 모두 체크
+  const itemOhhaeng = [primaryElement, secondaryElement];
+  itemOhhaeng.forEach(oh => {
+    // 상생 관계: +3~5
+    if (OHHAENG_RELATIONS.상생[currentOhhaeng] === oh) {
+      bonus += timeFrame === 'today' ? 5 : timeFrame === 'month' ? 4 : 3;
+    }
+    // 비화 (같은 오행): +2~3
+    else if (currentOhhaeng === oh) {
+      bonus += timeFrame === 'today' ? 3 : 2;
+    }
+    // 상극 관계: -2~-4
+    else if (OHHAENG_RELATIONS.상극[currentOhhaeng] === oh) {
+      bonus -= timeFrame === 'today' ? 4 : timeFrame === 'month' ? 3 : 2;
+    }
+  });
+
+  // 5. 천간지지 일치 보너스
+  const exactBonus = calculateExactMatchBonus(sajuData, currentGan, currentJi, timeFrame);
+  bonus += exactBonus * 0.15; // 가중치 15%
+
+  // 6. 최종 보너스 범위 제한 (-20 ~ +20)
+  return Math.max(-20, Math.min(20, Math.round(bonus)));
+}

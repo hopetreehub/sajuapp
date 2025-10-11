@@ -18,7 +18,7 @@ import {
   SajuData,
   CHEONGAN_OHHAENG,
   JIJI_OHHAENG,
-  calculateMultiLayerScore,
+  calculateTimeBonus,
 } from './sajuScoreCalculator';
 
 export interface HealthScoreResult {
@@ -152,16 +152,38 @@ function calculateSingleHealthScore(
   const ageFactor = getAgeFactor(system, currentAge);
   const ageAdjusted = Math.round(baseScore * ageFactor);
 
-  // 7. 시간대별 점수 계산 (다층 점수 시스템 활용)
-  const todayScore = Math.round(
-    calculateMultiLayerScore(system.name, sajuData, 'today', targetDate, birthYear) * ageFactor,
+  // 7. 시간대별 점수 계산 (NEW - 보너스 기반 계산으로 변경)
+  // 기존: calculateMultiLayerScore (가중평균) → 시간대 점수가 기본보다 낮아지는 문제
+  // 개선: calculateTimeBonus (보너스 가산) → 시간대 점수가 기본보다 높아질 수 있음
+  const todayBonus = calculateTimeBonus(
+    system.primaryElement,
+    system.secondaryElement,
+    sajuData,
+    'today',
+    targetDate,
+    birthYear,
   );
-  const monthScore = Math.round(
-    calculateMultiLayerScore(system.name, sajuData, 'month', targetDate, birthYear) * ageFactor,
+  const monthBonus = calculateTimeBonus(
+    system.primaryElement,
+    system.secondaryElement,
+    sajuData,
+    'month',
+    targetDate,
+    birthYear,
   );
-  const yearScore = Math.round(
-    calculateMultiLayerScore(system.name, sajuData, 'year', targetDate, birthYear) * ageFactor,
+  const yearBonus = calculateTimeBonus(
+    system.primaryElement,
+    system.secondaryElement,
+    sajuData,
+    'year',
+    targetDate,
+    birthYear,
   );
+
+  // baseScore에 보너스를 더하고 연령 보정 적용
+  const todayScore = Math.max(20, Math.min(90, Math.round((baseScore + todayBonus) * ageFactor)));
+  const monthScore = Math.max(20, Math.min(90, Math.round((baseScore + monthBonus) * ageFactor)));
+  const yearScore = Math.max(20, Math.min(90, Math.round((baseScore + yearBonus) * ageFactor)));
 
   // 8. 위험도 평가
   const riskLevel = evaluateRiskLevel(ageAdjusted, currentAge, system);
