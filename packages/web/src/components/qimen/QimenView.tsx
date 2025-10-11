@@ -25,19 +25,28 @@ export default function QimenView() {
   const [loading, setLoading] = useState(true);
   const [showGuide, setShowGuide] = useState(false);
   const [showSimpleSummary, setShowSimpleSummary] = useState(true);
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
 
-  // 차트 계산 (고객 정보 포함)
+  // 고객 선택 관련 상태
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [appliedCustomer, setAppliedCustomer] = useState<Customer | null>(null);
+  const [hasUnappliedChanges, setHasUnappliedChanges] = useState(false);
+
+  // 고객 선택 변경 감지
+  useEffect(() => {
+    setHasUnappliedChanges(selectedCustomer?.id !== appliedCustomer?.id);
+  }, [selectedCustomer, appliedCustomer]);
+
+  // 차트 계산 (적용된 고객 정보 사용)
   useEffect(() => {
     try {
       setLoading(true);
 
-      // 고객 생년월일이 있으면 활용
-      const birthInfo = selectedCustomer ? {
-        year: parseInt(selectedCustomer.birth_date.split('-')[0]),
-        month: parseInt(selectedCustomer.birth_date.split('-')[1]),
-        day: parseInt(selectedCustomer.birth_date.split('-')[2]),
-        hour: selectedCustomer.birth_time ? parseInt(selectedCustomer.birth_time.split(':')[0]) : undefined,
+      // 적용된 고객 생년월일 활용
+      const birthInfo = appliedCustomer ? {
+        year: parseInt(appliedCustomer.birth_date.split('-')[0]),
+        month: parseInt(appliedCustomer.birth_date.split('-')[1]),
+        day: parseInt(appliedCustomer.birth_date.split('-')[2]),
+        hour: appliedCustomer.birth_time ? parseInt(appliedCustomer.birth_time.split(':')[0]) : undefined,
       } : undefined;
 
       const newChart = calculateQimenChart({
@@ -50,7 +59,7 @@ export default function QimenView() {
     } finally {
       setLoading(false);
     }
-  }, [selectedDate, selectedCustomer]);
+  }, [selectedDate, appliedCustomer]);
 
   // 시간 변경 핸들러
   const handleTimeChange = (newDate: Date) => {
@@ -61,6 +70,12 @@ export default function QimenView() {
   // 궁 선택 핸들러
   const handlePalaceSelect = (palace: Palace) => {
     setSelectedPalace(palace);
+  };
+
+  // 고객 적용 핸들러
+  const handleApplyCustomer = () => {
+    setAppliedCustomer(selectedCustomer);
+    setHasUnappliedChanges(false);
   };
 
   // 로딩 중
@@ -98,14 +113,34 @@ export default function QimenView() {
 
           {/* 고객 선택 */}
           <div className="max-w-2xl mx-auto mb-6">
-            <CustomerSelector
-              selectedCustomer={selectedCustomer}
-              onSelect={setSelectedCustomer}
-              showAddButton={true}
-            />
-            {selectedCustomer && (
-              <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                💡 {selectedCustomer.name}님의 생년월일({selectedCustomer.birth_date})을 기반으로 맞춤 해석을 제공합니다
+            <div className="flex items-center justify-center gap-3">
+              <CustomerSelector
+                selectedCustomer={selectedCustomer}
+                onSelect={setSelectedCustomer}
+                showAddButton={true}
+              />
+              {selectedCustomer && (
+                <button
+                  onClick={handleApplyCustomer}
+                  disabled={!hasUnappliedChanges}
+                  className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                    hasUnappliedChanges
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl animate-pulse'
+                      : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  {hasUnappliedChanges ? '✨ 적용하기' : '✓ 적용됨'}
+                </button>
+              )}
+            </div>
+            {appliedCustomer && (
+              <div className="mt-2 text-sm text-center text-gray-600 dark:text-gray-400">
+                💡 현재 <strong>{appliedCustomer.name}</strong>님({appliedCustomer.birth_date}) 기준으로 맞춤 해석 중
+              </div>
+            )}
+            {selectedCustomer && hasUnappliedChanges && (
+              <div className="mt-2 text-sm text-center text-orange-600 dark:text-orange-400 font-medium">
+                ⚠️ <strong>{selectedCustomer.name}</strong>님으로 변경하려면 "적용하기" 버튼을 클릭하세요
               </div>
             )}
           </div>

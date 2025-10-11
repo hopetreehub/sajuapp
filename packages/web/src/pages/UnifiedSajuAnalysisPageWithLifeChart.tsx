@@ -19,6 +19,8 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
   const [selectedCategory, setSelectedCategory] = useState('jubon');
   const [selectedSubcategory, setSelectedSubcategory] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [appliedCustomer, setAppliedCustomer] = useState<Customer | null>(null);
+  const [hasUnappliedChanges, setHasUnappliedChanges] = useState(false);
   const [customerSajuData, setCustomerSajuData] = useState<any>(null);
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
@@ -52,15 +54,20 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
     }
   }, [selectedCategory, currentCategory]);
 
-  // 고객 선택 시 사주 데이터 로드
+  // 고객 선택 변경 감지
   useEffect(() => {
-    if (selectedCustomer?.id) {
-      loadCustomerSajuData(selectedCustomer.id);
+    setHasUnappliedChanges(selectedCustomer?.id !== appliedCustomer?.id);
+  }, [selectedCustomer, appliedCustomer]);
+
+  // 고객 적용 시 사주 데이터 로드 (적용된 고객 정보 사용)
+  useEffect(() => {
+    if (appliedCustomer?.id) {
+      loadCustomerSajuData(appliedCustomer.id);
     } else {
       setCustomerSajuData(null);
       setGlobalSajuData(null); // 전역 사주 데이터도 초기화
     }
-  }, [selectedCustomer]);
+  }, [appliedCustomer]);
 
   // 컴포넌트 마운트 시 동적 카테고리 데이터 로드 (현재 비활성화 - 백엔드 API 없음)
   useEffect(() => {
@@ -87,6 +94,12 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
     loadCategories();
   }, [categoriesLoaded, isLoadingCategories]);
 
+  // 고객 적용 핸들러
+  const handleApplyCustomer = () => {
+    setAppliedCustomer(selectedCustomer);
+    setHasUnappliedChanges(false);
+  };
+
   // 인생차트 로드 함수
   const loadLifeChartForCustomer = async (customer: Customer) => {
     try {
@@ -100,7 +113,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
 
 
       const response = await fetchLifetimeFortune(request);
-      
+
       setLifetimeFortune(response);
 
     } catch (error: any) {
@@ -158,9 +171,9 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
     };
   }, [selectedCategory, selectedSubcategory, currentCategory]);
 
-  // 생년월일 정보
-  const birthDate = selectedCustomer 
-    ? `${selectedCustomer.birth_date} ${selectedCustomer.birth_time}`
+  // 생년월일 정보 (적용된 고객 기준)
+  const birthDate = appliedCustomer
+    ? `${appliedCustomer.birth_date} ${appliedCustomer.birth_time}`
     : '고객을 선택해주세요';
 
   return (
@@ -182,11 +195,36 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
 
         {/* 고객 선택 */}
         <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
-          <CustomerSelector 
-            onSelect={setSelectedCustomer}
-            selectedCustomer={selectedCustomer}
-          />
-          {selectedCustomer && customerSajuData && (
+          <div className="flex items-center justify-center gap-3">
+            <CustomerSelector
+              onSelect={setSelectedCustomer}
+              selectedCustomer={selectedCustomer}
+            />
+            {selectedCustomer && (
+              <button
+                onClick={handleApplyCustomer}
+                disabled={!hasUnappliedChanges}
+                className={`px-6 py-2 rounded-lg font-medium transition-all ${
+                  hasUnappliedChanges
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl animate-pulse'
+                    : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                {hasUnappliedChanges ? '✨ 적용하기' : '✓ 적용됨'}
+              </button>
+            )}
+          </div>
+          {appliedCustomer && (
+            <div className="mt-2 text-sm text-center text-gray-600 dark:text-gray-400">
+              💡 현재 <strong>{appliedCustomer.name}</strong>님({appliedCustomer.birth_date}) 기준으로 분석 중
+            </div>
+          )}
+          {selectedCustomer && hasUnappliedChanges && (
+            <div className="mt-2 text-sm text-center text-orange-600 dark:text-orange-400 font-medium">
+              ⚠️ <strong>{selectedCustomer.name}</strong>님으로 변경하려면 "적용하기" 버튼을 클릭하세요
+            </div>
+          )}
+          {appliedCustomer && customerSajuData && (
             <div className="mt-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
               <div className="text-sm text-purple-700 dark:text-purple-300">
                 <div className="font-semibold mb-1">사주 팔자:</div>
@@ -203,59 +241,59 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
           )}
         </div>
 
-        {/* 🔥 100년 인생운세 차트 버튼 - 고객 선택 후 표시 */}
-        {selectedCustomer && (
+        {/* 🔥 100년 인생운세 차트 버튼 - 적용된 고객 선택 후 표시 */}
+        {appliedCustomer && (
           <div className="mb-6">
             <LifeChartButton
-              customer={selectedCustomer}
+              customer={appliedCustomer}
               lifetimeFortune={lifetimeFortune}
               loading={lifeChartLoading}
               error={lifeChartError}
-              onLoadChart={() => loadLifeChartForCustomer(selectedCustomer)}
+              onLoadChart={() => loadLifeChartForCustomer(appliedCustomer)}
               onScrollToChart={() => document.getElementById('hundred-year-chart')?.scrollIntoView({ behavior: 'smooth' })}
             />
           </div>
         )}
 
         {/* 🔥 100년 인생운세 차트 - 데이터 로드 시 표시 */}
-        {lifetimeFortune && selectedCustomer && (
+        {lifetimeFortune && appliedCustomer && (
           <div id="hundred-year-chart" className="mb-8">
             <HundredYearChart
               data={lifetimeFortune.data.lifetimeFortune}
-              currentAge={calculateCurrentAge(selectedCustomer.birth_date)}
-              birthYear={new Date(selectedCustomer.birth_date).getFullYear()}
+              currentAge={calculateCurrentAge(appliedCustomer.birth_date)}
+              birthYear={new Date(appliedCustomer.birth_date).getFullYear()}
             />
           </div>
         )}
 
-        {/* 💚 12대 건강 시스템 차트 - 고객 선택 및 사주 데이터 로드 시 표시 */}
-        {selectedCustomer && customerSajuData && (
+        {/* 💚 12대 건강 시스템 차트 - 적용된 고객 및 사주 데이터 로드 시 표시 */}
+        {appliedCustomer && customerSajuData && (
           <div id="health-system-chart" className="mb-8">
             <HealthRadarChart
               sajuData={customerSajuData}
-              birthYear={new Date(selectedCustomer.birth_date).getFullYear()}
+              birthYear={new Date(appliedCustomer.birth_date).getFullYear()}
               birthDate={birthDate}
             />
           </div>
         )}
 
-        {/* 💰 9대 재물운 시스템 차트 - 고객 선택 및 사주 데이터 로드 시 표시 */}
-        {selectedCustomer && customerSajuData && (
+        {/* 💰 9대 재물운 시스템 차트 - 적용된 고객 및 사주 데이터 로드 시 표시 */}
+        {appliedCustomer && customerSajuData && (
           <div id="wealth-system-chart" className="mb-8">
             <WealthRadarChart
               sajuData={customerSajuData}
-              birthYear={new Date(selectedCustomer.birth_date).getFullYear()}
+              birthYear={new Date(appliedCustomer.birth_date).getFullYear()}
               birthDate={birthDate}
             />
           </div>
         )}
 
-        {/* 🤝 7대 인간관계운 시스템 차트 - 고객 선택 및 사주 데이터 로드 시 표시 */}
-        {selectedCustomer && customerSajuData && (
+        {/* 🤝 7대 인간관계운 시스템 차트 - 적용된 고객 및 사주 데이터 로드 시 표시 */}
+        {appliedCustomer && customerSajuData && (
           <div id="relationship-system-chart" className="mb-8">
             <RelationshipRadarChart
               sajuData={customerSajuData}
-              birthYear={new Date(selectedCustomer.birth_date).getFullYear()}
+              birthYear={new Date(appliedCustomer.birth_date).getFullYear()}
               birthDate={birthDate}
             />
           </div>
