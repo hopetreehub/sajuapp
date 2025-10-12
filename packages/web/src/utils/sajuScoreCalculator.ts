@@ -1691,7 +1691,7 @@ export function calculateTimeBonus(
   sajuData: SajuData,
   timeFrame: 'today' | 'month' | 'year',
   targetDate: Date,
-  birthYear: number
+  birthYear: number,
 ): number {
   let bonus = 0;
 

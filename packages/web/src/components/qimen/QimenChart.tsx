@@ -38,7 +38,7 @@ export default function QimenChart3x3({
                 onClick={() => onPalaceSelect(palace)}
               />
             );
-          })
+          }),
         )}
       </div>
 

@@ -362,7 +362,7 @@ export function getDirectionByPalace(palace: Palace): Direction {
 export function calculateCombinedNature(
   gate: Gate,
   star: Star,
-  spirit?: Spirit
+  spirit?: Spirit,
 ): 'auspicious' | 'neutral' | 'inauspicious' {
   const gateNature = GATES[gate].nature;
   const starNature = STARS[star].nature;

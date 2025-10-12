@@ -267,7 +267,7 @@ export class QimenCalculationError extends Error {
   constructor(
     message: string,
     public code: 'INVALID_DATE' | 'INVALID_SOLAR_TERM' | 'CALCULATION_FAILED',
-    public details?: any
+    public details?: any,
   ) {
     super(message);
     this.name = 'QimenCalculationError';

@@ -67,7 +67,7 @@ const SPIRIT_ORDER: Spirit[] = [
  * 귀문둔갑 차트 계산 (메인 함수)
  */
 export function calculateQimenChart(
-  options: QimenCalculationOptions = {}
+  options: QimenCalculationOptions = {},
 ): QimenChart {
   const dateTime = options.dateTime || new Date();
 
@@ -178,7 +178,7 @@ function getHourGanZhi(date: Date): { gan: CheonGan; zhi: JiJi } {
 function getDayGan(date: Date): CheonGan {
   const baseDate = new Date(1984, 0, 1); // 1984-01-01
   const daysDiff = Math.floor(
-    (date.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24)
+    (date.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24),
   );
 
   const ganIndex = ((daysDiff % 10) + 10) % 10;
@@ -192,7 +192,7 @@ function arrangePalaces(
   ju: number,
   yinYang: YinYang,
   hourGanZhi: { gan: CheonGan; zhi: JiJi },
-  dateTime: Date
+  dateTime: Date,
 ): QimenChart['palaces'] {
   // 기본 구궁 순서 (낙서 순서)
   const basePalaceOrder: Palace[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -230,7 +230,7 @@ function arrangePalaces(
  */
 function arrangeGates(
   startPalace: Palace,
-  yinYang: YinYang
+  yinYang: YinYang,
 ): Record<Palace, Gate> {
   const positions: Record<Palace, Gate> = {} as Record<Palace, Gate>;
 
@@ -253,7 +253,7 @@ function arrangeGates(
  */
 function arrangeStars(
   startPalace: Palace,
-  yinYang: YinYang
+  yinYang: YinYang,
 ): Record<Palace, Star> {
   const positions: Record<Palace, Star> = {} as Record<Palace, Star>;
 
@@ -271,7 +271,7 @@ function arrangeStars(
  */
 function arrangeSpirits(
   startPalace: Palace,
-  hourGanZhi: { gan: CheonGan; zhi: JiJi }
+  hourGanZhi: { gan: CheonGan; zhi: JiJi },
 ): Record<Palace, Spirit | undefined> {
   const positions: Record<Palace, Spirit | undefined> = {} as Record<
     Palace,
@@ -311,7 +311,7 @@ function createPalaceInfo(
   star: Star,
   spirit: Spirit | undefined,
   hourGanZhi: { gan: CheonGan; zhi: JiJi },
-  dateTime: Date
+  dateTime: Date,
 ): PalaceInfo {
   const direction = PALACE_TO_DIRECTION[palace];
 
@@ -324,7 +324,7 @@ function createPalaceInfo(
     gate,
     star,
     spirit,
-    fortune
+    fortune,
   );
 
   // 추천사항 생성
@@ -355,7 +355,7 @@ function createPalaceInfo(
 function evaluateFortune(
   gate: Gate,
   star: Star,
-  spirit?: Spirit
+  spirit?: Spirit,
 ): Fortune {
   const combinedNature = calculateCombinedNature(gate, star, spirit);
 
@@ -395,7 +395,7 @@ function generateInterpretation(
   gate: Gate,
   star: Star,
   spirit: Spirit | undefined,
-  fortune: Fortune
+  fortune: Fortune,
 ): string {
   const direction = PALACE_TO_DIRECTION[palace];
   const gateData = GATES[gate];
@@ -433,7 +433,7 @@ function generateRecommendations(
   gate: Gate,
   star: Star,
   spirit: Spirit | undefined,
-  fortune: Fortune
+  fortune: Fortune,
 ): string[] {
   const recommendations: string[] = [];
 
@@ -459,7 +459,7 @@ function generateWarnings(
   gate: Gate,
   star: Star,
   spirit: Spirit | undefined,
-  fortune: Fortune
+  fortune: Fortune,
 ): string[] {
   const warnings: string[] = [];
 
@@ -480,7 +480,7 @@ function generateWarnings(
     const spiritData = SPIRITS[spirit];
     if (spiritData.nature === 'inauspicious') {
       warnings.push(
-        `${spiritData.characteristics.slice(0, 2).join(', ')}에 주의하세요`
+        `${spiritData.characteristics.slice(0, 2).join(', ')}에 주의하세요`,
       );
     }
   }
@@ -492,7 +492,7 @@ function generateWarnings(
  * 전체 길흉 평가
  */
 function evaluateOverallFortune(
-  palaces: QimenChart['palaces']
+  palaces: QimenChart['palaces'],
 ): QimenChart['overallFortune'] {
   const fortuneScores = {
     excellent: 100,
@@ -564,7 +564,7 @@ function evaluateOverallFortune(
  */
 export function checkDirectionFortune(
   chart: QimenChart,
-  direction: string
+  direction: string,
 ): PalaceInfo | null {
   for (const palace of Object.values(chart.palaces)) {
     if (palace.direction === direction) {
