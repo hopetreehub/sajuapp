@@ -9,6 +9,7 @@ import { logger } from '@/utils/logger';
 import fortuneRoutes from '@/routes/fortune.routes';
 import diaryRoutes from '@/routes/diary.routes';
 import healthRoutes from '@/routes/health.routes';
+import qimenRoutes from '@/routes/qimen.routes';
 
 // Middleware
 import { requestLogger } from '@/middleware/request-logger.middleware';
@@ -117,6 +118,7 @@ class AIServiceApplication {
     // Main API routes
     this.app.use(`${API_PREFIX}/fortune`, fortuneRoutes);
     this.app.use(`${API_PREFIX}/diary`, diaryRoutes);
+    this.app.use(`${API_PREFIX}/qimen`, qimenRoutes);
 
     // Root endpoint
     this.app.get('/', (req, res) => {

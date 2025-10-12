@@ -172,7 +172,7 @@ export interface QimenCalculationOptions {
   };
 
   /** 해석 컨텍스트 (용도에 따른 해석 조정) */
-  context?: 'general' | 'business' | 'love' | 'travel' | 'health';
+  context?: 'general' | 'business' | 'love' | 'travel' | 'health' | 'wealth' | 'lawsuit' | 'education';
 
   /** 상세 해석 포함 여부 */
   includeDetailedInterpretation?: boolean;

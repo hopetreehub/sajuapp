@@ -18,6 +18,10 @@ import SimpleSummary from './SimpleSummary';
 import CustomerSelector from '../saju/CustomerSelector';
 import { analyzeBirthDate } from '@/utils/birthYearAnalysis';
 import { calculatePersonalizedOverallScore } from '@/utils/qimenPersonalization';
+import { getAllContexts, type QimenContext } from '@/data/qimenContextWeights';
+import { generateAIPrompt } from '@/utils/qimenContextEvaluator';
+import AIChat from './AIChat';
+import Toast, { type ToastType } from '../common/Toast';
 
 export default function QimenView() {
   // 상태 관리
@@ -32,6 +36,35 @@ export default function QimenView() {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [appliedCustomer, setAppliedCustomer] = useState<Customer | null>(null);
   const [hasUnappliedChanges, setHasUnappliedChanges] = useState(false);
+
+  // 목적 선택 상태
+  const [selectedContext, setSelectedContext] = useState<QimenContext>('general');
+  const [showAIChat, setShowAIChat] = useState(false);
+
+  // 자동 갱신 관련 상태
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [timeUntilChange, setTimeUntilChange] = useState<{
+    hours: number;
+    minutes: number;
+    seconds: number;
+    type: 'hour' | 'day' | 'solarTerm';
+  } | null>(null);
+
+  // 토스트 알림 상태
+  const [toast, setToast] = useState<{
+    message: string;
+    type: ToastType;
+  } | null>(null);
+
+  // 변경 히스토리
+  const [changeHistory, setChangeHistory] = useState<Array<{
+    timestamp: Date;
+    ju: number;
+    yinYang: string;
+    solarTerm: string;
+    type: 'hour' | 'day' | 'solarTerm';
+  }>>([]);
+  const [showHistory, setShowHistory] = useState(false);
 
   // 고객 선택 변경 감지
   useEffect(() => {
@@ -62,6 +95,54 @@ export default function QimenView() {
         dateTime: selectedDate,
         birthInfo,
       });
+
+      // 이전 차트와 비교하여 변경사항 확인
+      if (chart) {
+        let changeType: 'hour' | 'day' | 'solarTerm' | null = null;
+        let changeMessage = '';
+
+        // 절기 변경
+        if (chart.solarTerm.name !== newChart.solarTerm.name) {
+          changeType = 'solarTerm';
+          changeMessage = `🌸 절기가 변경되었습니다: ${chart.solarTerm.name} → ${newChart.solarTerm.name}`;
+        }
+        // 국 변경 (절기 변경 시 함께 바뀜)
+        else if (chart.ju !== newChart.ju || chart.yinYang !== newChart.yinYang) {
+          changeType = 'solarTerm';
+          changeMessage = `⚡ 국(局)이 변경되었습니다: ${chart.yinYang === 'yang' ? '양둔' : '음둔'} ${chart.ju}국 → ${newChart.yinYang === 'yang' ? '양둔' : '음둔'} ${newChart.ju}국`;
+        }
+        // 일간 변경
+        else if (chart.dayGan !== newChart.dayGan) {
+          changeType = 'day';
+          changeMessage = `📅 일간(日干)이 변경되었습니다: ${chart.dayGan} → ${newChart.dayGan}`;
+        }
+        // 시간 변경
+        else if (chart.hourGanZhi.gan !== newChart.hourGanZhi.gan || chart.hourGanZhi.zhi !== newChart.hourGanZhi.zhi) {
+          changeType = 'hour';
+          changeMessage = `⏰ 시간이 변경되었습니다: ${chart.hourGanZhi.gan}${chart.hourGanZhi.zhi} → ${newChart.hourGanZhi.gan}${newChart.hourGanZhi.zhi}`;
+        }
+
+        // 변경사항이 있으면 토스트 표시 및 히스토리 추가
+        if (changeType && changeMessage) {
+          setToast({
+            message: changeMessage,
+            type: changeType === 'solarTerm' ? 'warning' : 'info',
+          });
+
+          // 히스토리 추가 (최대 10개)
+          setChangeHistory(prev => [
+            {
+              timestamp: new Date(),
+              ju: newChart.ju,
+              yinYang: newChart.yinYang === 'yang' ? '양둔' : '음둔',
+              solarTerm: newChart.solarTerm.name,
+              type: changeType,
+            },
+            ...prev.slice(0, 9),
+          ]);
+        }
+      }
+
       setChart(newChart);
 
       console.log('✅ [귀문둔갑] 차트 계산 완료:', newChart.ju, newChart.yinYang);
@@ -72,6 +153,69 @@ export default function QimenView() {
     }
   }, [selectedDate, appliedCustomer]);
 
+  // 다음 변경까지 시간 계산
+  useEffect(() => {
+    const calculateTimeUntilChange = () => {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+      const currentSecond = now.getSeconds();
+
+      // 다음 2시간 경계 (팔신 변경)
+      const nextEvenHour = currentHour % 2 === 0 ? currentHour + 2 : currentHour + 1;
+      const nextHourChange = new Date(now);
+      nextHourChange.setHours(nextEvenHour, 0, 0, 0);
+
+      // 다음 자정 (일간 변경)
+      const nextDayChange = new Date(now);
+      nextDayChange.setDate(nextDayChange.getDate() + 1);
+      nextDayChange.setHours(0, 0, 0, 0);
+
+      // 가장 가까운 변경 시점
+      const timeDiff = nextHourChange.getTime() - now.getTime();
+      const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+      setTimeUntilChange({
+        hours,
+        minutes,
+        seconds,
+        type: 'hour',
+      });
+    };
+
+    calculateTimeUntilChange();
+    const interval = setInterval(calculateTimeUntilChange, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // 자동 갱신 (2시간마다)
+  useEffect(() => {
+    if (!autoRefresh) return;
+
+    const checkAndRefresh = () => {
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+
+      // 짝수 시각의 정각이면 갱신 (01:00, 03:00, 05:00 등)
+      if (currentMinute === 0 && currentHour % 2 === 1) {
+        console.log('⏰ [귀문둔갑] 자동 갱신 - 시간 변경 감지');
+        setSelectedDate(new Date());
+
+        // 알림 표시 (나중에 추가)
+        // showNotification('시간이 변경되었습니다. 차트가 자동 갱신되었습니다.');
+      }
+    };
+
+    // 1분마다 체크
+    const interval = setInterval(checkAndRefresh, 60000);
+
+    return () => clearInterval(interval);
+  }, [autoRefresh]);
+
   // 시간 변경 핸들러
   const handleTimeChange = (newDate: Date) => {
     setSelectedDate(newDate);
@@ -80,6 +224,7 @@ export default function QimenView() {
 
   // 궁 선택 핸들러
   const handlePalaceSelect = (palace: Palace) => {
+    console.log('🎯 [귀문둔갑] 방위 클릭:', palace, '궁');
     setSelectedPalace(palace);
   };
 
@@ -119,9 +264,69 @@ export default function QimenView() {
               <span>초보자 가이드</span>
             </button>
           </div>
-          <p className="text-gray-600 dark:text-gray-300 text-lg mb-4">
+          <p className="text-gray-600 dark:text-gray-300 text-lg mb-2">
             奇門遁甲 - 시간과 방위의 길흉 판단
           </p>
+
+          {/* 자동 갱신 및 다음 변경까지 시간 */}
+          <div className="flex justify-center items-center gap-3 mb-4 flex-wrap">
+            <button
+              onClick={() => setAutoRefresh(!autoRefresh)}
+              className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
+                autoRefresh
+                  ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+              }`}
+            >
+              {autoRefresh ? '🔄 자동 갱신 ON' : '⏸️ 자동 갱신 OFF'}
+            </button>
+            {timeUntilChange && (
+              <div className="px-3 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded-full text-sm">
+                ⏱️ 다음 변경까지: {timeUntilChange.hours > 0 && `${timeUntilChange.hours}시간 `}
+                {timeUntilChange.minutes}분 {timeUntilChange.seconds}초
+              </div>
+            )}
+            {changeHistory.length > 0 && (
+              <button
+                onClick={() => setShowHistory(!showHistory)}
+                className="px-3 py-1 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors flex items-center gap-1"
+              >
+                📊 변경 히스토리 ({changeHistory.length})
+              </button>
+            )}
+          </div>
+
+          {/* 목적 선택 */}
+          <div className="max-w-3xl mx-auto mb-6">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                🎯 목적:
+              </label>
+              <select
+                value={selectedContext}
+                onChange={(e) => setSelectedContext(e.target.value as QimenContext)}
+                className="px-4 py-2 bg-white dark:bg-gray-800 border-2 border-purple-300 dark:border-purple-700 rounded-lg text-gray-900 dark:text-gray-100 font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all cursor-pointer"
+              >
+                {getAllContexts().map((ctx) => (
+                  <option key={ctx.value} value={ctx.value}>
+                    {ctx.icon} {ctx.label}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={() => setShowAIChat(!showAIChat)}
+                className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+              >
+                <span>🤖</span>
+                <span>AI에게 질문하기</span>
+              </button>
+            </div>
+            {selectedContext !== 'general' && (
+              <div className="text-center text-sm text-gray-600 dark:text-gray-400 mb-4">
+                💡 <strong>{getAllContexts().find(c => c.value === selectedContext)?.description}</strong>에 특화된 해석을 제공합니다
+              </div>
+            )}
+          </div>
 
           {/* 고객 선택 */}
           <div className="max-w-2xl mx-auto mb-6">
@@ -340,17 +545,93 @@ export default function QimenView() {
           </div>
         </div>
 
-        {/* 선택한 궁 상세 정보 */}
+        {/* 선택한 궁 상세 정보 - 모달로 표시 */}
         {selectedPalace && (
-          <PalaceDetail
-            palace={chart.palaces[selectedPalace]}
-            onClose={() => setSelectedPalace(null)}
-          />
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center p-4 overflow-y-auto">
+            <div className="max-w-4xl w-full my-8">
+              <PalaceDetail
+                palace={chart.palaces[selectedPalace]}
+                onClose={() => setSelectedPalace(null)}
+              />
+            </div>
+          </div>
         )}
 
         {/* 초보자 가이드 모달 */}
         {showGuide && (
           <BeginnerGuide onClose={() => setShowGuide(false)} />
+        )}
+
+        {/* AI 채팅 */}
+        {showAIChat && (
+          <AIChat
+            chart={chart}
+            context={selectedContext}
+            customer={appliedCustomer}
+            onClose={() => setShowAIChat(false)}
+          />
+        )}
+
+        {/* 변경 히스토리 모달 */}
+        {showHistory && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100">📊 차트 변경 히스토리</h3>
+                <button
+                  onClick={() => setShowHistory(false)}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="p-6 overflow-y-auto max-h-[60vh]">
+                {changeHistory.length === 0 ? (
+                  <p className="text-center text-gray-500 dark:text-gray-400 py-8">아직 변경 내역이 없습니다.</p>
+                ) : (
+                  <div className="space-y-3">
+                    {changeHistory.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700"
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                item.type === 'solarTerm' ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300' :
+                                item.type === 'day' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300' :
+                                'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
+                              }`}>
+                                {item.type === 'solarTerm' ? '🌸 절기/국 변경' : item.type === 'day' ? '📅 일간 변경' : '⏰ 시간 변경'}
+                              </span>
+                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                                {item.timestamp.toLocaleString('ko-KR')}
+                              </span>
+                            </div>
+                            <p className="text-sm text-gray-700 dark:text-gray-300">
+                              <strong>{item.yinYang} {item.ju}국</strong> · 절기: {item.solarTerm}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 토스트 알림 */}
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
         )}
       </div>
     </div>

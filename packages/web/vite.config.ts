@@ -43,6 +43,12 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
         },
+        // AI 서비스
+        '/api/v1/qimen': {
+          target: 'http://localhost:4017',
+          changeOrigin: true,
+          secure: false,
+        },
       },
     },
     preview: {

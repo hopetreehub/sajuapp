@@ -8,6 +8,7 @@ import HundredYearChart from '@/components/charts/HundredYearChart';
 import ChartNavigation from '@/components/Common/ChartNavigation';
 import CustomerSelector from '@/components/saju/CustomerSelector';
 import UniversalLifeChart from '@/components/charts/UniversalLifeChart';
+import SajuAIChat from '@/components/saju/SajuAIChat';
 import { SajuBirthInfo, SajuAnalysisResult, SajuData } from '@/types/saju';
 import { Customer } from '@/services/customerApi';
 import { customerToSajuBirthInfo, formatCustomerBirthDate } from '@/utils/customerConverter';
@@ -30,6 +31,7 @@ const SajuAnalysisPage: React.FC = () => {
   const [showCustomerPanel, setShowCustomerPanel] = useState(true);
   const [activeTab, setActiveTab] = useState<'analysis' | 'chart' | 'hundred-year'>('analysis');
   const [selectedDimensions, setSelectedDimensions] = useState<ChartDimensionType[]>(['geunbon', 'woon', 'haeng', 'hyeong', 'byeon']);
+  const [showAIChat, setShowAIChat] = useState(false);
 
   // 초기 로드 (고객 선택 패널 표시)
   useEffect(() => {
@@ -573,6 +575,27 @@ const SajuAnalysisPage: React.FC = () => {
           <p>※ 개인의 노력과 환경에 따라 실제 결과는 달라질 수 있습니다.</p>
         </div>
       </div>
+
+      {/* AI 채팅 플로팅 버튼 */}
+      {selectedCustomer && fourPillars && analysisResult && (
+        <button
+          onClick={() => setShowAIChat(true)}
+          className="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full shadow-2xl hover:shadow-purple-500/50 hover:scale-110 transition-all duration-300 flex items-center justify-center z-50 animate-bounce"
+          title="AI에게 질문하기"
+        >
+          <span className="text-3xl">🤖</span>
+        </button>
+      )}
+
+      {/* AI 채팅 모달 */}
+      {showAIChat && selectedCustomer && fourPillars && analysisResult && (
+        <SajuAIChat
+          customer={selectedCustomer}
+          fourPillars={fourPillars}
+          analysisResult={analysisResult}
+          onClose={() => setShowAIChat(false)}
+        />
+      )}
     </div>
   );
 };
