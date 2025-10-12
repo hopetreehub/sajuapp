@@ -190,19 +190,18 @@ ${userQuestion}
 4. <think> 태그나 사고 과정 노출 금지
 5. 구체적인 궁위, 주성, 점수를 언급하며 설명
 6. 긍정적이고 희망적인 조언 제공
-7. 200자 이내로 간결하게 답변`;
+7. 200자 이내로 간결하게 답변
+8. **중요**: 같은 질문이라도 매번 다양한 표현과 관점으로 답변하세요`;
   };
 
   // AI 응답 생성
   const getAIResponse = async (userQuestion: string): Promise<string> => {
     try {
-      // 캐시 키 생성
-      const cacheKey = `${chart.bureau}_${selectedContext}_${customer?.id || 'none'}_${userQuestion.toLowerCase().trim()}`;
-
-      // 캐시 확인
-      if (responseCache.has(cacheKey)) {
-        return responseCache.get(cacheKey)!;
-      }
+      // 캐시 비활성화: AI가 매번 새로운 답변을 생성하도록 함
+      // const cacheKey = `${chart.bureau}_${selectedContext}_${customer?.id || 'none'}_${userQuestion.toLowerCase().trim()}`;
+      // if (responseCache.has(cacheKey)) {
+      //   return responseCache.get(cacheKey)!;
+      // }
 
       // 프롬프트 생성
       const aiPrompt = generateZiweiAIPrompt(userQuestion);
@@ -226,8 +225,8 @@ ${userQuestion}
       const data = await response.json();
 
       if (data.success && data.response) {
-        // 응답 캐싱
-        setResponseCache((prev) => new Map(prev).set(cacheKey, data.response));
+        // 캐싱 비활성화
+        // setResponseCache((prev) => new Map(prev).set(cacheKey, data.response));
         return data.response;
       } else {
         return generateRuleBasedResponse(userQuestion);
