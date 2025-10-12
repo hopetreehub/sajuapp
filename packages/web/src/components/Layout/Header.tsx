@@ -1,9 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import ThemeToggle from '../ThemeToggle';
-import SearchBar, { SearchBarRef } from '../SearchBar';
-import useKeyboardShortcuts from '@/hooks/useKeyboardShortcuts';
 
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -11,14 +9,6 @@ const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuthStore();
-  const searchBarRef = useRef<SearchBarRef>(null);
-
-  // 키보드 단축키 설정
-  useKeyboardShortcuts({
-    onSearchFocus: () => {
-      searchBarRef.current?.focus();
-    },
-  });
 
   const navItems = [
     { path: '/', label: '캘린더', icon: '📅' },
@@ -66,30 +56,15 @@ const Header: React.FC = () => {
             </Link>
           </div>
 
-          {/* Center - Search Bar and Navigation */}
-          <div className="flex-1 flex items-center justify-center space-x-8">
-            {/* Search Bar */}
-            <div className="hidden md:block w-96 max-w-md">
-              <SearchBar
-                ref={searchBarRef}
-                placeholder="일정, 할일, 일기 검색... (Ctrl+K)"
-                className="w-full"
-                showCategories={false}
-                onSearch={(results) => {
-                  if (results.length > 0) {
-                    navigate('/search', { state: { results } });
-                  }
-                }}
-              />
-            </div>
-
+          {/* Center - Navigation */}
+          <div className="flex-1 flex items-center justify-center">
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-1">
+            <nav className="hidden md:flex items-center space-x-2">
               {navItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-1
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-1.5
                     ${isActive(item.path)
                       ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
@@ -211,21 +186,6 @@ const Header: React.FC = () => {
         {isMobileMenuOpen && (
           <nav className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
             <div className="flex flex-col space-y-1">
-              {/* Mobile Search Bar */}
-              <div className="px-4 mb-3">
-                <SearchBar
-                  placeholder="검색..."
-                  className="w-full"
-                  showCategories={true}
-                  onSearch={(results) => {
-                    if (results.length > 0) {
-                      navigate('/search', { state: { results } });
-                      setIsMobileMenuOpen(false);
-                    }
-                  }}
-                />
-              </div>
-
               {navItems.map((item) => (
                 <Link
                   key={item.path}
