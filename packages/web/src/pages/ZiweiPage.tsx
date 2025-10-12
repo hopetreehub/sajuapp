@@ -13,11 +13,13 @@ import { calculateZiweiChart } from '@/utils/ziweiCalculator';
 import type { ZiweiChart, Palace } from '@/types/ziwei';
 import type { Customer } from '@/services/customerApi';
 import CustomerSelector from '@/components/saju/CustomerSelector';
+import ZiweiChartView from '@/components/ziwei/ZiweiChartView';
+import ZiweiPalaceDetail from '@/components/ziwei/ZiweiPalaceDetail';
 
 export default function ZiweiPage() {
   // 상태 관리
   const [chart, setChart] = useState<ZiweiChart | null>(null);
-  const [_selectedPalace, _setSelectedPalace] = useState<Palace | null>(null);
+  const [selectedPalace, setSelectedPalace] = useState<Palace | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -111,7 +113,9 @@ export default function ZiweiPage() {
             </div>
             {appliedCustomer && (
               <div className="mt-4 text-sm text-center text-gray-600 dark:text-gray-400">
-                💡 현재 <strong>{appliedCustomer.name}</strong>님 ({appliedCustomer.birth_date} {appliedCustomer.birth_time})의 명반(命盤)을 분석 중입니다
+                💡 현재 <strong>{appliedCustomer.name}</strong>님 (
+                {appliedCustomer.birth_date} {appliedCustomer.birth_time})의 명반(命盤)을
+                분석 중입니다
               </div>
             )}
             {selectedCustomer && hasUnappliedChanges && (
@@ -377,21 +381,20 @@ export default function ZiweiPage() {
               </div>
             </div>
 
-            {/* 개발 중 안내 */}
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl p-6 text-center">
-              <div className="text-4xl mb-4">🚧</div>
-              <h3 className="text-xl font-bold text-yellow-700 dark:text-yellow-300 mb-2">
-                자미두수 시스템 개발 중
-              </h3>
-              <p className="text-yellow-600 dark:text-yellow-400 mb-4">
-                12궁위 차트 시각화와 AI 분석 기능을 개발하고 있습니다
-              </p>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Phase 1 완료: 타입 정의 + 계산 엔진 ✅<br />
-                Phase 2 진행 중: 프론트엔드 컴포넌트 🚧<br />
-                Phase 3 예정: AI 통합 및 고급 분석 📋
-              </div>
-            </div>
+            {/* 12궁위 차트 시각화 */}
+            <ZiweiChartView
+              chart={chart}
+              selectedPalace={selectedPalace}
+              onPalaceSelect={setSelectedPalace}
+            />
+
+            {/* 선택한 궁위 상세 정보 모달 */}
+            {selectedPalace && (
+              <ZiweiPalaceDetail
+                palace={chart.palaces[selectedPalace]}
+                onClose={() => setSelectedPalace(null)}
+              />
+            )}
           </div>
         )}
       </div>
