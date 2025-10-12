@@ -15,6 +15,7 @@ import type { Customer } from '@/services/customerApi';
 import CustomerSelector from '@/components/saju/CustomerSelector';
 import ZiweiChartView from '@/components/ziwei/ZiweiChartView';
 import ZiweiPalaceDetail from '@/components/ziwei/ZiweiPalaceDetail';
+import ZiweiAIChat from '@/components/ziwei/ZiweiAIChat';
 
 export default function ZiweiPage() {
   // 상태 관리
@@ -22,6 +23,7 @@ export default function ZiweiPage() {
   const [selectedPalace, setSelectedPalace] = useState<Palace | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showAIChat, setShowAIChat] = useState(false);
 
   // 고객 선택 관련 상태
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -381,6 +383,24 @@ export default function ZiweiPage() {
               </div>
             </div>
 
+            {/* AI 상담 버튼 */}
+            <div className="bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-blue-900/20 rounded-xl shadow-lg p-6 text-center border border-purple-200 dark:border-purple-800">
+              <div className="text-4xl mb-3">🤖⭐</div>
+              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                AI 상담사와 대화하기
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                자미두수 AI가 {appliedCustomer?.name || '당신'}님의 명반을 분석하여<br />
+                직업, 재물, 건강, 결혼 등 궁금한 점을 자세히 답변해드립니다
+              </p>
+              <button
+                onClick={() => setShowAIChat(true)}
+                className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-bold hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                🤖 AI 상담 시작하기
+              </button>
+            </div>
+
             {/* 12궁위 차트 시각화 */}
             <ZiweiChartView
               chart={chart}
@@ -393,6 +413,16 @@ export default function ZiweiPage() {
               <ZiweiPalaceDetail
                 palace={chart.palaces[selectedPalace]}
                 onClose={() => setSelectedPalace(null)}
+              />
+            )}
+
+            {/* AI 채팅 모달 */}
+            {showAIChat && (
+              <ZiweiAIChat
+                chart={chart}
+                customer={appliedCustomer}
+                selectedPalace={selectedPalace}
+                onClose={() => setShowAIChat(false)}
               />
             )}
           </div>

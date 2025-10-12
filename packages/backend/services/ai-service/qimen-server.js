@@ -1,11 +1,12 @@
 /**
- * 귀문둔갑 AI Service 간단 서버
+ * 귀문둔갑 & 자미두수 AI Service 간단 서버
  * PORT=4017로 실행
  *
  * AI Provider Priority:
- * 1. DeepInfra (Qwen/Qwen2.5-32B-Instruct)
- * 2. OpenAI (gpt-3.5-turbo)
- * 3. Rule-based fallback
+ * 1. OpenAI (gpt-4o-mini)
+ * 2. DeepInfra (Qwen/Qwen2.5-32B-Instruct)
+ * 3. Gemini (gemini-2.0-flash-exp)
+ * 4. Rule-based fallback
  */
 
 const express = require('express');
@@ -257,14 +258,14 @@ function getRuleBasedResponse(prompt) {
 // AI 응답 생성 (폴백 체인)
 // ============================================
 async function generateAIResponse(prompt) {
-  // 1순위: Gemini
+  // 1순위: OpenAI
   try {
-    console.log('🤖 [1순위] Gemini API 시도 중...');
-    const result = await callGeminiAPI(prompt);
-    console.log('✅ [1순위] Gemini API 성공');
+    console.log('🤖 [1순위] OpenAI API 시도 중...');
+    const result = await callOpenAIAPI(prompt);
+    console.log('✅ [1순위] OpenAI API 성공');
     return result;
   } catch (error) {
-    console.warn('⚠️ [1순위] Gemini API 실패:', error.message);
+    console.warn('⚠️ [1순위] OpenAI API 실패:', error.message);
   }
 
   // 2순위: DeepInfra
@@ -277,14 +278,14 @@ async function generateAIResponse(prompt) {
     console.warn('⚠️ [2순위] DeepInfra API 실패:', error.message);
   }
 
-  // 3순위: OpenAI
+  // 3순위: Gemini
   try {
-    console.log('🤖 [3순위] OpenAI API 시도 중...');
-    const result = await callOpenAIAPI(prompt);
-    console.log('✅ [3순위] OpenAI API 성공');
+    console.log('🤖 [3순위] Gemini API 시도 중...');
+    const result = await callGeminiAPI(prompt);
+    console.log('✅ [3순위] Gemini API 성공');
     return result;
   } catch (error) {
-    console.warn('⚠️ [3순위] OpenAI API 실패:', error.message);
+    console.warn('⚠️ [3순위] Gemini API 실패:', error.message);
   }
 
   // 4순위: Rule-based Fallback
@@ -346,20 +347,60 @@ app.post('/api/v1/qimen/chat', async (req, res) => {
 });
 
 // ============================================
+// 자미두수 AI 채팅
+// ============================================
+app.post('/api/v1/ziwei/chat', async (req, res) => {
+  try {
+    const { prompt, userQuestion } = req.body;
+
+    if (!prompt || !userQuestion) {
+      return res.status(400).json({
+        success: false,
+        error: 'prompt와 userQuestion은 필수입니다.',
+      });
+    }
+
+    console.log('⭐ [자미두수 AI] 요청 받음');
+    console.log('💬 [사용자 질문]:', userQuestion);
+
+    // AI 응답 생성 (폴백 체인)
+    const result = await generateAIResponse(prompt);
+
+    console.log(`✅ [자미두수 AI] 응답 생성 완료 (Provider: ${result.provider})`);
+
+    res.json({
+      success: true,
+      response: result.text,
+      provider: result.provider,
+      usage: result.usage,
+    });
+  } catch (error) {
+    console.error('❌ [자미두수 AI] 오류:', error.message);
+
+    res.status(500).json({
+      success: false,
+      error: '서버 내부 오류가 발생했습니다.',
+      details: error.message,
+    });
+  }
+});
+
+// ============================================
 // 서버 시작
 // ============================================
 app.listen(PORT, () => {
   console.log('='.repeat(60));
-  console.log('🚀 귀문둔갑 AI Service 시작');
+  console.log('🚀 귀문둔갑 & 자미두수 AI Service 시작');
   console.log('='.repeat(60));
   console.log(`📡 서버 실행 중: http://localhost:${PORT}`);
   console.log(`🔗 Health check: http://localhost:${PORT}/api/v1/health`);
-  console.log(`🤖 AI Chat: POST http://localhost:${PORT}/api/v1/qimen/chat`);
+  console.log(`🔮 귀문둔갑 AI: POST http://localhost:${PORT}/api/v1/qimen/chat`);
+  console.log(`⭐ 자미두수 AI: POST http://localhost:${PORT}/api/v1/ziwei/chat`);
   console.log('');
   console.log('🔄 AI Provider Priority:');
-  console.log(`   1️⃣ Gemini (${process.env.GOOGLE_MODEL || 'gemini-2.0-flash-exp'})`);
+  console.log(`   1️⃣ OpenAI (${process.env.OPENAI_MODEL || 'gpt-4o-mini'})`);
   console.log(`   2️⃣ DeepInfra (${process.env.DEEPINFRA_DEFAULT_MODEL})`);
-  console.log(`   3️⃣ OpenAI (${process.env.OPENAI_MODEL || 'gpt-4o-mini'})`);
+  console.log(`   3️⃣ Gemini (${process.env.GOOGLE_MODEL || 'gemini-2.0-flash-exp'})`);
   console.log(`   4️⃣ Rule-based fallback`);
   console.log('='.repeat(60));
 });
