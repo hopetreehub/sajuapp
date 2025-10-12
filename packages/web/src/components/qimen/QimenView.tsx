@@ -16,6 +16,8 @@ import TimeSelector from './TimeSelector';
 import BeginnerGuide from './BeginnerGuide';
 import SimpleSummary from './SimpleSummary';
 import CustomerSelector from '../saju/CustomerSelector';
+import { analyzeBirthDate } from '@/utils/birthYearAnalysis';
+import { calculatePersonalizedOverallScore } from '@/utils/qimenPersonalization';
 
 export default function QimenView() {
   // 상태 관리
@@ -49,11 +51,20 @@ export default function QimenView() {
         hour: appliedCustomer.birth_time ? parseInt(appliedCustomer.birth_time.split(':')[0]) : undefined,
       } : undefined;
 
+      console.log('🔮 [귀문둔갑] 차트 재계산:', {
+        고객: appliedCustomer?.name,
+        생년월일: appliedCustomer?.birth_date,
+        시간: selectedDate.toLocaleString(),
+        birthInfo,
+      });
+
       const newChart = calculateQimenChart({
         dateTime: selectedDate,
         birthInfo,
       });
       setChart(newChart);
+
+      console.log('✅ [귀문둔갑] 차트 계산 완료:', newChart.ju, newChart.yinYang);
     } catch (error) {
       console.error('귀문둔갑 계산 에러:', error);
     } finally {
@@ -74,6 +85,7 @@ export default function QimenView() {
 
   // 고객 적용 핸들러
   const handleApplyCustomer = () => {
+    console.log('🔥 [귀문둔갑] 고객 적용:', selectedCustomer?.name, selectedCustomer?.birth_date);
     setAppliedCustomer(selectedCustomer);
     setHasUnappliedChanges(false);
   };
@@ -184,7 +196,11 @@ export default function QimenView() {
 
         {/* 간단 요약 (초보자용) */}
         {showSimpleSummary && (
-          <SimpleSummary chart={chart} />
+          <SimpleSummary
+            chart={chart}
+            customerName={appliedCustomer?.name}
+            customerBirthDate={appliedCustomer?.birth_date}
+          />
         )}
 
         {/* 구궁 차트 */}
@@ -203,30 +219,87 @@ export default function QimenView() {
           </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <div className="flex items-center gap-3 mb-3">
-                <div className={`text-6xl font-bold ${
-                  chart.overallFortune.score >= 80 ? 'text-green-500' :
-                  chart.overallFortune.score >= 60 ? 'text-blue-500' :
-                  chart.overallFortune.score >= 40 ? 'text-yellow-500' :
-                  chart.overallFortune.score >= 20 ? 'text-orange-500' :
-                  'text-red-500'
-                }`}>
-                  {chart.overallFortune.score}
-                </div>
-                <div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">종합 점수</div>
-                  <div className="text-lg font-bold text-gray-700 dark:text-gray-200">
-                    {chart.overallFortune.level === 'excellent' ? '대길 🌟' :
-                     chart.overallFortune.level === 'good' ? '길 ✨' :
-                     chart.overallFortune.level === 'neutral' ? '평 ⚖️' :
-                     chart.overallFortune.level === 'bad' ? '흉 ⚠️' :
-                     '대흉 ❌'}
+              {/* 개인화된 점수 표시 */}
+              {appliedCustomer ? (() => {
+                const birthAnalysis = analyzeBirthDate(appliedCustomer.birth_date);
+                const personalScore = calculatePersonalizedOverallScore(chart, birthAnalysis);
+                const displayScore = personalScore.personalScore;
+                const scoreChange = personalScore.bonus;
+
+                return (
+                  <div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className={`text-6xl font-bold ${
+                        displayScore >= 80 ? 'text-green-500' :
+                        displayScore >= 60 ? 'text-blue-500' :
+                        displayScore >= 40 ? 'text-yellow-500' :
+                        displayScore >= 20 ? 'text-orange-500' :
+                        'text-red-500'
+                      }`}>
+                        {displayScore}
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">
+                          당신의 운세
+                          {scoreChange !== 0 && (
+                            <span className={`ml-2 font-bold ${
+                              scoreChange > 0 ? 'text-green-600' : 'text-red-600'
+                            }`}>
+                              ({scoreChange > 0 ? '+' : ''}{scoreChange})
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-lg font-bold text-gray-700 dark:text-gray-200">
+                          {displayScore >= 80 ? '대길 🌟' :
+                           displayScore >= 60 ? '길 ✨' :
+                           displayScore >= 40 ? '평 ⚖️' :
+                           displayScore >= 20 ? '흉 ⚠️' :
+                           '대흉 ❌'}
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-2">
+                      {chart.overallFortune.summary}
+                    </p>
+                    {scoreChange !== 0 && (
+                      <div className={`text-sm p-2 rounded ${
+                        scoreChange > 0
+                          ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
+                          : 'bg-orange-50 dark:bg-orange-900/20 text-orange-700 dark:text-orange-300'
+                      }`}>
+                        💡 {personalScore.explanation}
+                      </div>
+                    )}
                   </div>
+                );
+              })() : (
+                <div>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className={`text-6xl font-bold ${
+                      chart.overallFortune.score >= 80 ? 'text-green-500' :
+                      chart.overallFortune.score >= 60 ? 'text-blue-500' :
+                      chart.overallFortune.score >= 40 ? 'text-yellow-500' :
+                      chart.overallFortune.score >= 20 ? 'text-orange-500' :
+                      'text-red-500'
+                    }`}>
+                      {chart.overallFortune.score}
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">종합 점수</div>
+                      <div className="text-lg font-bold text-gray-700 dark:text-gray-200">
+                        {chart.overallFortune.level === 'excellent' ? '대길 🌟' :
+                         chart.overallFortune.level === 'good' ? '길 ✨' :
+                         chart.overallFortune.level === 'neutral' ? '평 ⚖️' :
+                         chart.overallFortune.level === 'bad' ? '흉 ⚠️' :
+                         '대흉 ❌'}
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                    {chart.overallFortune.summary}
+                  </p>
                 </div>
-              </div>
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                {chart.overallFortune.summary}
-              </p>
+              )}
             </div>
 
             <div>

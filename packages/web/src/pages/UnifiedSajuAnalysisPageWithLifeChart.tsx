@@ -61,6 +61,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
 
   // 고객 적용 시 사주 데이터 로드 (적용된 고객 정보 사용)
   useEffect(() => {
+    console.log('🔮 [사주분석] appliedCustomer 변경:', appliedCustomer?.name, appliedCustomer?.id);
     if (appliedCustomer?.id) {
       loadCustomerSajuData(appliedCustomer.id);
     } else {
@@ -96,6 +97,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
 
   // 고객 적용 핸들러
   const handleApplyCustomer = () => {
+    console.log('🔥 [사주분석] 고객 적용:', selectedCustomer?.name, selectedCustomer?.birth_date);
     setAppliedCustomer(selectedCustomer);
     setHasUnappliedChanges(false);
   };
@@ -126,8 +128,10 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
 
   const loadCustomerSajuData = async (customerId: number) => {
     try {
+      console.log('📥 [사주분석] 고객 데이터 로딩 시작:', customerId);
 
       const response = await getCustomerById(customerId);
+      console.log('📦 [사주분석] API 응답 받음:', response.data.name);
 
       // saju_data가 문자열인 경우 JSON 파싱
       let sajuData = response.data.saju_data;
@@ -141,6 +145,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
         }
       }
 
+      console.log('✅ [사주분석] 사주 데이터 설정:', sajuData?.fullSaju);
       setCustomerSajuData(sajuData);
       // 전역 사주 데이터 설정 (모든 차트에 반영)
       setGlobalSajuData(sajuData);
