@@ -43,8 +43,14 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
         },
-        // AI 서비스
+        // AI 서비스 (귀문둔갑)
         '/api/v1/qimen': {
+          target: 'http://localhost:4017',
+          changeOrigin: true,
+          secure: false,
+        },
+        // AI 서비스 (자미두수)
+        '/api/v1/ziwei': {
           target: 'http://localhost:4017',
           changeOrigin: true,
           secure: false,
