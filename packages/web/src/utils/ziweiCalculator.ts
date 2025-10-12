@@ -13,10 +13,10 @@ import type {
   AuxiliaryStar,
   ElementBureau,
   PalaceInfo,
-  PalaceStrength,
   MajorFortune,
   YearlyFortune,
 } from '@/types/ziwei';
+import { PalaceStrength } from '@/types/ziwei';
 
 // ============================================
 // 상수 정의
