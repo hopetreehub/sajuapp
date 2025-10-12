@@ -16,6 +16,7 @@ import LearningPage from '@/pages/LearningPage';
 import SearchPage from '@/pages/SearchPage';
 import TestApi from '@/pages/TestApi';
 import QimenView from '@/components/qimen/QimenView';
+import ZiweiPage from '@/pages/ZiweiPage';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
@@ -66,6 +67,8 @@ function App() {
                 <Route path="/learning/:courseId" element={<ProtectedRoute><LearningPage /></ProtectedRoute>} />
                 {/* 귀문둔갑 */}
                 <Route path="/qimen" element={<ProtectedRoute><QimenView /></ProtectedRoute>} />
+                {/* 자미두수 */}
+                <Route path="/ziwei" element={<ProtectedRoute><ZiweiPage /></ProtectedRoute>} />
               </Routes>
             </main>
             <Footer />
