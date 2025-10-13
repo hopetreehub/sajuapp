@@ -205,8 +205,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
             className={`
               w-full py-4 px-6 rounded-lg font-medium text-lg transition-all duration-200
               ${canSubmit && !isLoading
-                ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl'
-                : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl border-2 border-purple-400 dark:border-purple-300'
+                : 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed border-2 border-gray-400 dark:border-gray-500'
               }
             `}
           >
