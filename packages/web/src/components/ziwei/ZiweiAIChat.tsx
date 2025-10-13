@@ -169,6 +169,24 @@ ${Object.entries(chart.palaces)
   )
   .join('\n')}
 
+[사화성 (四化星) - 생년 천간에 따른 특별한 영향]
+${Object.entries(chart.palaces)
+  .filter(([_, info]) =>
+    info.auxiliaryStars.some(star => ['化祿', '化權', '化科', '化忌'].includes(star))
+  )
+  .map(([palace, info]) => {
+    const transformations = info.auxiliaryStars.filter(star =>
+      ['化祿', '化權', '化科', '化忌'].includes(star)
+    );
+    const mainStar = info.mainStars.find(ms =>
+      transformations.length > 0
+    );
+    return transformations.map(t =>
+      `- ${palace}: ${mainStar}이(가) ${t} (재물운/권력운/명예운/불운에 큰 영향)`
+    ).join('\n');
+  })
+  .join('\n')}
+
 [주요 특성]
 - 성격: ${chart.characteristics.personality.join(', ')}
 - 직업: ${chart.characteristics.career.join(', ')}

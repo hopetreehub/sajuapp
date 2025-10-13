@@ -18,6 +18,12 @@ import type {
 } from '@/types/ziwei';
 import { PalaceStrength } from '@/types/ziwei';
 import { getAuxiliaryStarScore } from '@/data/ziweiAuxiliaryStars';
+import {
+  calculateTransformations,
+  findTransformation,
+  TRANSFORMATION_SCORE_ADJUSTMENT,
+  type TransformationResult,
+} from '@/data/ziweiTransformations';
 
 // ============================================
 // 상수 정의
@@ -395,26 +401,39 @@ function placeAuxiliaryStars(
 }
 
 /**
- * 12궁위 생성
+ * 12궁위 생성 (사화성 포함)
  */
 function createPalaces(
   lifePalaceBranch: EarthlyBranch,
   mainStarPlacements: Record<EarthlyBranch, MainStar[]>,
   auxiliaryStarPlacements: Record<EarthlyBranch, AuxiliaryStar[]>,
+  birthYear: number,
 ): Record<Palace, PalaceInfo> {
   const result: Record<Palace, PalaceInfo> = {} as any;
 
   const lifePalaceIndex = getBranchIndex(lifePalaceBranch);
+
+  // 사화성 계산
+  const transformations = calculateTransformations(birthYear);
 
   PALACE_NAMES.forEach((palaceName, i) => {
     const branchIndex = (lifePalaceIndex + i) % 12;
     const branch = EARTHLY_BRANCHES[branchIndex];
 
     const mainStars = mainStarPlacements[branch] || [];
-    const auxiliaryStars = auxiliaryStarPlacements[branch] || [];
+    const auxiliaryStars = [...(auxiliaryStarPlacements[branch] || [])];
 
-    // 길흉 점수 계산 (별자리 기반)
-    const luckyScore = calculatePalaceLuckyScore(mainStars, auxiliaryStars);
+    // 주성에 사화성 추가
+    mainStars.forEach(mainStar => {
+      const transformation = findTransformation(mainStar, transformations);
+      if (transformation) {
+        // 사화성을 보조성 배열에 추가
+        auxiliaryStars.push(transformation);
+      }
+    });
+
+    // 길흉 점수 계산 (사화성 포함)
+    const luckyScore = calculatePalaceLuckyScore(mainStars, auxiliaryStars, transformations);
 
     // 길흉 상태 결정
     const strength = luckyScore >= 80 ? PalaceStrength.PROSPEROUS :
@@ -440,9 +459,13 @@ function createPalaces(
 
 /**
  * 궁위 길흉 점수 계산
- * 데이터 파일의 점수를 활용하여 정확도 향상
+ * 데이터 파일의 점수를 활용하여 정확도 향상 (사화성 포함)
  */
-function calculatePalaceLuckyScore(mainStars: MainStar[], auxiliaryStars: AuxiliaryStar[]): number {
+function calculatePalaceLuckyScore(
+  mainStars: MainStar[],
+  auxiliaryStars: AuxiliaryStar[],
+  transformations: TransformationResult[],
+): number {
   let score = 50; // 기본 점수
 
   // 주성 점수
@@ -453,8 +476,15 @@ function calculatePalaceLuckyScore(mainStars: MainStar[], auxiliaryStars: Auxili
     '七殺': 7, '破軍': 6,
   };
 
+  // 주성 기본 점수 추가
   mainStars.forEach(star => {
     score += starScores[star] || 5;
+
+    // 사화성 보너스 점수
+    const transformation = findTransformation(star, transformations);
+    if (transformation) {
+      score += TRANSFORMATION_SCORE_ADJUSTMENT[transformation];
+    }
   });
 
   // 보조성 점수 - 데이터 파일에서 가져오기
@@ -680,8 +710,13 @@ export function calculateZiweiChart(birthInfo: {
     birthInfo.hour,
   );
 
-  // 6. 12궁위 생성
-  const palaces = createPalaces(lifePalaceBranch, mainStarPlacements, auxiliaryStarPlacements);
+  // 6. 12궁위 생성 (사화성 포함)
+  const palaces = createPalaces(
+    lifePalaceBranch,
+    mainStarPlacements,
+    auxiliaryStarPlacements,
+    birthInfo.year,
+  );
 
   // 7. 대운 계산
   const majorFortunes = calculateMajorFortunes(
