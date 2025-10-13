@@ -194,6 +194,15 @@ ${Object.entries(chart.palaces)
 - 건강: ${chart.characteristics.health.join(', ')}
 - 인간관계: ${chart.characteristics.relationships.join(', ')}
 
+[대운 (大運) - 10년 단위 운세]
+- 현재 대운: ${chart.majorFortunes.find(f => chart.yearlyFortune.age >= f.startAge && chart.yearlyFortune.age <= f.endAge)?.description || '대운 정보 없음'}
+- 대운 점수: ${chart.majorFortunes.find(f => chart.yearlyFortune.age >= f.startAge && chart.yearlyFortune.age <= f.endAge)?.luckyScore || 50}점
+
+[유년운 (流年) - 올해 운세]
+- ${chart.yearlyFortune.description}
+- 올해 점수: ${chart.yearlyFortune.luckyScore}점
+- 올해 키워드: ${chart.yearlyFortune.keywords.join(', ')}
+
 ${palaceInfo}
 [상담 목적]
 ${contextDescription[selectedContext]}

@@ -562,13 +562,14 @@ function generatePalaceKeywords(palace: Palace, mainStars: MainStar[]): string[]
 }
 
 /**
- * 대운 계산 (10년 단위)
+ * 대운 계산 (10년 단위) - 실제 궁위 점수 기반
  */
 function calculateMajorFortunes(
   lifePalaceBranch: EarthlyBranch,
   bureau: ElementBureau,
   birthYear: number,
-  gender?: 'male' | 'female',
+  gender: 'male' | 'female' | undefined,
+  palaces: Record<Palace, PalaceInfo>,
 ): MajorFortune[] {
   const fortunes: MajorFortune[] = [];
 
@@ -598,7 +599,24 @@ function calculateMajorFortunes(
     const direction = isForward ? 1 : -1;
     const palaceIndex = (lifePalaceIndex + i * direction + 12) % 12;
     const palaceBranch = EARTHLY_BRANCHES[palaceIndex];
-    const palace = PALACE_NAMES[i % 12];
+    const palace = PALACE_NAMES[palaceIndex % 12];
+
+    // 실제 궁위 정보 가져오기
+    const palaceInfo = palaces[palace];
+    const luckyScore = palaceInfo ? palaceInfo.luckyScore : 50;
+
+    // 대운 해석 생성
+    const description = generateMajorFortuneDescription(
+      age,
+      palace,
+      palaceInfo,
+      isForward,
+    );
+
+    // 대운 키워드 생성
+    const keywords = palaceInfo
+      ? palaceInfo.keywords.slice(0, 3)
+      : ['변화', '성장', '도전'];
 
     fortunes.push({
       startAge: age,
@@ -606,9 +624,9 @@ function calculateMajorFortunes(
       palace,
       branch: palaceBranch,
       direction: isForward ? 'forward' : 'backward',
-      description: `${age}세부터 ${age + 9}세까지의 운세`,
-      luckyScore: 50 + Math.random() * 30,
-      keywords: ['성장', '발전', '도전'],
+      description,
+      luckyScore,
+      keywords,
     });
   }
 
@@ -616,12 +634,55 @@ function calculateMajorFortunes(
 }
 
 /**
- * 유년운 계산
+ * 대운 해석 생성
+ */
+function generateMajorFortuneDescription(
+  startAge: number,
+  palace: Palace,
+  palaceInfo: PalaceInfo | undefined,
+  isForward: boolean,
+): string {
+  if (!palaceInfo) {
+    return `${startAge}세부터 ${startAge + 9}세까지의 운세입니다.`;
+  }
+
+  const scoreLevel =
+    palaceInfo.luckyScore >= 80
+      ? '매우 좋은'
+      : palaceInfo.luckyScore >= 60
+        ? '좋은'
+        : palaceInfo.luckyScore >= 40
+          ? '보통의'
+          : palaceInfo.luckyScore >= 20
+            ? '어려운'
+            : '매우 어려운';
+
+  const palaceDesc: Record<Palace, string> = {
+    '命宮': '인생의 기본 운세',
+    '兄弟宮': '형제자매와 친구 관계',
+    '夫妻宮': '배우자와 결혼 생활',
+    '子女宮': '자녀와의 관계',
+    '財帛宮': '재물과 수입',
+    '疾厄宮': '건강과 체력',
+    '遷移宮': '이동과 변화',
+    '奴僕宮': '부하와 친구의 도움',
+    '官祿宮': '직업과 명예',
+    '田宅宮': '부동산과 가정',
+    '福德宮': '정신적 안정과 복',
+    '父母宮': '부모와 상사의 도움',
+  };
+
+  return `${startAge}세~${startAge + 9}세는 ${palace}(${palaceDesc[palace]})이 주관하는 시기로 ${scoreLevel} 운세입니다. ${palaceInfo.mainStars.join(', ') || '주성 없음'}의 영향을 받습니다.`;
+}
+
+/**
+ * 유년운 계산 - 실제 궁위 점수 기반
  */
 function calculateYearlyFortune(
   lifePalaceBranch: EarthlyBranch,
   currentYear: number,
   birthYear: number,
+  palaces: Record<Palace, PalaceInfo>,
 ): YearlyFortune {
   const age = currentYear - birthYear + 1;
   const lifePalaceIndex = getBranchIndex(lifePalaceBranch);
@@ -631,15 +692,74 @@ function calculateYearlyFortune(
   const yearlyBranch = EARTHLY_BRANCHES[yearlyPalaceIndex];
   const yearlyPalace = PALACE_NAMES[yearlyPalaceIndex % 12];
 
+  // 실제 궁위 정보 가져오기
+  const palaceInfo = palaces[yearlyPalace];
+  const luckyScore = palaceInfo ? palaceInfo.luckyScore : 50;
+
+  // 유년운 해석 생성
+  const description = generateYearlyFortuneDescription(
+    currentYear,
+    age,
+    yearlyPalace,
+    palaceInfo,
+  );
+
+  // 유년운 키워드 생성
+  const keywords = palaceInfo
+    ? palaceInfo.keywords.slice(0, 3)
+    : ['기회', '변화', '성장'];
+
   return {
     year: currentYear,
     age,
     palace: yearlyPalace,
     branch: yearlyBranch,
-    description: `${currentYear}년 ${age}세의 운세`,
-    luckyScore: 50 + Math.random() * 30,
-    keywords: ['기회', '변화', '성장'],
+    description,
+    luckyScore,
+    keywords,
   };
+}
+
+/**
+ * 유년운 해석 생성
+ */
+function generateYearlyFortuneDescription(
+  year: number,
+  age: number,
+  palace: Palace,
+  palaceInfo: PalaceInfo | undefined,
+): string {
+  if (!palaceInfo) {
+    return `${year}년 ${age}세의 운세입니다.`;
+  }
+
+  const scoreLevel =
+    palaceInfo.luckyScore >= 80
+      ? '매우 좋습니다'
+      : palaceInfo.luckyScore >= 60
+        ? '좋습니다'
+        : palaceInfo.luckyScore >= 40
+          ? '보통입니다'
+          : palaceInfo.luckyScore >= 20
+            ? '주의가 필요합니다'
+            : '매우 조심해야 합니다';
+
+  const palaceInfluence: Record<Palace, string> = {
+    '命宮': '자신의 운명에 집중하는',
+    '兄弟宮': '형제와 친구의 도움을 받는',
+    '夫妻宮': '배우자와 관계가 중요한',
+    '子女宮': '자녀와의 인연이 있는',
+    '財帛宮': '재물과 수입이 주목받는',
+    '疾厄宮': '건강 관리가 중요한',
+    '遷移宮': '변화와 이동이 많은',
+    '奴僕宮': '사람들의 도움을 받는',
+    '官祿宮': '직업과 명예가 빛나는',
+    '田宅宮': '가정과 부동산이 안정되는',
+    '福德宮': '정신적으로 충만한',
+    '父母宮': '부모와 상사의 은혜를 받는',
+  };
+
+  return `${year}년 (${age}세)은 ${palace}의 영향을 받아 ${palaceInfluence[palace]} 해입니다. 올해 운세는 ${scoreLevel}.`;
 }
 
 /**
@@ -718,17 +838,23 @@ export function calculateZiweiChart(birthInfo: {
     birthInfo.year,
   );
 
-  // 7. 대운 계산
+  // 7. 대운 계산 (실제 궁위 정보 기반)
   const majorFortunes = calculateMajorFortunes(
     lifePalaceBranch,
     bureau,
     birthInfo.year,
     birthInfo.gender,
+    palaces,
   );
 
-  // 8. 유년운 계산
+  // 8. 유년운 계산 (실제 궁위 정보 기반)
   const currentYear = new Date().getFullYear();
-  const yearlyFortune = calculateYearlyFortune(lifePalaceBranch, currentYear, birthInfo.year);
+  const yearlyFortune = calculateYearlyFortune(
+    lifePalaceBranch,
+    currentYear,
+    birthInfo.year,
+    palaces,
+  );
 
   // 9. 종합 운세 생성
   const overallFortune = generateOverallFortune(palaces);
