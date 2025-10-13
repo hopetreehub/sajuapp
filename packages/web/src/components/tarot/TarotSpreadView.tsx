@@ -89,27 +89,32 @@ export default function TarotSpreadView({
       </div>
 
       {/* 모든 카드 뒤집기 버튼 */}
-      <div className="flex justify-center gap-4 mt-6">
+      <div className="flex justify-center gap-4 mt-12 mb-8">
         <button
           onClick={() => {
             const allPositions = new Set(cardPositions.map((cp) => cp.position));
             setFlippedCards(allPositions);
           }}
-          className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all shadow-md"
+          className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-base font-semibold rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl"
         >
-          모든 카드 펼치기
+          🔓 모든 카드 펼치기
         </button>
         <button
           onClick={() => setFlippedCards(new Set())}
-          className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-all shadow-md"
+          className="px-8 py-3 bg-gray-500 text-white text-base font-semibold rounded-lg hover:bg-gray-600 transition-all shadow-lg hover:shadow-xl"
         >
-          모든 카드 뒤집기
+          🔒 모든 카드 뒤집기
         </button>
       </div>
 
       {/* 선택된 카드 상세 정보 */}
       {selectedCard && flippedCards.has(selectedCard.position) && (
-        <div className="mt-8">
+        <div className="mt-12 pt-8 border-t-4 border-purple-200 dark:border-purple-800">
+          <div className="mb-4 text-center">
+            <h3 className="text-xl font-bold text-purple-600 dark:text-purple-400">
+              📖 선택한 카드 상세 정보
+            </h3>
+          </div>
           <TarotCardDetail
             card={selectedCard.card}
             isReversed={selectedCard.isReversed}
