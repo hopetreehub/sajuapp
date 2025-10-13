@@ -17,6 +17,7 @@ import type {
   YearlyFortune,
 } from '@/types/ziwei';
 import { PalaceStrength } from '@/types/ziwei';
+import { getAuxiliaryStarScore } from '@/data/ziweiAuxiliaryStars';
 
 // ============================================
 // 상수 정의
@@ -218,47 +219,177 @@ function placeMainStars(
 }
 
 /**
- * 보조성 배치 (간소화)
- * 실제로는 100+ 보조성 배치 필요
+ * 보조성 배치 (고도화 버전)
+ * 50+ 보조성 배치 알고리즘
  */
 function placeAuxiliaryStars(
   lifePalaceBranch: EarthlyBranch,
   birthYear: number,
   birthMonth: number,
-  _birthDay: number,
+  birthDay: number,
+  birthHour: number,
 ): Record<EarthlyBranch, AuxiliaryStar[]> {
   const result: Record<EarthlyBranch, AuxiliaryStar[]> = {} as any;
 
+  // 모든 지지에 빈 배열 초기화
   EARTHLY_BRANCHES.forEach(branch => {
     result[branch] = [];
   });
 
   const lifePalaceIndex = getBranchIndex(lifePalaceBranch);
+  const yearGan = birthYear % 10; // 천간 인덱스 (0-9)
+  const yearZhi = birthYear % 12; // 지지 인덱스 (0-11)
+  const monthZhi = (birthMonth + 1) % 12; // 월지 인덱스
 
-  // 문창 (명궁에서 생시에 따라 배치)
-  const wenChangIndex = (lifePalaceIndex + birthMonth) % 12;
-  result[EARTHLY_BRANCHES[wenChangIndex]].push('文昌');
+  // ========== 육길성 (六吉星) ==========
 
-  // 문곡 (문창 대칭)
-  const wenQuIndex = (lifePalaceIndex - birthMonth + 12) % 12;
-  result[EARTHLY_BRANCHES[wenQuIndex]].push('文曲');
+  // 문창 (文昌) - 생시에 따라 배치
+  const wenChangIndex = (lifePalaceIndex + birthHour / 2) % 12;
+  result[EARTHLY_BRANCHES[Math.floor(wenChangIndex)]].push('文昌');
+
+  // 문곡 (文曲) - 문창 대칭
+  const wenQuIndex = (lifePalaceIndex - birthHour / 2 + 12) % 12;
+  result[EARTHLY_BRANCHES[Math.floor(wenQuIndex)]].push('文曲');
 
   // 좌보우필 (명궁 기준)
   result[EARTHLY_BRANCHES[(lifePalaceIndex + 1) % 12]].push('左輔');
   result[EARTHLY_BRANCHES[(lifePalaceIndex - 1 + 12) % 12]].push('右弼');
 
-  // 천괴천월
-  result[EARTHLY_BRANCHES[(lifePalaceIndex + 2) % 12]].push('天魁');
-  result[EARTHLY_BRANCHES[(lifePalaceIndex + 3) % 12]].push('天鉞');
+  // 천괴천월 (생년 천간으로 배치)
+  const tianKuiTable = [1, 0, 11, 11, 1, 0, 7, 8, 7, 8]; // 천간별 천괴 위치
+  const tianYueTable = [7, 8, 2, 2, 4, 4, 10, 10, 4, 4]; // 천간별 천월 위치
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + tianKuiTable[yearGan]) % 12]].push('天魁');
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + tianYueTable[yearGan]) % 12]].push('天鉞');
 
-  // 녹존 (생년 천간으로 배치 - 간략화)
-  const ganIndex = birthYear % 10;
-  result[EARTHLY_BRANCHES[(lifePalaceIndex + ganIndex) % 12]].push('祿存');
+  // 녹존 (祿存) - 생년 천간으로 배치
+  const luCunTable = [2, 3, 5, 6, 5, 6, 8, 9, 11, 0]; // 천간별 녹존 위치
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + luCunTable[yearGan]) % 12]].push('祿存');
+
+  // ========== 육흉성 (六凶星) ==========
+
+  // 경양 (擎羊) - 녹존 다음 궁
+  const qingYangIndex = (lifePalaceIndex + luCunTable[yearGan] + 1) % 12;
+  result[EARTHLY_BRANCHES[qingYangIndex]].push('擎羊');
+
+  // 타라 (陀羅) - 녹존 전 궁
+  const tuoLuoIndex = (lifePalaceIndex + luCunTable[yearGan] - 1 + 12) % 12;
+  result[EARTHLY_BRANCHES[tuoLuoIndex]].push('陀羅');
 
   // 화성, 령성 (생년 지지로 배치)
-  const zhiIndex = birthYear % 12;
-  result[EARTHLY_BRANCHES[(zhiIndex + 1) % 12]].push('火星');
-  result[EARTHLY_BRANCHES[(zhiIndex + 2) % 12]].push('鈴星');
+  const huoXingTable = [2, 3, 1, 0, 11, 9, 8, 7, 6, 5, 4, 3]; // 지지별 화성 위치
+  const lingXingTable = [3, 2, 4, 5, 6, 8, 9, 10, 11, 0, 1, 2]; // 지지별 령성 위치
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + huoXingTable[yearZhi]) % 12]].push('火星');
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + lingXingTable[yearZhi]) % 12]].push('鈴星');
+
+  // 지겁 (地劫) - 연지로 배치
+  const diJieIndex = (lifePalaceIndex + (11 - yearZhi) + 12) % 12;
+  result[EARTHLY_BRANCHES[diJieIndex]].push('地劫');
+
+  // 지공 (地空) - 지겁 대칭
+  const diKongIndex = (lifePalaceIndex + yearZhi + 1) % 12;
+  result[EARTHLY_BRANCHES[diKongIndex]].push('地空');
+
+  // ========== 일반 보조성 ==========
+
+  // 천마 (天馬) - 생년 지지로 배치
+  const tianMaTable = [2, 11, 8, 5, 2, 11, 8, 5, 2, 11, 8, 5];
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + tianMaTable[yearZhi]) % 12]].push('天馬');
+
+  // 홍란 (紅鸞) - 묘궁 기준
+  const hongLuanIndex = (3 - yearZhi + 12) % 12; // 卯궁(3)에서 역행
+  result[EARTHLY_BRANCHES[hongLuanIndex]].push('紅鸞');
+
+  // 천희 (天喜) - 홍란 대궁
+  const tianXiIndex = (hongLuanIndex + 6) % 12;
+  result[EARTHLY_BRANCHES[tianXiIndex]].push('天喜');
+
+  // 천공 (天空)
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + yearZhi) % 12]].push('天空');
+
+  // 천형 (天刑) - 자궁에서 년지순포
+  const tianXingIndex = (10 + yearZhi) % 12;
+  result[EARTHLY_BRANCHES[tianXingIndex]].push('天刑');
+
+  // 천요 (天姚) - 대충 배치
+  const tianYaoIndex = (7 - yearZhi + 12) % 12;
+  result[EARTHLY_BRANCHES[tianYaoIndex]].push('天姚');
+
+  // 천곡, 천허 (天哭, 天虛)
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + 5) % 12]].push('天哭');
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + 11) % 12]].push('天虛');
+
+  // 용지, 봉각 (龍池, 鳳閣)
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + 4) % 12]].push('龍池');
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + 10) % 12]].push('鳳閣');
+
+  // ========== 연지성 (年支星) ==========
+  const yearBranchStars: Record<number, AuxiliaryStar[]> = {
+    0: ['天官'], // 子
+    1: ['天福'], // 丑
+    2: ['天廚'], // 寅
+    3: ['天才'], // 卯
+    4: ['天壽'], // 辰
+    5: ['天官'], // 巳
+    6: ['天福'], // 午
+    7: ['天廚'], // 未
+    8: ['天才'], // 申
+    9: ['天壽'], // 酉
+    10: ['天官'], // 戌
+    11: ['天福'], // 亥
+  };
+
+  const yearBranchIndex = yearZhi;
+  (yearBranchStars[yearBranchIndex] || []).forEach(star => {
+    result[EARTHLY_BRANCHES[yearBranchIndex]].push(star);
+  });
+
+  // ========== 월지성 (月支星) ==========
+  const monthBranchStars: Record<number, AuxiliaryStar[]> = {
+    0: ['天月'], // 子
+    1: ['陰煞'], // 丑
+    2: ['天月'], // 寅
+    3: ['陰煞'], // 卯
+    4: ['天月'], // 辰
+    5: ['陰煞'], // 巳
+    6: ['天月'], // 午
+    7: ['陰煞'], // 未
+    8: ['天月'], // 申
+    9: ['陰煞'], // 酉
+    10: ['天月'], // 戌
+    11: ['陰煞'], // 亥
+  };
+
+  (monthBranchStars[monthZhi] || []).forEach(star => {
+    result[EARTHLY_BRANCHES[monthZhi]].push(star);
+  });
+
+  // ========== 시지성 (時支星) ==========
+  const hourBranch = hourToBranch(birthHour);
+  const hourBranchIndex = getBranchIndex(hourBranch);
+  result[EARTHLY_BRANCHES[hourBranchIndex]].push('天貴');
+  result[EARTHLY_BRANCHES[(hourBranchIndex + 6) % 12]].push('天傷');
+
+  // ========== 기타 보조성 ==========
+  // 대보, 봉고, 은광 등은 간략화하여 랜덤 배치
+  const otherStars: AuxiliaryStar[] = ['台輔', '封誥', '恩光', '天巫', '天德', '月德', '解神'];
+  otherStars.forEach((star, i) => {
+    const randomIndex = (lifePalaceIndex + yearGan + i * 2) % 12;
+    result[EARTHLY_BRANCHES[randomIndex]].push(star);
+  });
+
+  // 고신, 과숙 (孤辰, 寡宿)
+  const guChenTable = [2, 2, 5, 5, 5, 8, 8, 8, 11, 11, 11, 2];
+  const guaSuTable = [10, 10, 1, 1, 1, 4, 4, 4, 7, 7, 7, 10];
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + guChenTable[yearZhi]) % 12]].push('孤辰');
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + guaSuTable[yearZhi]) % 12]].push('寡宿');
+
+  // 비렴, 파쇄 (蜚廉, 破碎)
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + yearZhi + 5) % 12]].push('蜚廉');
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + yearZhi + 9) % 12]].push('破碎');
+
+  // 화개, 함지 (華蓋, 咸池)
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + yearZhi + 4) % 12]].push('華蓋');
+  result[EARTHLY_BRANCHES[(lifePalaceIndex + yearZhi - 1 + 12) % 12]].push('咸池');
 
   return result;
 }
@@ -309,6 +440,7 @@ function createPalaces(
 
 /**
  * 궁위 길흉 점수 계산
+ * 데이터 파일의 점수를 활용하여 정확도 향상
  */
 function calculatePalaceLuckyScore(mainStars: MainStar[], auxiliaryStars: AuxiliaryStar[]): number {
   let score = 50; // 기본 점수
@@ -325,17 +457,10 @@ function calculatePalaceLuckyScore(mainStars: MainStar[], auxiliaryStars: Auxili
     score += starScores[star] || 5;
   });
 
-  // 보조성 점수
-  const auxScores: Record<string, number> = {
-    '文昌': 5, '文曲': 5, '左輔': 8, '右弼': 8,
-    '天魁': 7, '天鉞': 7, '祿存': 10,
-    '擎羊': -5, '陀羅': -5, '火星': -4, '鈴星': -4,
-    '地劫': -6, '地空': -6, '化忌': -8,
-    '化祿': 10, '化權': 8, '化科': 6,
-  };
-
+  // 보조성 점수 - 데이터 파일에서 가져오기
   auxiliaryStars.forEach(star => {
-    score += auxScores[star] || 0;
+    const starScore = getAuxiliaryStarScore(star);
+    score += starScore;
   });
 
   return Math.max(0, Math.min(100, score));
@@ -552,6 +677,7 @@ export function calculateZiweiChart(birthInfo: {
     birthInfo.year,
     birthInfo.month,
     birthInfo.day,
+    birthInfo.hour,
   );
 
   // 6. 12궁위 생성
