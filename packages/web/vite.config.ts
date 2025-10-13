@@ -61,6 +61,12 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
         },
+        // AI 서비스 (타로)
+        '/api/v1/tarot': {
+          target: 'http://localhost:4017',
+          changeOrigin: true,
+          secure: false,
+        },
       },
     },
     preview: {

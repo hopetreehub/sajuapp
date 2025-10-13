@@ -299,6 +299,53 @@ app.post('/api/v1/saju/chat', async (req, res) => {
   }
 });
 
+// 타로 AI 채팅 엔드포인트
+app.post('/api/v1/tarot/chat', async (req, res) => {
+  try {
+    const { prompt, userQuestion } = req.body;
+
+    if (!prompt || !userQuestion) {
+      return res.status(400).json({
+        success: false,
+        error: '프롬프트와 사용자 질문이 필요합니다',
+      });
+    }
+
+    console.log('\n[타로 AI] 요청 받음:', {
+      userQuestion,
+      promptLength: prompt.length,
+    });
+
+    // 폴백 체인으로 AI 응답 생성
+    const { text, provider } = await getAIResponse(prompt);
+
+    console.log('[타로 AI] 응답 생성 완료:', {
+      provider,
+      responseLength: text.length,
+      preview: text.substring(0, 100),
+    });
+
+    // 타로는 마크다운 정제만 하고 외국어 필터는 적용하지 않음
+    const cleanedResponse = cleanTarotResponse(text);
+
+    return res.json({
+      success: true,
+      response: cleanedResponse,
+      provider,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('[타로 AI] Error:', error);
+
+    // 에러 응답
+    return res.status(500).json({
+      success: false,
+      error: 'AI 응답 생성 중 오류가 발생했습니다',
+      details: error.message,
+    });
+  }
+});
+
 /**
  * AI 응답 정제 함수
  */
@@ -343,12 +390,43 @@ function cleanAIResponse(text) {
   return cleaned;
 }
 
+/**
+ * 타로 AI 응답 정제 함수
+ * 타로는 영어 카드명이 포함될 수 있으므로 외국어 필터 없음
+ */
+function cleanTarotResponse(text) {
+  let cleaned = text;
+
+  // 1. <think> 태그 및 사고 과정 제거
+  cleaned = cleaned.replace(/<think>.*?<\/think>/gs, '');
+  cleaned = cleaned.replace(/<\/?think>/g, '');
+
+  // 2. 마크다운 형식만 가볍게 정제 (구조는 유지)
+  cleaned = cleaned.replace(/#{1,6}\s/g, '');
+
+  // 3. 불완전한 문장 제거
+  cleaned = cleaned.replace(/\s+[을를이가에와과]$/gm, '');
+  cleaned = cleaned.replace(/\s+있어$/gm, '있어요');
+
+  // 4. 공백 정리
+  cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+  cleaned = cleaned.trim();
+
+  // 5. 최소 길이 검증
+  if (cleaned.length < 20) {
+    return '죄송합니다. 타로 해석을 생성하는 데 문제가 발생했습니다. 다시 질문해 주세요.';
+  }
+
+  return cleaned;
+}
+
 // 서버 시작
 app.listen(PORT, () => {
   console.log(`\n✨ AI Service (Multi-Provider Fallback) is running on http://localhost:${PORT}\n`);
   console.log(`📡 Health check: http://localhost:${PORT}/api/v1/health`);
   console.log(`💬 Ziwei Chat: POST http://localhost:${PORT}/api/v1/ziwei/chat`);
   console.log(`💬 Saju Chat: POST http://localhost:${PORT}/api/v1/saju/chat`);
+  console.log(`🔮 Tarot Chat: POST http://localhost:${PORT}/api/v1/tarot/chat`);
   console.log(`\n🔑 AI 제공자 우선순위:`);
   console.log(`   1순위: OpenAI (GPT-4o-mini) - ${OPENAI_API_KEY ? '✅ 설정됨' : '❌ 미설정'}`);
   console.log(`   2순위: DeepInfra (Llama 3.1 70B) - ${DEEPINFRA_API_KEY ? '✅ 설정됨' : '❌ 미설정'}`);
