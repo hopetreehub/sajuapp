@@ -383,6 +383,104 @@ export default function ZiweiPage() {
               </div>
             </div>
 
+            {/* 대운/유년운 섹션 (NEW!) */}
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* 유년운 (올해 운세) */}
+              <div className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-xl shadow-lg p-6 border border-orange-200 dark:border-orange-800">
+                <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                  <span>📅</span>
+                  <span>올해 운세 (流年運)</span>
+                </h2>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      {chart.yearlyFortune.year}년 ({chart.yearlyFortune.age}세)
+                    </div>
+                    <div className={`text-3xl font-bold ${
+                      chart.yearlyFortune.luckyScore >= 80 ? 'text-green-600' :
+                      chart.yearlyFortune.luckyScore >= 60 ? 'text-blue-600' :
+                      chart.yearlyFortune.luckyScore >= 40 ? 'text-yellow-600' :
+                      chart.yearlyFortune.luckyScore >= 20 ? 'text-orange-600' :
+                      'text-red-600'
+                    }`}>
+                      {chart.yearlyFortune.luckyScore}점
+                    </div>
+                  </div>
+                  <div className="p-4 bg-white/50 dark:bg-gray-800/50 rounded-lg">
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      주관 궁위: <strong className="text-orange-600 dark:text-orange-400">{chart.yearlyFortune.palace}</strong> ({chart.yearlyFortune.branch})
+                    </div>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                      {chart.yearlyFortune.description}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {chart.yearlyFortune.keywords.map((keyword, idx) => (
+                      <span
+                        key={idx}
+                        className="px-3 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-full text-xs font-medium"
+                      >
+                        #{keyword}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* 대운 (10년 운세) */}
+              <div className="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-xl shadow-lg p-6 border border-purple-200 dark:border-purple-800">
+                <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                  <span>🌊</span>
+                  <span>현재 대운 (大運)</span>
+                </h2>
+                {(() => {
+                  const currentFortune = chart.majorFortunes.find(
+                    f => chart.yearlyFortune.age >= f.startAge && chart.yearlyFortune.age <= f.endAge
+                  );
+                  return currentFortune ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          {currentFortune.startAge}세 ~ {currentFortune.endAge}세
+                        </div>
+                        <div className={`text-3xl font-bold ${
+                          currentFortune.luckyScore >= 80 ? 'text-green-600' :
+                          currentFortune.luckyScore >= 60 ? 'text-blue-600' :
+                          currentFortune.luckyScore >= 40 ? 'text-yellow-600' :
+                          currentFortune.luckyScore >= 20 ? 'text-orange-600' :
+                          'text-red-600'
+                        }`}>
+                          {currentFortune.luckyScore}점
+                        </div>
+                      </div>
+                      <div className="p-4 bg-white/50 dark:bg-gray-800/50 rounded-lg">
+                        <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                          주관 궁위: <strong className="text-purple-600 dark:text-purple-400">{currentFortune.palace}</strong> ({currentFortune.branch})
+                        </div>
+                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                          {currentFortune.description}
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {currentFortune.keywords.map((keyword, idx) => (
+                          <span
+                            key={idx}
+                            className="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-xs font-medium"
+                          >
+                            #{keyword}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+                      대운 정보를 찾을 수 없습니다
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+
             {/* AI 상담 버튼 */}
             <div className="bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-blue-900/20 rounded-xl shadow-lg p-6 text-center border border-purple-200 dark:border-purple-800">
               <div className="text-4xl mb-3">🤖⭐</div>
