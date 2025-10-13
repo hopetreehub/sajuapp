@@ -209,3 +209,119 @@ export function calculateMonthlyFortune(date: Date, sajuData: SajuData): number 
   }
   return 0;
 }
+
+/**
+ * 대운(大運) 계산
+ * - 대운은 10년 주기로 변화하는 큰 운
+ * - 남명 양년생/여명 음년생은 순행, 남명 음년생/여명 양년생은 역행
+ * - 월주를 기준으로 계산
+ */
+export interface Daewoon {
+  gan: CheonGan;
+  ji: JiJi;
+  combined: string;
+  startAge: number;
+  endAge: number;
+  description: string;
+}
+
+// 천간 순행 순서
+const CHEONGAN_순행: CheonGan[] = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
+// 지지 순행 순서
+const JIJI_순행: JiJi[] = ['자', '축', '인', '묘', '진', '사', '오', '미', '신', '유', '술', '해'];
+
+function getNext(current: string, array: string[], reverse: boolean): string {
+  const index = array.indexOf(current);
+  if (index === -1) return array[0];
+
+  if (reverse) {
+    return array[(index - 1 + array.length) % array.length];
+  } else {
+    return array[(index + 1) % array.length];
+  }
+}
+
+export function calculateDaewoon(birthYear: number, gender: 'male' | 'female', monthGan: CheonGan, monthJi: JiJi): Daewoon[] {
+  // 대운 시작 나이 계산 (성별과 연도의 음양에 따라 다름)
+  const isYangYear = ['갑', '병', '무', '경', '임'].includes(CHEONGAN_순행[(birthYear - 4) % 10]);
+
+  // 순행 여부: 남자 양년생 또는 여자 음년생
+  const isForward = (gender === 'male' && isYangYear) || (gender === 'female' && !isYangYear);
+
+  // 대운은 보통 3-10세 사이에 시작 (간단화하여 5세로 고정)
+  let startAge = 5;
+
+  const daewoonList: Daewoon[] = [];
+  let currentGan = monthGan;
+  let currentJi = monthJi;
+
+  // 10개의 대운 생성 (100년치)
+  for (let i = 0; i < 10; i++) {
+    // 첫 대운은 월주의 다음부터
+    currentGan = getNext(currentGan, CHEONGAN_순행, !isForward) as CheonGan;
+    currentJi = getNext(currentJi, JIJI_순행, !isForward) as JiJi;
+
+    daewoonList.push({
+      gan: currentGan,
+      ji: currentJi,
+      combined: `${currentGan}${currentJi}`,
+      startAge: startAge + (i * 10),
+      endAge: startAge + (i * 10) + 9,
+      description: `${startAge + (i * 10)}세 ~ ${startAge + (i * 10) + 9}세`,
+    });
+  }
+
+  return daewoonList;
+}
+
+/**
+ * 현재 대운 구하기
+ */
+export function getCurrentDaewoon(birthYear: number, birthMonth: number, gender: 'male' | 'female', monthGan: CheonGan, monthJi: JiJi): Daewoon | null {
+  const currentYear = new Date().getFullYear();
+  const currentAge = currentYear - birthYear;
+
+  const daewoonList = calculateDaewoon(birthYear, gender, monthGan, monthJi);
+
+  return daewoonList.find(d => currentAge >= d.startAge && currentAge <= d.endAge) || null;
+}
+
+/**
+ * 세운(歲運) 계산
+ * - 세운은 1년 주기로 변화하는 운
+ * - 해당 연도의 간지가 세운
+ */
+export interface Sewoon {
+  year: number;
+  gan: CheonGan;
+  ji: JiJi;
+  combined: string;
+  description: string;
+}
+
+export function calculateSewoon(year: number): Sewoon {
+  // 갑자년은 1984년
+  const 갑자년 = 1984;
+  const yearDiff = year - 갑자년;
+
+  const ganIndex = yearDiff % 10;
+  const jiIndex = yearDiff % 12;
+
+  const gan = CHEONGAN_순행[(ganIndex + 10) % 10];
+  const ji = JIJI_순행[(jiIndex + 12) % 12];
+
+  return {
+    year,
+    gan,
+    ji,
+    combined: `${gan}${ji}`,
+    description: `${year}년 (${gan}${ji}년)`,
+  };
+}
+
+/**
+ * 현재 세운 구하기
+ */
+export function getCurrentSewoon(): Sewoon {
+  return calculateSewoon(new Date().getFullYear());
+}

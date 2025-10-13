@@ -14,6 +14,8 @@ import RelationshipRadarChart from '@/components/saju/charts/RelationshipRadarCh
 import { fetchLifetimeFortune, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';
 import { convertCustomerToLifetimeRequest } from '@/utils/customerDataConverter';
 import '@/utils/testUniqueValues'; // 개인별 고유값 테스트 함수 로드
+import SajuAIChat from '@/components/saju/SajuAIChat';
+import { calculateFourPillars } from '@/utils/sajuCalculator';
 
 export default function UnifiedSajuAnalysisPageWithLifeChart() {
   const [selectedCategory, setSelectedCategory] = useState('jubon');
@@ -28,6 +30,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
   const [lifeChartLoading, setLifeChartLoading] = useState(false);
   const [lifeChartError, setLifeChartError] = useState<string | null>(null);
   const [categories, setCategories] = useState<SajuRadarCategory[]>(SAJU_RADAR_CATEGORIES);
+  const [showAIChat, setShowAIChat] = useState(false);
 
   // 정확한 나이 계산 함수
   const calculateCurrentAge = (birthDate: string): number => {
@@ -131,21 +134,72 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
       console.log('📥 [사주분석] 고객 데이터 로딩 시작:', customerId);
 
       const response = await getCustomerById(customerId);
-      console.log('📦 [사주분석] API 응답 받음:', response.data.name);
+      console.log('📦 [사주분석] API 전체 응답:', response);
+      console.log('📦 [사주분석] response.data:', response.data);
+
+      // API가 배열을 반환하는 경우 처리
+      let customerData;
+      if (Array.isArray(response.data)) {
+        console.log('⚠️ [사주분석] API가 배열 반환 - ID로 필터링:', customerId);
+        customerData = response.data.find((c: any) => c.id === customerId);
+        console.log('📦 [사주분석] 필터링된 고객 데이터:', customerData);
+      } else {
+        customerData = response.data;
+      }
+
+      if (!customerData) {
+        console.error('❌ [사주분석] 고객을 찾을 수 없음:', customerId);
+        setCustomerSajuData(null);
+        setGlobalSajuData(null);
+        return;
+      }
+
+      console.log('📦 [사주분석] 고객 이름:', customerData.name);
+      console.log('📦 [사주분석] 고객 객체 전체:', customerData);
+      console.log('📦 [사주분석] 고객 객체 키들:', Object.keys(customerData));
 
       // saju_data가 문자열인 경우 JSON 파싱
-      let sajuData = response.data.saju_data;
+      let sajuData = customerData.saju_data;
+      console.log('📦 [사주분석] saju_data (파싱 전):', sajuData);
+      console.log('📦 [사주분석] saju_data 타입:', typeof sajuData);
+
       if (typeof sajuData === 'string') {
         try {
           sajuData = JSON.parse(sajuData);
-
+          console.log('📦 [사주분석] saju_data (파싱 후):', sajuData);
         } catch (e) {
           console.error('[사주 데이터 파싱 실패]', e);
           sajuData = null;
         }
       }
 
+      // saju_data가 없는 경우 기본 데이터 생성 (AI 버튼용)
+      if (!sajuData) {
+        console.log('⚠️ [사주분석] saju_data 없음 - AI용 기본 데이터 생성');
+        sajuData = {
+          fullSaju: '사주 데이터 계산 필요',
+          ohHaengBalance: {
+            목: 20,
+            화: 20,
+            토: 20,
+            금: 20,
+            수: 20
+          },
+          sipSungBalance: {
+            비겁: 10,
+            식상: 10,
+            재성: 10,
+            관성: 10,
+            인성: 10
+          },
+          // 차트 에러 방지용 플래그
+          _isMinimal: true
+        };
+        console.log('✅ [사주분석] AI용 기본 데이터 생성 완료');
+      }
+
       console.log('✅ [사주분석] 사주 데이터 설정:', sajuData?.fullSaju);
+      console.log('✅ [사주분석] 사주 데이터 전체:', sajuData);
       setCustomerSajuData(sajuData);
       // 전역 사주 데이터 설정 (모든 차트에 반영)
       setGlobalSajuData(sajuData);
@@ -181,15 +235,101 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
     ? `${appliedCustomer.birth_date} ${appliedCustomer.birth_time}`
     : '고객을 선택해주세요';
 
+  // 사주팔자 계산 (AI 채팅용)
+  const fourPillars = useMemo(() => {
+    if (!appliedCustomer) {
+      console.log('🤖 [AI 버튼] fourPillars 계산 불가: appliedCustomer 없음');
+      return null;
+    }
+
+    const [year, month, day] = appliedCustomer.birth_date.split('-').map(Number);
+    const [hour, minute] = appliedCustomer.birth_time.split(':').map(Number);
+
+    const result = calculateFourPillars({
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      isLunar: appliedCustomer.lunar_solar === 'lunar',
+      gender: appliedCustomer.gender,
+    });
+
+    console.log('🤖 [AI 버튼] fourPillars 계산 완료:', result);
+    return result;
+  }, [appliedCustomer]);
+
+  // 사주 분석 결과 (AI 채팅용)
+  const analysisResult = useMemo(() => {
+    if (!customerSajuData || !fourPillars || !appliedCustomer) {
+      console.log('🤖 [AI 버튼] analysisResult 생성 불가:', {
+        customerSajuData: !!customerSajuData,
+        fourPillars: !!fourPillars,
+        appliedCustomer: !!appliedCustomer
+      });
+      return null;
+    }
+
+    const result = {
+      fiveElements: customerSajuData.ohHaengBalance || {},
+      tenGods: customerSajuData.sipSungBalance || {},
+      totalScore: Object.values(customerSajuData.ohHaengBalance || {}).reduce((sum: number, val: any) => sum + val, 0),
+      averageScore: Math.round(Object.values(customerSajuData.ohHaengBalance || {}).reduce((sum: number, val: any) => sum + val, 0) / 5),
+      birthInfo: {
+        year: parseInt(appliedCustomer.birth_date.split('-')[0]),
+        month: parseInt(appliedCustomer.birth_date.split('-')[1]),
+        day: parseInt(appliedCustomer.birth_date.split('-')[2]),
+        hour: parseInt(appliedCustomer.birth_time.split(':')[0]),
+        minute: parseInt(appliedCustomer.birth_time.split(':')[1]),
+        isLunar: appliedCustomer.lunar_solar === 'lunar',
+        gender: appliedCustomer.gender,
+      },
+      fourPillars,
+      sixAreas: {
+        career: customerSajuData.ohHaengBalance?.화 || 0,
+        wealth: customerSajuData.ohHaengBalance?.금 || 0,
+        health: customerSajuData.ohHaengBalance?.수 || 0,
+        relationships: customerSajuData.ohHaengBalance?.목 || 0,
+        study: customerSajuData.ohHaengBalance?.토 || 0,
+        family: 50,
+      },
+    };
+
+    console.log('🤖 [AI 버튼] analysisResult 생성 완료');
+    return result;
+  }, [customerSajuData, fourPillars, appliedCustomer]);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         {/* 헤더 */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            🔮 통합 사주 레이더 분석
-          </h1>
+          <div className="flex items-center justify-center gap-4 mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+              🔮 통합 사주 레이더 분석
+            </h1>
+            {/* AI 버튼 디버깅 */}
+            {(() => {
+              console.log('🔍 [AI 버튼 렌더링 체크]', {
+                appliedCustomer: !!appliedCustomer,
+                customerSajuData: !!customerSajuData,
+                fourPillars: !!fourPillars,
+                analysisResult: !!analysisResult,
+                모두충족: !!(appliedCustomer && customerSajuData && fourPillars && analysisResult)
+              });
+              return null;
+            })()}
+            {appliedCustomer && fourPillars && (
+              <button
+                onClick={() => setShowAIChat(true)}
+                className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+              >
+                <span>🤖</span>
+                <span>AI에게 질문하기</span>
+              </button>
+            )}
+          </div>
           <p className="text-gray-600 dark:text-gray-400 text-lg">
             주문차트 기반 9개 대항목 상세 분석 시스템
           </p>
@@ -271,8 +411,8 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
           </div>
         )}
 
-        {/* 💚 12대 건강 시스템 차트 - 적용된 고객 및 사주 데이터 로드 시 표시 */}
-        {appliedCustomer && customerSajuData && (
+        {/* 💚 12대 건강 시스템 차트 - 완전한 사주 데이터가 있을 때만 표시 */}
+        {appliedCustomer && customerSajuData && !customerSajuData._isMinimal && (
           <div id="health-system-chart" className="mb-8">
             <HealthRadarChart
               sajuData={customerSajuData}
@@ -282,8 +422,8 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
           </div>
         )}
 
-        {/* 💰 9대 재물운 시스템 차트 - 적용된 고객 및 사주 데이터 로드 시 표시 */}
-        {appliedCustomer && customerSajuData && (
+        {/* 💰 9대 재물운 시스템 차트 - 완전한 사주 데이터가 있을 때만 표시 */}
+        {appliedCustomer && customerSajuData && !customerSajuData._isMinimal && (
           <div id="wealth-system-chart" className="mb-8">
             <WealthRadarChart
               sajuData={customerSajuData}
@@ -293,8 +433,8 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
           </div>
         )}
 
-        {/* 🤝 7대 인간관계운 시스템 차트 - 적용된 고객 및 사주 데이터 로드 시 표시 */}
-        {appliedCustomer && customerSajuData && (
+        {/* 🤝 7대 인간관계운 시스템 차트 - 완전한 사주 데이터가 있을 때만 표시 */}
+        {appliedCustomer && customerSajuData && !customerSajuData._isMinimal && (
           <div id="relationship-system-chart" className="mb-8">
             <RelationshipRadarChart
               sajuData={customerSajuData}
@@ -396,6 +536,29 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
             <div className="text-sm">세부항목</div>
           </div>
         </div>
+
+        {/* AI 채팅 모달 */}
+        {showAIChat && appliedCustomer && fourPillars && (
+          <SajuAIChat
+            customer={appliedCustomer}
+            fourPillars={fourPillars}
+            analysisResult={analysisResult || {
+              fiveElements: customerSajuData?.ohHaengBalance || {},
+              tenGods: customerSajuData?.sipSungBalance || {},
+              fourPillars,
+              birthInfo: {
+                year: parseInt(appliedCustomer.birth_date.split('-')[0]),
+                month: parseInt(appliedCustomer.birth_date.split('-')[1]),
+                day: parseInt(appliedCustomer.birth_date.split('-')[2]),
+                hour: parseInt(appliedCustomer.birth_time.split(':')[0]),
+                minute: parseInt(appliedCustomer.birth_time.split(':')[1]),
+                isLunar: appliedCustomer.lunar_solar === 'lunar',
+                gender: appliedCustomer.gender,
+              }
+            } as any}
+            onClose={() => setShowAIChat(false)}
+          />
+        )}
 
       </div>
     </div>

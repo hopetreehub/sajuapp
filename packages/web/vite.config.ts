@@ -55,6 +55,12 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
         },
+        // AI 서비스 (사주)
+        '/api/v1/saju': {
+          target: 'http://localhost:4017',
+          changeOrigin: true,
+          secure: false,
+        },
       },
     },
     preview: {

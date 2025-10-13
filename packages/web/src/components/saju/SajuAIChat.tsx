@@ -10,6 +10,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import type { Customer } from '@/services/customerApi';
 import type { FourPillarsResult } from '@/utils/sajuCalculator';
 import type { SajuAnalysisResult } from '@/types/saju';
+import {
+  getCurrentDaewoon,
+  getCurrentSewoon,
+  calculateMonthlyFortune,
+  type Daewoon,
+  type Sewoon,
+} from '@/utils/sajuRelations';
+import { getDailyPillar, getDailyFortuneModifier } from '@/utils/dailyFortune';
+import type { SajuData } from '@/utils/sajuScoreCalculator';
 
 interface SajuAIChatProps {
   customer: Customer;
@@ -34,7 +43,9 @@ function generateSajuAIPrompt(
   userQuestion: string,
 ): string {
   const birthYear = parseInt(customer.birth_date.split('-')[0]);
+  const birthMonth = parseInt(customer.birth_date.split('-')[1]);
   const age = new Date().getFullYear() - birthYear;
+  const today = new Date();
 
   // 오행 균형 정보
   const fiveElementsStr = Object.entries(analysisResult.fiveElements)
@@ -45,6 +56,31 @@ function generateSajuAIPrompt(
   const tenGodsStr = Object.entries(analysisResult.tenGods)
     .map(([god, value]) => `${god}: ${value}점`)
     .join(', ');
+
+  // 대운(大運) 계산
+  const daewoon = getCurrentDaewoon(
+    birthYear,
+    birthMonth,
+    customer.gender,
+    fourPillars.month.heavenly as any,
+    fourPillars.month.earthly as any
+  );
+
+  // 세운(歲運) 계산
+  const sewoon = getCurrentSewoon();
+
+  // 월운 계산
+  const sajuData: SajuData = {
+    year: { gan: fourPillars.year.heavenly as any, ji: fourPillars.year.earthly as any },
+    month: { gan: fourPillars.month.heavenly as any, ji: fourPillars.month.earthly as any },
+    day: { gan: fourPillars.day.heavenly as any, ji: fourPillars.day.earthly as any },
+    hour: { gan: fourPillars.hour.heavenly as any, ji: fourPillars.hour.earthly as any },
+  };
+  const monthlyFortune = calculateMonthlyFortune(today, sajuData);
+
+  // 일운 계산
+  const dailyPillar = getDailyPillar(today);
+  const dailyFortune = getDailyFortuneModifier(today, sajuData, '종합운');
 
   const prompt = `당신은 30년 경력의 사주명리학 전문가입니다. ${customer.name}님에게 친구처럼 편하게 조언하듯 자연스럽게 대화하세요.
 
@@ -68,6 +104,12 @@ ${fiveElementsStr}
 🎭 십성 분포 (十星分布):
 ${tenGodsStr}
 
+🌊 현재 운세 (運勢):
+- 대운(大運): ${daewoon ? `${daewoon.combined} (${daewoon.description})` : '계산 불가'}
+- 세운(歲運): ${sewoon.combined} (${sewoon.description})
+- 월운(月運): ${monthlyFortune > 0 ? '+' : ''}${monthlyFortune}점 (${today.getMonth() + 1}월)
+- 일운(日運): ${dailyPillar.combined} (오늘 ${dailyFortune > 0 ? '+' : ''}${dailyFortune}점)
+
 💬 사용자 질문: "${userQuestion}"
 
 ✅ 반드시 지킬 사항:
@@ -87,7 +129,23 @@ ${tenGodsStr}
    - 오행 균형이 낮은 부분은 어떤 문제가 생길 수 있는지 구체적으로 설명
    - 피해야 할 행동, 조심해야 할 시기를 명시
 8. 🔮 ${customer.name}님의 사주팔자를 바탕으로 오행 균형이나 십성 분포를 근거로 설명
-9. 📏 400-600자 정도로 충분히 설명
+9. 🌊 운세 정보 적극 활용:
+   - "오늘", "이번 달", "올해" 질문에는 반드시 대운/세운/월운/일운 정보를 활용
+   - 대운(大運)은 10년 주기의 큰 흐름, 현재 인생 단계 설명 시 사용
+   - 세운(歲運)은 올해 전체 운세, 연간 계획이나 목표 조언 시 사용
+   - 월운(月運)은 이번 달 기운, 월별 주의사항이나 활동 권장 시 사용
+   - 일운(日運)은 오늘 하루 운세, 당일 결정이나 행동 조언 시 사용
+   - 점수가 음수면 "조심해야 할 시기", 양수면 "기회를 잡을 시기"로 해석
+10. 📏 600-900자 정도로 충분히 설명
+11. 💼 실용적 답변 구조:
+   - 1단계: 현재 운세 종합 판단 (대운+세운+월운+일운 기반)
+   - 2단계: 질문에 대한 핵심 답변 (YES/NO 또는 확률 제시)
+   - 3단계: 근거 설명 (사주팔자, 오행, 십성, 운세 정보 활용)
+   - 4단계: 구체적 행동 지침 (3-5가지, "~하세요", "~하면 좋습니다" 형식)
+   - 5단계: 주의사항 및 타이밍 (피해야 할 것, 최적 시기)
+
+예시: "앱 개발 잘될까요?" 질문에는
+→ "현재 세운 을사는 혁신과 도전의 해라서 새로운 사업에 유리합니다. 다만 월운이 0점이라 이번 달보다는 다음 달부터 본격적으로 시작하는 게 좋겠어요. 구체적으로 다음과 같이 준비하세요: 1) 이번 달은 기획과 시장조사에 집중 2) 다음 달 월운이 올라가면 개발 착수 3) 대운 갑오의 안정적 에너지를 활용해 꾸준히 진행"
 
 지금 바로 순수 한국어로만 답변을 시작하세요 (외국어 문자 사용 절대 금지):`;
 
@@ -231,9 +289,9 @@ export default function SajuAIChat({ customer, fourPillars, analysisResult, onCl
       const aiPrompt = generateSajuAIPrompt(customer, fourPillars, analysisResult, userQuestion);
       console.log('✅ [AI] 프롬프트 생성 완료');
 
-      // AI API 호출
-      console.log('🌐 [AI] API 호출 중...');
-      const response = await fetch('/api/v1/qimen/chat', {
+      // AI API 호출 - 사주 전용 엔드포인트 사용
+      console.log('🌐 [사주 AI] API 호출 중...');
+      const response = await fetch('/api/v1/saju/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
