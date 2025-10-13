@@ -63,15 +63,15 @@ export default function TarotSpreadView({
       </div>
 
       {/* 카드 그리드 */}
-      <div className={`grid ${getLayoutClass()} gap-4 justify-items-center`}>
+      <div className={`grid ${getLayoutClass()} gap-6 justify-items-center`}>
         {cardPositions.map((position) => (
-          <div key={position.position} className="flex flex-col items-center">
+          <div key={position.position} className="flex flex-col items-center space-y-3">
             {/* 위치 라벨 */}
-            <div className="mb-2 text-center">
-              <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <div className="text-center px-2 min-h-[60px] flex flex-col justify-center">
+              <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
                 {position.position}. {position.positionName}
               </div>
-              <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+              <div className="text-xs text-gray-500 dark:text-gray-500 leading-tight">
                 {position.positionMeaning}
               </div>
             </div>

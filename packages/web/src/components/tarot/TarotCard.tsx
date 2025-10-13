@@ -47,19 +47,21 @@ export default function TarotCardComponent({
     >
       {/* 카드 뒷면 */}
       <div
-        className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-purple-700 rounded-xl shadow-lg"
+        className="absolute inset-0 rounded-xl shadow-lg overflow-hidden"
         style={{
           backfaceVisibility: 'hidden',
         }}
       >
-        <div className="w-full h-full flex items-center justify-center p-4">
-          <div className="text-6xl">🔮</div>
-        </div>
+        <img
+          src="/image/back/back.webp"
+          alt="타로 카드 뒷면"
+          className="w-full h-full object-cover"
+        />
       </div>
 
       {/* 카드 앞면 */}
       <div
-        className={`bg-gradient-to-br ${bgGradient} rounded-xl shadow-lg p-4 ${
+        className={`bg-white rounded-xl shadow-lg border-2 border-gray-300 overflow-hidden ${
           isReversed ? 'rotate-180' : ''
         }`}
         style={{
@@ -69,27 +71,34 @@ export default function TarotCardComponent({
       >
         <div className={`flex flex-col h-full ${isReversed ? 'rotate-180' : ''}`}>
           {/* 카드 헤더 */}
-          <div className="text-center mb-3">
-            <div className="text-xs font-semibold text-white/80 mb-1">
+          <div className="text-center bg-gradient-to-r from-purple-600 to-pink-600 py-2 px-2">
+            <div className="text-xs font-semibold text-white/90 mb-0.5">
               {card.suit === 'major' ? 'Major Arcana' : card.suit.toUpperCase()}
             </div>
-            <div className="text-lg font-bold text-white">{card.nameKo}</div>
-            <div className="text-xs text-white/70">{card.name}</div>
+            <div className="text-sm font-bold text-white leading-tight">{card.nameKo}</div>
           </div>
 
-          {/* 카드 중앙 (숫자 또는 이미지) */}
-          <div className="flex-1 flex items-center justify-center my-2">
-            <div className="w-24 h-32 bg-white/20 rounded-lg flex items-center justify-center">
-              <div className="text-5xl text-white font-bold">
-                {card.suit === 'major' ? card.number : card.number}
+          {/* 카드 중앙 (이미지) */}
+          <div className="flex-1 relative">
+            {card.imagePath ? (
+              <img
+                src={card.imagePath}
+                alt={card.nameKo}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                <div className="text-5xl text-gray-400 font-bold">
+                  {card.number}
+                </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* 카드 푸터 - 방향 표시 */}
           {isReversed && (
-            <div className="text-center mt-2">
-              <div className="text-xs font-semibold text-white/90 bg-white/20 rounded px-2 py-1 inline-block">
+            <div className="text-center bg-red-600 py-1">
+              <div className="text-xs font-semibold text-white">
                 ↓ 역방향 ↓
               </div>
             </div>
