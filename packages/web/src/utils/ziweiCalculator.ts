@@ -532,7 +532,7 @@ function generatePalaceDescription(
  * 궁위 키워드 생성
  */
 function generatePalaceKeywords(palace: Palace, mainStars: MainStar[]): string[] {
-  const keywords = [];
+  const keywords: string[] = [];
 
   // 별자리별 키워드
   const starKeywords: Record<string, string[]> = {
