@@ -162,6 +162,33 @@ export interface YearlyFortune {
   keywords: string[];  // 키워드
 }
 
+// 유월운 정보 (1개월 단위)
+export interface MonthlyFortune {
+  year: number;        // 연도
+  month: number;       // 월 (1-12)
+  age: number;         // 나이
+  palace: Palace;      // 유월궁
+  branch: EarthlyBranch; // 지지
+  description: string; // 해석
+  luckyScore: number;  // 길흉 점수
+  keywords: string[];  // 키워드
+}
+
+// 유일운 정보 (1일 단위)
+export interface DailyFortune {
+  date: string;        // 날짜 (YYYY-MM-DD)
+  year: number;        // 연도
+  month: number;       // 월
+  day: number;         // 일
+  age: number;         // 나이
+  palace: Palace;      // 유일궁
+  branch: EarthlyBranch; // 지지
+  description: string; // 해석
+  luckyScore: number;  // 길흉 점수
+  keywords: string[];  // 키워드
+  dayOfWeek: string;   // 요일 (월/화/수/목/금/토/일)
+}
+
 // 자미두수 명반 (전체 차트)
 export interface ZiweiChart {
   // 생년월일시 정보
@@ -192,6 +219,12 @@ export interface ZiweiChart {
 
   // 유년운 (현재 년도 운세)
   yearlyFortune: YearlyFortune;
+
+  // 유월운 (현재 월 운세)
+  monthlyFortune: MonthlyFortune;
+
+  // 이번 주 일진 (7일치 운세)
+  weeklyFortunes: DailyFortune[];
 
   // 종합 운세
   overallFortune: {

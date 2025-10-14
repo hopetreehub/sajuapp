@@ -203,6 +203,25 @@ ${Object.entries(chart.palaces)
 - 올해 점수: ${chart.yearlyFortune.luckyScore}점
 - 올해 키워드: ${chart.yearlyFortune.keywords.join(', ')}
 
+[유월운 (流月運) - 이번 달 운세]
+- ${chart.monthlyFortune.description}
+- 이번 달 점수: ${chart.monthlyFortune.luckyScore}점
+- 이번 달 키워드: ${chart.monthlyFortune.keywords.join(', ')}
+
+[이번 주 일진 (7일 운세)]
+${chart.weeklyFortunes
+  .map(
+    (df) =>
+      `- ${df.date} (${df.dayOfWeek}요일): ${df.palace} ${df.branch} | ${df.luckyScore}점 | ${df.keywords.join(', ')}
+  → ${df.description}`,
+  )
+  .join('\n')}
+
+⚠️ 중요: 사용자가 "이번 주 중 언제", "어느 날", "무슨 요일" 같은 질문을 하면 위 7일 일진 정보를 바탕으로 구체적인 날짜와 요일을 추천해주세요!
+- 점수가 가장 높은 날을 1순위로 추천
+- 해당 날짜의 궁위 특성과 키워드를 언급
+- 피해야 할 낮은 점수의 날도 함께 알려주기
+
 ${palaceInfo}
 [상담 목적]
 ${contextDescription[selectedContext]}

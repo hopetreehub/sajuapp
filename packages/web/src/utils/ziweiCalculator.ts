@@ -15,6 +15,8 @@ import type {
   PalaceInfo,
   MajorFortune,
   YearlyFortune,
+  MonthlyFortune,
+  DailyFortune,
 } from '@/types/ziwei';
 import { PalaceStrength } from '@/types/ziwei';
 import { getAuxiliaryStarScore } from '@/data/ziweiAuxiliaryStars';
@@ -763,6 +765,221 @@ function generateYearlyFortuneDescription(
 }
 
 /**
+ * 유월운 계산 - 실제 궁위 점수 기반
+ */
+function calculateMonthlyFortune(
+  lifePalaceBranch: EarthlyBranch,
+  year: number,
+  month: number,
+  birthYear: number,
+  palaces: Record<Palace, PalaceInfo>,
+): MonthlyFortune {
+  const age = year - birthYear + 1;
+  const lifePalaceIndex = getBranchIndex(lifePalaceBranch);
+
+  // 유년궁 계산
+  const yearlyPalaceIndex = (lifePalaceIndex + age - 1) % 12;
+
+  // 유월궁 = 유년궁에서 월수만큼 순행
+  const monthlyPalaceIndex = (yearlyPalaceIndex + month - 1) % 12;
+  const monthlyBranch = EARTHLY_BRANCHES[monthlyPalaceIndex];
+  const monthlyPalace = PALACE_NAMES[monthlyPalaceIndex % 12];
+
+  // 실제 궁위 정보 가져오기
+  const palaceInfo = palaces[monthlyPalace];
+  const luckyScore = palaceInfo ? palaceInfo.luckyScore : 50;
+
+  // 유월운 해석 생성
+  const description = generateMonthlyFortuneDescription(
+    year,
+    month,
+    age,
+    monthlyPalace,
+    palaceInfo,
+  );
+
+  // 유월운 키워드 생성
+  const keywords = palaceInfo
+    ? palaceInfo.keywords.slice(0, 3)
+    : ['변화', '기회', '노력'];
+
+  return {
+    year,
+    month,
+    age,
+    palace: monthlyPalace,
+    branch: monthlyBranch,
+    description,
+    luckyScore,
+    keywords,
+  };
+}
+
+/**
+ * 유월운 해석 생성
+ */
+function generateMonthlyFortuneDescription(
+  year: number,
+  month: number,
+  age: number,
+  palace: Palace,
+  palaceInfo: PalaceInfo | undefined,
+): string {
+  if (!palaceInfo) {
+    return `${year}년 ${month}월의 운세입니다.`;
+  }
+
+  const scoreLevel =
+    palaceInfo.luckyScore >= 80
+      ? '매우 좋습니다'
+      : palaceInfo.luckyScore >= 60
+        ? '좋습니다'
+        : palaceInfo.luckyScore >= 40
+          ? '보통입니다'
+          : palaceInfo.luckyScore >= 20
+            ? '주의가 필요합니다'
+            : '매우 조심해야 합니다';
+
+  return `${year}년 ${month}월 (${age}세)은 ${palace}의 영향을 받는 달입니다. 이번 달 운세는 ${scoreLevel}.`;
+}
+
+/**
+ * 유일운 계산 - 실제 궁위 점수 기반
+ */
+function calculateDailyFortune(
+  lifePalaceBranch: EarthlyBranch,
+  date: Date,
+  birthYear: number,
+  palaces: Record<Palace, PalaceInfo>,
+): DailyFortune {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const age = year - birthYear + 1;
+  const lifePalaceIndex = getBranchIndex(lifePalaceBranch);
+
+  // 유년궁 계산
+  const yearlyPalaceIndex = (lifePalaceIndex + age - 1) % 12;
+
+  // 유월궁 계산
+  const monthlyPalaceIndex = (yearlyPalaceIndex + month - 1) % 12;
+
+  // 유일궁 = 유월궁에서 일수만큼 순행
+  const dailyPalaceIndex = (monthlyPalaceIndex + day - 1) % 12;
+  const dailyBranch = EARTHLY_BRANCHES[dailyPalaceIndex];
+  const dailyPalace = PALACE_NAMES[dailyPalaceIndex % 12];
+
+  // 실제 궁위 정보 가져오기
+  const palaceInfo = palaces[dailyPalace];
+  const luckyScore = palaceInfo ? palaceInfo.luckyScore : 50;
+
+  // 요일 계산
+  const dayOfWeek = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
+
+  // 유일운 해석 생성
+  const description = generateDailyFortuneDescription(
+    year,
+    month,
+    day,
+    dayOfWeek,
+    dailyPalace,
+    palaceInfo,
+  );
+
+  // 유일운 키워드 생성
+  const keywords = palaceInfo
+    ? palaceInfo.keywords.slice(0, 3)
+    : ['노력', '기회', '주의'];
+
+  return {
+    date: `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
+    year,
+    month,
+    day,
+    age,
+    palace: dailyPalace,
+    branch: dailyBranch,
+    description,
+    luckyScore,
+    keywords,
+    dayOfWeek,
+  };
+}
+
+/**
+ * 유일운 해석 생성
+ */
+function generateDailyFortuneDescription(
+  year: number,
+  month: number,
+  day: number,
+  dayOfWeek: string,
+  palace: Palace,
+  palaceInfo: PalaceInfo | undefined,
+): string {
+  if (!palaceInfo) {
+    return `${year}년 ${month}월 ${day}일 (${dayOfWeek})의 운세입니다.`;
+  }
+
+  const scoreLevel =
+    palaceInfo.luckyScore >= 80
+      ? '매우 유리'
+      : palaceInfo.luckyScore >= 60
+        ? '유리'
+        : palaceInfo.luckyScore >= 40
+          ? '보통'
+          : palaceInfo.luckyScore >= 20
+            ? '주의 필요'
+            : '불리';
+
+  const palaceAction: Record<Palace, string> = {
+    '命宮': '자신의 능력을 발휘하기',
+    '兄弟宮': '친구와 협력하기',
+    '夫妻宮': '배우자와 상담하기',
+    '子女宮': '자녀와 시간 보내기',
+    '財帛宮': '재물 관리 및 계약',
+    '疾厄宮': '건강 관리',
+    '遷移宮': '이동 및 변화',
+    '奴僕宮': '팀워크',
+    '官祿宮': '업무 및 명예 활동',
+    '田宅宮': '부동산 및 가정 일',
+    '福德宮': '휴식 및 취미',
+    '父母宮': '윗사람과의 상담',
+  };
+
+  return `${month}/${day}(${dayOfWeek})은 ${palace}의 영향으로 ${palaceAction[palace]}에 ${scoreLevel}합니다. 점수: ${palaceInfo.luckyScore}점`;
+}
+
+/**
+ * 이번 주 일진 계산 (7일치)
+ */
+function calculateWeeklyFortunes(
+  lifePalaceBranch: EarthlyBranch,
+  birthYear: number,
+  palaces: Record<Palace, PalaceInfo>,
+): DailyFortune[] {
+  const today = new Date();
+  const fortunes: DailyFortune[] = [];
+
+  // 오늘부터 6일 후까지 (총 7일)
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+
+    const dailyFortune = calculateDailyFortune(
+      lifePalaceBranch,
+      date,
+      birthYear,
+      palaces,
+    );
+
+    fortunes.push(dailyFortune);
+  }
+
+  return fortunes;
+}
+
+/**
  * 종합 운세 생성
  */
 function generateOverallFortune(palaces: Record<Palace, PalaceInfo>): ZiweiChart['overallFortune'] {
@@ -849,6 +1066,7 @@ export function calculateZiweiChart(birthInfo: {
 
   // 8. 유년운 계산 (실제 궁위 정보 기반)
   const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
   const yearlyFortune = calculateYearlyFortune(
     lifePalaceBranch,
     currentYear,
@@ -856,7 +1074,23 @@ export function calculateZiweiChart(birthInfo: {
     palaces,
   );
 
-  // 9. 종합 운세 생성
+  // 9. 유월운 계산 (현재 월 운세)
+  const monthlyFortune = calculateMonthlyFortune(
+    lifePalaceBranch,
+    currentYear,
+    currentMonth,
+    birthInfo.year,
+    palaces,
+  );
+
+  // 10. 이번 주 일진 계산 (7일치)
+  const weeklyFortunes = calculateWeeklyFortunes(
+    lifePalaceBranch,
+    birthInfo.year,
+    palaces,
+  );
+
+  // 11. 종합 운세 생성
   const overallFortune = generateOverallFortune(palaces);
 
   // 10. 주요 특성 추출
@@ -879,6 +1113,8 @@ export function calculateZiweiChart(birthInfo: {
     bodyPalaceBranch,
     majorFortunes,
     yearlyFortune,
+    monthlyFortune,
+    weeklyFortunes,
     overallFortune,
     characteristics,
   };

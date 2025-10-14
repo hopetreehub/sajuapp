@@ -46,6 +46,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['무모함', '경솔함', '무책임', '망설임'],
     symbolism: '절벽 끝에 서서 앞으로 나아가는 청년. 무한한 가능성과 새로운 시작을 상징',
     description: '인생의 새로운 여정의 시작. 두려움 없이 앞으로 나아가는 순수한 영혼',
+    imagePath: '/tarot/00-TheFool.jpg',
   },
   {
     id: 'major-1',
@@ -59,6 +60,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['조작', '속임수', '낭비', '미숙'],
     symbolism: '한 손은 하늘, 한 손은 땅을 가리키며 네 가지 원소를 다루는 마법사',
     description: '가진 능력과 자원을 활용하여 목표를 달성할 수 있는 힘',
+    imagePath: '/tarot/01-TheMagician.jpg',
   },
   {
     id: 'major-2',
@@ -72,6 +74,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['직관 무시', '비밀', '혼란', '표면적'],
     symbolism: '달의 여신 앞에 앉아 내면의 지혜를 담고 있는 여사제',
     description: '내면의 목소리에 귀 기울이고 직관을 따를 때',
+    imagePath: '/tarot/02-TheHighPriestess.jpg',
   },
   {
     id: 'major-3',
@@ -85,6 +88,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['의존', '부족', '과잉', '정체'],
     symbolism: '풍요로운 자연 속에서 왕좌에 앉은 임신한 여황제',
     description: '창조적 에너지와 풍요로움이 넘치는 시기',
+    imagePath: '/tarot/03-TheEmpress.jpg',
   },
   {
     id: 'major-4',
@@ -98,6 +102,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['독재', '경직', '통제', '남용'],
     symbolism: '왕좌에 앉아 세상을 다스리는 황제',
     description: '질서와 구조를 세우고 리더십을 발휘할 때',
+    imagePath: '/tarot/04-TheEmperor.jpg',
   },
   {
     id: 'major-5',
@@ -111,6 +116,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['반항', '비정통', '독단', '자유'],
     symbolism: '종교적 권위를 상징하는 교황',
     description: '전통적 가치와 영적 가르침을 따를 때',
+    imagePath: '/tarot/05-TheHierophant.jpg',
   },
   {
     id: 'major-6',
@@ -124,6 +130,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['불화', '갈등', '선택 실패', '분리'],
     symbolism: '천사의 축복 아래 서 있는 연인',
     description: '중요한 선택의 순간, 사랑과 조화의 관계',
+    imagePath: '/tarot/06-TheLovers.jpg',
   },
   {
     id: 'major-7',
@@ -137,6 +144,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['방향 상실', '통제 불능', '좌절', '정체'],
     symbolism: '두 마리의 스핑크스가 끄는 전차를 모는 전사',
     description: '강한 의지로 장애물을 극복하고 목표를 향해 전진',
+    imagePath: '/tarot/07-TheChariot.jpg',
   },
   {
     id: 'major-8',
@@ -150,6 +158,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['약함', '의심', '두려움', '통제 불능'],
     symbolism: '사자의 입을 부드럽게 다루는 여성',
     description: '내면의 힘과 용기로 어려움을 극복',
+    imagePath: '/tarot/08-Strength.jpg',
   },
   {
     id: 'major-9',
@@ -163,6 +172,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['고립', '외로움', '거부', '미성숙'],
     symbolism: '등불을 들고 홀로 산을 오르는 노인',
     description: '홀로 내면을 성찰하고 진리를 찾는 시간',
+    imagePath: '/tarot/09-TheHermit.jpg',
   },
   {
     id: 'major-10',
@@ -176,6 +186,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['불운', '정체', '저항', '역행'],
     symbolism: '끊임없이 돌아가는 운명의 바퀴',
     description: '인생의 순환과 변화, 새로운 기회의 도래',
+    imagePath: '/tarot/10-WheelOfFortune.jpg',
   },
   {
     id: 'major-11',
@@ -189,6 +200,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['불공정', '편견', '회피', '불균형'],
     symbolism: '칼과 저울을 든 정의의 여신',
     description: '공정한 판단과 진실이 드러나는 때',
+    imagePath: '/tarot/11-Justice.jpg',
   },
   {
     id: 'major-12',
@@ -202,6 +214,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['무의미한 희생', '저항', '지연', '집착'],
     symbolism: '거꾸로 매달린 남자가 평온한 표정을 짓고 있음',
     description: '관점을 바꾸면 새로운 깨달음을 얻는 시기',
+    imagePath: '/tarot/12-TheHangedMan.jpg',
   },
   {
     id: 'major-13',
@@ -215,6 +228,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['저항', '정체', '두려움', '집착'],
     symbolism: '말을 탄 해골 기사 - 변화와 변신의 상징',
     description: '낡은 것이 끝나고 새로운 것이 시작되는 전환점',
+    imagePath: '/tarot/13-Death.jpg',
   },
   {
     id: 'major-14',
@@ -228,6 +242,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['불균형', '과잉', '부족', '불협화'],
     symbolism: '두 잔 사이에 물을 부어 섞는 천사',
     description: '균형과 조화를 이루며 중용의 길을 가는 때',
+    imagePath: '/tarot/14-Temperance.jpg',
   },
   {
     id: 'major-15',
@@ -241,6 +256,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['해방', '자유', '깨달음', '극복'],
     symbolism: '쇠사슬에 묶인 남녀와 악마',
     description: '물질적 욕망이나 중독에서 벗어날 필요가 있음',
+    imagePath: '/tarot/15-TheDevil.jpg',
   },
   {
     id: 'major-16',
@@ -254,6 +270,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['회피', '지연', '두려움', '저항'],
     symbolism: '번개에 맞아 무너지는 탑',
     description: '기존의 틀이 무너지고 새로운 진실이 드러나는 때',
+    imagePath: '/tarot/16-TheTower.jpg',
   },
   {
     id: 'major-17',
@@ -267,6 +284,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['절망', '불신', '비관', '상실'],
     symbolism: '물가에서 별빛 아래 물을 붓는 여성',
     description: '희망과 치유의 빛이 비치는 평화로운 시기',
+    imagePath: '/tarot/17-TheStar.jpg',
   },
   {
     id: 'major-18',
@@ -280,6 +298,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['명료', '진실', '해소', '깨달음'],
     symbolism: '달빛 아래 개와 늑대가 짖고 있는 신비로운 풍경',
     description: '불확실하고 혼란스러운 시기, 직관에 귀 기울여야 함',
+    imagePath: '/tarot/18-TheMoon.jpg',
   },
   {
     id: 'major-19',
@@ -293,6 +312,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['좌절', '지연', '비관', '어두움'],
     symbolism: '태양 아래 백마를 타고 있는 어린아이',
     description: '모든 것이 밝게 빛나고 성공을 거두는 시기',
+    imagePath: '/tarot/19-TheSun.jpg',
   },
   {
     id: 'major-20',
@@ -306,6 +326,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['의심', '후회', '회피', '정체'],
     symbolism: '천사의 나팔 소리에 무덤에서 일어나는 사람들',
     description: '과거를 평가하고 새로운 삶으로 부활하는 시기',
+    imagePath: '/tarot/20-Judgement.jpg',
   },
   {
     id: 'major-21',
@@ -319,6 +340,7 @@ export const MAJOR_ARCANA: TarotCard[] = [
     reversedKeywords: ['미완성', '지연', '미달', '불완전'],
     symbolism: '월계관 속에서 춤추는 여성과 네 가지 원소',
     description: '목표를 달성하고 완전함에 이르는 시기',
+    imagePath: '/tarot/21-TheWorld.jpg',
   },
 ];
 
@@ -340,6 +362,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['지연', '부족', '방향 상실', '정체'],
     symbolism: '하늘에서 손이 나와 완드를 쥐고 있음',
     description: '새로운 프로젝트나 모험의 시작, 열정적인 에너지',
+    imagePath: '/tarot/Wands01.jpg',
   },
   {
     id: 'wands-2',
@@ -353,6 +376,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['우유부단', '두려움', '혼란', '지연'],
     symbolism: '성벽 위에서 세계를 내려다보는 남자',
     description: '미래를 계획하고 다음 단계를 결정하는 시기',
+    imagePath: '/tarot/Wands02.jpg',
   },
   {
     id: 'wands-3',
@@ -366,6 +390,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['지연', '좌절', '상실', '장애물'],
     symbolism: '해안에서 멀리 바다를 바라보는 남자',
     description: '계획이 실현되고 새로운 기회가 펼쳐지는 때',
+    imagePath: '/tarot/Wands03.jpg',
   },
   {
     id: 'wands-4',
@@ -379,6 +404,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['불안정', '긴장', '연기', '불협화'],
     symbolism: '완드로 장식된 아치 아래 축하하는 사람들',
     description: '목표 달성을 축하하고 안정을 즐기는 시기',
+    imagePath: '/tarot/Wands04.jpg',
   },
   {
     id: 'wands-5',
@@ -392,6 +418,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['회피', '조화', '내적 갈등', '해소'],
     symbolism: '다섯 사람이 완드로 싸우는 모습',
     description: '경쟁과 갈등 속에서 자신의 위치를 찾는 시기',
+    imagePath: '/tarot/Wands05.jpg',
   },
   {
     id: 'wands-6',
@@ -405,6 +432,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['실패', '부족', '자만', '낙담'],
     symbolism: '말을 타고 승리의 월계관을 쓴 남자',
     description: '노력이 인정받고 승리를 거두는 시기',
+    imagePath: '/tarot/Wands06.jpg',
   },
   {
     id: 'wands-7',
@@ -418,6 +446,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['압도', '포기', '실패', '약함'],
     symbolism: '높은 곳에서 여섯 개의 완드에 맞서는 남자',
     description: '자신의 입장을 지키며 도전에 맞서는 시기',
+    imagePath: '/tarot/Wands07.jpg',
   },
   {
     id: 'wands-8',
@@ -431,6 +460,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['지연', '좌절', '느림', '정체'],
     symbolism: '하늘을 날아가는 여덟 개의 완드',
     description: '일이 빠르게 진행되고 변화가 일어나는 시기',
+    imagePath: '/tarot/Wands08.jpg',
   },
   {
     id: 'wands-9',
@@ -444,6 +474,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['탈진', '포기', '방어적', '약함'],
     symbolism: '부상당한 남자가 여덟 개의 완드 뒤에 서 있음',
     description: '마지막 도전을 앞두고 인내하는 시기',
+    imagePath: '/tarot/Wands09.jpg',
   },
   {
     id: 'wands-10',
@@ -457,6 +488,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['내려놓기', '위임', '회피', '해방'],
     symbolism: '열 개의 완드를 짊어지고 가는 남자',
     description: '과중한 책임을 지고 있지만 목표에 가까워지는 시기',
+    imagePath: '/tarot/Wands10.jpg',
   },
   {
     id: 'wands-11',
@@ -470,6 +502,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['무모', '산만', '부족', '경솔'],
     symbolism: '완드를 들고 있는 젊은 청년',
     description: '새로운 가능성을 탐험하고 열정적으로 시작하는 시기',
+    imagePath: '/tarot/Wands11.jpg',
   },
   {
     id: 'wands-12',
@@ -483,6 +516,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['성급', '무모', '좌절', '방향 상실'],
     symbolism: '말을 타고 질주하는 기사',
     description: '열정적으로 행동하고 모험을 추구하는 시기',
+    imagePath: '/tarot/Wands12.jpg',
   },
   {
     id: 'wands-13',
@@ -496,6 +530,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['이기심', '질투', '자기중심', '불안'],
     symbolism: '왕좌에 앉아 해바라기와 검은 고양이를 거느린 여왕',
     description: '자신감과 카리스마로 목표를 달성하는 시기',
+    imagePath: '/tarot/Wands13.jpg',
   },
   {
     id: 'wands-14',
@@ -509,6 +544,7 @@ export const WANDS: TarotCard[] = [
     reversedKeywords: ['독재', '성급', '무모', '압제'],
     symbolism: '왕좌에 앉아 완드를 든 왕',
     description: '강한 리더십과 비전으로 이끄는 시기',
+    imagePath: '/tarot/Wands14.jpg',
   },
 ];
 
@@ -526,6 +562,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['억압', '부족', '상실', '슬픔'],
     symbolism: '하늘에서 손이 나와 넘치는 컵을 쥐고 있음',
     description: '새로운 감정과 사랑이 시작되는 시기',
+    imagePath: '/tarot/Cups01.jpg',
   },
   {
     id: 'cups-2',
@@ -539,6 +576,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['불화', '단절', '불균형', '분리'],
     symbolism: '남녀가 컵을 교환하며 맹세하는 모습',
     description: '균형 잡힌 관계와 상호 이해가 깊어지는 시기',
+    imagePath: '/tarot/Cups02.jpg',
   },
   {
     id: 'cups-3',
@@ -552,6 +590,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['과잉', '고립', '문제', '불화'],
     symbolism: '세 여성이 컵을 들고 춤추는 모습',
     description: '친구들과 함께 기쁨을 나누는 시기',
+    imagePath: '/tarot/Cups03.jpg',
   },
   {
     id: 'cups-4',
@@ -565,6 +604,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['관점', '동기', '각성', '수용'],
     symbolism: '나무 아래 앉아 세 개의 컵을 무시하는 남자',
     description: '현재 상황을 재평가하고 내면을 돌아보는 시기',
+    imagePath: '/tarot/Cups04.jpg',
   },
   {
     id: 'cups-5',
@@ -578,6 +618,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['수용', '용서', '앞으로', '치유'],
     symbolism: '쓰러진 컵을 바라보며 슬퍼하는 사람',
     description: '상실과 슬픔을 경험하지만 희망은 남아있는 시기',
+    imagePath: '/tarot/Cups05.jpg',
   },
   {
     id: 'cups-6',
@@ -591,6 +632,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['집착', '미래', '성숙', '해방'],
     symbolism: '어린이들이 꽃이 담긴 컵을 나누는 모습',
     description: '과거의 좋은 추억을 회상하는 시기',
+    imagePath: '/tarot/Cups06.jpg',
   },
   {
     id: 'cups-7',
@@ -604,6 +646,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['명료', '결정', '현실', '집중'],
     symbolism: '구름 속에 떠 있는 일곱 개의 컵',
     description: '많은 선택지 앞에서 혼란스러운 시기',
+    imagePath: '/tarot/Cups07.jpg',
   },
   {
     id: 'cups-8',
@@ -617,6 +660,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['두려움', '정체', '회피', '집착'],
     symbolism: '여덟 개의 컵을 뒤로하고 떠나는 사람',
     description: '더 높은 목표를 위해 현재를 떠나는 시기',
+    imagePath: '/tarot/Cups08.jpg',
   },
   {
     id: 'cups-9',
@@ -630,6 +674,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['불만족', '탐욕', '허영', '과잉'],
     symbolism: '아홉 개의 컵 앞에 만족스럽게 앉아있는 남자',
     description: '소원이 이루어지고 만족스러운 시기',
+    imagePath: '/tarot/Cups09.jpg',
   },
   {
     id: 'cups-10',
@@ -643,6 +688,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['불화', '문제', '이별', '갈등'],
     symbolism: '무지개 아래 가족이 함께하는 모습',
     description: '가족과 함께 완전한 행복을 누리는 시기',
+    imagePath: '/tarot/Cups10.jpg',
   },
   {
     id: 'cups-11',
@@ -656,6 +702,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['미숙', '비현실', '실망', '불안정'],
     symbolism: '컵을 들고 있는 젊은이',
     description: '새로운 감정과 창의적 영감이 찾아오는 시기',
+    imagePath: '/tarot/Cups11.jpg',
   },
   {
     id: 'cups-12',
@@ -669,6 +716,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['비현실', '변덕', '무책임', '환상'],
     symbolism: '말을 타고 컵을 들고 있는 기사',
     description: '로맨틱한 제안이나 이상적인 기회가 오는 시기',
+    imagePath: '/tarot/Cups12.jpg',
   },
   {
     id: 'cups-13',
@@ -682,6 +730,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['불안', '의존', '조종', '불균형'],
     symbolism: '왕좌에 앉아 화려한 컵을 들고 있는 여왕',
     description: '직관과 공감으로 다른 이를 돌보는 시기',
+    imagePath: '/tarot/Cups13.jpg',
   },
   {
     id: 'cups-14',
@@ -695,6 +744,7 @@ export const CUPS: TarotCard[] = [
     reversedKeywords: ['억압', '조종', '냉담', '불안정'],
     symbolism: '바다 위 왕좌에 앉아 컵을 든 왕',
     description: '감정을 현명하게 다루고 균형을 유지하는 시기',
+    imagePath: '/tarot/Cups14.jpg',
   },
 ];
 
@@ -712,6 +762,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['혼란', '오판', '부족', '불명확'],
     symbolism: '하늘에서 손이 나와 검을 쥐고 있음',
     description: '진실이 드러나고 명료한 판단을 내리는 시기',
+    imagePath: '/tarot/Swords01.jpg',
   },
   {
     id: 'swords-2',
@@ -725,6 +776,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['결정', '진실', '해결', '행동'],
     symbolism: '눈을 가린 채 두 개의 검을 든 여성',
     description: '어려운 선택을 앞두고 결정을 미루는 시기',
+    imagePath: '/tarot/Swords02.jpg',
   },
   {
     id: 'swords-3',
@@ -738,6 +790,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['치유', '용서', '회복', '해방'],
     symbolism: '세 개의 검이 심장을 꿰뚫고 있는 모습',
     description: '감정적 상처와 슬픔을 경험하는 시기',
+    imagePath: '/tarot/Swords03.jpg',
   },
   {
     id: 'swords-4',
@@ -751,6 +804,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['탈진', '스트레스', '부족', '불안'],
     symbolism: '누워서 쉬고 있는 기사',
     description: '휴식을 취하고 에너지를 회복하는 시기',
+    imagePath: '/tarot/Swords04.jpg',
   },
   {
     id: 'swords-5',
@@ -764,6 +818,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['화해', '용서', '인정', '해결'],
     symbolism: '다섯 개의 검을 들고 승리를 거둔 남자',
     description: '승리했지만 대가가 큰 갈등의 시기',
+    imagePath: '/tarot/Swords05.jpg',
   },
   {
     id: 'swords-6',
@@ -777,6 +832,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['정체', '저항', '집착', '지연'],
     symbolism: '배를 타고 강을 건너는 가족',
     description: '어려움을 뒤로하고 더 나은 곳으로 이동하는 시기',
+    imagePath: '/tarot/Swords06.jpg',
   },
   {
     id: 'swords-7',
@@ -790,6 +846,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['진실', '양심', '책임', '폭로'],
     symbolism: '검을 몰래 훔쳐 도망가는 남자',
     description: '전략적으로 행동하거나 기만이 있는 시기',
+    imagePath: '/tarot/Swords07.jpg',
   },
   {
     id: 'swords-8',
@@ -803,6 +860,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['해방', '자유', '극복', '권한 회복'],
     symbolism: '눈을 가리고 묶인 채 검에 둘러싸인 여성',
     description: '스스로를 제한하고 갇혀있다고 느끼는 시기',
+    imagePath: '/tarot/Swords08.jpg',
   },
   {
     id: 'swords-9',
@@ -816,6 +874,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['희망', '회복', '극복', '해방'],
     symbolism: '침대에서 머리를 감싸 쥐고 있는 사람',
     description: '걱정과 불안에 시달리는 시기',
+    imagePath: '/tarot/Swords09.jpg',
   },
   {
     id: 'swords-10',
@@ -829,6 +888,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['회복', '재생', '극복', '새 시작'],
     symbolism: '열 개의 검에 찔린 채 쓰러진 사람',
     description: '최악의 상황이지만 곧 새로운 시작이 올 시기',
+    imagePath: '/tarot/Swords10.jpg',
   },
   {
     id: 'swords-11',
@@ -842,6 +902,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['소문', '거짓', '부족', '경솔'],
     symbolism: '검을 들고 경계하는 젊은이',
     description: '호기심을 갖고 새로운 정보를 탐색하는 시기',
+    imagePath: '/tarot/Swords11.jpg',
   },
   {
     id: 'swords-12',
@@ -855,6 +916,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['무모', '공격', '경솔', '혼란'],
     symbolism: '말을 타고 질주하는 기사',
     description: '빠르고 결단력 있게 행동하는 시기',
+    imagePath: '/tarot/Swords12.jpg',
   },
   {
     id: 'swords-13',
@@ -868,6 +930,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['냉담', '잔인', '감정 결여', '비판적'],
     symbolism: '왕좌에 앉아 검을 들고 있는 여왕',
     description: '명료한 판단과 독립적 사고를 하는 시기',
+    imagePath: '/tarot/Swords13.jpg',
   },
   {
     id: 'swords-14',
@@ -881,6 +944,7 @@ export const SWORDS: TarotCard[] = [
     reversedKeywords: ['독단', '냉혹', '조종', '무자비'],
     symbolism: '왕좌에 앉아 검을 든 왕',
     description: '논리와 지성으로 공정하게 판단하는 시기',
+    imagePath: '/tarot/Swords14.jpg',
   },
 ];
 
@@ -898,6 +962,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['상실', '불안정', '지연', '실패'],
     symbolism: '하늘에서 손이 나와 펜타클을 쥐고 있음',
     description: '새로운 재정적 기회와 물질적 성공의 시작',
+    imagePath: '/tarot/Pentacles01.jpg',
   },
   {
     id: 'pentacles-2',
@@ -911,6 +976,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['불균형', '과부하', '혼란', '부족'],
     symbolism: '두 개의 펜타클을 저글링하는 남자',
     description: '여러 일을 균형있게 조정하는 시기',
+    imagePath: '/tarot/Pentacles02.jpg',
   },
   {
     id: 'pentacles-3',
@@ -924,6 +990,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['부족', '비효율', '불협화', '실패'],
     symbolism: '성당에서 일하는 장인',
     description: '협력과 전문성으로 성과를 내는 시기',
+    imagePath: '/tarot/Pentacles03.jpg',
   },
   {
     id: 'pentacles-4',
@@ -937,6 +1004,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['인색', '탐욕', '자기중심', '집착'],
     symbolism: '펜타클을 꽉 쥐고 있는 남자',
     description: '안정을 유지하되 너무 집착하지 않도록 주의하는 시기',
+    imagePath: '/tarot/Pentacles04.jpg',
   },
   {
     id: 'pentacles-5',
@@ -950,6 +1018,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['회복', '개선', '도움', '희망'],
     symbolism: '눈 내리는 밤 교회 밖에서 고통받는 사람들',
     description: '재정적 어려움을 겪지만 도움을 구할 수 있는 시기',
+    imagePath: '/tarot/Pentacles05.jpg',
   },
   {
     id: 'pentacles-6',
@@ -963,6 +1032,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['이기심', '불공정', '불균형', '착취'],
     symbolism: '저울을 들고 가난한 이에게 나눠주는 남자',
     description: '나누고 베푸는 균형잡힌 시기',
+    imagePath: '/tarot/Pentacles06.jpg',
   },
   {
     id: 'pentacles-7',
@@ -976,6 +1046,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['좌절', '지연', '부족', '실망'],
     symbolism: '농작물을 바라보며 기다리는 농부',
     description: '인내심을 갖고 장기적 성과를 기다리는 시기',
+    imagePath: '/tarot/Pentacles07.jpg',
   },
   {
     id: 'pentacles-8',
@@ -989,6 +1060,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['완벽주의', '과로', '부족', '실수'],
     symbolism: '펜타클을 정성껏 만드는 장인',
     description: '기술을 연마하고 성장하는 시기',
+    imagePath: '/tarot/Pentacles08.jpg',
   },
   {
     id: 'pentacles-9',
@@ -1002,6 +1074,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['의존', '불안', '과시', '부족'],
     symbolism: '정원에서 여유를 즐기는 여성',
     description: '자립하여 풍요를 누리는 성공의 시기',
+    imagePath: '/tarot/Pentacles09.jpg',
   },
   {
     id: 'pentacles-10',
@@ -1015,6 +1088,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['손실', '분쟁', '불안정', '부담'],
     symbolism: '가족과 함께 부를 누리는 모습',
     description: '가족과 함께 물질적 풍요를 누리는 완성의 시기',
+    imagePath: '/tarot/Pentacles10.jpg',
   },
   {
     id: 'pentacles-11',
@@ -1028,6 +1102,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['부족', '게으름', '실패', '무관심'],
     symbolism: '펜타클을 들고 있는 젊은이',
     description: '새로운 학습과 계획을 시작하는 시기',
+    imagePath: '/tarot/Pentacles11.jpg',
   },
   {
     id: 'pentacles-12',
@@ -1041,6 +1116,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['게으름', '정체', '완벽주의', '고집'],
     symbolism: '말을 타고 펜타클을 든 기사',
     description: '책임감을 갖고 꾸준히 일하는 시기',
+    imagePath: '/tarot/Pentacles12.jpg',
   },
   {
     id: 'pentacles-13',
@@ -1054,6 +1130,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['자기중심', '질투', '불안정', '탐욕'],
     symbolism: '왕좌에 앉아 펜타클을 든 여왕',
     description: '실용적이고 안정적으로 풍요를 관리하는 시기',
+    imagePath: '/tarot/Pentacles13.jpg',
   },
   {
     id: 'pentacles-14',
@@ -1067,6 +1144,7 @@ export const PENTACLES: TarotCard[] = [
     reversedKeywords: ['탐욕', '무능', '손실', '부패'],
     symbolism: '왕좌에 앉아 펜타클을 든 왕',
     description: '재정적 성공과 안정적 리더십을 발휘하는 시기',
+    imagePath: '/tarot/Pentacles14.jpg',
   },
 ];
 

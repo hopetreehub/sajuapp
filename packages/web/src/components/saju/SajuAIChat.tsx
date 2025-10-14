@@ -74,8 +74,9 @@ function generateSajuAIPrompt(
     year: { gan: fourPillars.year.heavenly as any, ji: fourPillars.year.earthly as any },
     month: { gan: fourPillars.month.heavenly as any, ji: fourPillars.month.earthly as any },
     day: { gan: fourPillars.day.heavenly as any, ji: fourPillars.day.earthly as any },
-    hour: { gan: fourPillars.hour.heavenly as any, ji: fourPillars.hour.earthly as any },
-  };
+    time: { gan: fourPillars.hour.heavenly as any, ji: fourPillars.hour.earthly as any },
+    ohHaengBalance: analysisResult.fiveElements,
+  } as any;
   const monthlyFortune = calculateMonthlyFortune(today, sajuData);
 
   // 일운 계산

@@ -12,6 +12,8 @@ import {
   type TarotCardPosition,
 } from '@/utils/tarotSpread';
 import TarotSpreadView from '@/components/tarot/TarotSpreadView';
+import TarotHistoryView from '@/components/tarot/TarotHistoryView';
+import { saveTarotReading, getTarotReadings } from '@/utils/tarotStorage';
 
 type Stage = 'select-spread' | 'enter-question' | 'drawing-cards' | 'show-result';
 
@@ -22,6 +24,7 @@ export default function TarotPage() {
   const [cardPositions, setCardPositions] = useState<TarotCardPosition[]>([]);
   const [aiInterpretation, setAiInterpretation] = useState<string>('');
   const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
 
   // 1단계: 스프레드 선택
   const handleSpreadSelect = (spreadId: string) => {
@@ -89,6 +92,20 @@ export default function TarotPage() {
 
       if (data.success) {
         setAiInterpretation(data.response);
+
+        // 타로 기록 저장
+        const spread = TAROT_SPREADS.find(s => s.id === selectedSpreadId);
+        if (spread) {
+          saveTarotReading({
+            userId: 1, // TODO: 실제 사용자 ID로 변경
+            spreadId: selectedSpreadId,
+            spreadName: spread.nameKo,
+            question: userQuestion,
+            cards: cardPositions,
+            aiInterpretation: data.response,
+          });
+          console.log('[타로 기록] 저장 완료');
+        }
       } else {
         throw new Error(data.error || 'AI 해석 실패');
       }
@@ -115,7 +132,13 @@ export default function TarotPage() {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-purple-900 dark:to-indigo-900 py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* 헤더 */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 relative">
+          <button
+            onClick={() => setShowHistory(!showHistory)}
+            className="absolute right-0 top-0 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-all"
+          >
+            {showHistory ? '타로 보기' : '📜 기록 보기'}
+          </button>
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">
             🔮 타로 카드 점술
           </h1>
@@ -124,30 +147,38 @@ export default function TarotPage() {
           </p>
         </div>
 
-        {/* 진행 상태 표시 */}
-        <div className="mb-8">
-          <div className="flex justify-center items-center gap-4">
-            <StageIndicator
-              label="스프레드 선택"
-              isActive={stage === 'select-spread'}
-              isCompleted={['enter-question', 'drawing-cards', 'show-result'].includes(stage)}
-            />
-            <div className="w-12 h-0.5 bg-gray-300 dark:bg-gray-700" />
-            <StageIndicator
-              label="질문 입력"
-              isActive={stage === 'enter-question'}
-              isCompleted={['drawing-cards', 'show-result'].includes(stage)}
-            />
-            <div className="w-12 h-0.5 bg-gray-300 dark:bg-gray-700" />
-            <StageIndicator
-              label="카드 뽑기"
-              isActive={stage === 'drawing-cards'}
-              isCompleted={stage === 'show-result'}
-            />
-            <div className="w-12 h-0.5 bg-gray-300 dark:bg-gray-700" />
-            <StageIndicator label="결과 확인" isActive={stage === 'show-result'} isCompleted={false} />
-          </div>
-        </div>
+        {/* 기록 보기 화면 */}
+        {showHistory && (
+          <TarotHistoryView onClose={() => setShowHistory(false)} />
+        )}
+
+        {/* 타로 점술 화면 */}
+        {!showHistory && (
+          <>
+            {/* 진행 상태 표시 */}
+            <div className="mb-8">
+              <div className="flex justify-center items-center gap-4">
+                <StageIndicator
+                  label="스프레드 선택"
+                  isActive={stage === 'select-spread'}
+                  isCompleted={['enter-question', 'drawing-cards', 'show-result'].includes(stage)}
+                />
+                <div className="w-12 h-0.5 bg-gray-300 dark:bg-gray-700" />
+                <StageIndicator
+                  label="질문 입력"
+                  isActive={stage === 'enter-question'}
+                  isCompleted={['drawing-cards', 'show-result'].includes(stage)}
+                />
+                <div className="w-12 h-0.5 bg-gray-300 dark:bg-gray-700" />
+                <StageIndicator
+                  label="카드 뽑기"
+                  isActive={stage === 'drawing-cards'}
+                  isCompleted={stage === 'show-result'}
+                />
+                <div className="w-12 h-0.5 bg-gray-300 dark:bg-gray-700" />
+                <StageIndicator label="결과 확인" isActive={stage === 'show-result'} isCompleted={false} />
+              </div>
+            </div>
 
         {/* 1단계: 스프레드 선택 */}
         {stage === 'select-spread' && (
@@ -294,6 +325,8 @@ export default function TarotPage() {
               )}
             </div>
           </div>
+        )}
+          </>
         )}
       </div>
     </div>
