@@ -69,17 +69,9 @@ export default function TarotCardComponent({
           transform: 'rotateY(180deg)',
         }}
       >
-        <div className={`flex flex-col h-full ${isReversed ? 'rotate-180' : ''}`}>
-          {/* 카드 헤더 */}
-          <div className="text-center bg-gradient-to-r from-purple-600 to-pink-600 py-2 px-2">
-            <div className="text-xs font-semibold text-white/90 mb-0.5">
-              {card.suit === 'major' ? 'Major Arcana' : card.suit.toUpperCase()}
-            </div>
-            <div className="text-sm font-bold text-white leading-tight">{card.nameKo}</div>
-          </div>
-
-          {/* 카드 중앙 (이미지) */}
-          <div className="flex-1 relative">
+        <div className={`relative w-full h-full ${isReversed ? 'rotate-180' : ''}`}>
+          {/* 카드 중앙 (이미지) - 전체를 차지 */}
+          <div className="absolute inset-0">
             {card.imagePath ? (
               <img
                 src={card.imagePath}
@@ -95,10 +87,20 @@ export default function TarotCardComponent({
             )}
           </div>
 
-          {/* 카드 푸터 - 방향 표시 */}
+          {/* 카드 헤더 - 이미지 위에 오버레이 (투명 배경) */}
+          <div className="absolute top-0 left-0 right-0 text-center bg-gradient-to-b from-black/70 to-transparent py-2 px-2">
+            <div className="text-[10px] font-semibold text-white/90 mb-0.5">
+              {card.suit === 'major' ? 'Major Arcana' : card.suit.toUpperCase()}
+            </div>
+            <div className="text-xs font-bold text-white leading-tight drop-shadow-lg">
+              {card.nameKo}
+            </div>
+          </div>
+
+          {/* 카드 푸터 - 방향 표시 (이미지 위에 오버레이) */}
           {isReversed && (
-            <div className="text-center bg-red-600 py-1">
-              <div className="text-xs font-semibold text-white">
+            <div className="absolute bottom-0 left-0 right-0 text-center bg-gradient-to-t from-red-600/90 to-transparent py-1.5">
+              <div className="text-xs font-semibold text-white drop-shadow-lg">
                 ↓ 역방향 ↓
               </div>
             </div>

@@ -85,6 +85,7 @@ export default function TarotPage() {
       });
 
       if (!response.ok) {
+        console.warn('[타로 AI] AI 서비스 응답 실패, fallback 해석 사용');
         throw new Error('AI 해석 요청 실패');
       }
 
@@ -111,10 +112,49 @@ export default function TarotPage() {
       }
     } catch (error) {
       console.error('[타로 AI] Error:', error);
-      alert('AI 해석을 가져오는 중 오류가 발생했습니다');
+
+      // Fallback: 기본 해석 제공
+      const spread = TAROT_SPREADS.find(s => s.id === selectedSpreadId);
+      const fallbackInterpretation = generateFallbackInterpretation(cardPositions, userQuestion, spread?.nameKo || '');
+      setAiInterpretation(fallbackInterpretation);
+
+      console.log('[타로 AI] Fallback 해석 사용');
     } finally {
       setIsLoadingAI(false);
     }
+  };
+
+  // Fallback 해석 생성 함수
+  const generateFallbackInterpretation = (
+    positions: TarotCardPosition[],
+    question: string,
+    spreadName: string
+  ): string => {
+    let interpretation = `📖 **${spreadName}** 타로 해석\n\n`;
+    interpretation += `💭 **질문**: ${question}\n\n`;
+    interpretation += `⚠️ *AI 서비스가 일시적으로 사용 불가능하여 기본 해석을 제공합니다.*\n\n`;
+    interpretation += `---\n\n`;
+
+    positions.forEach((pos, index) => {
+      const orientation = pos.isReversed ? '역방향' : '정방향';
+      const meaning = pos.isReversed ? pos.card.reversedMeaning : pos.card.uprightMeaning;
+      const keywords = pos.isReversed ? pos.card.reversedKeywords : pos.card.uprightKeywords;
+
+      interpretation += `### ${index + 1}. ${pos.positionName} - ${pos.card.nameKo} (${orientation})\n\n`;
+      interpretation += `**위치 의미**: ${pos.positionMeaning}\n\n`;
+      interpretation += `**카드 의미**: ${meaning}\n\n`;
+      interpretation += `**키워드**: ${keywords.join(', ')}\n\n`;
+      interpretation += `---\n\n`;
+    });
+
+    interpretation += `\n💡 **종합 조언**\n\n`;
+    interpretation += `뽑힌 카드들은 현재 상황에 대한 깊은 통찰을 제공합니다. `;
+    interpretation += `각 카드의 의미를 질문과 연결하여 생각해보세요. `;
+    interpretation += `타로는 미래를 정확히 예측하는 도구가 아니라, 현재의 상황을 이해하고 `;
+    interpretation += `더 나은 선택을 할 수 있도록 돕는 지혜의 도구입니다.\n\n`;
+    interpretation += `🔮 마음을 열고 카드의 메시지에 귀 기울여보세요.`;
+
+    return interpretation;
   };
 
   // 처음으로 돌아가기

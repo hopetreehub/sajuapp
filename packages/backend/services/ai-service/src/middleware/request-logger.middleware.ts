@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, RequestHandler, ErrorRequestHandler } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { logger } from '@/utils/logger';
 
@@ -10,7 +10,7 @@ export interface LoggedRequest extends Request {
 /**
  * 요청 로깅 미들웨어
  */
-export const requestLogger = (req: Request, res: Response, next: NextFunction): void => {
+export const requestLogger: RequestHandler = (req: Request, res: Response, next: NextFunction): void => {
   const loggedReq = req as LoggedRequest;
   // 요청 ID 생성 및 시작 시간 기록
   loggedReq.requestId = uuidv4();
@@ -98,7 +98,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction): 
 /**
  * API 별 상세 로깅 미들웨어
  */
-export const detailedApiLogger = (req: Request, res: Response, next: NextFunction): void => {
+export const detailedApiLogger: RequestHandler = (req: Request, res: Response, next: NextFunction): void => {
   const loggedReq = req as LoggedRequest;
   // AI 서비스 요청은 더 상세하게 로깅
   if (loggedReq.path.includes('/fortune/') || loggedReq.path.includes('/diary/')) {
@@ -126,7 +126,7 @@ export const detailedApiLogger = (req: Request, res: Response, next: NextFunctio
 /**
  * 에러 처리 로깅 미들웨어
  */
-export const errorLogger = (error: Error, req: Request, res: Response, next: NextFunction): void => {
+export const errorLogger: ErrorRequestHandler = (error: Error, req: Request, res: Response, next: NextFunction): void => {
   const loggedReq = req as LoggedRequest;
   const errorInfo = {
     requestId: loggedReq.requestId || 'unknown',
@@ -159,7 +159,7 @@ export const errorLogger = (error: Error, req: Request, res: Response, next: Nex
 /**
  * 보안 헤더 로깅
  */
-export const securityLogger = (req: Request, res: Response, next: NextFunction): void => {
+export const securityLogger: RequestHandler = (req: Request, res: Response, next: NextFunction): void => {
   const securityInfo = {
     requestId: (req as LoggedRequest).requestId || 'unknown',
     headers: {
