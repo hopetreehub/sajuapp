@@ -114,6 +114,56 @@ export const exportZiweiReadingToPDF = async (
 };
 
 /**
+ * 사주 분석 내용을 PDF로 출력
+ */
+export const exportSajuAnalysisToPDF = async (
+  birthDate: string,
+  birthTime: string,
+  date: string
+): Promise<void> => {
+  const filename = `사주분석_${birthDate}_${date}.pdf`;
+  await exportToPDF('saju-analysis-content', {
+    filename,
+    title: '🔮 사주 명리 분석 결과',
+    subtitle: `생년월일: ${birthDate} ${birthTime} | ${date}`,
+  });
+};
+
+/**
+ * 통합 사주 분석 내용을 PDF로 출력
+ */
+export const exportUnifiedSajuToPDF = async (
+  birthDate: string,
+  birthTime: string,
+  date: string
+): Promise<void> => {
+  const filename = `통합사주분석_${birthDate}_${date}.pdf`;
+  await exportToPDF('unified-saju-content', {
+    filename,
+    title: '📊 통합 사주 분석 결과',
+    subtitle: `생년월일: ${birthDate} ${birthTime} | ${date}`,
+  });
+};
+
+/**
+ * 범용 PDF 출력 함수 (컨텐츠 ID와 옵션을 직접 지정)
+ */
+export const exportContentToPDF = async (
+  contentId: string,
+  title: string,
+  subtitle: string,
+  filenamePrefix: string
+): Promise<void> => {
+  const date = formatDateForFilename();
+  const filename = `${filenamePrefix}_${date}.pdf`;
+  await exportToPDF(contentId, {
+    filename,
+    title,
+    subtitle,
+  });
+};
+
+/**
  * 날짜를 파일명에 적합한 형식으로 변환
  */
 export const formatDateForFilename = (date: Date = new Date()): string => {
