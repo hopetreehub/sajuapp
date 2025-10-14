@@ -14,6 +14,7 @@ import {
 import TarotSpreadView from '@/components/tarot/TarotSpreadView';
 import TarotHistoryView from '@/components/tarot/TarotHistoryView';
 import { saveTarotReading, getTarotReadings } from '@/utils/tarotStorage';
+import { exportTarotReadingToPDF, formatDateForFilename } from '@/utils/pdfExport';
 
 type Stage = 'select-spread' | 'enter-question' | 'drawing-cards' | 'show-result';
 
@@ -166,6 +167,19 @@ export default function TarotPage() {
     setAiInterpretation('');
   };
 
+  // PDF 다운로드
+  const handleDownloadPDF = async () => {
+    try {
+      if (!selectedSpread) return;
+      const date = formatDateForFilename();
+      await exportTarotReadingToPDF(selectedSpread.nameKo, userQuestion, date);
+      alert('PDF 다운로드가 완료되었습니다!');
+    } catch (error) {
+      console.error('[PDF] Error:', error);
+      alert('PDF 생성 중 오류가 발생했습니다.');
+    }
+  };
+
   const selectedSpread = TAROT_SPREADS.find((s) => s.id === selectedSpreadId);
 
   return (
@@ -302,24 +316,59 @@ export default function TarotPage() {
         {/* 4단계: 결과 표시 */}
         {stage === 'show-result' && selectedSpread && cardPositions.length > 0 && (
           <div className="space-y-8">
-            {/* 질문 표시 */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                당신의 질문
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300">{userQuestion}</p>
+            {/* PDF 출력용 컨테이너 */}
+            <div id="tarot-reading-content" className="space-y-6">
+              {/* 헤더 정보 (PDF용) */}
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <h2 className="text-2xl font-bold text-center text-purple-600 dark:text-purple-400 mb-4">
+                  🔮 타로 카드 상담 결과
+                </h2>
+                <div className="text-center text-gray-600 dark:text-gray-400 mb-4">
+                  {new Date().toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </div>
+                <div className="text-center text-sm text-gray-500 dark:text-gray-500">
+                  {selectedSpread.nameKo} | {selectedSpread.description}
+                </div>
+              </div>
+
+              {/* 질문 표시 */}
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                  당신의 질문
+                </h3>
+                <p className="text-gray-700 dark:text-gray-300">{userQuestion}</p>
+              </div>
+
+              {/* 타로 스프레드 표시 */}
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                <TarotSpreadView
+                  cardPositions={cardPositions}
+                  spreadName={selectedSpread.nameKo}
+                  spreadDescription={selectedSpread.description}
+                />
+              </div>
+
+              {/* AI 해석 결과 */}
+              {aiInterpretation && (
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span>🤖</span>
+                    <span>AI 타로 해석</span>
+                  </h3>
+                  <div className="prose dark:prose-invert max-w-none">
+                    <div className="whitespace-pre-wrap text-gray-800 dark:text-gray-200">
+                      {aiInterpretation}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* 타로 스프레드 표시 */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-              <TarotSpreadView
-                cardPositions={cardPositions}
-                spreadName={selectedSpread.nameKo}
-                spreadDescription={selectedSpread.description}
-              />
-            </div>
-
-            {/* AI 해석 요청 버튼 */}
+            {/* AI 해석 요청 버튼 (PDF 출력 대상 아님) */}
             {!aiInterpretation && (
               <div className="flex justify-center">
                 <button
@@ -332,22 +381,7 @@ export default function TarotPage() {
               </div>
             )}
 
-            {/* AI 해석 결과 */}
-            {aiInterpretation && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <span>🤖</span>
-                  <span>AI 타로 해석</span>
-                </h3>
-                <div className="prose dark:prose-invert max-w-none">
-                  <div className="whitespace-pre-wrap text-gray-800 dark:text-gray-200">
-                    {aiInterpretation}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* 하단 버튼 */}
+            {/* 하단 버튼 (PDF 출력 대상 아님) */}
             <div className="flex justify-center gap-4">
               <button
                 onClick={resetReading}
@@ -357,10 +391,10 @@ export default function TarotPage() {
               </button>
               {aiInterpretation && (
                 <button
-                  onClick={() => window.print()}
-                  className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all"
+                  onClick={handleDownloadPDF}
+                  className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all flex items-center gap-2"
                 >
-                  결과 인쇄하기
+                  📄 PDF 다운로드
                 </button>
               )}
             </div>
