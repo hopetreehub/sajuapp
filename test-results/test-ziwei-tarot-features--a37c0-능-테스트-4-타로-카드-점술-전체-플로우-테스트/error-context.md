@@ -1,0 +1,174 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - main [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - generic [ref=e12]:
+            - generic [ref=e13]: 🔮
+            - heading "운명나침반" [level=1] [ref=e14]
+          - paragraph [ref=e15]: AI와 전통 사주학이 만나 당신의 운명을 안내합니다
+        - generic [ref=e18]:
+          - button "로그인" [ref=e19] [cursor=pointer]
+          - button "회원가입" [ref=e20] [cursor=pointer]
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e24]:
+              - generic [ref=e26]: 🔮
+              - heading "운명나침반 로그인" [level=1] [ref=e27]
+              - paragraph [ref=e28]: 나만의 운세 분석을 계속해보세요
+            - generic [ref=e29]:
+              - generic [ref=e30]:
+                - generic [ref=e31]: 이메일 주소
+                - textbox "example@email.com" [ref=e32]
+              - generic [ref=e33]:
+                - generic [ref=e34]: 비밀번호
+                - textbox "비밀번호를 입력하세요" [ref=e35]
+              - generic [ref=e36]:
+                - generic [ref=e37]:
+                  - checkbox "로그인 상태 유지" [ref=e38]
+                  - generic [ref=e39]: 로그인 상태 유지
+                - button "비밀번호 찾기" [ref=e40] [cursor=pointer]
+              - button "로그인" [disabled] [ref=e41]
+              - paragraph [ref=e43]:
+                - text: 아직 계정이 없으신가요?
+                - button "회원가입하기" [ref=e44] [cursor=pointer]
+          - generic [ref=e45]:
+            - generic [ref=e46]: 소셜 계정으로 간편 로그인
+            - generic [ref=e47]:
+              - button "🌐 구글" [disabled] [ref=e48]:
+                - generic [ref=e49]:
+                  - generic [ref=e50]: 🌐
+                  - generic [ref=e51]: 구글
+              - button "💬 카카오" [disabled] [ref=e52]:
+                - generic [ref=e53]:
+                  - generic [ref=e54]: 💬
+                  - generic [ref=e55]: 카카오
+              - button "📱 네이버" [disabled] [ref=e56]:
+                - generic [ref=e57]:
+                  - generic [ref=e58]: 📱
+                  - generic [ref=e59]: 네이버
+            - generic [ref=e60]: (준비 중)
+          - paragraph [ref=e62]: 로그인하시면 개인화된 사주 분석과 캘린더 기능을 이용하실 수 있습니다.
+        - generic [ref=e63]:
+          - heading "운명나침반과 함께 하는 특별한 경험" [level=2] [ref=e64]
+          - generic [ref=e65]:
+            - generic [ref=e66]:
+              - generic [ref=e68]: 📊
+              - heading "개인화 사주 분석" [level=3] [ref=e69]
+              - paragraph [ref=e70]: 생년월일시를 바탕으로 한 정확한 사주 해석과 운세 분석을 제공합니다.
+            - generic [ref=e71]:
+              - generic [ref=e73]: 📅
+              - heading "스마트 캘린더" [level=3] [ref=e74]
+              - paragraph [ref=e75]: 일정 관리와 운세 정보가 통합된 지능형 캘린더로 하루를 계획하세요.
+            - generic [ref=e76]:
+              - generic [ref=e78]: 📝
+              - heading "다이어리 & 운세" [level=3] [ref=e79]
+              - paragraph [ref=e80]: 매일의 기록과 함께 개인 맞춤 운세와 조언을 받아보세요.
+      - generic [ref=e81]:
+        - paragraph [ref=e82]: © 2024 운명나침반. 모든 권리 보유.
+        - generic [ref=e83]:
+          - link "이용약관" [ref=e84] [cursor=pointer]:
+            - /url: "#"
+          - link "개인정보처리방침" [ref=e85] [cursor=pointer]:
+            - /url: "#"
+          - link "고객지원" [ref=e86] [cursor=pointer]:
+            - /url: "#"
+  - contentinfo [ref=e87]:
+    - generic [ref=e88]:
+      - generic [ref=e89]:
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - generic [ref=e92]: 🧭
+            - generic [ref=e93]: 운명나침반
+          - paragraph [ref=e94]: 전통 사주명리학과 현대 AI 기술을 결합한 가장 정확한 운세 서비스
+          - generic [ref=e95]:
+            - link "Facebook" [ref=e96] [cursor=pointer]:
+              - /url: https://facebook.com
+              - generic [ref=e97] [cursor=pointer]: 📘
+            - link "Twitter" [ref=e98] [cursor=pointer]:
+              - /url: https://twitter.com
+              - generic [ref=e99] [cursor=pointer]: 🐦
+            - link "Instagram" [ref=e100] [cursor=pointer]:
+              - /url: https://instagram.com
+              - generic [ref=e101] [cursor=pointer]: 📷
+            - link "YouTube" [ref=e102] [cursor=pointer]:
+              - /url: https://youtube.com
+              - generic [ref=e103] [cursor=pointer]: 📺
+            - link "KakaoTalk" [ref=e104] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=e105] [cursor=pointer]: 💬
+        - generic [ref=e106]:
+          - heading "서비스" [level=3] [ref=e107]
+          - list [ref=e108]:
+            - listitem [ref=e109]:
+              - link "오늘의 운세" [ref=e110] [cursor=pointer]:
+                - /url: /fortune
+            - listitem [ref=e111]:
+              - link "사주 분석" [ref=e112] [cursor=pointer]:
+                - /url: /saju
+            - listitem [ref=e113]:
+              - link "궁합 보기" [ref=e114] [cursor=pointer]:
+                - /url: /compatibility
+            - listitem [ref=e115]:
+              - link "캘린더" [ref=e116] [cursor=pointer]:
+                - /url: /calendar
+        - generic [ref=e117]:
+          - heading "정보" [level=3] [ref=e118]
+          - list [ref=e119]:
+            - listitem [ref=e120]:
+              - link "이용약관" [ref=e121] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e122]:
+              - link "개인정보처리방침" [ref=e123] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e124]:
+              - link "공지사항" [ref=e125] [cursor=pointer]:
+                - /url: /notice
+            - listitem [ref=e126]:
+              - link "자주 묻는 질문" [ref=e127] [cursor=pointer]:
+                - /url: /faq
+        - generic [ref=e128]:
+          - heading "회사" [level=3] [ref=e129]
+          - list [ref=e130]:
+            - listitem [ref=e131]:
+              - link "회사소개" [ref=e132] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e133]:
+              - link "채용정보" [ref=e134] [cursor=pointer]:
+                - /url: /careers
+            - listitem [ref=e135]:
+              - link "제휴문의" [ref=e136] [cursor=pointer]:
+                - /url: /partnership
+            - listitem [ref=e137]:
+              - link "고객센터" [ref=e138] [cursor=pointer]:
+                - /url: /support
+      - generic [ref=e140]:
+        - generic [ref=e141]:
+          - heading "운세 소식을 받아보세요" [level=3] [ref=e142]
+          - paragraph [ref=e143]: 매주 당신의 운세와 행운의 팁을 이메일로 전달해드립니다
+        - generic [ref=e144]:
+          - textbox "이메일 주소 입력" [ref=e145]
+          - button "구독하기" [ref=e146] [cursor=pointer]
+      - generic [ref=e148]:
+        - generic [ref=e149]: © 2025 운명나침반. All rights reserved.
+        - generic [ref=e150]:
+          - generic [ref=e151]: Made with ❤️ in Korea
+          - generic [ref=e152]: "|"
+          - generic [ref=e153]: Version 1.0.0
+      - generic [ref=e155]:
+        - generic [ref=e156]:
+          - generic [ref=e157]: 🔒
+          - generic [ref=e158]: SSL 보안 연결
+        - generic [ref=e159]:
+          - generic [ref=e160]: ✅
+          - generic [ref=e161]: 개인정보보호 인증
+        - generic [ref=e162]:
+          - generic [ref=e163]: 🏆
+          - generic [ref=e164]: 2024 베스트 운세앱 선정
+        - generic [ref=e165]:
+          - generic [ref=e166]: 📊
+          - generic [ref=e167]: 누적 사용자 100만+
+```

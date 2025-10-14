@@ -67,8 +67,11 @@ if (!existsSync('logs')) {
 
 // Production-specific configuration
 if (SERVICE_CONFIG.nodeEnv === 'production') {
-  logger.remove(logger.transports.find(t => t.constructor.name === 'Console'));
-  
+  const consoleTransport = logger.transports.find(t => t.constructor.name === 'Console');
+  if (consoleTransport) {
+    logger.remove(consoleTransport);
+  }
+
   // Add production transports (e.g., external logging services)
   // logger.add(new winston.transports.Http({
   //   host: 'logging-service',

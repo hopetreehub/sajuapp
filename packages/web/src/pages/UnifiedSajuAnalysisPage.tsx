@@ -7,6 +7,8 @@ import UnifiedSajuRadarChart from '@/components/saju/charts/UnifiedSajuRadarChar
 import CustomerSelector from '@/components/saju/CustomerSelector';
 import { Customer, getCustomerById } from '@/services/customerApi';
 import { calculateSajuData } from '@/utils/sajuDataCalculator';
+import SajuAIChat from '@/components/saju/SajuAIChat';
+import { calculateFourPillars } from '@/utils/sajuCalculator';
 
 export default function UnifiedSajuAnalysisPage() {
   const [selectedCategory, setSelectedCategory] = useState('jubon');
@@ -15,6 +17,7 @@ export default function UnifiedSajuAnalysisPage() {
   const [customerSajuData, setCustomerSajuData] = useState<any>(null);
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
 
   const currentCategory = SAJU_RADAR_CATEGORIES.find(cat => cat.id === selectedCategory);
 
@@ -120,9 +123,57 @@ export default function UnifiedSajuAnalysisPage() {
   }, [selectedCategory, selectedSubcategory, currentCategory]);
 
   // 생년월일 정보
-  const birthDate = selectedCustomer 
+  const birthDate = selectedCustomer
     ? `${selectedCustomer.birth_date} ${selectedCustomer.birth_time}`
     : '고객을 선택해주세요';
+
+  // 사주팔자 계산 (AI 채팅용)
+  const fourPillars = useMemo(() => {
+    if (!selectedCustomer) return null;
+
+    const [year, month, day] = selectedCustomer.birth_date.split('-').map(Number);
+    const [hour, minute] = selectedCustomer.birth_time.split(':').map(Number);
+
+    return calculateFourPillars({
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      isLunar: selectedCustomer.lunar_solar === 'lunar',
+      gender: selectedCustomer.gender,
+    });
+  }, [selectedCustomer]);
+
+  // 사주 분석 결과 (AI 채팅용)
+  const analysisResult = useMemo(() => {
+    if (!customerSajuData || !fourPillars || !selectedCustomer) return null;
+
+    return {
+      fiveElements: customerSajuData.ohHaengBalance || {},
+      tenGods: customerSajuData.sipSungBalance || {},
+      totalScore: Object.values(customerSajuData.ohHaengBalance || {}).reduce((sum: number, val: any) => sum + val, 0),
+      averageScore: Math.round(Object.values(customerSajuData.ohHaengBalance || {}).reduce((sum: number, val: any) => sum + val, 0) / 5),
+      birthInfo: {
+        year: parseInt(selectedCustomer.birth_date.split('-')[0]),
+        month: parseInt(selectedCustomer.birth_date.split('-')[1]),
+        day: parseInt(selectedCustomer.birth_date.split('-')[2]),
+        hour: parseInt(selectedCustomer.birth_time.split(':')[0]),
+        minute: parseInt(selectedCustomer.birth_time.split(':')[1]),
+        isLunar: selectedCustomer.lunar_solar === 'lunar',
+        gender: selectedCustomer.gender,
+      },
+      fourPillars,
+      sixAreas: {
+        career: customerSajuData.ohHaengBalance?.화 || 0,
+        wealth: customerSajuData.ohHaengBalance?.금 || 0,
+        health: customerSajuData.ohHaengBalance?.수 || 0,
+        relationships: customerSajuData.ohHaengBalance?.목 || 0,
+        study: customerSajuData.ohHaengBalance?.토 || 0,
+        family: 50, // 기본값
+      },
+    };
+  }, [customerSajuData, fourPillars, selectedCustomer]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -130,9 +181,20 @@ export default function UnifiedSajuAnalysisPage() {
         
         {/* 헤더 */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            🔮 통합 사주 레이더 분석
-          </h1>
+          <div className="flex items-center justify-center gap-4 mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+              🔮 통합 사주 레이더 분석
+            </h1>
+            {selectedCustomer && customerSajuData && (
+              <button
+                onClick={() => setShowAIChat(true)}
+                className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+              >
+                <span>🤖</span>
+                <span>AI에게 질문하기</span>
+              </button>
+            )}
+          </div>
           <p className="text-gray-600 dark:text-gray-400 text-lg">
             주문차트 기반 9개 대항목 상세 분석 시스템
           </p>
@@ -256,6 +318,16 @@ export default function UnifiedSajuAnalysisPage() {
             <div className="text-sm">세부항목</div>
           </div>
         </div>
+
+        {/* AI 채팅 모달 */}
+        {showAIChat && selectedCustomer && fourPillars && analysisResult && (
+          <SajuAIChat
+            customer={selectedCustomer}
+            fourPillars={fourPillars}
+            analysisResult={analysisResult as any}
+            onClose={() => setShowAIChat(false)}
+          />
+        )}
 
       </div>
     </div>
