@@ -100,23 +100,25 @@ export default function TarotSpreadView({
         ))}
       </div>
 
-      {/* 모든 카드 뒤집기 버튼 */}
-      <div className="flex flex-col sm:flex-row justify-center gap-4 mt-16 mb-10 px-4">
-        <button
-          onClick={() => {
-            const allPositions = new Set(cardPositions.map((cp) => cp.position));
-            setFlippedCards(allPositions);
-          }}
-          className="px-10 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-lg font-bold rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all shadow-2xl hover:shadow-3xl hover:scale-105 transform"
-        >
-          🔓 모든 카드 펼치기
-        </button>
-        <button
-          onClick={() => setFlippedCards(new Set())}
-          className="px-10 py-4 bg-gradient-to-r from-gray-500 to-gray-600 text-white text-lg font-bold rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all shadow-2xl hover:shadow-3xl hover:scale-105 transform"
-        >
-          🔒 모든 카드 뒤집기
-        </button>
+      {/* 모든 카드 뒤집기 버튼 - 카드와 충분한 간격 확보 */}
+      <div className="mt-24 mb-12 pt-8 border-t-2 border-gray-200 dark:border-gray-700">
+        <div className="flex flex-col sm:flex-row justify-center gap-6 px-4">
+          <button
+            onClick={() => {
+              const allPositions = new Set(cardPositions.map((cp) => cp.position));
+              setFlippedCards(allPositions);
+            }}
+            className="px-10 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-lg font-bold rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all shadow-2xl hover:shadow-3xl hover:scale-105 transform relative z-10"
+          >
+            🔓 모든 카드 펼치기
+          </button>
+          <button
+            onClick={() => setFlippedCards(new Set())}
+            className="px-10 py-4 bg-gradient-to-r from-gray-500 to-gray-600 text-white text-lg font-bold rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all shadow-2xl hover:shadow-3xl hover:scale-105 transform relative z-10"
+          >
+            🔒 모든 카드 뒤집기
+          </button>
+        </div>
       </div>
 
       {/* 선택된 카드 상세 정보 */}
