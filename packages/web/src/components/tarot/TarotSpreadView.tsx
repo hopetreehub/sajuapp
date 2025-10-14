@@ -39,17 +39,17 @@ export default function TarotSpreadView({
     onCardClick?.(position);
   };
 
-  // 스프레드별 레이아웃 결정
+  // 스프레드별 레이아웃 결정 (반응형)
   const getLayoutClass = () => {
     const count = cardPositions.length;
     if (count === 1) return 'grid-cols-1';
-    if (count === 3) return 'grid-cols-3';
-    if (count === 5) return 'grid-cols-5';
-    if (count === 6) return 'grid-cols-3';
-    if (count === 7) return 'grid-cols-4';
-    if (count === 10) return 'grid-cols-5'; // Celtic Cross
-    if (count === 13) return 'grid-cols-7'; // Year Ahead
-    return 'grid-cols-4';
+    if (count === 3) return 'grid-cols-1 sm:grid-cols-3';
+    if (count === 5) return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5';
+    if (count === 6) return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3';
+    if (count === 7) return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
+    if (count === 10) return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5'; // Celtic Cross
+    if (count === 13) return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7'; // Year Ahead
+    return 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
   };
 
   return (
@@ -63,15 +63,15 @@ export default function TarotSpreadView({
       </div>
 
       {/* 카드 그리드 */}
-      <div className={`grid ${getLayoutClass()} gap-6 justify-items-center`}>
+      <div className={`grid ${getLayoutClass()} gap-8 justify-items-center`}>
         {cardPositions.map((position) => (
-          <div key={position.position} className="flex flex-col items-center space-y-3">
-            {/* 위치 라벨 */}
-            <div className="text-center px-2 min-h-[60px] flex flex-col justify-center">
-              <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">
+          <div key={position.position} className="flex flex-col items-center space-y-4 max-w-[180px]">
+            {/* 위치 라벨 - 카드 위 */}
+            <div className="text-center px-3 py-2 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 rounded-lg w-full">
+              <div className="text-sm font-bold text-purple-700 dark:text-purple-300 mb-1">
                 {position.position}. {position.positionName}
               </div>
-              <div className="text-xs text-gray-500 dark:text-gray-500 leading-tight">
+              <div className="text-xs text-gray-600 dark:text-gray-400 leading-tight">
                 {position.positionMeaning}
               </div>
             </div>
@@ -82,26 +82,38 @@ export default function TarotSpreadView({
               isReversed={position.isReversed}
               isFlipped={flippedCards.has(position.position)}
               onClick={() => handleCardClick(position)}
-              className="w-40 h-64"
+              className="w-40 h-64 shadow-xl"
             />
+
+            {/* 카드 정보 - 카드 아래 (펼쳐졌을 때만 표시) */}
+            {flippedCards.has(position.position) && (
+              <div className="text-center px-2 py-1 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 w-full">
+                <div className="text-xs font-semibold text-gray-700 dark:text-gray-300 truncate">
+                  {position.card.nameKo}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-500 mt-0.5">
+                  {position.isReversed ? '역방향 ↓' : '정방향 ↑'}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
 
       {/* 모든 카드 뒤집기 버튼 */}
-      <div className="flex justify-center gap-4 mt-12 mb-8">
+      <div className="flex flex-col sm:flex-row justify-center gap-4 mt-16 mb-10 px-4">
         <button
           onClick={() => {
             const allPositions = new Set(cardPositions.map((cp) => cp.position));
             setFlippedCards(allPositions);
           }}
-          className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-base font-semibold rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl"
+          className="px-10 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-lg font-bold rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all shadow-2xl hover:shadow-3xl hover:scale-105 transform"
         >
           🔓 모든 카드 펼치기
         </button>
         <button
           onClick={() => setFlippedCards(new Set())}
-          className="px-8 py-3 bg-gray-500 text-white text-base font-semibold rounded-lg hover:bg-gray-600 transition-all shadow-lg hover:shadow-xl"
+          className="px-10 py-4 bg-gradient-to-r from-gray-500 to-gray-600 text-white text-lg font-bold rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all shadow-2xl hover:shadow-3xl hover:scale-105 transform"
         >
           🔒 모든 카드 뒤집기
         </button>
