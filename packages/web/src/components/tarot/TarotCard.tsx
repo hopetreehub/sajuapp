@@ -21,25 +21,11 @@ export default function TarotCardComponent({
   onClick,
   className = '',
 }: TarotCardProps) {
-  const orientation = isReversed ? '역방향' : '정방향';
-  const meaning = isReversed ? card.reversedMeaning : card.uprightMeaning;
-  const keywords = isReversed ? card.reversedKeywords : card.uprightKeywords;
-
-  // 슈트별 색상
-  const suitColors = {
-    major: 'from-purple-500 to-pink-500',
-    wands: 'from-red-500 to-orange-500',
-    cups: 'from-blue-500 to-cyan-500',
-    swords: 'from-gray-600 to-slate-800',
-    pentacles: 'from-yellow-600 to-amber-700',
-  };
-
-  const bgGradient = suitColors[card.suit];
 
   return (
     <div
       onClick={onClick}
-      className={`relative cursor-pointer transition-all duration-500 transform hover:scale-105 ${className}`}
+      className={`relative cursor-pointer transition-all duration-500 hover:scale-105 ${className}`}
       style={{
         transformStyle: 'preserve-3d',
         transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
@@ -61,9 +47,7 @@ export default function TarotCardComponent({
 
       {/* 카드 앞면 */}
       <div
-        className={`bg-white rounded-xl shadow-lg border-2 border-gray-300 overflow-hidden ${
-          isReversed ? 'rotate-180' : ''
-        }`}
+        className="absolute inset-0 bg-white rounded-xl shadow-lg border-2 border-gray-300 overflow-hidden"
         style={{
           backfaceVisibility: 'hidden',
           transform: 'rotateY(180deg)',
