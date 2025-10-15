@@ -1,12 +1,21 @@
-// 고객 관리 API 서비스 - Vercel 풀스택 버전
+// 고객 관리 API 서비스 - LocalStorage 기반 (개발 환경)
+
+import {
+  loadCustomersFromLocalStorage,
+  addCustomerToLocalStorage,
+  updateCustomerInLocalStorage,
+  deleteCustomerFromLocalStorage,
+} from '@/data/mockCustomerData';
+
+// 개발 환경에서는 LocalStorage 사용
+const USE_LOCAL_STORAGE = import.meta.env.DEV;
 
 // API Base URL 설정
 const API_BASE_URL = '/api/customers';
 
 // 초기화 로깅
 if (typeof window !== 'undefined') {
-
-
+  console.log('[Customer API] 초기화:', USE_LOCAL_STORAGE ? 'LocalStorage 모드' : 'API 모드');
 }
 
 // 타입 정의
@@ -45,6 +54,47 @@ export async function getCustomers(
   limit: number = 20,
   search: string = '',
 ): Promise<CustomerListResponse> {
+  // 개발 환경: LocalStorage 사용
+  if (USE_LOCAL_STORAGE) {
+    try {
+      let customers = loadCustomersFromLocalStorage();
+
+      // 검색어가 있으면 필터링
+      if (search.trim()) {
+        const searchLower = search.toLowerCase();
+        customers = customers.filter(
+          (c) =>
+            c.name.toLowerCase().includes(searchLower) ||
+            c.phone?.includes(searchLower) ||
+            c.memo?.toLowerCase().includes(searchLower)
+        );
+      }
+
+      // 페이지네이션
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedCustomers = customers.slice(startIndex, endIndex);
+
+      return {
+        success: true,
+        data: paginatedCustomers,
+        total: customers.length,
+        page,
+        totalPages: Math.ceil(customers.length / limit),
+      };
+    } catch (error) {
+      console.error('[Customer API] LocalStorage 조회 실패:', error);
+      return {
+        success: false,
+        data: [],
+        total: 0,
+        page,
+        totalPages: 0,
+      };
+    }
+  }
+
+  // 프로덕션 환경: API 사용
   const params = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
@@ -80,6 +130,27 @@ export async function getCustomers(
 
 // 고객 상세 조회
 export async function getCustomerById(id: number): Promise<CustomerResponse> {
+  // 개발 환경: LocalStorage 사용
+  if (USE_LOCAL_STORAGE) {
+    try {
+      const customers = loadCustomersFromLocalStorage();
+      const customer = customers.find((c) => c.id === id);
+
+      if (!customer) {
+        throw new Error('고객을 찾을 수 없습니다');
+      }
+
+      return {
+        success: true,
+        data: customer,
+      };
+    } catch (error) {
+      console.error('[Customer API] LocalStorage 조회 실패:', error);
+      throw new Error('고객 정보를 불러오는데 실패했습니다');
+    }
+  }
+
+  // 프로덕션 환경: API 사용
   const url = `${API_BASE_URL}?id=${id}`;
 
   const response = await fetch(url);
@@ -93,6 +164,21 @@ export async function getCustomerById(id: number): Promise<CustomerResponse> {
 
 // 고객 등록
 export async function createCustomer(customer: Customer): Promise<CustomerResponse> {
+  // 개발 환경: LocalStorage 사용
+  if (USE_LOCAL_STORAGE) {
+    try {
+      const newCustomer = addCustomerToLocalStorage(customer);
+      return {
+        success: true,
+        data: newCustomer,
+      };
+    } catch (error) {
+      console.error('[Customer API] LocalStorage 생성 실패:', error);
+      throw new Error('고객 등록에 실패했습니다');
+    }
+  }
+
+  // 프로덕션 환경: API 사용
   const url = API_BASE_URL;
 
   const response = await fetch(url, {
@@ -116,6 +202,26 @@ export async function updateCustomer(
   id: number,
   customer: Customer,
 ): Promise<CustomerResponse> {
+  // 개발 환경: LocalStorage 사용
+  if (USE_LOCAL_STORAGE) {
+    try {
+      const updatedCustomer = updateCustomerInLocalStorage(id, customer);
+
+      if (!updatedCustomer) {
+        throw new Error('고객을 찾을 수 없습니다');
+      }
+
+      return {
+        success: true,
+        data: updatedCustomer,
+      };
+    } catch (error) {
+      console.error('[Customer API] LocalStorage 수정 실패:', error);
+      throw new Error('고객 정보 수정에 실패했습니다');
+    }
+  }
+
+  // 프로덕션 환경: API 사용
   const url = `${API_BASE_URL}?id=${id}`;
 
   const response = await fetch(url, {
@@ -136,6 +242,26 @@ export async function updateCustomer(
 
 // 고객 삭제
 export async function deleteCustomer(id: number): Promise<{ success: boolean; message: string }> {
+  // 개발 환경: LocalStorage 사용
+  if (USE_LOCAL_STORAGE) {
+    try {
+      const success = deleteCustomerFromLocalStorage(id);
+
+      if (!success) {
+        throw new Error('고객을 찾을 수 없습니다');
+      }
+
+      return {
+        success: true,
+        message: '고객이 삭제되었습니다',
+      };
+    } catch (error) {
+      console.error('[Customer API] LocalStorage 삭제 실패:', error);
+      throw new Error('고객 삭제에 실패했습니다');
+    }
+  }
+
+  // 프로덕션 환경: API 사용
   const url = `${API_BASE_URL}?id=${id}`;
 
   const response = await fetch(url, {

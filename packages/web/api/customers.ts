@@ -1,43 +1,56 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-// Customer 인터페이스
+// Customer 인터페이스 (프론트엔드와 일치)
 interface Customer {
-  id: string;
+  id: number; // string -> number로 변경
   name: string;
   birth_date: string;
   birth_time: string;
   phone: string;
   gender: 'male' | 'female';
   lunar_solar: 'lunar' | 'solar';
-  notes?: string;
+  memo?: string; // notes -> memo로 변경
   saju_data?: unknown;
   created_at: string;
   updated_at: string;
 }
 
 // 임시 고객 데이터 (메모리에 저장)
+// TODO: 추후 SQLite 데이터베이스로 전환
 const customers: Customer[] = [
   {
-    id: '1',
+    id: 1,
     name: '박준수',
     birth_date: '1990-05-15',
     birth_time: '14:30',
     phone: '010-1234-5678',
     gender: 'male',
     lunar_solar: 'solar',
-    notes: '사주 상담 고객',
+    memo: '사주 상담 고객',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
   {
-    id: '2',
+    id: 2,
     name: '이정미',
     birth_date: '1988-11-22',
     birth_time: '09:15',
     phone: '010-9876-5432',
     gender: 'female',
     lunar_solar: 'lunar',
-    notes: '궁합 상담 고객',
+    memo: '궁합 상담 고객',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 3,
+    name: '최민호',
+    birth_date: '1985-03-10',
+    birth_time: '16:45',
+    phone: '010-5555-1234',
+    gender: 'male',
+    lunar_solar: 'solar',
+    memo: '귀문둔갑 상담',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -81,7 +94,11 @@ function handleGetCustomers(req: VercelRequest, res: VercelResponse) {
 
   // 특정 고객 조회
   if (id) {
-    const customer = customers.find(c => c.id === id);
+    const customerId = parseInt(id as string, 10);
+    if (isNaN(customerId)) {
+      return res.status(400).json({ error: 'Invalid customer ID' });
+    }
+    const customer = customers.find(c => c.id === customerId);
     if (!customer) {
       return res.status(404).json({ error: 'Customer not found' });
     }
@@ -107,7 +124,7 @@ function handleCreateCustomer(req: VercelRequest, res: VercelResponse) {
     phone,
     gender,
     lunar_solar,
-    notes,
+    memo,
   } = req.body;
 
   if (!name || !birth_date || !birth_time || !gender || !lunar_solar) {
@@ -116,15 +133,17 @@ function handleCreateCustomer(req: VercelRequest, res: VercelResponse) {
     });
   }
 
+  // 새 고객 ID 생성 (기존 최대 ID + 1)
+  const maxId = customers.length > 0 ? Math.max(...customers.map(c => c.id)) : 0;
   const newCustomer: Customer = {
-    id: Date.now().toString(),
+    id: maxId + 1,
     name,
     birth_date,
     birth_time,
     phone: phone || '',
     gender,
     lunar_solar,
-    notes: notes || '',
+    memo: memo || '',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
@@ -145,7 +164,12 @@ function handleUpdateCustomer(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Customer ID is required' });
   }
 
-  const customerIndex = customers.findIndex(customer => customer.id === id);
+  const customerId = parseInt(id as string, 10);
+  if (isNaN(customerId)) {
+    return res.status(400).json({ error: 'Invalid customer ID' });
+  }
+
+  const customerIndex = customers.findIndex(customer => customer.id === customerId);
 
   if (customerIndex === -1) {
     return res.status(404).json({ error: 'Customer not found' });
@@ -170,7 +194,12 @@ function handleDeleteCustomer(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Customer ID is required' });
   }
 
-  const customerIndex = customers.findIndex(customer => customer.id === id);
+  const customerId = parseInt(id as string, 10);
+  if (isNaN(customerId)) {
+    return res.status(400).json({ error: 'Invalid customer ID' });
+  }
+
+  const customerIndex = customers.findIndex(customer => customer.id === customerId);
 
   if (customerIndex === -1) {
     return res.status(404).json({ error: 'Customer not found' });
