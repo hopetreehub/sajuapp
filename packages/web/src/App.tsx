@@ -50,7 +50,7 @@ function App() {
                 <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
                 <Route path="/admin" element={<ProtectedRoute><AdminDashboardPage /></ProtectedRoute>} />
                 <Route path="/fortune" element={<ProtectedRoute><FortunePage /></ProtectedRoute>} />
-                <Route path="/saju" element={<UnifiedSajuAnalysisPageWithLifeChart />} />
+                <Route path="/saju" element={<ProtectedRoute><UnifiedSajuAnalysisPageWithLifeChart /></ProtectedRoute>} />
                 <Route path="/customers" element={<ProtectedRoute><CustomerManagementPage /></ProtectedRoute>} />
                 <Route path="/test-api" element={<ProtectedRoute><TestApi /></ProtectedRoute>} />
                 {/* 기존 사주 서브페이지들은 통합 시스템으로 교체됨 */}
