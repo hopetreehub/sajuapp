@@ -10,6 +10,7 @@ import { calculateSajuData } from '@/utils/sajuDataCalculator';
 import SajuAIChat from '@/components/saju/SajuAIChat';
 import { calculateFourPillars } from '@/utils/sajuCalculator';
 import { exportUnifiedSajuToPDF, formatDateForFilename } from '@/utils/pdfExport';
+import SajuBeginnerGuide from '@/components/saju/SajuBeginnerGuide';
 
 export default function UnifiedSajuAnalysisPage() {
   const [selectedCategory, setSelectedCategory] = useState('jubon');
@@ -20,6 +21,7 @@ export default function UnifiedSajuAnalysisPage() {
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
   const [isExportingPDF, setIsExportingPDF] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
 
   const currentCategory = SAJU_RADAR_CATEGORIES.find(cat => cat.id === selectedCategory);
 
@@ -204,10 +206,17 @@ export default function UnifiedSajuAnalysisPage() {
 
         {/* 헤더 */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-4 mb-2">
+          <div className="flex items-center justify-center gap-4 mb-2 flex-wrap">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
               🔮 통합 사주 레이더 분석
             </h1>
+            <button
+              onClick={() => setShowGuide(true)}
+              className="px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors flex items-center gap-2"
+            >
+              <span>📖</span>
+              <span>초보자 가이드</span>
+            </button>
             {selectedCustomer && customerSajuData && (
               <>
                 <button
@@ -372,6 +381,11 @@ export default function UnifiedSajuAnalysisPage() {
             analysisResult={analysisResult as any}
             onClose={() => setShowAIChat(false)}
           />
+        )}
+
+        {/* 초보자 가이드 모달 */}
+        {showGuide && (
+          <SajuBeginnerGuide onClose={() => setShowGuide(false)} />
         )}
 
       </div>

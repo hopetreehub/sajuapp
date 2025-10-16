@@ -16,6 +16,7 @@ import CustomerSelector from '@/components/saju/CustomerSelector';
 import ZiweiChartView from '@/components/ziwei/ZiweiChartView';
 import ZiweiPalaceDetail from '@/components/ziwei/ZiweiPalaceDetail';
 import ZiweiAIChat from '@/components/ziwei/ZiweiAIChat';
+import ZiweiBeginnerGuide from '@/components/ziwei/ZiweiBeginnerGuide';
 
 export default function ZiweiPage() {
   // 상태 관리
@@ -24,6 +25,7 @@ export default function ZiweiPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showAIChat, setShowAIChat] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
 
   // 고객 선택 관련 상태
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -82,9 +84,18 @@ export default function ZiweiPage() {
       <div className="max-w-7xl mx-auto">
         {/* 헤더 */}
         <header className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400 mb-2">
-            ⭐ 자미두수
-          </h1>
+          <div className="flex justify-center items-center gap-4 mb-2">
+            <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 dark:from-purple-400 dark:via-pink-400 dark:to-blue-400">
+              ⭐ 자미두수
+            </h1>
+            <button
+              onClick={() => setShowGuide(true)}
+              className="px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors flex items-center gap-2"
+            >
+              <span>📖</span>
+              <span>초보자 가이드</span>
+            </button>
+          </div>
           <p className="text-gray-600 dark:text-gray-300 text-lg">
             紫微斗數 - 14주성과 12궁위로 보는 정밀 운명 분석
           </p>
@@ -524,6 +535,11 @@ export default function ZiweiPage() {
               />
             )}
           </div>
+        )}
+
+        {/* 초보자 가이드 모달 */}
+        {showGuide && (
+          <ZiweiBeginnerGuide onClose={() => setShowGuide(false)} />
         )}
       </div>
     </div>
