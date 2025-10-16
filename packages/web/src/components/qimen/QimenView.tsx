@@ -16,6 +16,7 @@ import TimeSelector from './TimeSelector';
 import BeginnerGuide from './BeginnerGuide';
 import SimpleSummary from './SimpleSummary';
 import FortuneHeatmap from './FortuneHeatmap';
+import TimeComparison from './TimeComparison';
 import CustomerSelector from '../saju/CustomerSelector';
 import { analyzeBirthDate } from '@/utils/birthYearAnalysis';
 import { calculatePersonalizedOverallScore } from '@/utils/qimenPersonalization';
@@ -34,6 +35,7 @@ export default function QimenView() {
   const [showGuide, setShowGuide] = useState(false);
   const [showSimpleSummary, setShowSimpleSummary] = useState(true);
   const [showHeatmap, setShowHeatmap] = useState(false);
+  const [showComparison, setShowComparison] = useState(false);
 
   // 고객 선택 관련 상태
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -357,6 +359,13 @@ export default function QimenView() {
               >
                 <span>📄</span>
                 <span>{isExportingPDF ? 'PDF 생성 중...' : 'PDF 출력'}</span>
+              </button>
+              <button
+                onClick={() => setShowComparison(true)}
+                className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-medium hover:from-orange-600 hover:to-red-600 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+              >
+                <span>📊</span>
+                <span>시간대 비교</span>
               </button>
             </div>
             {selectedContext !== 'general' && (
@@ -693,6 +702,15 @@ export default function QimenView() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* 시간대 비교 */}
+        {showComparison && (
+          <TimeComparison
+            baseDate={selectedDate}
+            customer={appliedCustomer}
+            onClose={() => setShowComparison(false)}
+          />
         )}
 
         {/* 토스트 알림 */}
