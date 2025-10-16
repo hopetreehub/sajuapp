@@ -436,23 +436,27 @@ export function generateAIPrompt(
     const birthDay = parseInt(customer.birth_date.split('-')[2]);
     const age = new Date().getFullYear() - birthYear;
 
-    customerInfo = `
+    if (birthAnalysis) {
+      customerInfo = `
 
 🙋 고객 정보:
 - 이름: ${customer.name}님
 - 생년월일: ${customer.birth_date} (${customer.lunar_solar === 'lunar' ? '음력' : '양력'})
 - 나이: ${age}세
-- 생년 천간: ${birthAnalysis.yearGan} (${birthAnalysis.wuxing.element})
-- 오행: ${birthAnalysis.wuxing.element} (${birthAnalysis.wuxing.yinYang})
+- 생년 천간: ${birthAnalysis.stem}
+- 오행: ${birthAnalysis.element}
 - 생시: ${customer.birth_time || '미상'}
-- 특징: ${birthAnalysis.personality}`;
+- 특징: ${birthAnalysis.characteristics.personality}`;
+    }
   }
 
   // 고객 사주 정보 추출 (중복 호출 방지)
   let customerSajuInfo = '';
   if (customer) {
     const birthAnalysis = analyzeBirthDate(customer.birth_date);
-    customerSajuInfo = `${customer.name}님의 사주(생년 천간: ${birthAnalysis.yearGan}, 오행: ${birthAnalysis.wuxing.element})와 귀문둔갑을 연결하여`;
+    if (birthAnalysis) {
+      customerSajuInfo = `${customer.name}님의 사주(생년 천간: ${birthAnalysis.stem}, 오행: ${birthAnalysis.element})와 귀문둔갑을 연결하여`;
+    }
   }
 
   let prompt = `당신은 30년 경력의 귀문둔갑 전문가입니다. ${customer ? customer.name + '님에게' : '고객에게'} 친구처럼 편하게 조언하듯 자연스럽게 대화하세요.

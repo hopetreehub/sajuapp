@@ -148,7 +148,8 @@ export function calculatePersonalizedOverallScore(
   const bestPalaces = chart.overallFortune.bestPalaces;
   const worstPalaces = chart.overallFortune.worstPalaces;
 
-  for (const palaceName of Object.keys(chart.palaces) as Palace[]) {
+  for (const palaceNameStr of Object.keys(chart.palaces)) {
+    const palaceName = Number(palaceNameStr) as Palace;
     const palace = chart.palaces[palaceName];
     const palaceBonus = calculatePersonalizedPalaceScore(palace, birthAnalysis);
 

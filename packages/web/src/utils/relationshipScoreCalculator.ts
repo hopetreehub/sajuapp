@@ -19,7 +19,14 @@ import {
   CHEONGAN_OHHAENG,
   JIJI_OHHAENG,
   calculateTimeBonus,
+  JiJi,
 } from './sajuScoreCalculator';
+
+// 한자 → 한글 지지 변환 맵
+const HANJA_TO_KOREAN: Record<string, JiJi> = {
+  '子': '자', '丑': '축', '寅': '인', '卯': '묘', '辰': '진', '巳': '사',
+  '午': '오', '未': '미', '申': '신', '酉': '유', '戌': '술', '亥': '해',
+};
 
 export interface RelationshipScoreResult {
   systemId: string;
@@ -696,13 +703,13 @@ function analyzeHarmonyConflict(sajuData: SajuData): { harmonies: string[]; conf
   const conflicts: string[] = [];
 
   // 합 찾기
-  const harmonyPairs = [
-    ['子', '丑', '수토합'],
-    ['寅', '亥', '목목합'],
-    ['卯', '戌', '화합'],
-    ['辰', '酉', '금합'],
-    ['巳', '申', '수합'],
-    ['午', '未', '토합'],
+  const harmonyPairs: [JiJi, JiJi, string][] = [
+    [HANJA_TO_KOREAN['子'], HANJA_TO_KOREAN['丑'], '수토합'],
+    [HANJA_TO_KOREAN['寅'], HANJA_TO_KOREAN['亥'], '목목합'],
+    [HANJA_TO_KOREAN['卯'], HANJA_TO_KOREAN['戌'], '화합'],
+    [HANJA_TO_KOREAN['辰'], HANJA_TO_KOREAN['酉'], '금합'],
+    [HANJA_TO_KOREAN['巳'], HANJA_TO_KOREAN['申'], '수합'],
+    [HANJA_TO_KOREAN['午'], HANJA_TO_KOREAN['未'], '토합'],
   ];
 
   for (const [ji1, ji2, name] of harmonyPairs) {
@@ -712,13 +719,13 @@ function analyzeHarmonyConflict(sajuData: SajuData): { harmonies: string[]; conf
   }
 
   // 충 찾기
-  const conflictPairs = [
-    ['子', '午', '자오충'],
-    ['丑', '未', '축미충'],
-    ['寅', '申', '인신충'],
-    ['卯', '酉', '묘유충'],
-    ['辰', '戌', '진술충'],
-    ['巳', '亥', '사해충'],
+  const conflictPairs: [JiJi, JiJi, string][] = [
+    [HANJA_TO_KOREAN['子'], HANJA_TO_KOREAN['午'], '자오충'],
+    [HANJA_TO_KOREAN['丑'], HANJA_TO_KOREAN['未'], '축미충'],
+    [HANJA_TO_KOREAN['寅'], HANJA_TO_KOREAN['申'], '인신충'],
+    [HANJA_TO_KOREAN['卯'], HANJA_TO_KOREAN['酉'], '묘유충'],
+    [HANJA_TO_KOREAN['辰'], HANJA_TO_KOREAN['戌'], '진술충'],
+    [HANJA_TO_KOREAN['巳'], HANJA_TO_KOREAN['亥'], '사해충'],
   ];
 
   for (const [ji1, ji2, name] of conflictPairs) {

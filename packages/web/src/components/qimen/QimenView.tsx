@@ -21,7 +21,7 @@ import { calculatePersonalizedOverallScore } from '@/utils/qimenPersonalization'
 import { getAllContexts, type QimenContext } from '@/data/qimenContextWeights';
 import { generateAIPrompt } from '@/utils/qimenContextEvaluator';
 import AIChat from './AIChat';
-import Toast, { type ToastType } from '../common/Toast';
+import Toast, { type ToastType } from '../Common/Toast';
 import { exportContentToPDF } from '@/utils/pdfExport';
 
 export default function QimenView() {
