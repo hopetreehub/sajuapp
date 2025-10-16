@@ -604,6 +604,326 @@ export function interpretSpread(cardPositions: TarotCardPosition[]): string {
   return cardPositions.map((cp) => interpretCard(cp)).join('\n\n---\n\n');
 }
 
+// =====================
+// 카드 조합 분석 시스템
+// =====================
+
+/**
+ * 카드 조합 유형 정의
+ */
+type CombinationType =
+  | 'synergy' // 시너지 (강화)
+  | 'conflict' // 충돌 (약화)
+  | 'amplification' // 증폭
+  | 'transformation' // 변형
+  | 'balance' // 균형
+  | 'warning' // 경고
+  | 'opportunity'; // 기회
+
+interface CardCombination {
+  type: CombinationType;
+  cards: TarotCard[];
+  positions: string[];
+  strength: 'strong' | 'moderate' | 'weak';
+  message: string;
+  advice: string;
+}
+
+/**
+ * 카드 조합 패턴 분석
+ */
+export function analyzeCardCombinations(cardPositions: TarotCardPosition[]): CardCombination[] {
+  const combinations: CardCombination[] = [];
+
+  // 2장 이상의 카드가 있을 때만 분석
+  if (cardPositions.length < 2) return combinations;
+
+  // 1. 메이저 아르카나 다중 출현 (3장 이상)
+  const majorArcana = cardPositions.filter(cp => cp.card.suit === 'major');
+  if (majorArcana.length >= 3) {
+    combinations.push({
+      type: 'amplification',
+      cards: majorArcana.map(cp => cp.card),
+      positions: majorArcana.map(cp => cp.positionName),
+      strength: 'strong',
+      message: '**메이저 아르카나가 3장 이상 출현**했습니다. 이는 **인생의 중대한 전환점**을 의미합니다.',
+      advice: '이 시기는 운명적인 변화가 일어나는 중요한 순간입니다. 신중하되 과감하게 결정을 내리세요.',
+    });
+  }
+
+  // 2. 같은 수트 3장 이상 (마이너 아르카나)
+  const suits = ['wands', 'cups', 'swords', 'pentacles'];
+  for (const suit of suits) {
+    const sameSuit = cardPositions.filter(cp =>
+      cp.card.suit === suit
+    );
+
+    if (sameSuit.length >= 3) {
+      const suitMessages: Record<string, { message: string; advice: string }> = {
+        wands: {
+          message: '**지팡이 수트 3장 이상** - 행동, 열정, 창조성이 핵심 테마입니다.',
+          advice: '지금은 **적극적으로 행동**할 때입니다. 아이디어를 실행에 옮기고 새로운 프로젝트를 시작하세요.',
+        },
+        cups: {
+          message: '**컵 수트 3장 이상** - 감정, 관계, 사랑이 핵심 테마입니다.',
+          advice: '**감정적 연결**에 주목하세요. 관계를 깊이 있게 발전시키고 마음의 소리에 귀 기울이세요.',
+        },
+        swords: {
+          message: '**검 수트 3장 이상** - 사고, 갈등, 결단이 핵심 테마입니다.',
+          advice: '**명확한 판단**이 필요합니다. 복잡한 상황을 논리적으로 분석하고 어려운 결정을 내려야 합니다.',
+        },
+        pentacles: {
+          message: '**펜타클 수트 3장 이상** - 물질, 재정, 실용성이 핵심 테마입니다.',
+          advice: '**현실적 계획**에 집중하세요. 재정 관리, 커리어 발전, 장기적 안정성을 추구하세요.',
+        },
+      };
+
+      combinations.push({
+        type: 'synergy',
+        cards: sameSuit.map(cp => cp.card),
+        positions: sameSuit.map(cp => cp.positionName),
+        strength: 'strong',
+        message: suitMessages[suit].message,
+        advice: suitMessages[suit].advice,
+      });
+    }
+  }
+
+  // 3. 긍정-부정 카드 충돌 (인접 위치)
+  for (let i = 0; i < cardPositions.length - 1; i++) {
+    const current = cardPositions[i];
+    const next = cardPositions[i + 1];
+
+    const currentFortune = getFortuneDetermination(current.card, current.isReversed);
+    const nextFortune = getFortuneDetermination(next.card, next.isReversed);
+
+    // 매우 긍정적과 매우 부정적이 인접
+    if (
+      (currentFortune.status === '매우 긍정적' && nextFortune.status === '매우 부정적') ||
+      (currentFortune.status === '매우 부정적' && nextFortune.status === '매우 긍정적')
+    ) {
+      combinations.push({
+        type: 'conflict',
+        cards: [current.card, next.card],
+        positions: [current.positionName, next.positionName],
+        strength: 'strong',
+        message: `**극단적 대조**가 나타났습니다. ${current.positionName}과 ${next.positionName} 사이에 큰 변화가 있습니다.`,
+        advice: '급격한 변화에 대비하세요. 좋은 상황에서 방심하지 말고, 어려운 상황에서도 희망을 잃지 마세요.',
+      });
+    }
+  }
+
+  // 4. 특정 카드 조합 패턴
+  const cardNames = cardPositions.map(cp => cp.card.name);
+
+  // 타워 + 별 = 파괴 후 재건
+  if (cardNames.includes('The Tower') && cardNames.includes('The Star')) {
+    const towerPos = cardPositions.find(cp => cp.card.name === 'The Tower');
+    const starPos = cardPositions.find(cp => cp.card.name === 'The Star');
+
+    combinations.push({
+      type: 'transformation',
+      cards: [towerPos!.card, starPos!.card],
+      positions: [towerPos!.positionName, starPos!.positionName],
+      strength: 'strong',
+      message: '**타워와 별의 조합** - 파괴 후 희망과 재건이 따릅니다.',
+      advice: '현재의 위기는 새로운 시작을 위한 과정입니다. 무너진 것을 두려워하지 말고, 더 나은 미래를 준비하세요.',
+    });
+  }
+
+  // 죽음 + 심판 = 완전한 변화와 재탄생
+  if (cardNames.includes('Death') && cardNames.includes('Judgement')) {
+    const deathPos = cardPositions.find(cp => cp.card.name === 'Death');
+    const judgementPos = cardPositions.find(cp => cp.card.name === 'Judgement');
+
+    combinations.push({
+      type: 'transformation',
+      cards: [deathPos!.card, judgementPos!.card],
+      positions: [deathPos!.positionName, judgementPos!.positionName],
+      strength: 'strong',
+      message: '**죽음과 심판의 조합** - 과거를 완전히 끝내고 새롭게 태어납니다.',
+      advice: '과거에 대한 집착을 버리세요. 완전히 새로운 시작이 가능한 시기입니다. 과감하게 변화하세요.',
+    });
+  }
+
+  // 연인 + 악마 = 관계의 위험
+  if (cardNames.includes('The Lovers') && cardNames.includes('The Devil')) {
+    const loversPos = cardPositions.find(cp => cp.card.name === 'The Lovers');
+    const devilPos = cardPositions.find(cp => cp.card.name === 'The Devil');
+
+    combinations.push({
+      type: 'warning',
+      cards: [loversPos!.card, devilPos!.card],
+      positions: [loversPos!.positionName, devilPos!.positionName],
+      strength: 'strong',
+      message: '**연인과 악마의 조합** - 관계에서 집착, 의존, 유혹의 위험이 있습니다.',
+      advice: '건강하지 못한 관계 패턴을 경계하세요. 사랑이 속박이 되지 않도록 주의하세요.',
+    });
+  }
+
+  // 에이스 카드 2장 이상 = 새로운 시작의 기회
+  const aces = cardPositions.filter(cp => cp.card.name.startsWith('Ace of'));
+  if (aces.length >= 2) {
+    combinations.push({
+      type: 'opportunity',
+      cards: aces.map(cp => cp.card),
+      positions: aces.map(cp => cp.positionName),
+      strength: 'strong',
+      message: '**에이스 카드 다중 출현** - 여러 분야에서 새로운 시작의 기회가 옵니다.',
+      advice: '지금은 씨앗을 뿌릴 때입니다. 다양한 가능성에 열린 마음으로 도전하세요.',
+    });
+  }
+
+  // 5. 숫자 패턴 (같은 숫자 3장 이상)
+  const numbers = ['Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+  for (const num of numbers) {
+    const sameNumber = cardPositions.filter(cp => cp.card.name.includes(num));
+
+    if (sameNumber.length >= 3) {
+      const numberMeanings: Record<string, { message: string; advice: string }> = {
+        Two: {
+          message: '**숫자 2가 반복** - 선택, 균형, 파트너십이 중요합니다.',
+          advice: '협력과 조화를 추구하세요. 중요한 선택을 앞두고 있습니다.',
+        },
+        Three: {
+          message: '**숫자 3이 반복** - 창조, 성장, 표현이 활발합니다.',
+          advice: '창의성을 발휘하고 소통하세요. 협업을 통해 더 큰 성과를 낼 수 있습니다.',
+        },
+        Four: {
+          message: '**숫자 4가 반복** - 안정, 기초, 구조가 핵심입니다.',
+          advice: '탄탄한 기반을 다지세요. 서두르지 말고 차근차근 진행하세요.',
+        },
+        Five: {
+          message: '**숫자 5가 반복** - 변화, 도전, 갈등이 많습니다.',
+          advice: '변화를 받아들이세요. 어려움 속에서 성장의 기회를 찾으세요.',
+        },
+        Six: {
+          message: '**숫자 6이 반복** - 조화, 책임, 치유가 필요합니다.',
+          advice: '균형을 회복하세요. 타인에 대한 책임과 자신에 대한 돌봄 사이의 조화를 찾으세요.',
+        },
+        Seven: {
+          message: '**숫자 7이 반복** - 성찰, 평가, 전략이 중요합니다.',
+          advice: '깊이 생각하세요. 행동하기 전에 현재 상황을 신중히 평가하세요.',
+        },
+        Eight: {
+          message: '**숫자 8이 반복** - 움직임, 발전, 힘이 증가합니다.',
+          advice: '적극적으로 행동하세요. 추진력을 가지고 목표를 향해 나아가세요.',
+        },
+        Nine: {
+          message: '**숫자 9가 반복** - 완성, 성취, 완결이 가까워집니다.',
+          advice: '마무리에 집중하세요. 거의 다 왔으니 끝까지 완수하세요.',
+        },
+        Ten: {
+          message: '**숫자 10이 반복** - 순환의 끝, 새로운 시작이 옵니다.',
+          advice: '한 사이클이 끝나고 있습니다. 배운 것을 정리하고 새로운 단계로 나아가세요.',
+        },
+      };
+
+      if (numberMeanings[num]) {
+        combinations.push({
+          type: 'synergy',
+          cards: sameNumber.map(cp => cp.card),
+          positions: sameNumber.map(cp => cp.positionName),
+          strength: 'moderate',
+          message: numberMeanings[num].message,
+          advice: numberMeanings[num].advice,
+        });
+      }
+    }
+  }
+
+  // 6. 과거-현재-미래 흐름 분석 (3카드 스프레드)
+  if (cardPositions.length === 3 &&
+      cardPositions.some(cp => cp.positionName === '과거') &&
+      cardPositions.some(cp => cp.positionName === '현재') &&
+      cardPositions.some(cp => cp.positionName === '미래')) {
+
+    const past = cardPositions.find(cp => cp.positionName === '과거')!;
+    const present = cardPositions.find(cp => cp.positionName === '현재')!;
+    const future = cardPositions.find(cp => cp.positionName === '미래')!;
+
+    const pastFortune = getFortuneDetermination(past.card, past.isReversed);
+    const presentFortune = getFortuneDetermination(present.card, present.isReversed);
+    const futureFortune = getFortuneDetermination(future.card, future.isReversed);
+
+    // 상승 추세 (부정→중립→긍정 또는 부정→긍정)
+    if (
+      (pastFortune.status.includes('부정') && futureFortune.status.includes('긍정')) ||
+      (pastFortune.status === '부정적' && presentFortune.status === '중립' && futureFortune.status.includes('긍정'))
+    ) {
+      combinations.push({
+        type: 'opportunity',
+        cards: [past.card, present.card, future.card],
+        positions: ['과거', '현재', '미래'],
+        strength: 'strong',
+        message: '**상승 추세** - 어려움을 극복하고 점점 좋아지는 흐름입니다.',
+        advice: '현재의 노력을 계속하세요. 상황이 긍정적으로 변화하고 있습니다.',
+      });
+    }
+
+    // 하락 추세 (긍정→부정)
+    if (
+      (pastFortune.status.includes('긍정') && futureFortune.status.includes('부정')) ||
+      (pastFortune.status.includes('긍정') && presentFortune.status === '중립' && futureFortune.status.includes('부정'))
+    ) {
+      combinations.push({
+        type: 'warning',
+        cards: [past.card, present.card, future.card],
+        positions: ['과거', '현재', '미래'],
+        strength: 'strong',
+        message: '**하락 추세** - 현재 방향을 유지하면 상황이 악화될 수 있습니다.',
+        advice: '지금이 변화의 시점입니다. 현재의 접근 방식을 재검토하고 수정하세요.',
+      });
+    }
+  }
+
+  return combinations;
+}
+
+/**
+ * 카드 조합 분석 텍스트 생성
+ */
+export function formatCombinationAnalysis(combinations: CardCombination[]): string {
+  if (combinations.length === 0) {
+    return '';
+  }
+
+  const sortedCombinations = combinations.sort((a, b) => {
+    const strengthOrder = { strong: 0, moderate: 1, weak: 2 };
+    return strengthOrder[a.strength] - strengthOrder[b.strength];
+  });
+
+  const sections = sortedCombinations.map((combo, index) => {
+    const strengthEmoji = combo.strength === 'strong' ? '🔥' : combo.strength === 'moderate' ? '⚡' : '💡';
+    const typeEmoji = {
+      synergy: '✨',
+      conflict: '⚔️',
+      amplification: '📈',
+      transformation: '🔄',
+      balance: '⚖️',
+      warning: '⚠️',
+      opportunity: '🎯',
+    }[combo.type];
+
+    return `
+${index + 1}. ${typeEmoji} ${strengthEmoji} **카드 조합 발견**
+
+${combo.message}
+
+**관련 위치**: ${combo.positions.join(', ')}
+**관련 카드**: ${combo.cards.map(c => c.nameKo).join(', ')}
+
+**조언**: ${combo.advice}
+    `.trim();
+  });
+
+  return `
+## 🔮 카드 조합 분석
+
+${sections.join('\n\n')}
+  `.trim();
+}
+
 /**
  * AI 프롬프트용 스프레드 정보 생성
  */
@@ -620,17 +940,40 @@ export function generateSpreadPrompt(
       const orientation = cp.isReversed ? '역방향' : '정방향';
       const meaning = cp.isReversed ? cp.card.reversedMeaning : cp.card.uprightMeaning;
       const keywords = cp.isReversed ? cp.card.reversedKeywords : cp.card.uprightKeywords;
+      const fortune = getFortuneDetermination(cp.card, cp.isReversed);
 
       return `
 ${cp.position}. ${cp.positionName} (${cp.positionMeaning})
    카드: ${cp.card.nameKo} (${cp.card.name})
    방향: ${orientation}
+   길흉: ${fortune.status} - ${fortune.message}
    의미: ${meaning}
    키워드: ${keywords.join(', ')}
    상징: ${cp.card.symbolism}
       `.trim();
     })
     .join('\n\n');
+
+  // 카드 조합 분석 추가
+  const combinations = analyzeCardCombinations(cardPositions);
+  let combinationInfo = '';
+  if (combinations.length > 0) {
+    combinationInfo = `\n\n카드 조합 특이사항:\n${combinations
+      .map((combo, index) => {
+        const typeKorean = {
+          synergy: '시너지',
+          conflict: '충돌',
+          amplification: '증폭',
+          transformation: '변형',
+          balance: '균형',
+          warning: '경고',
+          opportunity: '기회',
+        }[combo.type];
+
+        return `${index + 1}. [${typeKorean}] ${combo.message}\n   조언: ${combo.advice}\n   관련 카드: ${combo.cards.map(c => c.nameKo).join(', ')}`;
+      })
+      .join('\n\n')}`;
+  }
 
   return `
 타로 리딩 요청
@@ -641,7 +984,7 @@ ${cp.position}. ${cp.positionName} (${cp.positionMeaning})
 설명: ${spread.description}
 
 뽑힌 카드들:
-${cardsInfo}
+${cardsInfo}${combinationInfo}
 
 ---
 
@@ -666,10 +1009,15 @@ ${cardsInfo}
    - 각 카드가 해당 위치에서 의미하는 바를 직접적으로 설명
    - 긍정/부정/중립을 명확히 구분하여 전달
 
+5. **카드 조합 해석 반영**
+   ${combinations.length > 0 ? `- 위에 제시된 ${combinations.length}개의 카드 조합 특이사항을 반드시 해석에 반영하세요
+   - 조합에서 발견된 시너지, 충돌, 변형 등을 해석에 포함하세요
+   - 조합 분석에서 나온 조언을 종합 해석에 통합하세요` : '- 개별 카드의 의미를 종합하여 해석하세요'}
+
 답변 구조:
-1. **전체 흐름 요약** (2-3문장, 길흉 판단 포함)
+1. **전체 흐름 요약** (2-3문장, 길흉 판단 포함${combinations.length > 0 ? ', 주요 카드 조합 언급' : ''})
 2. **각 카드 위치별 해석** (위치마다 긍정/부정 명시)
-3. **구체적 행동 지침** (해야 할 일 3가지, 피해야 할 일 2가지)
-4. **타이밍과 주의사항** (언제, 무엇을 조심해야 하는지)
+${combinations.length > 0 ? '3. **카드 조합의 의미** (조합에서 발견된 특별한 패턴과 그 의미)\n4' : '3'}. **구체적 행동 지침** (해야 할 일 3가지, 피해야 할 일 2가지)
+${combinations.length > 0 ? '5' : '4'}. **타이밍과 주의사항** (언제, 무엇을 조심해야 하는지)
   `.trim();
 }
