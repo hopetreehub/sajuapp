@@ -13,26 +13,16 @@ interface ReferralSectionProps {
 const ReferralSection: React.FC<ReferralSectionProps> = ({
   className = '',
 }) => {
-  const {
-    user,
-    myReferralCode,
-    isGeneratingReferralCode,
-    referralStats,
-    isLoadingReferralStats,
-    error,
-    generateMyReferralCode,
-    loadReferralStats,
-  } = useAuthStore();
-
+  const { user } = useAuthStore();
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle');
   const [showStats, setShowStats] = useState(false);
 
-  // 컴포넌트 마운트 시 추천 코드와 통계 로드
-  useEffect(() => {
-    if (user && !myReferralCode) {
-      generateMyReferralCode();
-    }
-  }, [user, myReferralCode, generateMyReferralCode]);
+  // user의 referral_code 직접 사용 (authStore의 복잡한 함수 대신)
+  const myReferralCode = user?.referral_code || null;
+  const isGeneratingReferralCode = false;
+  const referralStats: any = null;
+  const isLoadingReferralStats = false;
+  const error = null;
 
   // 추천 코드 복사 기능
   const handleCopyCode = async () => {
@@ -49,11 +39,8 @@ const ReferralSection: React.FC<ReferralSectionProps> = ({
     }
   };
 
-  // 통계 토글 및 로드
-  const handleToggleStats = async () => {
-    if (!showStats && (!referralStats || Object.keys(referralStats).length === 0) && user?.id) {
-      await loadReferralStats(user.id);
-    }
+  // 통계 토글 (실적 로딩 기능은 비활성화됨)
+  const handleToggleStats = () => {
     setShowStats(!showStats);
   };
 
@@ -215,13 +202,7 @@ const ReferralSection: React.FC<ReferralSectionProps> = ({
           </div>
         ) : (
           <div className="text-center py-4">
-            <p className="text-gray-600 dark:text-gray-400 mb-3">추천 코드를 생성할 수 없습니다.</p>
-            <button
-              onClick={generateMyReferralCode}
-              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
-            >
-              다시 시도
-            </button>
+            <p className="text-gray-600 dark:text-gray-400">추천 코드가 아직 생성되지 않았습니다.</p>
           </div>
         )}
       </div>
@@ -315,13 +296,7 @@ const ReferralSection: React.FC<ReferralSectionProps> = ({
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-gray-600 dark:text-gray-400 mb-3">실적 정보를 불러올 수 없습니다.</p>
-              <button
-                onClick={() => user?.id && loadReferralStats(user.id)}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
-              >
-                다시 시도
-              </button>
+              <p className="text-gray-600 dark:text-gray-400">실적 정보를 불러올 수 없습니다.</p>
             </div>
           )}
         </div>
