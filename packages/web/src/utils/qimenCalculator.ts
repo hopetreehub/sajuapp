@@ -22,13 +22,15 @@ import {
   GATES,
   STARS,
   SPIRITS,
-  SOLAR_TERMS,
   PALACE_TO_DIRECTION,
   calculateCombinedNature,
 } from '@/data/qimenDunjiaData';
 
 // 사주 계산기에서 천간지지 가져오기
 import { CheonGan, JiJi } from '@/utils/sajuScoreCalculator';
+
+// 정밀 절기 계산 모듈
+import { calculateCurrentSolarTerm, type SolarTermInfo } from './solarTermCalculator';
 
 // ============================================
 // 천간지지 배열
@@ -109,45 +111,20 @@ export function calculateQimenChart(
 }
 
 /**
- * 절기 계산
+ * 절기 계산 (정밀 계산 사용)
  */
-function getSolarTerm(date: Date) {
-  const month = date.getMonth() + 1; // 0-based → 1-based
-  const day = date.getDate();
-
-  // 해당 월의 절기들 찾기
-  const monthTerms = SOLAR_TERMS.filter((t) => t.month === month);
-
-  // 날짜로 정확한 절기 결정
-  let currentTerm = monthTerms[0];
-
-  for (const term of monthTerms) {
-    if (day >= term.approxDay) {
-      currentTerm = term;
-    }
-  }
-
-  // 만약 월초인데 이전 달 절기가 더 가까우면 이전 절기 사용
-  if (day < 5 && monthTerms.length > 0) {
-    const prevMonth = month === 1 ? 12 : month - 1;
-    const prevTerms = SOLAR_TERMS.filter((t) => t.month === prevMonth);
-    if (prevTerms.length > 0) {
-      const lastPrevTerm = prevTerms[prevTerms.length - 1];
-      if (Math.abs(day - lastPrevTerm.approxDay) < Math.abs(day - currentTerm.approxDay)) {
-        currentTerm = lastPrevTerm;
-      }
-    }
-  }
-
-  return currentTerm;
+function getSolarTerm(date: Date): SolarTermInfo {
+  return calculateCurrentSolarTerm(date);
 }
 
 /**
- * 절기 시작일 여부 확인
+ * 절기 시작일 여부 확인 (정밀 계산)
  */
-function isStartOfSolarTerm(date: Date, term: typeof SOLAR_TERMS[0]): boolean {
-  const day = date.getDate();
-  return Math.abs(day - term.approxDay) <= 1;
+function isStartOfSolarTerm(date: Date, term: SolarTermInfo): boolean {
+  const termDate = term.datetime;
+  const diffHours = Math.abs(date.getTime() - termDate.getTime()) / (1000 * 60 * 60);
+  // 절기 시작 후 24시간 이내면 시작일로 간주
+  return diffHours <= 24;
 }
 
 /**
@@ -226,7 +203,14 @@ function arrangePalaces(
 }
 
 /**
- * 팔문 배치
+ * 팔문 배치 (전통 귀문둔갑 규칙)
+ *
+ * 규칙:
+ * 1. 휴문은 항상 坎宮 (1궁, 북쪽)에 고정
+ * 2. 나머지 7문은 휴문에서 시작하여 순차 배치
+ * 3. 양둔: 순행 (1→8→3→4→9→2→7→6)
+ * 4. 음둔: 역행 (1→6→7→2→9→4→3→8)
+ * 5. 5궁(중앙)은 기문(寄門) - 주변 궁의 문을 빌려옴
  */
 function arrangeGates(
   startPalace: Palace,
@@ -234,22 +218,38 @@ function arrangeGates(
 ): Record<Palace, Gate> {
   const positions: Record<Palace, Gate> = {} as Record<Palace, Gate>;
 
-  // 간단한 순환 배치 (실제로는 더 복잡한 규칙이 있음)
-  const palaceOrder: Palace[] = [1, 8, 3, 4, 9, 2, 7, 6];
+  // 낙서 궁 순서 (洛書 순환)
+  // 양둔 순행: 1→8→3→4→9→2→7→6
+  const yangOrder: Palace[] = [1, 8, 3, 4, 9, 2, 7, 6];
+  // 음둔 역행: 1→6→7→2→9→4→3→8
+  const yinOrder: Palace[] = [1, 6, 7, 2, 9, 4, 3, 8];
+
+  const palaceOrder = yinYang === 'yang' ? yangOrder : yinOrder;
+
+  // 국(局)에 따라 시작 위치 결정
+  // 국은 1~9, 배열 인덱스는 0~7이므로 조정
+  const startIndex = (startPalace - 1) % 8;
 
   for (let i = 0; i < GATE_ORDER.length; i++) {
-    const palace = palaceOrder[(i + startPalace - 1) % 8];
+    const palaceIndex = (startIndex + i) % 8;
+    const palace = palaceOrder[palaceIndex];
     positions[palace] = GATE_ORDER[i];
   }
 
-  // 5궁은 특별 처리 (중앙은 문이 없거나 임의 배치)
-  positions[5] = '휴문';
+  // 5궁 중앙: 2궁의 문을 빌려옴 (기문 규칙)
+  positions[5] = positions[2];
 
   return positions;
 }
 
 /**
- * 구성 배치
+ * 구성 배치 (전통 귀문둔갑 규칙)
+ *
+ * 규칙:
+ * 1. 구성은 9개 별이 9개 궁에 배치
+ * 2. 천봉성(天蓬星)을 시작점으로 하여 순환
+ * 3. 양둔: 순행 (1→2→3→4→5→6→7→8→9)
+ * 4. 음둔: 역행 (9→8→7→6→5→4→3→2→1)
  */
 function arrangeStars(
   startPalace: Palace,
@@ -257,9 +257,16 @@ function arrangeStars(
 ): Record<Palace, Star> {
   const positions: Record<Palace, Star> = {} as Record<Palace, Star>;
 
-  // 9개 별을 9개 궁에 순환 배치
+  // 9궁 순서
+  const yangOrder: Palace[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const yinOrder: Palace[] = [9, 8, 7, 6, 5, 4, 3, 2, 1];
+
+  const palaceOrder = yinYang === 'yang' ? yangOrder : yinOrder;
+
+  // 시작 궁에서 순환 배치
   for (let i = 0; i < 9; i++) {
-    const palace = (((i + startPalace - 1) % 9) + 1) as Palace;
+    const palaceIndex = (startPalace - 1 + i) % 9;
+    const palace = palaceOrder[palaceIndex];
     positions[palace] = STAR_ORDER[i];
   }
 
@@ -267,7 +274,14 @@ function arrangeStars(
 }
 
 /**
- * 팔신 배치
+ * 팔신 배치 (전통 귀문둔갑 규칙)
+ *
+ * 규칙:
+ * 1. 팔신은 시간(時辰)에 따라 배치
+ * 2. 직부(値符)의 위치가 핵심 - 시간의 시신(時神)이 머무는 궁
+ * 3. 직부에서 시작하여 나머지 7신을 순차 배치
+ * 4. 낙서 순서를 따름: 1→8→3→4→9→2→7→6
+ * 5. 5궁은 寄神(기신) - 주변 궁의 신을 빌려옴
  */
 function arrangeSpirits(
   startPalace: Palace,
@@ -278,26 +292,23 @@ function arrangeSpirits(
     Spirit | undefined
   >;
 
-  // 시간에 따라 시작 위치 결정
+  // 시간 지지로 시작 위치 결정
   const hourIndex = JIJI.indexOf(hourGanZhi.zhi);
-  const offset = Math.floor(hourIndex / 3);
 
+  // 낙서 순서 (8궁만, 5궁 제외)
   const palaceOrder: Palace[] = [1, 8, 3, 4, 9, 2, 7, 6];
 
+  // 시간 지지를 8로 나눈 나머지로 시작 위치 결정
+  const startIndex = hourIndex % 8;
+
   for (let i = 0; i < SPIRIT_ORDER.length; i++) {
-    const palace = palaceOrder[(i + offset) % 8];
+    const palaceIndex = (startIndex + i) % 8;
+    const palace = palaceOrder[palaceIndex];
     positions[palace] = SPIRIT_ORDER[i];
   }
 
-  // 5궁 중앙은 신이 없음
-  positions[5] = undefined;
-
-  // 배치되지 않은 궁도 undefined
-  for (let p = 1; p <= 9; p++) {
-    if (!positions[p as Palace]) {
-      positions[p as Palace] = undefined;
-    }
-  }
+  // 5궁 중앙: 2궁의 신을 빌려옴 (기신 규칙)
+  positions[5] = positions[2];
 
   return positions;
 }
