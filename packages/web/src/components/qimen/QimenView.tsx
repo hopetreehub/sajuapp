@@ -15,6 +15,7 @@ import PalaceDetail from './PalaceDetail';
 import TimeSelector from './TimeSelector';
 import BeginnerGuide from './BeginnerGuide';
 import SimpleSummary from './SimpleSummary';
+import FortuneHeatmap from './FortuneHeatmap';
 import CustomerSelector from '../saju/CustomerSelector';
 import { analyzeBirthDate } from '@/utils/birthYearAnalysis';
 import { calculatePersonalizedOverallScore } from '@/utils/qimenPersonalization';
@@ -32,6 +33,7 @@ export default function QimenView() {
   const [loading, setLoading] = useState(true);
   const [showGuide, setShowGuide] = useState(false);
   const [showSimpleSummary, setShowSimpleSummary] = useState(true);
+  const [showHeatmap, setShowHeatmap] = useState(false);
 
   // 고객 선택 관련 상태
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -399,12 +401,24 @@ export default function QimenView() {
           </div>
 
           {/* 간단 요약 토글 */}
-          <button
-            onClick={() => setShowSimpleSummary(!showSimpleSummary)}
-            className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
-          >
-            {showSimpleSummary ? '상세 모드로 보기 ▼' : '간단 요약 보기 ▲'}
-          </button>
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={() => setShowSimpleSummary(!showSimpleSummary)}
+              className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+            >
+              {showSimpleSummary ? '상세 모드로 보기 ▼' : '간단 요약 보기 ▲'}
+            </button>
+            <button
+              onClick={() => setShowHeatmap(!showHeatmap)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                showHeatmap
+                  ? 'bg-gradient-to-r from-green-500 to-blue-500 text-white shadow-lg'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
+              }`}
+            >
+              {showHeatmap ? '🎨 히트맵 모드' : '📊 차트 모드'}
+            </button>
+          </div>
 
           {/* 국 정보 */}
           <div className="mt-4 flex justify-center gap-4 flex-wrap">
@@ -454,13 +468,21 @@ export default function QimenView() {
           />
         )}
 
-        {/* 구궁 차트 */}
+        {/* 구궁 차트 / 길흉 히트맵 */}
         <div className="my-8">
-          <QimenChart3x3
-            chart={chart}
-            selectedPalace={selectedPalace}
-            onPalaceSelect={handlePalaceSelect}
-          />
+          {showHeatmap ? (
+            <FortuneHeatmap
+              chart={chart}
+              selectedPalace={selectedPalace}
+              onPalaceSelect={handlePalaceSelect}
+            />
+          ) : (
+            <QimenChart3x3
+              chart={chart}
+              selectedPalace={selectedPalace}
+              onPalaceSelect={handlePalaceSelect}
+            />
+          )}
         </div>
 
         {/* 전체 길흉 요약 */}

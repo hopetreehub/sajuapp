@@ -284,7 +284,7 @@ export function getAllSolarTermsForYear(year: number): SolarTermInfo[] {
 export function getNextSolarTerm(date: Date): SolarTermInfo {
   const currentTerm = calculateCurrentSolarTerm(date);
   const currentIndex = SOLAR_TERM_DEFINITIONS.findIndex(
-    t => t.name === currentTerm.name
+    t => t.name === currentTerm.name,
   );
 
   const nextIndex = (currentIndex + 1) % SOLAR_TERM_DEFINITIONS.length;
