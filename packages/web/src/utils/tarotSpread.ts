@@ -1217,6 +1217,292 @@ ${sections.join('\n\n')}
 /**
  * AI 프롬프트용 스프레드 정보 생성
  */
+// =====================
+// 타이밍 정보 시스템
+// =====================
+
+/**
+ * 타이밍 속성 정의
+ */
+export type TimingAttribute =
+  | 'immediate' // 즉시 (1-3일)
+  | 'soon' // 곧 (1-2주)
+  | 'near-future' // 가까운 미래 (1-2개월)
+  | 'mid-term' // 중기적 (3-6개월)
+  | 'long-term' // 장기적 (6개월 이상)
+  | 'gradual' // 점진적 (단계적 변화)
+  | 'cyclical' // 순환적 (반복적)
+  | 'waiting'; // 대기 필요 (아직 아님)
+
+/**
+ * 타이밍 정보 인터페이스
+ */
+interface TimingInfo {
+  attribute: TimingAttribute;
+  message: string;
+  actionWindow: string; // 행동해야 할 시기
+}
+
+/**
+ * 카드별 타이밍 속성 매핑
+ */
+const CARD_TIMING: Record<string, { upright: TimingAttribute; reversed: TimingAttribute }> = {
+  // 메이저 아르카나
+  'The Fool': { upright: 'immediate', reversed: 'waiting' },
+  'The Magician': { upright: 'immediate', reversed: 'soon' },
+  'The High Priestess': { upright: 'waiting', reversed: 'gradual' },
+  'The Empress': { upright: 'gradual', reversed: 'mid-term' },
+  'The Emperor': { upright: 'mid-term', reversed: 'long-term' },
+  'The Hierophant': { upright: 'mid-term', reversed: 'waiting' },
+  'The Lovers': { upright: 'soon', reversed: 'waiting' },
+  'The Chariot': { upright: 'immediate', reversed: 'mid-term' },
+  'Strength': { upright: 'gradual', reversed: 'waiting' },
+  'The Hermit': { upright: 'long-term', reversed: 'mid-term' },
+  'Wheel of Fortune': { upright: 'cyclical', reversed: 'waiting' },
+  'Justice': { upright: 'mid-term', reversed: 'long-term' },
+  'The Hanged Man': { upright: 'waiting', reversed: 'gradual' },
+  'Death': { upright: 'soon', reversed: 'gradual' },
+  'Temperance': { upright: 'gradual', reversed: 'waiting' },
+  'The Devil': { upright: 'immediate', reversed: 'soon' },
+  'The Tower': { upright: 'immediate', reversed: 'soon' },
+  'The Star': { upright: 'near-future', reversed: 'mid-term' },
+  'The Moon': { upright: 'cyclical', reversed: 'waiting' },
+  'The Sun': { upright: 'soon', reversed: 'near-future' },
+  'Judgement': { upright: 'soon', reversed: 'mid-term' },
+  'The World': { upright: 'near-future', reversed: 'long-term' },
+
+  // 완드 수트 - 행동, 에너지 (빠른 타이밍)
+  'Ace of Wands': { upright: 'immediate', reversed: 'soon' },
+  'Two of Wands': { upright: 'soon', reversed: 'mid-term' },
+  'Three of Wands': { upright: 'near-future', reversed: 'mid-term' },
+  'Four of Wands': { upright: 'soon', reversed: 'near-future' },
+  'Five of Wands': { upright: 'immediate', reversed: 'soon' },
+  'Six of Wands': { upright: 'soon', reversed: 'near-future' },
+  'Seven of Wands': { upright: 'immediate', reversed: 'soon' },
+  'Eight of Wands': { upright: 'immediate', reversed: 'soon' },
+  'Nine of Wands': { upright: 'waiting', reversed: 'gradual' },
+  'Ten of Wands': { upright: 'near-future', reversed: 'mid-term' },
+
+  // 컵 수트 - 감정, 관계 (중간 타이밍)
+  'Ace of Cups': { upright: 'soon', reversed: 'near-future' },
+  'Two of Cups': { upright: 'soon', reversed: 'near-future' },
+  'Three of Cups': { upright: 'soon', reversed: 'near-future' },
+  'Four of Cups': { upright: 'waiting', reversed: 'gradual' },
+  'Five of Cups': { upright: 'gradual', reversed: 'soon' },
+  'Six of Cups': { upright: 'cyclical', reversed: 'near-future' },
+  'Seven of Cups': { upright: 'waiting', reversed: 'gradual' },
+  'Eight of Cups': { upright: 'soon', reversed: 'near-future' },
+  'Nine of Cups': { upright: 'near-future', reversed: 'mid-term' },
+  'Ten of Cups': { upright: 'long-term', reversed: 'mid-term' },
+
+  // 검 수트 - 사고, 갈등 (즉시 또는 빠른 타이밍)
+  'Ace of Swords': { upright: 'immediate', reversed: 'soon' },
+  'Two of Swords': { upright: 'waiting', reversed: 'soon' },
+  'Three of Swords': { upright: 'immediate', reversed: 'soon' },
+  'Four of Swords': { upright: 'waiting', reversed: 'soon' },
+  'Five of Swords': { upright: 'immediate', reversed: 'soon' },
+  'Six of Swords': { upright: 'gradual', reversed: 'mid-term' },
+  'Seven of Swords': { upright: 'immediate', reversed: 'soon' },
+  'Eight of Swords': { upright: 'waiting', reversed: 'gradual' },
+  'Nine of Swords': { upright: 'immediate', reversed: 'soon' },
+  'Ten of Swords': { upright: 'immediate', reversed: 'soon' },
+
+  // 펜타클 수트 - 물질, 재정 (점진적, 장기적 타이밍)
+  'Ace of Pentacles': { upright: 'soon', reversed: 'near-future' },
+  'Two of Pentacles': { upright: 'cyclical', reversed: 'gradual' },
+  'Three of Pentacles': { upright: 'gradual', reversed: 'mid-term' },
+  'Four of Pentacles': { upright: 'waiting', reversed: 'gradual' },
+  'Five of Pentacles': { upright: 'gradual', reversed: 'near-future' },
+  'Six of Pentacles': { upright: 'cyclical', reversed: 'gradual' },
+  'Seven of Pentacles': { upright: 'mid-term', reversed: 'long-term' },
+  'Eight of Pentacles': { upright: 'gradual', reversed: 'mid-term' },
+  'Nine of Pentacles': { upright: 'long-term', reversed: 'mid-term' },
+  'Ten of Pentacles': { upright: 'long-term', reversed: 'mid-term' },
+
+  // 코트 카드 (왕, 여왕, 기사, 시종)
+  'Page of Wands': { upright: 'soon', reversed: 'near-future' },
+  'Knight of Wands': { upright: 'immediate', reversed: 'soon' },
+  'Queen of Wands': { upright: 'soon', reversed: 'near-future' },
+  'King of Wands': { upright: 'near-future', reversed: 'mid-term' },
+  'Page of Cups': { upright: 'soon', reversed: 'near-future' },
+  'Knight of Cups': { upright: 'gradual', reversed: 'near-future' },
+  'Queen of Cups': { upright: 'near-future', reversed: 'mid-term' },
+  'King of Cups': { upright: 'mid-term', reversed: 'long-term' },
+  'Page of Swords': { upright: 'immediate', reversed: 'soon' },
+  'Knight of Swords': { upright: 'immediate', reversed: 'soon' },
+  'Queen of Swords': { upright: 'soon', reversed: 'near-future' },
+  'King of Swords': { upright: 'near-future', reversed: 'mid-term' },
+  'Page of Pentacles': { upright: 'gradual', reversed: 'mid-term' },
+  'Knight of Pentacles': { upright: 'gradual', reversed: 'mid-term' },
+  'Queen of Pentacles': { upright: 'mid-term', reversed: 'long-term' },
+  'King of Pentacles': { upright: 'long-term', reversed: 'mid-term' },
+};
+
+/**
+ * 타이밍 속성별 설명 메시지
+ */
+const TIMING_MESSAGES: Record<TimingAttribute, { period: string; action: string }> = {
+  immediate: {
+    period: '지금 당장 (1-3일 이내)',
+    action: '**즉시 행동**하세요. 지체하면 기회를 놓칠 수 있습니다.',
+  },
+  soon: {
+    period: '곧 (1-2주 이내)',
+    action: '**빠르게 준비**하고 실행하세요. 시기가 다가오고 있습니다.',
+  },
+  'near-future': {
+    period: '가까운 미래 (1-2개월)',
+    action: '**조금 더 준비**하세요. 아직 시간이 있지만 서두르는 것이 좋습니다.',
+  },
+  'mid-term': {
+    period: '중기적 (3-6개월)',
+    action: '**차근차근 계획**하고 진행하세요. 서두르지 말고 꾸준히 노력하세요.',
+  },
+  'long-term': {
+    period: '장기적 (6개월 이상)',
+    action: '**장기적 관점**에서 접근하세요. 인내심을 가지고 기반을 다지세요.',
+  },
+  gradual: {
+    period: '점진적 (단계별 진행)',
+    action: '**한 걸음씩** 나아가세요. 급격한 변화보다는 꾸준한 노력이 필요합니다.',
+  },
+  cyclical: {
+    period: '순환적 (반복적)',
+    action: '**타이밍을 잘 포착**하세요. 기회는 다시 돌아오니 놓치지 마세요.',
+  },
+  waiting: {
+    period: '대기 필요 (아직 아님)',
+    action: '**서두르지 마세요**. 지금은 관찰하고 준비하는 시기입니다.',
+  },
+};
+
+/**
+ * 카드의 타이밍 정보 분석
+ */
+export function analyzeCardTiming(card: TarotCard, isReversed: boolean): TimingInfo {
+  const timingData = CARD_TIMING[card.name];
+  if (!timingData) {
+    // 기본값: 중립적 타이밍
+    return {
+      attribute: 'near-future',
+      message: '가까운 미래에 변화가 일어날 것입니다.',
+      actionWindow: '1-2개월 이내에 행동하세요.',
+    };
+  }
+
+  const attribute = isReversed ? timingData.reversed : timingData.upright;
+  const timingMsg = TIMING_MESSAGES[attribute];
+
+  return {
+    attribute,
+    message: `이 카드의 시기는 **${timingMsg.period}**입니다.`,
+    actionWindow: timingMsg.action,
+  };
+}
+
+/**
+ * 전체 스프레드의 타이밍 분석
+ */
+export function analyzeOverallTiming(cardPositions: TarotCardPosition[]): {
+  dominant: TimingAttribute;
+  summary: string;
+  recommendations: string[];
+} {
+  // 각 카드의 타이밍 속성 수집
+  const timingCounts: Record<TimingAttribute, number> = {
+    immediate: 0,
+    soon: 0,
+    'near-future': 0,
+    'mid-term': 0,
+    'long-term': 0,
+    gradual: 0,
+    cyclical: 0,
+    waiting: 0,
+  };
+
+  cardPositions.forEach((cp) => {
+    const timing = analyzeCardTiming(cp.card, cp.isReversed);
+    timingCounts[timing.attribute] += 1;
+  });
+
+  // 가장 많이 나타난 타이밍 속성 찾기
+  let maxCount = 0;
+  let dominant: TimingAttribute = 'near-future';
+
+  for (const [attr, count] of Object.entries(timingCounts)) {
+    if (count > maxCount) {
+      maxCount = count;
+      dominant = attr as TimingAttribute;
+    }
+  }
+
+  // 타이밍 요약 메시지 생성
+  const timingMsg = TIMING_MESSAGES[dominant];
+  let summary = '';
+  const recommendations: string[] = [];
+
+  // 즉각적 행동 필요 카드 수
+  const urgentCount = timingCounts.immediate + timingCounts.soon;
+  // 대기/점진적 카드 수
+  const slowCount = timingCounts.waiting + timingCounts.gradual;
+
+  if (urgentCount >= 2) {
+    summary = `전체적으로 **빠른 행동**이 필요한 시기입니다. ${timingMsg.period}가 핵심입니다.`;
+    recommendations.push('지금이 결정과 행동의 시기입니다');
+    recommendations.push('기회를 놓치지 않도록 신속하게 움직이세요');
+    recommendations.push('직관을 믿고 과감하게 시작하세요');
+  } else if (slowCount >= 2) {
+    summary = `전체적으로 **신중하고 점진적인 접근**이 필요합니다. ${timingMsg.period}가 중요합니다.`;
+    recommendations.push('서두르지 말고 충분히 준비하세요');
+    recommendations.push('장기적 관점에서 계획을 세우세요');
+    recommendations.push('인내심을 가지고 단계적으로 진행하세요');
+  } else if (timingCounts.cyclical >= 1) {
+    summary = `**타이밍이 중요**한 상황입니다. ${timingMsg.period}를 고려하세요.`;
+    recommendations.push('적절한 시기를 기다리세요');
+    recommendations.push('기회가 다시 오면 놓치지 마세요');
+    recommendations.push('주기적으로 상황을 점검하세요');
+  } else {
+    summary = `**균형 잡힌 시간 계획**이 필요합니다. ${timingMsg.period}를 염두에 두세요.`;
+    recommendations.push('급하거나 느린 것이 아닌, 적절한 타이밍을 찾으세요');
+    recommendations.push('상황에 따라 유연하게 대응하세요');
+    recommendations.push('필요하면 행동하고, 그렇지 않으면 기다리세요');
+  }
+
+  return {
+    dominant,
+    summary,
+    recommendations,
+  };
+}
+
+/**
+ * 타이밍 분석 텍스트 생성
+ */
+export function formatTimingAnalysis(cardPositions: TarotCardPosition[]): string {
+  const overallTiming = analyzeOverallTiming(cardPositions);
+
+  // 각 카드별 타이밍 정보
+  const cardTimings = cardPositions.map((cp) => {
+    const timing = analyzeCardTiming(cp.card, cp.isReversed);
+    return `• **${cp.positionName}** (${cp.card.nameKo}): ${timing.message}`;
+  });
+
+  return `
+## ⏰ 타이밍 분석
+
+${overallTiming.summary}
+
+**각 카드별 시기:**
+${cardTimings.join('\n')}
+
+**타이밍 가이드:**
+${overallTiming.recommendations.map((rec, i) => `${i + 1}. ${rec}`).join('\n')}
+  `.trim();
+}
+
+/**
+ * AI 프롬프트용 스프레드 정보 생성
+ */
 export function generateSpreadPrompt(
   spreadId: string,
   cardPositions: TarotCardPosition[],
@@ -1231,12 +1517,14 @@ export function generateSpreadPrompt(
       const meaning = cp.isReversed ? cp.card.reversedMeaning : cp.card.uprightMeaning;
       const keywords = cp.isReversed ? cp.card.reversedKeywords : cp.card.uprightKeywords;
       const fortune = getFortuneDetermination(cp.card, cp.isReversed);
+      const timing = analyzeCardTiming(cp.card, cp.isReversed);
 
       return `
 ${cp.position}. ${cp.positionName} (${cp.positionMeaning})
    카드: ${cp.card.nameKo} (${cp.card.name})
    방향: ${orientation}
    길흉: ${fortune.status} - ${fortune.message}
+   타이밍: ${timing.message} ${timing.actionWindow}
    의미: ${meaning}
    키워드: ${keywords.join(', ')}
    상징: ${cp.card.symbolism}
@@ -1280,6 +1568,10 @@ ${cp.position}. ${cp.positionName} (${cp.positionMeaning})
       .join('\n\n')}`;
   }
 
+  // 타이밍 분석 추가
+  const overallTiming = analyzeOverallTiming(cardPositions);
+  const timingInfo = `\n\n타이밍 분석:\n${overallTiming.summary}\n주요 행동 시기:\n${overallTiming.recommendations.map((rec, i) => `${i + 1}. ${rec}`).join('\n')}`;
+
   return `
 타로 리딩 요청
 
@@ -1290,7 +1582,7 @@ ${cp.position}. ${cp.positionName} (${cp.positionMeaning})
 설명: ${spread.description}
 
 뽑힌 카드들:
-${cardsInfo}${combinationInfo}
+${cardsInfo}${combinationInfo}${timingInfo}
 
 ---
 
@@ -1339,10 +1631,17 @@ ${situationAdvice.actionAdvice.map((action, i) => `${i + 1}. ${action}`).join('\
    - 권장 행동 지침을 구체적으로 반영하세요
    - 질문의 맥락에 맞는 실질적이고 구체적인 조언을 제공하세요
 
+7. **타이밍 정보 적극 반영**
+   - 위에 제시된 "타이밍 분석"을 반드시 활용하세요
+   - 각 카드의 시기 정보(즉시, 곧, 가까운 미래, 중기적, 장기적, 점진적, 순환적, 대기)를 구체적으로 언급하세요
+   - "언제" 행동해야 하는지 명확하게 전달하세요 (예: "1-2주 이내", "3-6개월 후", "지금 당장" 등)
+   - 급한 것과 느긋한 것을 구분하여 우선순위를 제시하세요
+   - ${overallTiming.summary}를 해석에 적극 반영하세요
+
 답변 구조:
-1. **전체 흐름 요약** (2-3문장, 길흉 판단 포함${combinations.length > 0 ? ', 주요 카드 조합 언급' : ''}, ${categoryNameKo} 맥락 반영)
-2. **각 카드 위치별 해석** (위치마다 긍정/부정 명시, ${categoryNameKo} 관점에서 설명)
+1. **전체 흐름 요약** (2-3문장, 길흉 판단 포함${combinations.length > 0 ? ', 주요 카드 조합 언급' : ''}, 타이밍 요약 포함, ${categoryNameKo} 맥락 반영)
+2. **각 카드 위치별 해석** (위치마다 긍정/부정 명시, 각 카드의 타이밍 정보 포함, ${categoryNameKo} 관점에서 설명)
 ${combinations.length > 0 ? '3. **카드 조합의 의미** (조합에서 발견된 특별한 패턴과 그 의미)\n4' : '3'}. **${categoryNameKo} 맞춤 행동 지침** (${categoryNameKo} 상황에 특화된 구체적 조언 3가지, 피해야 할 일 2가지)
-${combinations.length > 0 ? '5' : '4'}. **타이밍과 주의사항** (언제, 무엇을 조심해야 하는지, ${categoryNameKo} 특성 고려)
+${combinations.length > 0 ? '5' : '4'}. **타이밍과 행동 계획** (각 행동을 언제 해야 하는지 구체적 시기 명시, ${overallTiming.recommendations.join(', ')} 반영, ${categoryNameKo} 특성 고려)
   `.trim();
 }
