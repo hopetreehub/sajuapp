@@ -13,12 +13,12 @@ export default defineConfig(({ mode }) => {
       host: true,
       strictPort: false, // 임시로 false로 변경하여 테스트
       proxy: {
-        // 고객 관리 서비스
-        '/api/customers': {
-          target: 'http://localhost:4016',
-          changeOrigin: true,
-          secure: false,
-        },
+        // 고객 관리 서비스 - Vercel Functions 사용 (프록시 제거)
+        // '/api/customers': {
+        //   target: 'http://localhost:4016',
+        //   changeOrigin: true,
+        //   secure: false,
+        // },
         // 캘린더 서비스
         '/api/calendar': {
           target: 'http://localhost:4012',

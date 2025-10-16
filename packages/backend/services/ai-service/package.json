@@ -4,7 +4,7 @@
   "description": "AI Fortune Interpretation Service with DeepInfra Integration",
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node src/index.ts",
+    "dev": "nodemon --exec ts-node -r tsconfig-paths/register --transpile-only src/index.ts",
     "build": "echo 'AI Service build temporarily skipped'",
     "start": "node dist/index.js",
     "test": "jest",
@@ -72,3 +72,4 @@
   "author": "",
   "license": "MIT"
 }
+

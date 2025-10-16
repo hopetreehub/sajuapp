@@ -6,12 +6,12 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { v4 as uuidv4 } from 'uuid';
+import { aiOrchestrator } from '@/services/ai-orchestrator.service';
+import { AIRequest, AIRequestType } from '@/types/ai.types';
+import { logger } from '@/utils/logger';
 
 const router = Router();
-
-// Gemini API 초기화
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '');
 
 /**
  * 타로 AI 채팅 엔드포인트
@@ -28,39 +28,40 @@ router.post('/chat', async (req: Request, res: Response) => {
       });
     }
 
-    // Gemini 2.0 Flash Exp 모델 사용
-    const model = genAI.getGenerativeModel({
-      model: process.env.GOOGLE_MODEL || 'gemini-2.0-flash-exp',
-    });
-
-    // 생성 설정 - 타로는 더 창의적인 해석이 필요하므로 temperature를 높게 설정
-    const generationConfig = {
+    // AI Orchestrator를 통해 요청 처리
+    const aiRequest: AIRequest = {
+      id: uuidv4(),
+      requestType: AIRequestType.TAROT,
+      systemPrompt: '당신은 전문 타로 리더입니다. 타로 카드의 상징과 의미를 깊이 이해하고 있으며, 내담자의 질문에 대해 통찰력 있고 공감적인 해석을 제공합니다. 한국어로 자연스럽고 따뜻한 어조로 답변해주세요.',
+      userPrompt: prompt,
       temperature: 1.0,
-      topP: 0.95,
-      topK: 40,
-      maxOutputTokens: 800, // 타로 해석은 더 상세하므로 토큰 수 증가
+      maxTokens: 800,
+      metadata: {
+        userQuestion,
+        language: 'ko'
+      }
     };
 
-    // AI 응답 생성
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig,
-    });
+    logger.info(`Processing tarot request: ${aiRequest.id}`);
 
-    const response = result.response;
-    const text = response.text();
+    const aiResponse = await aiOrchestrator.processRequest(aiRequest);
+
+    if (!aiResponse.success) {
+      throw new Error(aiResponse.error || 'AI 응답 생성 실패');
+    }
 
     // 응답 검증 및 정제
-    const cleanedResponse = cleanAIResponse(text);
+    const cleanedResponse = cleanAIResponse(aiResponse.content);
 
     return res.json({
       success: true,
       response: cleanedResponse,
-      model: 'gemini-2.0-flash-exp',
+      provider: aiResponse.provider,
+      model: aiResponse.model,
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('[Tarot AI] Error:', error);
+    logger.error('[Tarot AI] Error:', error);
 
     // 에러 응답
     return res.status(500).json({

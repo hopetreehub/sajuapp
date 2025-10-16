@@ -36,15 +36,30 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
   const calculateCurrentAge = (birthDate: string): number => {
     const birth = new Date(birthDate);
     const today = new Date();
+
+    console.log('🔍 [나이계산] birthDate 입력:', birthDate);
+    console.log('🔍 [나이계산] birth 객체:', birth);
+    console.log('🔍 [나이계산] 출생년도:', birth.getFullYear());
+    console.log('🔍 [나이계산] 현재년도:', today.getFullYear());
+
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
+
+    console.log('🔍 [나이계산] 기본 나이 (연도차):', age);
+    console.log('🔍 [나이계산] 월 차이:', monthDiff);
+    console.log('🔍 [나이계산] 출생월:', birth.getMonth() + 1);
+    console.log('🔍 [나이계산] 현재월:', today.getMonth() + 1);
 
     // 생일이 아직 안 지났으면 1 빼기
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
       age--;
+      console.log('🔍 [나이계산] 생일 전이므로 -1:', age);
     }
 
-    return age + 1; // 한국 나이 계산 (태어나면 1살)
+    const koreanAge = age + 1; // 한국 나이 계산 (태어나면 1살)
+    console.log('🔍 [나이계산] 최종 한국 나이:', koreanAge);
+
+    return koreanAge;
   };
 
 

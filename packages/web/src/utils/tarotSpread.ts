@@ -19,6 +19,7 @@ export interface TarotSpread {
   nameKo: string;
   description: string;
   cardCount: number;
+  exampleQuestions?: string[]; // 질문 예제
   positions: Array<{
     position: number;
     name: string;
@@ -37,6 +38,12 @@ export const TAROT_SPREADS: TarotSpread[] = [
     nameKo: '원 카드',
     description: '오늘의 운세, 간단한 질문에 대한 답변',
     cardCount: 1,
+    exampleQuestions: [
+      '오늘 나에게 필요한 메시지는 무엇인가요?',
+      '이번 주 나에게 가장 중요한 것은 무엇인가요?',
+      '지금 이 순간 내가 집중해야 할 것은 무엇인가요?',
+      '오늘의 운세는 어떤가요?',
+    ],
     positions: [
       {
         position: 1,
@@ -51,6 +58,12 @@ export const TAROT_SPREADS: TarotSpread[] = [
     nameKo: '쓰리 카드 (과거-현재-미래)',
     description: '시간의 흐름에 따른 상황 파악',
     cardCount: 3,
+    exampleQuestions: [
+      '이 관계는 어떻게 발전할까요?',
+      '내 커리어는 앞으로 어떻게 될까요?',
+      '이 상황의 흐름은 어떻게 변화할까요?',
+      '내 인생의 다음 단계는 무엇인가요?',
+    ],
     positions: [
       {
         position: 1,
@@ -75,6 +88,12 @@ export const TAROT_SPREADS: TarotSpread[] = [
     nameKo: '쓰리 카드 (상황-행동-결과)',
     description: '문제 해결을 위한 행동 지침',
     cardCount: 3,
+    exampleQuestions: [
+      '이 프로젝트를 성공시키려면 어떻게 해야 하나요?',
+      '이 문제를 해결하려면 무엇을 해야 하나요?',
+      '목표 달성을 위한 최선의 방법은 무엇인가요?',
+      '이 상황에서 어떤 행동을 취해야 할까요?',
+    ],
     positions: [
       {
         position: 1,
@@ -99,6 +118,12 @@ export const TAROT_SPREADS: TarotSpread[] = [
     nameKo: '파이브 카드',
     description: '심층적인 상황 분석과 해결책',
     cardCount: 5,
+    exampleQuestions: [
+      '이 상황을 종합적으로 이해하고 싶습니다',
+      '내 인생에서 지금 일어나고 있는 일은 무엇인가요?',
+      '이 결정을 내리기 전에 알아야 할 것은 무엇인가요?',
+      '현재 상황의 전체적인 그림을 보여주세요',
+    ],
     positions: [
       {
         position: 1,
@@ -133,6 +158,12 @@ export const TAROT_SPREADS: TarotSpread[] = [
     nameKo: '켈틱 크로스',
     description: '가장 포괄적인 10장 배치, 깊이 있는 분석',
     cardCount: 10,
+    exampleQuestions: [
+      '내 인생의 전체적인 방향성을 알고 싶습니다',
+      '이 중대한 결정에 대해 깊이 있는 조언이 필요합니다',
+      '복잡한 상황을 완전히 이해하고 싶습니다',
+      '내 삶의 모든 측면을 종합적으로 봐주세요',
+    ],
     positions: [
       {
         position: 1,
@@ -192,6 +223,12 @@ export const TAROT_SPREADS: TarotSpread[] = [
     nameKo: '관계 스프레드',
     description: '연애, 우정, 가족 관계 분석',
     cardCount: 7,
+    exampleQuestions: [
+      '이 사람과의 관계는 어떻게 발전할까요?',
+      '우리 관계에서 개선해야 할 점은 무엇인가요?',
+      '상대방은 나를 어떻게 생각하고 있나요?',
+      '이 관계의 미래는 어떻게 될까요?',
+    ],
     positions: [
       {
         position: 1,
@@ -236,6 +273,12 @@ export const TAROT_SPREADS: TarotSpread[] = [
     nameKo: '진로/커리어 스프레드',
     description: '직업, 사업, 프로젝트 관련 조언',
     cardCount: 6,
+    exampleQuestions: [
+      '이직을 해도 괜찮을까요?',
+      '내 사업은 성공할 수 있을까요?',
+      '승진 기회가 올까요?',
+      '커리어에서 다음 단계는 무엇인가요?',
+    ],
     positions: [
       {
         position: 1,
@@ -275,6 +318,12 @@ export const TAROT_SPREADS: TarotSpread[] = [
     nameKo: '선택 스프레드',
     description: '두 가지 선택지 중 결정할 때',
     cardCount: 7,
+    exampleQuestions: [
+      'A회사와 B회사 중 어디로 이직해야 할까요?',
+      '유학을 가야 할까요, 취업을 해야 할까요?',
+      '이 사람과 결혼해야 할까요, 더 기다려야 할까요?',
+      '두 가지 선택 중 어느 것이 나에게 더 좋을까요?',
+    ],
     positions: [
       {
         position: 1,
@@ -319,6 +368,12 @@ export const TAROT_SPREADS: TarotSpread[] = [
     nameKo: '올해의 운세',
     description: '12개월 동안의 운세 전망',
     cardCount: 13,
+    exampleQuestions: [
+      '올해 나에게는 어떤 일들이 기다리고 있나요?',
+      '2025년 나의 운세는 어떤가요?',
+      '올 한 해 매달 주의해야 할 점은 무엇인가요?',
+      '이번 해의 전체적인 흐름을 알고 싶습니다',
+    ],
     positions: [
       {
         position: 1,

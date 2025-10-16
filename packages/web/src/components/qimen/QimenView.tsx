@@ -22,6 +22,7 @@ import { getAllContexts, type QimenContext } from '@/data/qimenContextWeights';
 import { generateAIPrompt } from '@/utils/qimenContextEvaluator';
 import AIChat from './AIChat';
 import Toast, { type ToastType } from '../common/Toast';
+import { exportContentToPDF } from '@/utils/pdfExport';
 
 export default function QimenView() {
   // 상태 관리
@@ -40,6 +41,7 @@ export default function QimenView() {
   // 목적 선택 상태
   const [selectedContext, setSelectedContext] = useState<QimenContext>('general');
   const [showAIChat, setShowAIChat] = useState(false);
+  const [isExportingPDF, setIsExportingPDF] = useState(false);
 
   // 자동 갱신 관련 상태
   const [autoRefresh, setAutoRefresh] = useState(true);
@@ -235,6 +237,32 @@ export default function QimenView() {
     setHasUnappliedChanges(false);
   };
 
+  // PDF 출력 핸들러
+  const handleExportPDF = async () => {
+    if (!chart) return;
+
+    setIsExportingPDF(true);
+    try {
+      const customerInfo = appliedCustomer
+        ? `${appliedCustomer.name}(${appliedCustomer.birth_date})`
+        : '일반';
+      const timeInfo = selectedDate.toLocaleString('ko-KR');
+
+      await exportContentToPDF(
+        'qimen-content',
+        '⚡ 귀문둔갑 분석 결과',
+        `${chart.yinYang === 'yang' ? '양둔' : '음둔'} ${chart.ju}국 | ${chart.solarTerm.name} | ${timeInfo}`,
+        `귀문둔갑_${customerInfo}`
+      );
+      alert('PDF 출력이 완료되었습니다.');
+    } catch (error) {
+      console.error('PDF 출력 실패:', error);
+      alert('PDF 출력 중 오류가 발생했습니다.');
+    } finally {
+      setIsExportingPDF(false);
+    }
+  };
+
   // 로딩 중
   if (loading || !chart) {
     return (
@@ -320,6 +348,14 @@ export default function QimenView() {
                 <span>🤖</span>
                 <span>AI에게 질문하기</span>
               </button>
+              <button
+                onClick={handleExportPDF}
+                disabled={isExportingPDF}
+                className="px-4 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-lg font-medium hover:from-green-600 hover:to-teal-600 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <span>📄</span>
+                <span>{isExportingPDF ? 'PDF 생성 중...' : 'PDF 출력'}</span>
+              </button>
             </div>
             {selectedContext !== 'general' && (
               <div className="text-center text-sm text-gray-600 dark:text-gray-400 mb-4">
@@ -393,13 +429,23 @@ export default function QimenView() {
           </div>
         </header>
 
-        {/* 시간 선택기 */}
-        <TimeSelector
-          selectedDate={selectedDate}
-          onChange={handleTimeChange}
-        />
+        {/* PDF 출력용 컨테이너 */}
+        <div
+          id="qimen-content"
+          className="space-y-6"
+          style={{
+            /* PDF 출력 최적화 스타일 */
+            WebkitPrintColorAdjust: 'exact',
+            printColorAdjust: 'exact',
+          }}
+        >
+          {/* 시간 선택기 */}
+          <TimeSelector
+            selectedDate={selectedDate}
+            onChange={handleTimeChange}
+          />
 
-        {/* 간단 요약 (초보자용) */}
+          {/* 간단 요약 (초보자용) */}
         {showSimpleSummary && (
           <SimpleSummary
             chart={chart}
@@ -543,6 +589,8 @@ export default function QimenView() {
               </div>
             </div>
           </div>
+        </div>
+
         </div>
 
         {/* 선택한 궁 상세 정보 - 모달로 표시 */}

@@ -9,6 +9,7 @@ import { Customer, getCustomerById } from '@/services/customerApi';
 import { calculateSajuData } from '@/utils/sajuDataCalculator';
 import SajuAIChat from '@/components/saju/SajuAIChat';
 import { calculateFourPillars } from '@/utils/sajuCalculator';
+import { exportUnifiedSajuToPDF, formatDateForFilename } from '@/utils/pdfExport';
 
 export default function UnifiedSajuAnalysisPage() {
   const [selectedCategory, setSelectedCategory] = useState('jubon');
@@ -18,8 +19,30 @@ export default function UnifiedSajuAnalysisPage() {
   const [categoriesLoaded, setCategoriesLoaded] = useState(false);
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
+  const [isExportingPDF, setIsExportingPDF] = useState(false);
 
   const currentCategory = SAJU_RADAR_CATEGORIES.find(cat => cat.id === selectedCategory);
+
+  // PDF 출력 함수
+  const handleExportPDF = async () => {
+    if (!selectedCustomer) return;
+
+    setIsExportingPDF(true);
+    try {
+      const date = formatDateForFilename();
+      await exportUnifiedSajuToPDF(
+        selectedCustomer.birth_date,
+        selectedCustomer.birth_time,
+        date
+      );
+      alert('PDF 출력이 완료되었습니다.');
+    } catch (error) {
+      console.error('PDF 출력 실패:', error);
+      alert('PDF 출력 중 오류가 발생했습니다.');
+    } finally {
+      setIsExportingPDF(false);
+    }
+  };
 
   // 카테고리 변경 시 첫 번째 중항목 자동 선택
   useEffect(() => {
@@ -178,7 +201,7 @@ export default function UnifiedSajuAnalysisPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
+
         {/* 헤더 */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-4 mb-2">
@@ -186,13 +209,23 @@ export default function UnifiedSajuAnalysisPage() {
               🔮 통합 사주 레이더 분석
             </h1>
             {selectedCustomer && customerSajuData && (
-              <button
-                onClick={() => setShowAIChat(true)}
-                className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
-              >
-                <span>🤖</span>
-                <span>AI에게 질문하기</span>
-              </button>
+              <>
+                <button
+                  onClick={() => setShowAIChat(true)}
+                  className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+                >
+                  <span>🤖</span>
+                  <span>AI에게 질문하기</span>
+                </button>
+                <button
+                  onClick={handleExportPDF}
+                  disabled={isExportingPDF}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full font-medium hover:from-blue-600 hover:to-cyan-600 transition-all shadow-lg hover:shadow-xl flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span>📄</span>
+                  <span>{isExportingPDF ? 'PDF 생성 중...' : 'PDF 출력'}</span>
+                </button>
+              </>
             )}
           </div>
           <p className="text-gray-600 dark:text-gray-400 text-lg">
@@ -203,13 +236,23 @@ export default function UnifiedSajuAnalysisPage() {
           </div>
         </div>
 
-        {/* 고객 선택 */}
-        <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
-          <CustomerSelector 
-            onSelect={setSelectedCustomer}
-            selectedCustomer={selectedCustomer}
-          />
-          {selectedCustomer && customerSajuData && (
+        {/* PDF 출력용 컨테이너 */}
+        <div
+          id="unified-saju-content"
+          className="space-y-6"
+          style={{
+            /* PDF 출력 최적화 스타일 */
+            WebkitPrintColorAdjust: 'exact',
+            printColorAdjust: 'exact',
+          }}
+        >
+          {/* 고객 선택 */}
+          <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+            <CustomerSelector
+              onSelect={setSelectedCustomer}
+              selectedCustomer={selectedCustomer}
+            />
+            {selectedCustomer && customerSajuData && (
             <div className="mt-4 p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
               <div className="text-sm text-purple-700 dark:text-purple-300">
                 <div className="font-semibold mb-1">사주 팔자:</div>
@@ -317,6 +360,8 @@ export default function UnifiedSajuAnalysisPage() {
             </div>
             <div className="text-sm">세부항목</div>
           </div>
+        </div>
+
         </div>
 
         {/* AI 채팅 모달 */}
