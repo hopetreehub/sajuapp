@@ -487,7 +487,92 @@ export function determineOrientation(): boolean {
 }
 
 /**
- * 타로 카드 해석 텍스트 생성
+ * 카드의 길흉 판단 (정방향/역방향 고려)
+ */
+function getFortuneDetermination(card: TarotCard, isReversed: boolean): {
+  status: '매우 긍정적' | '긍정적' | '중립' | '부정적' | '매우 부정적';
+  message: string;
+} {
+  // 메이저 아르카나 긍정/부정 분류
+  const majorPositive = ['The Fool', 'The Magician', 'The Empress', 'The Lovers', 'The Chariot',
+                        'Strength', 'The Star', 'The Sun', 'The World'];
+  const majorNegative = ['The Tower', 'The Devil', 'Death', 'The Hanged Man', 'The Moon'];
+
+  // 마이너 아르카나 긍정 카드 (에이스, 9, 10, 6 등)
+  const minorPositive = ['Ace of Wands', 'Ace of Cups', 'Ace of Pentacles', 'Ace of Swords',
+                        'Six of Wands', 'Nine of Cups', 'Ten of Cups', 'Ten of Pentacles',
+                        'Four of Wands', 'Six of Pentacles', 'Nine of Pentacles'];
+
+  // 마이너 아르카나 부정 카드 (5, 10검, 3검 등)
+  const minorNegative = ['Five of Cups', 'Five of Pentacles', 'Five of Swords', 'Five of Wands',
+                        'Ten of Swords', 'Nine of Swords', 'Eight of Swords', 'Seven of Swords',
+                        'Three of Swords'];
+
+  if (!isReversed) {
+    // 정방향
+    if (majorPositive.includes(card.name)) {
+      return {
+        status: '매우 긍정적',
+        message: '이 카드는 **매우 좋은 징조**입니다. 상황이 유리하게 전개될 것입니다.',
+      };
+    }
+    if (minorPositive.includes(card.name)) {
+      return {
+        status: '긍정적',
+        message: '이 카드는 **긍정적인 신호**입니다. 좋은 결과가 기대됩니다.',
+      };
+    }
+    if (majorNegative.includes(card.name)) {
+      return {
+        status: '매우 부정적',
+        message: '이 카드는 **주의가 필요**합니다. 어려운 상황이 예상됩니다.',
+      };
+    }
+    if (minorNegative.includes(card.name)) {
+      return {
+        status: '부정적',
+        message: '이 카드는 **불리한 조건**을 나타냅니다. 신중하게 대처하세요.',
+      };
+    }
+    return {
+      status: '중립',
+      message: '이 카드는 **가능성이 열려있는** 상태입니다. 당신의 선택에 달려있습니다.',
+    };
+  } else {
+    // 역방향 - 반대로 해석
+    if (majorPositive.includes(card.name)) {
+      return {
+        status: '부정적',
+        message: '역방향으로 나와 **상황이 불리**합니다. 조심스럽게 진행하세요.',
+      };
+    }
+    if (minorPositive.includes(card.name)) {
+      return {
+        status: '부정적',
+        message: '역방향으로 **좋지 않은 상황**입니다. 재검토가 필요합니다.',
+      };
+    }
+    if (majorNegative.includes(card.name)) {
+      return {
+        status: '긍정적',
+        message: '역방향으로 **위기가 완화**됩니다. 희망이 보입니다.',
+      };
+    }
+    if (minorNegative.includes(card.name)) {
+      return {
+        status: '중립',
+        message: '역방향으로 **상황이 개선** 중입니다. 긍정적 변화가 시작됩니다.',
+      };
+    }
+    return {
+      status: '중립',
+      message: '역방향으로 **재평가가 필요**합니다. 다른 관점에서 접근하세요.',
+    };
+  }
+}
+
+/**
+ * 타로 카드 해석 텍스트 생성 (길흉 판단 포함)
  */
 export function interpretCard(cardPosition: TarotCardPosition): string {
   const { card, positionName, positionMeaning, isReversed } = cardPosition;
@@ -495,11 +580,14 @@ export function interpretCard(cardPosition: TarotCardPosition): string {
   const orientation = isReversed ? '역방향' : '정방향';
   const meaning = isReversed ? card.reversedMeaning : card.uprightMeaning;
   const keywords = isReversed ? card.reversedKeywords : card.uprightKeywords;
+  const fortune = getFortuneDetermination(card, isReversed);
 
   return `
 **${positionName}**: ${card.nameKo} (${card.name}) - ${orientation}
 
 **위치 의미**: ${positionMeaning}
+
+**길흉 판단**: ${fortune.message}
 
 **카드 의미**: ${meaning}
 
@@ -557,13 +645,31 @@ ${cardsInfo}
 
 ---
 
-위 타로 카드들을 바탕으로 사용자의 질문에 대한 깊이 있는 해석과 조언을 제공해주세요.
-각 카드의 위치 의미와 카드 자체의 의미를 종합하여 통찰력 있는 답변을 작성해주세요.
+위 타로 카드들을 바탕으로 사용자의 질문에 대한 명확하고 직접적인 해석을 제공해주세요.
+
+필수 요구사항:
+1. **길흉 판단을 분명히 하세요**
+   - 좋은 카드: "매우 긍정적입니다", "좋은 결과가 예상됩니다", "유리한 상황입니다"
+   - 나쁜 카드: "어려운 상황입니다", "주의가 필요합니다", "불리한 조건입니다"
+   - 중립 카드: "가능성이 열려있습니다", "당신의 선택에 달려있습니다"
+
+2. **구체적인 조언을 하세요**
+   - "~하는 것이 좋습니다", "~은 피하세요", "~에 집중하세요"
+   - 막연한 조언 대신 실행 가능한 행동 지침
+
+3. **현실적으로 말하세요**
+   - 과도한 낙관이나 위로 금지
+   - 객관적 사실과 가능성 중심으로 전달
+   - "모든 것이 잘 될 거예요" 같은 애매한 표현 금지
+
+4. **각 위치별로 명확한 메시지**
+   - 각 카드가 해당 위치에서 의미하는 바를 직접적으로 설명
+   - 긍정/부정/중립을 명확히 구분하여 전달
 
 답변 구조:
-1. 전체적인 흐름과 메시지 요약
-2. 각 카드 위치별 상세 해석
-3. 종합 조언 및 행동 지침
-4. 주의사항 및 타이밍
+1. **전체 흐름 요약** (2-3문장, 길흉 판단 포함)
+2. **각 카드 위치별 해석** (위치마다 긍정/부정 명시)
+3. **구체적 행동 지침** (해야 할 일 3가지, 피해야 할 일 2가지)
+4. **타이밍과 주의사항** (언제, 무엇을 조심해야 하는지)
   `.trim();
 }
