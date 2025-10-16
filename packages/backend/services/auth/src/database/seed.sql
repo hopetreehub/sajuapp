@@ -1,0 +1,11 @@
+-- Initial Super Admin Account
+-- 주의: 실제 운영 환경에서는 반드시 비밀번호를 변경하세요!
+-- 기본 비밀번호: Admin123!ChangeMeNow
+-- 해시된 비밀번호는 database.ts에서 bcrypt로 생성됩니다
+
+-- 이 파일은 참고용이며, 실제 시드 데이터는 database.ts에서 프로그래밍 방식으로 생성됩니다
+-- 초기 관리자 정보:
+-- username: admin
+-- email: admin@sajuapp.com
+-- role: super_admin
+-- approval_status: approved
