@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import AuthPage from '@/pages/AuthPage';
 import DashboardPage from '@/pages/DashboardPage';
 import AdminDashboardPage from '@/pages/AdminDashboardPage';
+import AdminUserManagementPage from '@/pages/AdminUserManagementPage';
 import CalendarPage from '@/pages/CalendarPage';
 import DiaryPage from '@/pages/DiaryPage';
 import SettingsPage from '@/pages/SettingsPage';
@@ -49,6 +50,7 @@ function App() {
                 <Route path="/calendar" element={<Navigate to="/" replace />} />
                 <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
                 <Route path="/admin" element={<ProtectedRoute><AdminDashboardPage /></ProtectedRoute>} />
+                <Route path="/admin/users" element={<ProtectedRoute><AdminUserManagementPage /></ProtectedRoute>} />
                 <Route path="/fortune" element={<ProtectedRoute><FortunePage /></ProtectedRoute>} />
                 <Route path="/saju" element={<ProtectedRoute><UnifiedSajuAnalysisPageWithLifeChart /></ProtectedRoute>} />
                 <Route path="/customers" element={<ProtectedRoute><CustomerManagementPage /></ProtectedRoute>} />
