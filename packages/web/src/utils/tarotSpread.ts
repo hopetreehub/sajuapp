@@ -605,6 +605,296 @@ export function interpretSpread(cardPositions: TarotCardPosition[]): string {
 }
 
 // =====================
+// 상황별 조언 시스템
+// =====================
+
+/**
+ * 상황 카테고리 정의
+ */
+export type SituationCategory =
+  | 'love' // 연애/결혼
+  | 'career' // 직업/커리어
+  | 'finance' // 재정/돈
+  | 'health' // 건강
+  | 'relationship' // 인간관계/우정
+  | 'spiritual' // 영적 성장/자아
+  | 'decision' // 선택/결정
+  | 'general'; // 일반/종합
+
+/**
+ * 상황별 키워드 매핑
+ */
+const SITUATION_KEYWORDS: Record<SituationCategory, string[]> = {
+  love: [
+    '연애', '사랑', '결혼', '이별', '남자친구', '여자친구', '배우자', '짝사랑',
+    '연인', '데이트', '고백', '프러포즈', '재회', '복연', '소개팅', '만남',
+    '애인', '파트너', '썸', '커플', '부부', '이혼', '재혼',
+  ],
+  career: [
+    '직장', '회사', '취업', '이직', '승진', '면접', '커리어', '일',
+    '사업', '창업', '프로젝트', '업무', '상사', '동료', '직원', '사장',
+    '성과', '성취', '목표', '비즈니스', '경력', '진로', '직업',
+  ],
+  finance: [
+    '돈', '재정', '재산', '투자', '주식', '부동산', '저축', '수입',
+    '지출', '빚', '대출', '경제', '금전', '수익', '손실', '금융',
+    '자산', '코인', '암호화폐', '펀드', '예금', '보험',
+  ],
+  health: [
+    '건강', '병', '질병', '치료', '병원', '의사', '약', '수술',
+    '다이어트', '운동', '체중', '몸', '정신', '우울', '불안', '스트레스',
+    '통증', '회복', '재활', '건강검진', '체력', '피로',
+  ],
+  relationship: [
+    '친구', '가족', '부모', '형제', '자매', '아들', '딸', '자식',
+    '시부모', '장인', '장모', '친정', '시댁', '친구', '지인', '사람',
+    '관계', '인간관계', '소통', '갈등', '화해', '이해', '신뢰',
+  ],
+  spiritual: [
+    '영적', '성장', '깨달음', '자아', '내면', '명상', '수행',
+    '영성', '철학', '종교', '신앙', '믿음', '진리', '의미',
+    '정체성', '가치관', '목적', '방향', '인생', '삶',
+  ],
+  decision: [
+    '선택', '결정', '고민', '망설임', '갈림길', '기로', '딜레마',
+    '판단', '결심', '결단', '선택지', '옵션', '대안', '방법',
+  ],
+  general: ['운세', '오늘', '이번주', '이번달', '올해', '미래', '전체', '종합'],
+};
+
+/**
+ * 질문 텍스트에서 상황 카테고리 감지
+ */
+export function detectSituationCategory(question: string): SituationCategory {
+  const lowerQuestion = question.toLowerCase();
+
+  // 각 카테고리별 키워드 매칭 점수 계산
+  const scores: Record<SituationCategory, number> = {
+    love: 0,
+    career: 0,
+    finance: 0,
+    health: 0,
+    relationship: 0,
+    spiritual: 0,
+    decision: 0,
+    general: 0,
+  };
+
+  for (const [category, keywords] of Object.entries(SITUATION_KEYWORDS)) {
+    for (const keyword of keywords) {
+      if (lowerQuestion.includes(keyword)) {
+        scores[category as SituationCategory] += 1;
+      }
+    }
+  }
+
+  // 가장 높은 점수의 카테고리 반환
+  let maxCategory: SituationCategory = 'general';
+  let maxScore = 0;
+
+  for (const [category, score] of Object.entries(scores)) {
+    if (score > maxScore) {
+      maxScore = score;
+      maxCategory = category as SituationCategory;
+    }
+  }
+
+  return maxCategory;
+}
+
+/**
+ * 상황별 해석 가이드
+ */
+interface SituationAdvice {
+  focusAreas: string[]; // 집중해야 할 영역
+  interpretationTips: string[]; // 해석 팁
+  actionAdvice: string[]; // 행동 지침
+}
+
+const SITUATION_ADVICE: Record<SituationCategory, SituationAdvice> = {
+  love: {
+    focusAreas: ['감정의 흐름', '상대방의 마음', '관계의 진전', '소통 방식'],
+    interpretationTips: [
+      '컵 수트는 감정과 사랑의 상태를 나타냅니다',
+      '연인 카드는 선택과 관계의 조화를 의미합니다',
+      '역방향 카드는 관계의 문제나 감정의 혼란을 나타낼 수 있습니다',
+      '메이저 아르카나는 관계의 중대한 전환점을 암시합니다',
+    ],
+    actionAdvice: [
+      '솔직한 대화로 마음을 표현하세요',
+      '상대방의 입장을 이해하려 노력하세요',
+      '성급하게 결론내리지 말고 시간을 가지세요',
+      '자신의 감정을 먼저 정리하세요',
+    ],
+  },
+  career: {
+    focusAreas: ['업무 성과', '인간관계', '발전 기회', '장애물'],
+    interpretationTips: [
+      '완드 수트는 행동력과 추진력을 나타냅니다',
+      '펜타클 수트는 실질적 성과와 안정성을 의미합니다',
+      '황제/여황제는 리더십과 안정적 구조를 암시합니다',
+      '전차는 목표 달성과 승리를 나타냅니다',
+    ],
+    actionAdvice: [
+      '명확한 목표를 설정하고 계획을 세우세요',
+      '전문성을 키우는 데 집중하세요',
+      '협력과 네트워킹을 활용하세요',
+      '현실적으로 가능한 것부터 시작하세요',
+    ],
+  },
+  finance: {
+    focusAreas: ['수입원', '지출 관리', '투자 기회', '재정 안정성'],
+    interpretationTips: [
+      '펜타클 수트는 금전과 물질적 상황을 나타냅니다',
+      '에이스는 새로운 재정 기회를 암시합니다',
+      '4는 안정과 보존, 10은 완성과 풍요를 의미합니다',
+      '5는 재정적 어려움이나 손실을 경고합니다',
+    ],
+    actionAdvice: [
+      '수입과 지출을 철저히 관리하세요',
+      '장기적 관점에서 계획을 세우세요',
+      '위험 분산을 고려하세요',
+      '전문가의 조언을 구하는 것도 좋습니다',
+    ],
+  },
+  health: {
+    focusAreas: ['신체 상태', '정신 건강', '생활 습관', '회복력'],
+    interpretationTips: [
+      '검 수트는 정신적 스트레스와 불안을 나타낼 수 있습니다',
+      '힘 카드는 내면의 회복력과 치유 능력을 의미합니다',
+      '절제 카드는 균형과 조화로운 건강을 암시합니다',
+      '역방향 카드는 건강 문제에 주의가 필요함을 나타냅니다',
+    ],
+    actionAdvice: [
+      '규칙적인 생활 습관을 유지하세요',
+      '충분한 휴식과 수면을 취하세요',
+      '스트레스 관리에 신경 쓰세요',
+      '필요하다면 전문의 상담을 받으세요',
+    ],
+  },
+  relationship: {
+    focusAreas: ['소통', '이해', '갈등 해결', '유대감'],
+    interpretationTips: [
+      '컵 수트는 감정적 연결과 관계를 나타냅니다',
+      '2는 파트너십과 협력을, 3은 공동체와 우정을 의미합니다',
+      '검 수트의 충돌 카드는 갈등을 암시합니다',
+      '6은 조화와 균형, 치유를 나타냅니다',
+    ],
+    actionAdvice: [
+      '열린 마음으로 대화하세요',
+      '경청과 공감이 중요합니다',
+      '작은 것부터 함께 해결해 나가세요',
+      '시간이 필요하다면 여유를 가지세요',
+    ],
+  },
+  spiritual: {
+    focusAreas: ['내면의 목소리', '영적 성장', '깨달음', '방향성'],
+    interpretationTips: [
+      '은둔자는 내면 탐구와 성찰을 나타냅니다',
+      '여사제는 직관과 내면의 지혜를 의미합니다',
+      '별은 희망과 영감을, 달은 잠재의식을 나타냅니다',
+      '메이저 아르카나는 영혼의 여정을 상징합니다',
+    ],
+    actionAdvice: [
+      '명상이나 성찰의 시간을 가지세요',
+      '내면의 목소리에 귀 기울이세요',
+      '서두르지 말고 천천히 나아가세요',
+      '의미 있는 경험을 추구하세요',
+    ],
+  },
+  decision: {
+    focusAreas: ['선택지 분석', '장단점', '결과 예측', '직관'],
+    interpretationTips: [
+      '연인 카드는 중요한 선택의 순간을 나타냅니다',
+      '검 2는 결정의 어려움과 딜레마를 의미합니다',
+      '정의 카드는 공정한 판단과 균형을 암시합니다',
+      '각 선택지의 결과를 신중히 평가하세요',
+    ],
+    actionAdvice: [
+      '충분한 정보를 수집하세요',
+      '장단점을 객관적으로 비교하세요',
+      '직관도 중요하게 고려하세요',
+      '결정 후에는 흔들리지 말고 나아가세요',
+    ],
+  },
+  general: {
+    focusAreas: ['전반적 흐름', '주요 이슈', '기회와 도전', '방향성'],
+    interpretationTips: [
+      '메이저 아르카나는 중요한 생애 사건을 나타냅니다',
+      '수트의 흐름을 보고 전체적 테마를 파악하세요',
+      '긍정과 부정의 균형을 살펴보세요',
+      '과거-현재-미래의 연결을 이해하세요',
+    ],
+    actionAdvice: [
+      '현재 상황을 객관적으로 파악하세요',
+      '우선순위를 정하고 집중하세요',
+      '균형 잡힌 삶을 추구하세요',
+      '변화를 두려워하지 마세요',
+    ],
+  },
+};
+
+/**
+ * 상황별 맞춤 조언 생성
+ */
+export function generateSituationAdvice(
+  category: SituationCategory,
+  cardPositions: TarotCardPosition[]
+): string {
+  const advice = SITUATION_ADVICE[category];
+  const categoryName = {
+    love: '연애/사랑',
+    career: '직업/커리어',
+    finance: '재정/금전',
+    health: '건강',
+    relationship: '인간관계',
+    spiritual: '영적 성장',
+    decision: '선택/결정',
+    general: '종합 운세',
+  }[category];
+
+  // 카드 분석
+  const suits = cardPositions.map(cp => cp.card.suit);
+  const suitCounts: Record<string, number> = {};
+  suits.forEach(suit => {
+    suitCounts[suit] = (suitCounts[suit] || 0) + 1;
+  });
+
+  const dominantSuit = Object.entries(suitCounts).sort((a, b) => b[1] - a[1])[0]?.[0];
+  const hasMajorArcana = suits.includes('major');
+
+  let suitInsight = '';
+  if (dominantSuit === 'wands') {
+    suitInsight = '완드 수트가 많아 행동과 열정이 중요한 시기입니다.';
+  } else if (dominantSuit === 'cups') {
+    suitInsight = '컵 수트가 많아 감정과 관계가 핵심입니다.';
+  } else if (dominantSuit === 'swords') {
+    suitInsight = '검 수트가 많아 명확한 판단과 결단이 필요합니다.';
+  } else if (dominantSuit === 'pentacles') {
+    suitInsight = '펜타클 수트가 많아 실질적 성과에 집중해야 합니다.';
+  }
+
+  if (hasMajorArcana) {
+    suitInsight += ' 메이저 아르카나가 출현하여 중요한 전환점에 있습니다.';
+  }
+
+  return `
+## 📋 ${categoryName} 상황별 맞춤 조언
+
+${suitInsight}
+
+**🎯 집중 영역:**
+${advice.focusAreas.map((area, i) => `${i + 1}. ${area}`).join('\n')}
+
+**💡 해석 가이드:**
+${advice.interpretationTips.map((tip, i) => `• ${tip}`).join('\n')}
+
+**✅ 행동 지침:**
+${advice.actionAdvice.map((action, i) => `${i + 1}. ${action}`).join('\n')}
+  `.trim();
+}
+
+// =====================
 // 카드 조합 분석 시스템
 // =====================
 
@@ -954,6 +1244,21 @@ ${cp.position}. ${cp.positionName} (${cp.positionMeaning})
     })
     .join('\n\n');
 
+  // 상황 카테고리 자동 감지
+  const situationCategory = detectSituationCategory(userQuestion);
+  const situationAdvice = SITUATION_ADVICE[situationCategory];
+
+  const categoryNameKo = {
+    love: '연애/사랑',
+    career: '직업/커리어',
+    finance: '재정/금전',
+    health: '건강',
+    relationship: '인간관계',
+    spiritual: '영적 성장',
+    decision: '선택/결정',
+    general: '종합',
+  }[situationCategory];
+
   // 카드 조합 분석 추가
   const combinations = analyzeCardCombinations(cardPositions);
   let combinationInfo = '';
@@ -979,12 +1284,25 @@ ${cp.position}. ${cp.positionName} (${cp.positionMeaning})
 타로 리딩 요청
 
 사용자 질문: ${userQuestion}
+질문 카테고리: ${categoryNameKo}
 
 스프레드: ${spread.nameKo} (${spread.name})
 설명: ${spread.description}
 
 뽑힌 카드들:
 ${cardsInfo}${combinationInfo}
+
+---
+
+상황별 해석 가이드 (${categoryNameKo}):
+
+집중 영역: ${situationAdvice.focusAreas.join(', ')}
+
+핵심 해석 팁:
+${situationAdvice.interpretationTips.map((tip, i) => `${i + 1}. ${tip}`).join('\n')}
+
+권장 행동:
+${situationAdvice.actionAdvice.map((action, i) => `${i + 1}. ${action}`).join('\n')}
 
 ---
 
@@ -1014,10 +1332,17 @@ ${cardsInfo}${combinationInfo}
    - 조합에서 발견된 시너지, 충돌, 변형 등을 해석에 포함하세요
    - 조합 분석에서 나온 조언을 종합 해석에 통합하세요` : '- 개별 카드의 의미를 종합하여 해석하세요'}
 
+6. **상황별 맞춤 해석 (${categoryNameKo})**
+   - 위에 제시된 "상황별 해석 가이드"를 적극 활용하세요
+   - 집중 영역: ${situationAdvice.focusAreas.join(', ')}에 초점을 맞추세요
+   - 핵심 해석 팁을 반드시 적용하여 ${categoryNameKo} 상황에 특화된 해석을 제공하세요
+   - 권장 행동 지침을 구체적으로 반영하세요
+   - 질문의 맥락에 맞는 실질적이고 구체적인 조언을 제공하세요
+
 답변 구조:
-1. **전체 흐름 요약** (2-3문장, 길흉 판단 포함${combinations.length > 0 ? ', 주요 카드 조합 언급' : ''})
-2. **각 카드 위치별 해석** (위치마다 긍정/부정 명시)
-${combinations.length > 0 ? '3. **카드 조합의 의미** (조합에서 발견된 특별한 패턴과 그 의미)\n4' : '3'}. **구체적 행동 지침** (해야 할 일 3가지, 피해야 할 일 2가지)
-${combinations.length > 0 ? '5' : '4'}. **타이밍과 주의사항** (언제, 무엇을 조심해야 하는지)
+1. **전체 흐름 요약** (2-3문장, 길흉 판단 포함${combinations.length > 0 ? ', 주요 카드 조합 언급' : ''}, ${categoryNameKo} 맥락 반영)
+2. **각 카드 위치별 해석** (위치마다 긍정/부정 명시, ${categoryNameKo} 관점에서 설명)
+${combinations.length > 0 ? '3. **카드 조합의 의미** (조합에서 발견된 특별한 패턴과 그 의미)\n4' : '3'}. **${categoryNameKo} 맞춤 행동 지침** (${categoryNameKo} 상황에 특화된 구체적 조언 3가지, 피해야 할 일 2가지)
+${combinations.length > 0 ? '5' : '4'}. **타이밍과 주의사항** (언제, 무엇을 조심해야 하는지, ${categoryNameKo} 특성 고려)
   `.trim();
 }
