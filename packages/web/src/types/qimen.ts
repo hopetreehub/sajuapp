@@ -114,6 +114,16 @@ export interface PalaceInfo {
 
   /** 주의사항 */
   warnings: string[];
+
+  /** 신격 패턴 (팔문-구성-팔신 조합) */
+  patterns?: Array<{
+    id: string;
+    name: string;
+    type: 'auspicious' | 'inauspicious' | 'neutral';
+    description: string;
+    effects: string[];
+    strength: number;
+  }>;
 }
 
 /** 귀문둔갑 차트 (완전한 국) */

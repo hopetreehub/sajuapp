@@ -32,6 +32,9 @@ import { CheonGan, JiJi } from '@/utils/sajuScoreCalculator';
 // 정밀 절기 계산 모듈
 import { calculateCurrentSolarTerm, type SolarTermInfo } from './solarTermCalculator';
 
+// 신격 조합 분석 모듈
+import { analyzePatterns, adjustFortuneWithPatterns, type Pattern } from './qimenPatterns';
+
 // ============================================
 // 천간지지 배열
 // ============================================
@@ -344,6 +347,9 @@ function createPalaceInfo(
   // 주의사항 생성
   const warnings = generateWarnings(gate, star, spirit, fortune);
 
+  // 신격 패턴 분석
+  const patterns = analyzePatterns(gate, star, spirit);
+
   return {
     palace,
     direction,
@@ -357,11 +363,12 @@ function createPalaceInfo(
     interpretation,
     recommendations,
     warnings,
+    patterns: patterns.length > 0 ? patterns : undefined,
   };
 }
 
 /**
- * 길흉 판단
+ * 길흉 판단 (신격 조합 분석 포함)
  */
 function evaluateFortune(
   gate: Gate,
@@ -390,12 +397,17 @@ function evaluateFortune(
     else if (spiritNature === 'inauspicious') score -= 20;
   }
 
-  // 점수를 Fortune 타입으로 변환
-  if (score >= 80) return 'excellent';
-  if (score >= 60) return 'good';
-  if (score >= 40) return 'neutral';
-  if (score >= 20) return 'bad';
-  return 'terrible';
+  // 기본 점수를 Fortune으로 변환
+  let baseFortune: Fortune;
+  if (score >= 80) baseFortune = 'excellent';
+  else if (score >= 60) baseFortune = 'good';
+  else if (score >= 40) baseFortune = 'neutral';
+  else if (score >= 20) baseFortune = 'bad';
+  else baseFortune = 'terrible';
+
+  // 신격 조합 분석 적용
+  const patterns = analyzePatterns(gate, star, spirit);
+  return adjustFortuneWithPatterns(baseFortune, patterns);
 }
 
 /**
