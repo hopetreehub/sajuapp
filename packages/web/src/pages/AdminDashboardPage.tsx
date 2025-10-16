@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   ChartBarIcon,
   AcademicCapIcon,
@@ -6,6 +7,7 @@ import {
   ArrowTrendingUpIcon,
   BookOpenIcon,
   PlusIcon,
+  UsersIcon,
 } from '@heroicons/react/24/outline';
 import AcademyStatsCards from '@/components/Admin/AcademyStatsCards';
 import CourseManagement from '@/components/Admin/CourseManagement';
@@ -37,6 +39,7 @@ interface Course {
 }
 
 export default function AdminDashboardPage() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<AcademyStats | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -184,12 +187,19 @@ export default function AdminDashboardPage() {
           
           <div className="flex items-center gap-3">
             <button
+              onClick={() => navigate('/admin/users')}
+              className="px-4 py-2 text-sm bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
+            >
+              <UsersIcon className="h-4 w-4" />
+              사용자 관리
+            </button>
+            <button
               onClick={refreshData}
               className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
             >
               새로고침
             </button>
-            <button 
+            <button
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
             >
               <PlusIcon className="h-4 w-4" />
