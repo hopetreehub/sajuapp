@@ -104,14 +104,19 @@ function cleanAIResponse(text: string): string {
   cleaned = cleaned.replace(/^[-*+]\s/gm, ''); // 리스트
   cleaned = cleaned.replace(/^\d+\.\s/gm, ''); // 번호 리스트
 
-  // 3. 외국어 감지 및 제거 (영어, 중국어, 일본어, 러시아어 등)
-  const foreignRegex = /[a-zA-Z\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\u0400-\u04FF\u0600-\u06FF]+/g;
+  // 3. 외국어 라인 감지 및 제거 (한국어가 없는 라인만 제거)
   const lines = cleaned.split('\n');
   const koreanLines = lines.filter((line) => {
-    // 숫자와 문장부호는 허용
-    const nonKoreanChars = line.replace(/[0-9\s.,!?~():;'"'""\-]/g, '');
-    const hasForeignChars = foreignRegex.test(nonKoreanChars);
-    return !hasForeignChars || line.trim().length === 0;
+    const trimmedLine = line.trim();
+    if (trimmedLine.length === 0) return true; // 빈 줄은 유지
+
+    // 한국어(한글)이 포함된 라인은 유지
+    const hasKorean = /[가-힣]/.test(trimmedLine);
+    if (hasKorean) return true;
+
+    // 한글이 없고 순수 외국어만 있는 라인은 제거
+    const foreignOnlyRegex = /^[a-zA-Z\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\u0400-\u04FF\u0600-\u06FF\s.,!?~():;'"'""\-]+$/;
+    return !foreignOnlyRegex.test(trimmedLine);
   });
 
   cleaned = koreanLines.join('\n');
