@@ -1572,6 +1572,20 @@ ${cp.position}. ${cp.positionName} (${cp.positionMeaning})
   const overallTiming = analyzeOverallTiming(cardPositions);
   const timingInfo = `\n\n타이밍 분석:\n${overallTiming.summary}\n주요 행동 시기:\n${overallTiming.recommendations.map((rec, i) => `${i + 1}. ${rec}`).join('\n')}`;
 
+  // 위험도 분석 추가
+  const overallRisk = analyzeOverallRisk(cardPositions);
+  let riskInfo = `\n\n위험도 분석:\n${overallRisk.summary}`;
+  if (overallRisk.allWarnings.length > 0) {
+    riskInfo += `\n\n경고사항:\n${overallRisk.allWarnings.map((w, i) => `${i + 1}. ${w}`).join('\n')}`;
+  }
+  riskInfo += `\n\n예방 및 대응책:\n${overallRisk.allPrecautions.map((p, i) => `${i + 1}. ${p}`).join('\n')}`;
+  if (overallRisk.criticalCards.length > 0) {
+    riskInfo += `\n\n특히 주의할 카드:\n${overallRisk.criticalCards.map((cp) => {
+      const risk = analyzeCardRisk(cp.card, cp.isReversed);
+      return `- ${cp.positionName} (${cp.card.nameKo}): ${risk.message}`;
+    }).join('\n')}`;
+  }
+
   return `
 타로 리딩 요청
 
@@ -1582,7 +1596,7 @@ ${cp.position}. ${cp.positionName} (${cp.positionMeaning})
 설명: ${spread.description}
 
 뽑힌 카드들:
-${cardsInfo}${combinationInfo}${timingInfo}
+${cardsInfo}${combinationInfo}${timingInfo}${riskInfo}
 
 ---
 
@@ -1638,10 +1652,337 @@ ${situationAdvice.actionAdvice.map((action, i) => `${i + 1}. ${action}`).join('\
    - 급한 것과 느긋한 것을 구분하여 우선순위를 제시하세요
    - ${overallTiming.summary}를 해석에 적극 반영하세요
 
+8. **위험도 평가 명확히 전달**
+   - 위에 제시된 "위험도 분석"을 반드시 반영하세요
+   - 현재 상황의 위험 수준(${overallRisk.maxLevel})을 솔직하고 명확하게 전달하세요
+   ${overallRisk.allWarnings.length > 0 ? `- 경고사항 ${overallRisk.allWarnings.length}가지를 구체적으로 언급하고 왜 위험한지 설명하세요` : ''}
+   - 예방 및 대응책을 실행 가능한 형태로 제시하세요
+   ${overallRisk.criticalCards.length > 0 ? `- 특히 주의할 카드 ${overallRisk.criticalCards.length}장에 대해서는 별도로 강조하세요` : ''}
+   - 위험도가 높을수록 더 직접적이고 강하게 경고하세요
+   - 안전한 상황이면 "안심하셔도 됩니다", "긍정적인 상황입니다"라고 명확히 말하세요
+
 답변 구조:
-1. **전체 흐름 요약** (2-3문장, 길흉 판단 포함${combinations.length > 0 ? ', 주요 카드 조합 언급' : ''}, 타이밍 요약 포함, ${categoryNameKo} 맥락 반영)
+1. **전체 흐름 요약** (2-3문장, 길흉 판단 포함${combinations.length > 0 ? ', 주요 카드 조합 언급' : ''}, 타이밍 요약 포함, 위험도 수준 언급, ${categoryNameKo} 맥락 반영)
 2. **각 카드 위치별 해석** (위치마다 긍정/부정 명시, 각 카드의 타이밍 정보 포함, ${categoryNameKo} 관점에서 설명)
-${combinations.length > 0 ? '3. **카드 조합의 의미** (조합에서 발견된 특별한 패턴과 그 의미)\n4' : '3'}. **${categoryNameKo} 맞춤 행동 지침** (${categoryNameKo} 상황에 특화된 구체적 조언 3가지, 피해야 할 일 2가지)
-${combinations.length > 0 ? '5' : '4'}. **타이밍과 행동 계획** (각 행동을 언제 해야 하는지 구체적 시기 명시, ${overallTiming.recommendations.join(', ')} 반영, ${categoryNameKo} 특성 고려)
+${combinations.length > 0 ? '3. **카드 조합의 의미** (조합에서 발견된 특별한 패턴과 그 의미)\n4' : '3'}. **위험도 평가와 경고** (현재 위험 수준 명시${overallRisk.allWarnings.length > 0 ? ', 경고사항 설명' : ''}${overallRisk.criticalCards.length > 0 ? ', 특히 주의할 카드 강조' : ''}, 예방 및 대응책 제시)
+${combinations.length > 0 ? '5' : '4'}. **${categoryNameKo} 맞춤 행동 지침** (${categoryNameKo} 상황에 특화된 구체적 조언 3가지, 피해야 할 일 2가지, 위험도에 따른 우선순위 반영)
+${combinations.length > 0 ? '6' : '5'}. **타이밍과 행동 계획** (각 행동을 언제 해야 하는지 구체적 시기 명시, ${overallTiming.recommendations.join(', ')} 반영, 위험도에 따른 긴급도 조정, ${categoryNameKo} 특성 고려)
+  `.trim();
+}
+
+// =====================
+// 경고 강도 레벨 시스템
+// =====================
+
+/**
+ * 위험도 레벨 정의
+ */
+export type RiskLevel =
+  | 'critical' // 치명적 (즉각 대응 필요)
+  | 'high' // 높음 (심각한 주의 필요)
+  | 'moderate' // 중간 (주의 필요)
+  | 'low' // 낮음 (가벼운 경계)
+  | 'safe'; // 안전 (긍정적 상황)
+
+/**
+ * 위험도 정보 인터페이스
+ */
+interface RiskInfo {
+  level: RiskLevel;
+  message: string;
+  warnings: string[];
+  precautions: string[];
+}
+
+/**
+ * 카드별 위험도 레벨 매핑
+ */
+const CARD_RISK_LEVELS: Record<string, { upright: RiskLevel; reversed: RiskLevel }> = {
+  // 메이저 아르카나
+  'The Fool': { upright: 'moderate', reversed: 'high' },
+  'The Magician': { upright: 'safe', reversed: 'moderate' },
+  'The High Priestess': { upright: 'safe', reversed: 'moderate' },
+  'The Empress': { upright: 'safe', reversed: 'moderate' },
+  'The Emperor': { upright: 'safe', reversed: 'moderate' },
+  'The Hierophant': { upright: 'safe', reversed: 'moderate' },
+  'The Lovers': { upright: 'safe', reversed: 'high' },
+  'The Chariot': { upright: 'safe', reversed: 'moderate' },
+  'Strength': { upright: 'safe', reversed: 'moderate' },
+  'The Hermit': { upright: 'low', reversed: 'moderate' },
+  'Wheel of Fortune': { upright: 'low', reversed: 'moderate' },
+  'Justice': { upright: 'safe', reversed: 'moderate' },
+  'The Hanged Man': { upright: 'moderate', reversed: 'low' },
+  'Death': { upright: 'high', reversed: 'moderate' },
+  'Temperance': { upright: 'safe', reversed: 'moderate' },
+  'The Devil': { upright: 'critical', reversed: 'high' },
+  'The Tower': { upright: 'critical', reversed: 'high' },
+  'The Star': { upright: 'safe', reversed: 'moderate' },
+  'The Moon': { upright: 'high', reversed: 'moderate' },
+  'The Sun': { upright: 'safe', reversed: 'low' },
+  'Judgement': { upright: 'moderate', reversed: 'moderate' },
+  'The World': { upright: 'safe', reversed: 'moderate' },
+
+  // 완드 수트 - 행동, 에너지
+  'Ace of Wands': { upright: 'safe', reversed: 'moderate' },
+  'Two of Wands': { upright: 'low', reversed: 'moderate' },
+  'Three of Wands': { upright: 'safe', reversed: 'moderate' },
+  'Four of Wands': { upright: 'safe', reversed: 'moderate' },
+  'Five of Wands': { upright: 'moderate', reversed: 'moderate' },
+  'Six of Wands': { upright: 'safe', reversed: 'moderate' },
+  'Seven of Wands': { upright: 'moderate', reversed: 'moderate' },
+  'Eight of Wands': { upright: 'low', reversed: 'moderate' },
+  'Nine of Wands': { upright: 'moderate', reversed: 'moderate' },
+  'Ten of Wands': { upright: 'moderate', reversed: 'moderate' },
+
+  // 컵 수트 - 감정, 관계
+  'Ace of Cups': { upright: 'safe', reversed: 'moderate' },
+  'Two of Cups': { upright: 'safe', reversed: 'moderate' },
+  'Three of Cups': { upright: 'safe', reversed: 'moderate' },
+  'Four of Cups': { upright: 'moderate', reversed: 'low' },
+  'Five of Cups': { upright: 'high', reversed: 'moderate' },
+  'Six of Cups': { upright: 'safe', reversed: 'moderate' },
+  'Seven of Cups': { upright: 'moderate', reversed: 'moderate' },
+  'Eight of Cups': { upright: 'moderate', reversed: 'moderate' },
+  'Nine of Cups': { upright: 'safe', reversed: 'moderate' },
+  'Ten of Cups': { upright: 'safe', reversed: 'moderate' },
+
+  // 검 수트 - 사고, 갈등 (대체로 위험도 높음)
+  'Ace of Swords': { upright: 'low', reversed: 'moderate' },
+  'Two of Swords': { upright: 'moderate', reversed: 'moderate' },
+  'Three of Swords': { upright: 'critical', reversed: 'high' },
+  'Four of Swords': { upright: 'low', reversed: 'moderate' },
+  'Five of Swords': { upright: 'high', reversed: 'moderate' },
+  'Six of Swords': { upright: 'low', reversed: 'moderate' },
+  'Seven of Swords': { upright: 'high', reversed: 'moderate' },
+  'Eight of Swords': { upright: 'high', reversed: 'moderate' },
+  'Nine of Swords': { upright: 'critical', reversed: 'high' },
+  'Ten of Swords': { upright: 'critical', reversed: 'high' },
+
+  // 펜타클 수트 - 물질, 재정
+  'Ace of Pentacles': { upright: 'safe', reversed: 'moderate' },
+  'Two of Pentacles': { upright: 'low', reversed: 'moderate' },
+  'Three of Pentacles': { upright: 'safe', reversed: 'moderate' },
+  'Four of Pentacles': { upright: 'moderate', reversed: 'moderate' },
+  'Five of Pentacles': { upright: 'critical', reversed: 'high' },
+  'Six of Pentacles': { upright: 'safe', reversed: 'moderate' },
+  'Seven of Pentacles': { upright: 'low', reversed: 'moderate' },
+  'Eight of Pentacles': { upright: 'safe', reversed: 'moderate' },
+  'Nine of Pentacles': { upright: 'safe', reversed: 'moderate' },
+  'Ten of Pentacles': { upright: 'safe', reversed: 'moderate' },
+
+  // 코트 카드
+  'Page of Wands': { upright: 'safe', reversed: 'moderate' },
+  'Knight of Wands': { upright: 'low', reversed: 'moderate' },
+  'Queen of Wands': { upright: 'safe', reversed: 'moderate' },
+  'King of Wands': { upright: 'safe', reversed: 'moderate' },
+  'Page of Cups': { upright: 'safe', reversed: 'moderate' },
+  'Knight of Cups': { upright: 'low', reversed: 'moderate' },
+  'Queen of Cups': { upright: 'safe', reversed: 'moderate' },
+  'King of Cups': { upright: 'safe', reversed: 'moderate' },
+  'Page of Swords': { upright: 'low', reversed: 'moderate' },
+  'Knight of Swords': { upright: 'moderate', reversed: 'moderate' },
+  'Queen of Swords': { upright: 'low', reversed: 'moderate' },
+  'King of Swords': { upright: 'safe', reversed: 'moderate' },
+  'Page of Pentacles': { upright: 'safe', reversed: 'moderate' },
+  'Knight of Pentacles': { upright: 'safe', reversed: 'moderate' },
+  'Queen of Pentacles': { upright: 'safe', reversed: 'moderate' },
+  'King of Pentacles': { upright: 'safe', reversed: 'moderate' },
+};
+
+/**
+ * 위험도 레벨별 메시지
+ */
+const RISK_MESSAGES: Record<RiskLevel, { emoji: string; label: string; description: string }> = {
+  critical: {
+    emoji: '🚨',
+    label: '치명적 위험',
+    description: '**즉각적인 대응이 필요**합니다. 현재 상황이 매우 심각하며, 지금 행동하지 않으면 큰 손실이나 위기가 발생할 수 있습니다.',
+  },
+  high: {
+    emoji: '⚠️',
+    label: '높은 위험',
+    description: '**심각한 주의가 필요**합니다. 잘못된 선택이나 방치할 경우 상황이 악화될 가능성이 높습니다.',
+  },
+  moderate: {
+    emoji: '⚡',
+    label: '중간 위험',
+    description: '**주의가 필요**합니다. 신중하게 접근하고 예방적 조치를 취하는 것이 좋습니다.',
+  },
+  low: {
+    emoji: '💡',
+    label: '낮은 위험',
+    description: '**가벼운 경계가 필요**합니다. 큰 문제는 없으나 방심하지 말고 꾸준히 관리하세요.',
+  },
+  safe: {
+    emoji: '✅',
+    label: '안전',
+    description: '**긍정적인 상황**입니다. 현재 방향을 유지하면서 기회를 적극 활용하세요.',
+  },
+};
+
+/**
+ * 카드의 위험도 분석
+ */
+export function analyzeCardRisk(card: TarotCard, isReversed: boolean): RiskInfo {
+  const riskData = CARD_RISK_LEVELS[card.name];
+  if (!riskData) {
+    // 기본값: 중간 위험
+    return {
+      level: 'moderate',
+      message: '주의가 필요한 상황입니다.',
+      warnings: ['상황을 신중하게 판단하세요'],
+      precautions: ['예방적 조치를 고려하세요'],
+    };
+  }
+
+  const level = isReversed ? riskData.reversed : riskData.upright;
+  const riskMsg = RISK_MESSAGES[level];
+
+  // 레벨별 경고 및 예방책
+  const warnings: string[] = [];
+  const precautions: string[] = [];
+
+  switch (level) {
+    case 'critical':
+      warnings.push('지금 즉시 행동하지 않으면 회복 불가능한 손실이 발생할 수 있습니다');
+      warnings.push('현재 상황은 매우 위험하며 긴급한 대응이 필요합니다');
+      precautions.push('즉시 전문가의 조언을 구하세요');
+      precautions.push('모든 결정을 중단하고 상황을 재평가하세요');
+      precautions.push('신뢰할 수 있는 사람들과 상의하세요');
+      break;
+
+    case 'high':
+      warnings.push('잘못된 판단이 큰 문제로 이어질 수 있습니다');
+      warnings.push('현재 방향을 유지하면 상황이 악화될 가능성이 높습니다');
+      precautions.push('현재 계획을 신중하게 재검토하세요');
+      precautions.push('위험 요소를 식별하고 대비책을 마련하세요');
+      precautions.push('성급한 결정을 피하고 충분히 고민하세요');
+      break;
+
+    case 'moderate':
+      warnings.push('방심하면 예상치 못한 문제가 발생할 수 있습니다');
+      precautions.push('신중하게 접근하고 준비를 철저히 하세요');
+      precautions.push('예방적 조치를 미리 준비하세요');
+      precautions.push('정기적으로 상황을 점검하세요');
+      break;
+
+    case 'low':
+      warnings.push('작은 실수가 나중에 문제가 될 수 있습니다');
+      precautions.push('기본적인 주의를 게을리하지 마세요');
+      precautions.push('꾸준히 관리하고 모니터링하세요');
+      break;
+
+    case 'safe':
+      warnings.push('현재는 안전하지만 방심은 금물입니다');
+      precautions.push('현재의 좋은 상황을 유지하기 위해 노력하세요');
+      precautions.push('기회를 적극 활용하되 과신은 피하세요');
+      break;
+  }
+
+  return {
+    level,
+    message: `${riskMsg.emoji} ${riskMsg.label}: ${riskMsg.description}`,
+    warnings,
+    precautions,
+  };
+}
+
+/**
+ * 전체 스프레드의 위험도 분석
+ */
+export function analyzeOverallRisk(cardPositions: TarotCardPosition[]): {
+  maxLevel: RiskLevel;
+  summary: string;
+  criticalCards: TarotCardPosition[];
+  allWarnings: string[];
+  allPrecautions: string[];
+} {
+  const riskCounts: Record<RiskLevel, number> = {
+    critical: 0,
+    high: 0,
+    moderate: 0,
+    low: 0,
+    safe: 0,
+  };
+
+  const criticalCards: TarotCardPosition[] = [];
+  const allWarnings: string[] = [];
+  const allPrecautions: string[] = [];
+
+  // 각 카드 분석
+  cardPositions.forEach((cp) => {
+    const risk = analyzeCardRisk(cp.card, cp.isReversed);
+    riskCounts[risk.level] += 1;
+
+    if (risk.level === 'critical' || risk.level === 'high') {
+      criticalCards.push(cp);
+    }
+  });
+
+  // 최고 위험도 결정
+  let maxLevel: RiskLevel = 'safe';
+  if (riskCounts.critical > 0) maxLevel = 'critical';
+  else if (riskCounts.high >= 2) maxLevel = 'critical'; // 높은 위험 2개 이상 = 치명적
+  else if (riskCounts.high >= 1) maxLevel = 'high';
+  else if (riskCounts.moderate >= 2) maxLevel = 'moderate';
+  else if (riskCounts.moderate >= 1) maxLevel = 'low';
+
+  // 요약 메시지 생성
+  let summary = '';
+  if (maxLevel === 'critical') {
+    summary = '🚨 **매우 위험한 상황**입니다. 즉각적인 행동이 필요합니다.';
+    allWarnings.push('현재 상황은 심각하며, 신속하고 현명한 대응이 필수입니다');
+    allPrecautions.push('모든 중요한 결정을 중단하고 상황을 재평가하세요');
+    allPrecautions.push('전문가나 신뢰할 수 있는 조언자의 도움을 구하세요');
+  } else if (maxLevel === 'high') {
+    summary = '⚠️ **위험도가 높습니다**. 매우 신중한 접근이 필요합니다.';
+    allWarnings.push('잘못된 선택이 큰 문제를 초래할 수 있습니다');
+    allPrecautions.push('모든 선택지를 신중하게 평가하고 위험을 최소화하세요');
+  } else if (maxLevel === 'moderate') {
+    summary = '⚡ **주의가 필요**한 상황입니다. 신중하게 진행하세요.';
+    allWarnings.push('예상치 못한 문제가 발생할 수 있으니 주의하세요');
+    allPrecautions.push('계획을 철저히 검토하고 대비책을 마련하세요');
+  } else if (maxLevel === 'low') {
+    summary = '💡 **전반적으로 안정적**이지만 작은 주의가 필요합니다.';
+    allPrecautions.push('기본적인 관리와 모니터링을 지속하세요');
+  } else {
+    summary = '✅ **안전하고 긍정적**인 상황입니다.';
+    allPrecautions.push('현재의 좋은 흐름을 유지하면서 기회를 활용하세요');
+  }
+
+  return {
+    maxLevel,
+    summary,
+    criticalCards,
+    allWarnings,
+    allPrecautions,
+  };
+}
+
+/**
+ * 위험도 분석 텍스트 생성
+ */
+export function formatRiskAnalysis(cardPositions: TarotCardPosition[]): string {
+  const overallRisk = analyzeOverallRisk(cardPositions);
+
+  // 위험한 카드 목록
+  let criticalSection = '';
+  if (overallRisk.criticalCards.length > 0) {
+    const criticalList = overallRisk.criticalCards.map((cp) => {
+      const risk = analyzeCardRisk(cp.card, cp.isReversed);
+      return `• **${cp.positionName}** (${cp.card.nameKo}): ${RISK_MESSAGES[risk.level].emoji} ${RISK_MESSAGES[risk.level].label}`;
+    });
+
+    criticalSection = `\n\n**⚠️ 특히 주의할 카드:**\n${criticalList.join('\n')}`;
+  }
+
+  return `
+## ${RISK_MESSAGES[overallRisk.maxLevel].emoji} 위험도 분석
+
+${overallRisk.summary}
+
+${overallRisk.allWarnings.length > 0 ? `**경고사항:**\n${overallRisk.allWarnings.map((w, i) => `${i + 1}. ${w}`).join('\n')}\n` : ''}
+**예방 및 대응책:**
+${overallRisk.allPrecautions.map((p, i) => `${i + 1}. ${p}`).join('\n')}${criticalSection}
   `.trim();
 }
