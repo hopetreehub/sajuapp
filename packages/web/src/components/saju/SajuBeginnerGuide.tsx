@@ -16,7 +16,7 @@ export default function SajuBeginnerGuide({ onClose }: SajuBeginnerGuideProps) {
   const [activeTab, setActiveTab] = useState<'what' | 'how' | 'terms'>('what');
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" data-testid="beginner-guide-modal">
       <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[85vh] overflow-hidden">
         {/* 헤더 */}
         <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-6 text-white">

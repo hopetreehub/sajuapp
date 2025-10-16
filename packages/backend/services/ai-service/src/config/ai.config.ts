@@ -12,7 +12,7 @@ export const AI_CONFIG: Record<AIProvider, AIServiceConfig> = {
     maxTokens: parseInt(process.env.DEEPINFRA_MAX_TOKENS || '4000'),
     temperature: parseFloat(process.env.DEEPINFRA_TEMPERATURE || '0.7'),
     timeout: parseInt(process.env.DEEPINFRA_TIMEOUT || '30000'),
-    priority: 1,
+    priority: 2,
     cost: 'low',
     enabled: true
   },
@@ -24,7 +24,7 @@ export const AI_CONFIG: Record<AIProvider, AIServiceConfig> = {
     maxTokens: parseInt(process.env.OPENAI_MAX_TOKENS || '2000'),
     temperature: 0.7,
     timeout: 30000,
-    priority: 2,
+    priority: 1,
     cost: 'medium',
     dailyLimit: 100,
     enabled: !!process.env.OPENAI_API_KEY

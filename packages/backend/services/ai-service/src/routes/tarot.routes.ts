@@ -85,8 +85,8 @@ router.post('/chat', async (req: Request, res: Response) => {
 });
 
 /**
- * AI 응답 정제 함수
- * - 외국어 제거
+ * AI 응답 정제 함수 (개선 버전)
+ * - 외국어 제거 강화
  * - 마크다운 형식 제거
  * - 불완전한 문장 수정
  */
@@ -104,7 +104,7 @@ function cleanAIResponse(text: string): string {
   cleaned = cleaned.replace(/^[-*+]\s/gm, ''); // 리스트
   cleaned = cleaned.replace(/^\d+\.\s/gm, ''); // 번호 리스트
 
-  // 3. 외국어 라인 감지 및 제거 (한국어가 없는 라인만 제거)
+  // 3. 외국어 라인 감지 및 제거 (강화된 버전)
   const lines = cleaned.split('\n');
   const koreanLines = lines.filter((line) => {
     const trimmedLine = line.trim();
@@ -114,22 +114,34 @@ function cleanAIResponse(text: string): string {
     const hasKorean = /[가-힣]/.test(trimmedLine);
     if (hasKorean) return true;
 
-    // 한글이 없고 순수 외국어만 있는 라인은 제거
-    const foreignOnlyRegex = /^[a-zA-Z\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\u0400-\u04FF\u0600-\u06FF\s.,!?~():;'"'""\-]+$/;
-    return !foreignOnlyRegex.test(trimmedLine);
+    // 숫자와 기호만 있는 경우 유지
+    if (/^[\d\s.,!?~():;'"'""\-]+$/.test(trimmedLine)) return true;
+
+    // 한글이 없고 외국어가 포함된 라인은 제거
+    const hasForeignText = /[a-zA-Z\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\u0400-\u04FF\u0600-\u06FF\u0E00-\u0E7F\u1000-\u109F]/.test(trimmedLine);
+    return !hasForeignText;
   });
 
   cleaned = koreanLines.join('\n');
 
-  // 4. 불완전한 문장 제거
+  // 4. 외국어 단어 제거 (라인 내부)
+  cleaned = cleaned.replace(/[a-zA-Z]{3,}(?:\s+[a-zA-Z]{3,})*/g, ''); // 3글자 이상 연속 영문 제거
+  cleaned = cleaned.replace(/[\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF]{2,}/g, ''); // 중국어, 일본어 제거
+  cleaned = cleaned.replace(/[\u0400-\u04FF\u0600-\u06FF\u0E00-\u0E7F\u1000-\u109F]+/g, ''); // 러시아어, 아랍어, 태국어, 미얀마어 제거
+
+  // 5. 불완전한 문장 제거
   cleaned = cleaned.replace(/\s+[을를이가에와과]$/gm, ''); // 끝나지 않은 조사
   cleaned = cleaned.replace(/\s+있어$/gm, '있어요'); // 불완전한 종결어미
 
-  // 5. 공백 정리
+  // 6. 공백 정리
+  cleaned = cleaned.replace(/\s{2,}/g, ' '); // 연속된 공백 제거
   cleaned = cleaned.replace(/\n{3,}/g, '\n\n'); // 3개 이상 개행 제거
   cleaned = cleaned.trim();
 
-  // 6. 최소 길이 검증
+  // 7. 빈 라인 정리
+  cleaned = cleaned.split('\n').filter(line => line.trim().length > 0).join('\n\n');
+
+  // 8. 최소 길이 검증
   if (cleaned.length < 20) {
     return '죄송합니다. 타로 해석을 생성하는 데 문제가 발생했습니다. 다시 질문해 주세요.';
   }

@@ -16,6 +16,7 @@ import { convertCustomerToLifetimeRequest } from '@/utils/customerDataConverter'
 import '@/utils/testUniqueValues'; // 개인별 고유값 테스트 함수 로드
 import SajuAIChat from '@/components/saju/SajuAIChat';
 import { calculateFourPillars } from '@/utils/sajuCalculator';
+import SajuBeginnerGuide from '@/components/saju/SajuBeginnerGuide';
 
 export default function UnifiedSajuAnalysisPageWithLifeChart() {
   const [selectedCategory, setSelectedCategory] = useState('jubon');
@@ -31,6 +32,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
   const [lifeChartError, setLifeChartError] = useState<string | null>(null);
   const [categories, setCategories] = useState<SajuRadarCategory[]>(SAJU_RADAR_CATEGORIES);
   const [showAIChat, setShowAIChat] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
 
   // 정확한 나이 계산 함수
   const calculateCurrentAge = (birthDate: string): number => {
@@ -320,10 +322,17 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
         
         {/* 헤더 */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-4 mb-2">
+          <div className="flex items-center justify-center gap-4 mb-2 flex-wrap">
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
               🔮 통합 사주 레이더 분석
             </h1>
+            <button
+              onClick={() => setShowGuide(true)}
+              className="px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-sm font-medium hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors flex items-center gap-2"
+            >
+              <span>📖</span>
+              <span>초보자 가이드</span>
+            </button>
             {/* AI 버튼 디버깅 */}
             {(() => {
               console.log('🔍 [AI 버튼 렌더링 체크]', {
@@ -573,6 +582,11 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
             } as any}
             onClose={() => setShowAIChat(false)}
           />
+        )}
+
+        {/* 초보자 가이드 모달 */}
+        {showGuide && (
+          <SajuBeginnerGuide onClose={() => setShowGuide(false)} />
         )}
 
       </div>
