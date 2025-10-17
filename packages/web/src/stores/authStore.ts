@@ -109,12 +109,21 @@ export const useAuthStore = create<AuthState>()(
           console.error('Logout error:', error);
         }
 
+        // 상태 완전 초기화
         set({
           isAuthenticated: false,
           user: null,
           token: null,
-          error: null
+          error: null,
+          isLoading: false
         });
+
+        // localStorage 강제 초기화 (persist 미들웨어 지연 방지)
+        try {
+          localStorage.removeItem('auth-storage');
+        } catch (error) {
+          console.error('Failed to clear auth storage:', error);
+        }
       },
 
       signUp: async (data: SignUpData) => {
