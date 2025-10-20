@@ -11,6 +11,7 @@ import { calculateQimenChart } from '@/utils/qimenCalculator';
 import type { QimenChart, Palace } from '@/types/qimen';
 import type { Customer } from '@/services/customerApi';
 import QimenChart3x3 from './QimenChart';
+import Qimen3DRenderer from './Qimen3DRenderer';
 import PalaceDetail from './PalaceDetail';
 import TimeSelector from './TimeSelector';
 import BeginnerGuide from './BeginnerGuide';
@@ -39,6 +40,7 @@ export default function QimenView() {
   const [showGuide, setShowGuide] = useState(false);
   const [showSimpleSummary, setShowSimpleSummary] = useState(true);
   const [showHeatmap, setShowHeatmap] = useState(false);
+  const [show3D, setShow3D] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
 
   // 고객 선택 관련 상태
@@ -468,6 +470,16 @@ export default function QimenView() {
             >
               {showHeatmap ? '🎨 히트맵 모드' : '📊 차트 모드'}
             </button>
+            <button
+              onClick={() => setShow3D(!show3D)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                show3D
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                  : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600'
+              }`}
+            >
+              {show3D ? '🎲 3D 모드' : '🎯 2D 모드'}
+            </button>
           </div>
 
           {/* 국 정보 */}
@@ -518,9 +530,16 @@ export default function QimenView() {
           />
         )}
 
-        {/* 구궁 차트 / 길흉 히트맵 */}
+        {/* 구궁 차트 / 길흉 히트맵 / 3D 뷰 */}
         <div className="my-8">
-          {showHeatmap ? (
+          {show3D ? (
+            <Qimen3DRenderer
+              chart={chart}
+              selectedPalace={selectedPalace}
+              onPalaceSelect={handlePalaceSelect}
+              autoRotate={true}
+            />
+          ) : showHeatmap ? (
             <FortuneHeatmap
               chart={chart}
               selectedPalace={selectedPalace}
