@@ -7,9 +7,9 @@ import {
   deleteCustomer,
   type Customer,
 } from './database/db';
-import { applySecurity, validateInput } from './middleware/security';
+import { applySecurity, validateInput } from '../lib/security';
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // 보안 미들웨어 적용 (CORS, Security Headers, Rate Limiting)
   if (!applySecurity(req, res)) {
     return; // 이미 응답이 전송됨

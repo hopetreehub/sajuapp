@@ -1,50 +1,36 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
+/**
+ * Diaries API - PostgreSQL 기반
+ *
+ * @see packages/web/api/database/schema.sql
+ * @author Claude Code
+ * @version 2.0.0
+ */
 
-// Diary Entry interface
-export interface DiaryEntry {
-  id?: string;
-  user_id?: string;
-  date: string; // YYYY-MM-DD
-  content: string;
-  mood?: string;
-  weather?: string;
-  tags?: string[];
-  images?: string[]; // Base64 encoded images
-  created_at?: string;
-  updated_at?: string;
-}
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { applySecurityMiddleware } from '../lib/security';
+import {
+  getAllDiaries,
+  getDiaryById,
+  getDiaryByDate,
+  getDiariesByTag,
+  createDiary,
+  updateDiary,
+  deleteDiary,
+  type Diary,
+} from './database/db';
 
-// 임시 다이어리 데이터 (메모리에 저장)
-const diaries: DiaryEntry[] = [
-  {
-    id: '1',
-    user_id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    date: '2024-12-30',
-    content: '오늘은 새로운 프로젝트를 시작했다. 기대가 된다.',
-    mood: '😊',
-    weather: '☀️',
-    tags: ['프로젝트', '시작'],
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    user_id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
-    date: '2024-12-29',
-    content: '친구들과 즐거운 시간을 보냈다.',
-    mood: '😄',
-    weather: '⛅',
-    tags: ['친구', '즐거움'],
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
+/**
+ * API 핸들러
+ */
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // 보안 미들웨어 적용
+  const middlewareResult = applySecurityMiddleware(req, res);
+  if (middlewareResult) return middlewareResult;
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
   // CORS 헤더 설정
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-user-id');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   // OPTIONS 요청 처리 (CORS preflight)
   if (req.method === 'OPTIONS') {
@@ -52,106 +38,177 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const { method } = req;
-  const userId = req.headers['x-user-id'] as string || 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11';
 
   try {
     switch (method) {
       case 'GET':
-        return handleGetDiaries(req, res, userId);
+        return await handleGetDiaries(req, res);
       case 'POST':
-        return handleCreateDiary(req, res, userId);
+        return await handleCreateDiary(req, res);
       case 'PUT':
-        return handleUpdateDiary(req, res, userId);
+        return await handleUpdateDiary(req, res);
       case 'DELETE':
-        return handleDeleteDiary(req, res, userId);
+        return await handleDeleteDiary(req, res);
       default:
         res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
         return res.status(405).json({ error: `Method ${method} Not Allowed` });
     }
   } catch (error) {
-    console.error('Diary API Error:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    console.error('API Error:', error);
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
   }
 }
 
-function handleGetDiaries(req: VercelRequest, res: VercelResponse, userId: string) {
-  const { id, date, startDate, endDate, month, page = '1', limit = '10' } = req.query;
+/**
+ * GET /api/diaries - 일기 조회
+ * Query params:
+ * - date: 특정 날짜 (YYYY-MM-DD)
+ * - tag: 태그로 필터링
+ * - userId: 사용자 ID (기본값: 'default-user')
+ * - id: 특정 일기 ID
+ */
+async function handleGetDiaries(req: VercelRequest, res: VercelResponse) {
+  const { date, tag, userId = 'default-user', id } = req.query;
 
-  let filteredDiaries = diaries.filter(diary => diary.user_id === userId);
+  let diaries: Diary[] | Diary | null;
 
-  // ID로 특정 다이어리 조회
+  // 특정 ID로 조회
   if (id) {
-    const diary = filteredDiaries.find(d => d.id === id);
-    if (!diary) {
+    const diaryId = parseInt(id as string, 10);
+    if (isNaN(diaryId)) {
+      return res.status(400).json({ error: 'Invalid diary ID' });
+    }
+    diaries = await getDiaryById(diaryId);
+    if (!diaries) {
       return res.status(404).json({ error: 'Diary not found' });
     }
-    return res.status(200).json(diary);
+    return res.status(200).json({
+      success: true,
+      data: { ...diaries, id: diaries.id.toString() },
+    });
   }
 
-  // 날짜로 특정 다이어리 조회
+  // 날짜로 조회
   if (date) {
-    const diary = filteredDiaries.find(d => d.date === date);
-    if (!diary) {
-      return res.status(404).json({ error: 'Diary not found for this date' });
+    diaries = await getDiaryByDate(date as string, userId as string);
+    if (!diaries) {
+      return res.status(200).json({
+        success: true,
+        data: null,
+      });
     }
-    return res.status(200).json(diary);
+    return res.status(200).json({
+      success: true,
+      data: { ...diaries, id: diaries.id.toString() },
+    });
   }
 
-  // 날짜 범위로 필터링
-  if (startDate && endDate) {
-    filteredDiaries = filteredDiaries.filter(diary =>
-      diary.date >= startDate && diary.date <= endDate,
-    );
+  // 태그로 조회
+  if (tag) {
+    diaries = await getDiariesByTag(tag as string, userId as string);
+  } else {
+    diaries = await getAllDiaries(userId as string);
   }
 
-  // 월별 필터링
-  if (month) {
-    filteredDiaries = filteredDiaries.filter(diary =>
-      diary.date.startsWith(month),
-    );
-  }
+  // API 응답 형식 변환 (id를 string으로)
+  const formattedDiaries = Array.isArray(diaries)
+    ? diaries.map(diary => ({
+        ...diary,
+        id: diary.id.toString(),
+      }))
+    : [];
 
-  // 페이지네이션
-  const pageNum = parseInt(page as string);
-  const limitNum = parseInt(limit as string);
-  const startIndex = (pageNum - 1) * limitNum;
-  const endIndex = startIndex + limitNum;
-
-  const paginatedDiaries = filteredDiaries
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(startIndex, endIndex);
-
-  return res.status(200).json(paginatedDiaries);
+  return res.status(200).json({
+    success: true,
+    data: formattedDiaries,
+    total: formattedDiaries.length,
+  });
 }
 
-function handleCreateDiary(req: VercelRequest, res: VercelResponse, userId: string) {
-  const { date, content, mood, weather, tags, images } = req.body;
+/**
+ * POST /api/diaries - 일기 생성
+ * Body:
+ * - date: string (필수, YYYY-MM-DD)
+ * - content: string (필수)
+ * - mood?: string (이모지)
+ * - weather?: string (이모지)
+ * - tags?: string[]
+ * - images?: string[]
+ */
+async function handleCreateDiary(req: VercelRequest, res: VercelResponse) {
+  const {
+    date,
+    content,
+    mood,
+    weather,
+    tags = [],
+    images = [],
+    user_id = 'default-user',
+  } = req.body;
 
+  // 필수 필드 검증
   if (!date || !content) {
     return res.status(400).json({
       error: 'Date and content are required',
     });
   }
 
-  const newDiary: DiaryEntry = {
-    id: Date.now().toString(),
-    user_id: userId,
+  // 날짜 형식 검증
+  const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+  if (!datePattern.test(date)) {
+    return res.status(400).json({
+      error: 'Invalid date format. Use YYYY-MM-DD format.',
+    });
+  }
+
+  // 배열 타입 검증
+  if (!Array.isArray(tags) || !Array.isArray(images)) {
+    return res.status(400).json({
+      error: 'Tags and images must be arrays',
+    });
+  }
+
+  // 중복 체크 (하루에 하나의 일기만 허용)
+  const existing = await getDiaryByDate(date, user_id);
+  if (existing) {
+    return res.status(409).json({
+      error: 'Diary for this date already exists. Use PUT to update.',
+    });
+  }
+
+  // 일기 생성
+  const newDiary = await createDiary({
+    user_id: user_id || 'default-user',
     date,
     content,
-    mood: mood || '',
-    weather: weather || '',
-    tags: tags || [],
-    images: images || [],
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
+    mood,
+    weather,
+    tags,
+    images,
+  });
+
+  // API 응답 형식 변환
+  const formattedDiary = {
+    ...newDiary,
+    id: newDiary.id.toString(),
   };
 
-  diaries.push(newDiary);
-
-  return res.status(201).json(newDiary);
+  return res.status(201).json({
+    success: true,
+    data: formattedDiary,
+  });
 }
 
-function handleUpdateDiary(req: VercelRequest, res: VercelResponse, userId: string) {
+/**
+ * PUT /api/diaries?id={id} - 일기 수정
+ * Query params:
+ * - id: number (필수)
+ * Body: Partial<Diary>
+ */
+async function handleUpdateDiary(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query;
   const updates = req.body;
 
@@ -159,42 +216,82 @@ function handleUpdateDiary(req: VercelRequest, res: VercelResponse, userId: stri
     return res.status(400).json({ error: 'Diary ID is required' });
   }
 
-  const diaryIndex = diaries.findIndex(diary =>
-    diary.id === id && diary.user_id === userId,
-  );
+  const diaryId = parseInt(id as string, 10);
 
-  if (diaryIndex === -1) {
+  if (isNaN(diaryId)) {
+    return res.status(400).json({ error: 'Invalid diary ID' });
+  }
+
+  // 날짜 형식 검증 (업데이트하는 경우)
+  if (updates.date) {
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+    if (!datePattern.test(updates.date)) {
+      return res.status(400).json({
+        error: 'Invalid date format. Use YYYY-MM-DD format.',
+      });
+    }
+  }
+
+  // 배열 타입 검증
+  if (updates.tags && !Array.isArray(updates.tags)) {
+    return res.status(400).json({ error: 'Tags must be an array' });
+  }
+  if (updates.images && !Array.isArray(updates.images)) {
+    return res.status(400).json({ error: 'Images must be an array' });
+  }
+
+  // 일기 업데이트
+  const updatedDiary = await updateDiary(diaryId, updates);
+
+  if (!updatedDiary) {
     return res.status(404).json({ error: 'Diary not found' });
   }
 
-  diaries[diaryIndex] = {
-    ...diaries[diaryIndex],
-    ...updates,
-    updated_at: new Date().toISOString(),
+  // API 응답 형식 변환
+  const formattedDiary = {
+    ...updatedDiary,
+    id: updatedDiary.id.toString(),
   };
 
-  return res.status(200).json(diaries[diaryIndex]);
+  return res.status(200).json({
+    success: true,
+    data: formattedDiary,
+  });
 }
 
-function handleDeleteDiary(req: VercelRequest, res: VercelResponse, userId: string) {
+/**
+ * DELETE /api/diaries?id={id} - 일기 삭제
+ * Query params:
+ * - id: number (필수)
+ */
+async function handleDeleteDiary(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query;
 
   if (!id) {
     return res.status(400).json({ error: 'Diary ID is required' });
   }
 
-  const diaryIndex = diaries.findIndex(diary =>
-    diary.id === id && diary.user_id === userId,
-  );
+  const diaryId = parseInt(id as string, 10);
 
-  if (diaryIndex === -1) {
+  if (isNaN(diaryId)) {
+    return res.status(400).json({ error: 'Invalid diary ID' });
+  }
+
+  // 일기 삭제
+  const deletedDiary = await deleteDiary(diaryId);
+
+  if (!deletedDiary) {
     return res.status(404).json({ error: 'Diary not found' });
   }
 
-  const deletedDiary = diaries.splice(diaryIndex, 1)[0];
+  // API 응답 형식 변환
+  const formattedDiary = {
+    ...deletedDiary,
+    id: deletedDiary.id.toString(),
+  };
 
   return res.status(200).json({
     success: true,
-    data: deletedDiary,
+    data: formattedDiary,
   });
 }

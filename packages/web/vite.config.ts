@@ -1,13 +1,72 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import viteCompression from 'vite-plugin-compression';
+import { visualizer } from 'rollup-plugin-visualizer';
+import viteImagemin from 'vite-plugin-imagemin';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   
   return {
-    plugins: [react()],
+    plugins: [
+      react(),
+
+      // Gzip 압축 (프로덕션)
+      mode === 'production' && viteCompression({
+        algorithm: 'gzip',
+        ext: '.gz',
+        threshold: 10240, // 10KB 이상만 압축
+        deleteOriginFile: false,
+      }),
+
+      // Brotli 압축 (프로덕션)
+      mode === 'production' && viteCompression({
+        algorithm: 'brotliCompress',
+        ext: '.br',
+        threshold: 10240,
+        deleteOriginFile: false,
+      }),
+
+      // 이미지 최적화 (프로덕션)
+      mode === 'production' && viteImagemin({
+        gifsicle: {
+          optimizationLevel: 7,
+          interlaced: false,
+        },
+        optipng: {
+          optimizationLevel: 7,
+        },
+        mozjpeg: {
+          quality: 80,
+        },
+        pngquant: {
+          quality: [0.8, 0.9],
+          speed: 4,
+        },
+        svgo: {
+          plugins: [
+            {
+              name: 'removeViewBox',
+              active: false,
+            },
+            {
+              name: 'removeEmptyAttrs',
+              active: true,
+            },
+          ],
+        },
+      }),
+
+      // 번들 분석기 (빌드 시)
+      mode === 'production' && visualizer({
+        filename: 'dist/stats.html',
+        open: false,
+        gzipSize: true,
+        brotliSize: true,
+      }),
+    ].filter(Boolean),
     server: {
       port: parseInt(env.VITE_PORT) || 4000,
       host: true,

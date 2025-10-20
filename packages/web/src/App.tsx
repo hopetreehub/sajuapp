@@ -1,28 +1,40 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import AuthPage from '@/pages/AuthPage';
-import DashboardPage from '@/pages/DashboardPage';
-import AdminDashboardPage from '@/pages/AdminDashboardPage';
-import AdminUserManagementPage from '@/pages/AdminUserManagementPage';
-import CalendarPage from '@/pages/CalendarPage';
-import DiaryPage from '@/pages/DiaryPage';
-import SettingsPage from '@/pages/SettingsPage';
-import FortunePage from '@/pages/FortunePage';
-import SajuChartPage from '@/pages/SajuChartPage';
-import InterpretationPage from '@/pages/InterpretationPage';
-import UnifiedSajuAnalysisPageWithLifeChart from '@/pages/UnifiedSajuAnalysisPageWithLifeChart';
-import CustomerManagementPage from '@/pages/CustomerManagementPage';
-import { CompatibilityPage } from '@/pages/CompatibilityPage';
-import LearningPage from '@/pages/LearningPage';
-import SearchPage from '@/pages/SearchPage';
-import TestApi from '@/pages/TestApi';
-import QimenView from '@/components/qimen/QimenView';
-import QimenLearningPage from '@/pages/QimenLearningPage';
-import ZiweiPage from '@/pages/ZiweiPage';
-import TarotPage from '@/pages/TarotPage';
 import Header from '@/components/Layout/Header';
 import Footer from '@/components/Layout/Footer';
 import ProtectedRoute from '@/components/Auth/ProtectedRoute';
+
+// Lazy load pages for better performance
+const AuthPage = lazy(() => import('@/pages/AuthPage'));
+const DashboardPage = lazy(() => import('@/pages/DashboardPage'));
+const AdminDashboardPage = lazy(() => import('@/pages/AdminDashboardPage'));
+const AdminUserManagementPage = lazy(() => import('@/pages/AdminUserManagementPage'));
+const CalendarPage = lazy(() => import('@/pages/CalendarPage'));
+const DiaryPage = lazy(() => import('@/pages/DiaryPage'));
+const SettingsPage = lazy(() => import('@/pages/SettingsPage'));
+const FortunePage = lazy(() => import('@/pages/FortunePage'));
+const SajuChartPage = lazy(() => import('@/pages/SajuChartPage'));
+const InterpretationPage = lazy(() => import('@/pages/InterpretationPage'));
+const UnifiedSajuAnalysisPageWithLifeChart = lazy(() => import('@/pages/UnifiedSajuAnalysisPageWithLifeChart'));
+const CustomerManagementPage = lazy(() => import('@/pages/CustomerManagementPage'));
+const CompatibilityPage = lazy(() => import('@/pages/CompatibilityPage').then(module => ({ default: module.CompatibilityPage })));
+const LearningPage = lazy(() => import('@/pages/LearningPage'));
+const SearchPage = lazy(() => import('@/pages/SearchPage'));
+const TestApi = lazy(() => import('@/pages/TestApi'));
+const QimenView = lazy(() => import('@/components/qimen/QimenView'));
+const QimenLearningPage = lazy(() => import('@/pages/QimenLearningPage'));
+const ZiweiPage = lazy(() => import('@/pages/ZiweiPage'));
+const TarotPage = lazy(() => import('@/pages/TarotPage'));
+
+// Loading fallback component
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center space-y-4">
+      <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+      <p className="text-gray-600 dark:text-gray-400">로딩 중...</p>
+    </div>
+  </div>
+);
 import { CalendarProvider } from '@/contexts/CalendarContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { YearlyMemoProvider } from '@/contexts/YearlyMemoContext';
@@ -42,7 +54,8 @@ function App() {
             <div className="min-h-screen flex flex-col">
               <Header />
               <main className="flex-1">
-                <Routes>
+                <Suspense fallback={<LoadingFallback />}>
+                  <Routes>
                 {/* 공개 라우트 - 로그인 없이 접근 가능 */}
                 <Route path="/auth" element={<AuthPage />} />
 
@@ -77,6 +90,7 @@ function App() {
                 {/* 타로 카드 */}
                 <Route path="/tarot" element={<ProtectedRoute><TarotPage /></ProtectedRoute>} />
               </Routes>
+                </Suspense>
             </main>
             <Footer />
           </div>
