@@ -1,60 +1,12 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-
-// Customer 인터페이스 (프론트엔드와 일치)
-interface Customer {
-  id: number; // string -> number로 변경
-  name: string;
-  birth_date: string;
-  birth_time: string;
-  phone: string;
-  gender: 'male' | 'female';
-  lunar_solar: 'lunar' | 'solar';
-  memo?: string; // notes -> memo로 변경
-  saju_data?: unknown;
-  created_at: string;
-  updated_at: string;
-}
-
-// 임시 고객 데이터 (메모리에 저장)
-// TODO: 추후 SQLite 데이터베이스로 전환
-const customers: Customer[] = [
-  {
-    id: 1,
-    name: '박준수',
-    birth_date: '1990-05-15',
-    birth_time: '14:30',
-    phone: '010-1234-5678',
-    gender: 'male',
-    lunar_solar: 'solar',
-    memo: '사주 상담 고객',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 2,
-    name: '이정미',
-    birth_date: '1988-11-22',
-    birth_time: '09:15',
-    phone: '010-9876-5432',
-    gender: 'female',
-    lunar_solar: 'lunar',
-    memo: '궁합 상담 고객',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 3,
-    name: '최민호',
-    birth_date: '1985-03-10',
-    birth_time: '16:45',
-    phone: '010-5555-1234',
-    gender: 'male',
-    lunar_solar: 'solar',
-    memo: '귀문둔갑 상담',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
+import {
+  getAllCustomers,
+  getCustomerById,
+  createCustomer,
+  updateCustomer,
+  deleteCustomer,
+  type Customer,
+} from './database/db';
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
   // CORS 헤더 설정
@@ -72,24 +24,25 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   try {
     switch (method) {
       case 'GET':
-        return handleGetCustomers(req, res);
+        return await handleGetCustomers(req, res);
       case 'POST':
-        return handleCreateCustomer(req, res);
+        return await handleCreateCustomer(req, res);
       case 'PUT':
-        return handleUpdateCustomer(req, res);
+        return await handleUpdateCustomer(req, res);
       case 'DELETE':
-        return handleDeleteCustomer(req, res);
+        return await handleDeleteCustomer(req, res);
       default:
         res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
         return res.status(405).json({ error: `Method ${method} Not Allowed` });
     }
   } catch (error) {
     console.error('API Error:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    const errorMessage = error instanceof Error ? error.message : 'Internal Server Error';
+    return res.status(500).json({ error: errorMessage });
   }
 }
 
-function handleGetCustomers(req: VercelRequest, res: VercelResponse) {
+async function handleGetCustomers(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query;
 
   // 특정 고객 조회
@@ -98,7 +51,7 @@ function handleGetCustomers(req: VercelRequest, res: VercelResponse) {
     if (isNaN(customerId)) {
       return res.status(400).json({ error: 'Invalid customer ID' });
     }
-    const customer = customers.find(c => c.id === customerId);
+    const customer = await getCustomerById(customerId);
     if (!customer) {
       return res.status(404).json({ error: 'Customer not found' });
     }
@@ -109,6 +62,7 @@ function handleGetCustomers(req: VercelRequest, res: VercelResponse) {
   }
 
   // 모든 고객 조회
+  const customers = await getAllCustomers();
   return res.status(200).json({
     success: true,
     data: customers,
@@ -116,7 +70,7 @@ function handleGetCustomers(req: VercelRequest, res: VercelResponse) {
   });
 }
 
-function handleCreateCustomer(req: VercelRequest, res: VercelResponse) {
+async function handleCreateCustomer(req: VercelRequest, res: VercelResponse) {
   const {
     name,
     birth_date,
@@ -125,6 +79,7 @@ function handleCreateCustomer(req: VercelRequest, res: VercelResponse) {
     gender,
     lunar_solar,
     memo,
+    saju_data,
   } = req.body;
 
   if (!name || !birth_date || !birth_time || !gender || !lunar_solar) {
@@ -133,22 +88,16 @@ function handleCreateCustomer(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  // 새 고객 ID 생성 (기존 최대 ID + 1)
-  const maxId = customers.length > 0 ? Math.max(...customers.map(c => c.id)) : 0;
-  const newCustomer: Customer = {
-    id: maxId + 1,
+  const newCustomer = await createCustomer({
     name,
     birth_date,
     birth_time,
     phone: phone || '',
     gender,
     lunar_solar,
-    memo: memo || '',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  };
-
-  customers.push(newCustomer);
+    memo,
+    saju_data,
+  });
 
   return res.status(201).json({
     success: true,
@@ -156,7 +105,7 @@ function handleCreateCustomer(req: VercelRequest, res: VercelResponse) {
   });
 }
 
-function handleUpdateCustomer(req: VercelRequest, res: VercelResponse) {
+async function handleUpdateCustomer(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query;
   const updates = req.body;
 
@@ -169,25 +118,19 @@ function handleUpdateCustomer(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Invalid customer ID' });
   }
 
-  const customerIndex = customers.findIndex(customer => customer.id === customerId);
+  const updatedCustomer = await updateCustomer(customerId, updates);
 
-  if (customerIndex === -1) {
+  if (!updatedCustomer) {
     return res.status(404).json({ error: 'Customer not found' });
   }
 
-  customers[customerIndex] = {
-    ...customers[customerIndex],
-    ...updates,
-    updated_at: new Date().toISOString(),
-  };
-
   return res.status(200).json({
     success: true,
-    data: customers[customerIndex],
+    data: updatedCustomer,
   });
 }
 
-function handleDeleteCustomer(req: VercelRequest, res: VercelResponse) {
+async function handleDeleteCustomer(req: VercelRequest, res: VercelResponse) {
   const { id } = req.query;
 
   if (!id) {
@@ -199,13 +142,11 @@ function handleDeleteCustomer(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Invalid customer ID' });
   }
 
-  const customerIndex = customers.findIndex(customer => customer.id === customerId);
+  const deletedCustomer = await deleteCustomer(customerId);
 
-  if (customerIndex === -1) {
+  if (!deletedCustomer) {
     return res.status(404).json({ error: 'Customer not found' });
   }
-
-  const deletedCustomer = customers.splice(customerIndex, 1)[0];
 
   return res.status(200).json({
     success: true,
