@@ -3,10 +3,10 @@
  *
  * 각 궁의 팔문/구성/팔신 정보를 카드 형태로 표시
  * @author Claude Code
- * @version 1.0.0
+ * @version 1.1.0 - Performance optimized with React.memo and useMemo
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import type { PalaceInfo } from '@/types/qimen';
 
 interface PalaceCardProps {
@@ -15,9 +15,9 @@ interface PalaceCardProps {
   onClick: () => void;
 }
 
-export default function PalaceCard({ palace, isSelected, onClick }: PalaceCardProps) {
-  // 길흉에 따른 색상
-  const getFortuneColor = () => {
+function PalaceCard({ palace, isSelected, onClick }: PalaceCardProps) {
+  // 길흉에 따른 색상 (메모이제이션)
+  const fortuneColor = useMemo(() => {
     switch (palace.fortune) {
       case 'excellent':
         return 'from-green-400 to-emerald-500 dark:from-green-500 dark:to-emerald-600';
@@ -32,10 +32,10 @@ export default function PalaceCard({ palace, isSelected, onClick }: PalaceCardPr
       default:
         return 'from-gray-400 to-slate-500 dark:from-gray-500 dark:to-slate-600';
     }
-  };
+  }, [palace.fortune]);
 
-  // 길흉 이모지
-  const getFortuneEmoji = () => {
+  // 길흉 이모지 (메모이제이션)
+  const fortuneEmoji = useMemo(() => {
     switch (palace.fortune) {
       case 'excellent':
         return '🌟';
@@ -50,7 +50,7 @@ export default function PalaceCard({ palace, isSelected, onClick }: PalaceCardPr
       default:
         return '⚖️';
     }
-  };
+  }, [palace.fortune]);
 
   return (
     <button
@@ -69,7 +69,7 @@ export default function PalaceCard({ palace, isSelected, onClick }: PalaceCardPr
       <div className="flex justify-between items-start mb-2">
         <div className={`
           text-sm font-bold px-2 py-1 rounded-full
-          bg-gradient-to-r ${getFortuneColor()}
+          bg-gradient-to-r ${fortuneColor}
           text-white
         `}>
           {palace.palace}궁
@@ -107,7 +107,7 @@ export default function PalaceCard({ palace, isSelected, onClick }: PalaceCardPr
 
       {/* 길흉 표시 */}
       <div className="absolute top-2 right-2 text-2xl">
-        {getFortuneEmoji()}
+        {fortuneEmoji}
       </div>
 
       {/* 간지 */}
@@ -124,3 +124,6 @@ export default function PalaceCard({ palace, isSelected, onClick }: PalaceCardPr
     </button>
   );
 }
+
+// React.memo로 성능 최적화: palace, isSelected, onClick이 변경되지 않으면 리렌더링 방지
+export default React.memo(PalaceCard);

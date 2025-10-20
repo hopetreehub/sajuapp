@@ -3,10 +3,10 @@
  *
  * 초보자를 위한 쉬운 해석 (전문 용어 없이)
  * @author Claude Code
- * @version 1.0.0
+ * @version 1.1.0 - Performance optimized with React.memo and useMemo
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import type { QimenChart } from '@/types/qimen';
 import { analyzeBirthDate, type BirthYearAnalysis } from '@/utils/birthYearAnalysis';
 import { calculatePersonalizedOverallScore } from '@/utils/qimenPersonalization';
@@ -17,25 +17,63 @@ interface SimpleSummaryProps {
   customerBirthDate?: string;
 }
 
-export default function SimpleSummary({
+// 색상 클래스 (컴포넌트 외부로 이동)
+const colorClasses = {
+  green: {
+    bg: 'bg-green-50 dark:bg-green-900/20',
+    border: 'border-green-200 dark:border-green-800',
+    text: 'text-green-900 dark:text-green-300',
+    textLight: 'text-green-700 dark:text-green-400',
+  },
+  blue: {
+    bg: 'bg-blue-50 dark:bg-blue-900/20',
+    border: 'border-blue-200 dark:border-blue-800',
+    text: 'text-blue-900 dark:text-blue-300',
+    textLight: 'text-blue-700 dark:text-blue-400',
+  },
+  gray: {
+    bg: 'bg-gray-50 dark:bg-gray-700',
+    border: 'border-gray-200 dark:border-gray-600',
+    text: 'text-gray-900 dark:text-gray-300',
+    textLight: 'text-gray-700 dark:text-gray-400',
+  },
+  orange: {
+    bg: 'bg-orange-50 dark:bg-orange-900/20',
+    border: 'border-orange-200 dark:border-orange-800',
+    text: 'text-orange-900 dark:text-orange-300',
+    textLight: 'text-orange-700 dark:text-orange-400',
+  },
+  red: {
+    bg: 'bg-red-50 dark:bg-red-900/20',
+    border: 'border-red-200 dark:border-red-800',
+    text: 'text-red-900 dark:text-red-300',
+    textLight: 'text-red-700 dark:text-red-400',
+  },
+};
+
+function SimpleSummary({
   chart,
   customerName,
   customerBirthDate,
 }: SimpleSummaryProps) {
-  // 가장 좋은 방위와 나쁜 방위
-  const bestPalaces = chart.overallFortune.bestPalaces;
-  const worstPalaces = chart.overallFortune.worstPalaces;
+  // 가장 좋은 방위와 나쁜 방위 (메모이제이션)
+  const bestPalaces = useMemo(() => chart.overallFortune.bestPalaces, [chart.overallFortune.bestPalaces]);
+  const worstPalaces = useMemo(() => chart.overallFortune.worstPalaces, [chart.overallFortune.worstPalaces]);
 
-  // 생년 기반 개인화 분석
-  const birthAnalysis: BirthYearAnalysis | null = customerBirthDate
-    ? analyzeBirthDate(customerBirthDate)
-    : null;
+  // 생년 기반 개인화 분석 (메모이제이션)
+  const birthAnalysis = useMemo<BirthYearAnalysis | null>(
+    () => (customerBirthDate ? analyzeBirthDate(customerBirthDate) : null),
+    [customerBirthDate]
+  );
 
-  // 개인화된 점수 계산
-  const personalizedScore = calculatePersonalizedOverallScore(chart, birthAnalysis);
+  // 개인화된 점수 계산 (메모이제이션)
+  const personalizedScore = useMemo(
+    () => calculatePersonalizedOverallScore(chart, birthAnalysis),
+    [chart, birthAnalysis]
+  );
 
-  // 상황별 조언 생성
-  const getAdvice = () => {
+  // 상황별 조언 생성 (메모이제이션)
+  const advice = useMemo(() => {
     // 개인화된 점수가 있으면 사용, 없으면 기본 점수 사용
     const score = birthAnalysis ? personalizedScore.personalScore : chart.overallFortune.score;
 
@@ -75,43 +113,13 @@ export default function SimpleSummary({
         color: 'red',
       };
     }
-  };
+  }, [birthAnalysis, personalizedScore, chart.overallFortune.score]);
 
-  const advice = getAdvice();
-
-  // 색상 클래스
-  const colorClasses = {
-    green: {
-      bg: 'bg-green-50 dark:bg-green-900/20',
-      border: 'border-green-200 dark:border-green-800',
-      text: 'text-green-900 dark:text-green-300',
-      textLight: 'text-green-700 dark:text-green-400',
-    },
-    blue: {
-      bg: 'bg-blue-50 dark:bg-blue-900/20',
-      border: 'border-blue-200 dark:border-blue-800',
-      text: 'text-blue-900 dark:text-blue-300',
-      textLight: 'text-blue-700 dark:text-blue-400',
-    },
-    gray: {
-      bg: 'bg-gray-50 dark:bg-gray-700',
-      border: 'border-gray-200 dark:border-gray-600',
-      text: 'text-gray-900 dark:text-gray-300',
-      textLight: 'text-gray-700 dark:text-gray-400',
-    },
-    orange: {
-      bg: 'bg-orange-50 dark:bg-orange-900/20',
-      border: 'border-orange-200 dark:border-orange-800',
-      text: 'text-orange-900 dark:text-orange-300',
-      textLight: 'text-orange-700 dark:text-orange-400',
-    },
-    red: {
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      border: 'border-red-200 dark:border-red-800',
-      text: 'text-red-900 dark:text-red-300',
-      textLight: 'text-red-700 dark:text-red-400',
-    },
-  };
+  // 상황별 추천 (메모이제이션)
+  const situationAdvice = useMemo(
+    () => getSituationAdvice(chart, birthAnalysis),
+    [chart, birthAnalysis]
+  );
 
   const colors = colorClasses[advice.color as keyof typeof colorClasses];
 
@@ -250,7 +258,7 @@ export default function SimpleSummary({
           <span>상황별 추천 방향</span>
         </h4>
         <div className="grid md:grid-cols-2 gap-3">
-          {getSituationAdvice(chart, birthAnalysis).map((item, idx) => (
+          {situationAdvice.map((item, idx) => (
             <div key={idx} className="flex items-start gap-2 p-2 bg-white/50 dark:bg-gray-800/50 rounded">
               <span className="text-xl">{item.icon}</span>
               <div className="flex-1">
@@ -264,6 +272,9 @@ export default function SimpleSummary({
     </div>
   );
 }
+
+// React.memo로 성능 최적화: props가 변경되지 않으면 리렌더링 방지
+export default React.memo(SimpleSummary);
 
 // 간단한 설명 생성
 function getSimpleDescription(gate: string, _star: string): string {
