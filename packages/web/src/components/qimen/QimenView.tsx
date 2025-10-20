@@ -25,6 +25,7 @@ import { generateAIPrompt } from '@/utils/qimenContextEvaluator';
 import AIChat from './AIChat';
 import Toast, { type ToastType } from '../Common/Toast';
 import { exportContentToPDF } from '@/utils/pdfExport';
+import NotificationSettings from './NotificationSettings';
 
 export default function QimenView() {
   // 상태 관리
@@ -61,6 +62,9 @@ export default function QimenView() {
     message: string;
     type: ToastType;
   } | null>(null);
+
+  // 알림 설정 모달 상태
+  const [showNotificationSettings, setShowNotificationSettings] = useState(false);
 
   // 변경 히스토리
   const [changeHistory, setChangeHistory] = useState<Array<{
@@ -294,6 +298,13 @@ export default function QimenView() {
             >
               <span>📖</span>
               <span>초보자 가이드</span>
+            </button>
+            <button
+              onClick={() => setShowNotificationSettings(true)}
+              className="px-4 py-2 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 rounded-full text-sm font-medium hover:bg-yellow-200 dark:hover:bg-yellow-900/50 transition-colors flex items-center gap-2"
+            >
+              <span>🔔</span>
+              <span>알림 설정</span>
             </button>
           </div>
           <p className="text-gray-600 dark:text-gray-300 text-lg mb-2">
@@ -712,6 +723,12 @@ export default function QimenView() {
             onClose={() => setShowComparison(false)}
           />
         )}
+
+        {/* 알림 설정 모달 */}
+        <NotificationSettings
+          isOpen={showNotificationSettings}
+          onClose={() => setShowNotificationSettings(false)}
+        />
 
         {/* 토스트 알림 */}
         {toast && (
