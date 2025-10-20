@@ -1,0 +1,16 @@
+node_modules
+.git
+.vscode
+*.test.ts
+*.test.tsx
+test-results
+playwright-report
+coverage
+*.log
+.env.local
+dist/stats.html
+dist/**/*.gz
+dist/**/*.br
+src/test
+vitest.config.ts
+playwright.config.ts
