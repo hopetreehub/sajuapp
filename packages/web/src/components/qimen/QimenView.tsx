@@ -26,6 +26,7 @@ import AIChat from './AIChat';
 import Toast, { type ToastType } from '../Common/Toast';
 import { exportContentToPDF } from '@/utils/pdfExport';
 import NotificationSettings from './NotificationSettings';
+import BookmarkButton from './BookmarkButton';
 
 export default function QimenView() {
   // 상태 관리
@@ -378,6 +379,13 @@ export default function QimenView() {
                 <span>📊</span>
                 <span>시간대 비교</span>
               </button>
+              <BookmarkButton
+                chart={chart}
+                dateTime={selectedDate}
+                customerName={appliedCustomer?.name}
+                customerBirthDate={appliedCustomer?.birth_date}
+                context={selectedContext}
+              />
             </div>
             {selectedContext !== 'general' && (
               <div className="text-center text-sm text-gray-600 dark:text-gray-400 mb-4">
