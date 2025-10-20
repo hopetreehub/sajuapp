@@ -784,14 +784,14 @@ const intermediateCourse: Course = {
 ## 음양둔 판별법
 
 ### 방법 1: 날짜 확인
-```typescript
+\`\`\`
 // 2024년 기준
 if (date >= '2023-12-22' && date <= '2024-06-21') {
   return '양둔';
 } else {
   return '음둔';
 }
-```
+\`\`\`
 
 ### 방법 2: 절기 활용
 - 동지 후 → 양둔 시작

@@ -98,20 +98,62 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       outDir: 'dist',
-      sourcemap: true,
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-            'calendar-vendor': ['date-fns', 'date-fns-tz'],
-            'ui-vendor': ['@dnd-kit/core', '@dnd-kit/sortable'],
-          },
-          // 강제로 새로운 해시 생성 (캐시 무효화)
-          entryFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
-          chunkFileNames: `assets/[name]-[hash]-${Date.now()}.js`,
-          assetFileNames: `assets/[name]-[hash]-${Date.now()}.[ext]`,
+      sourcemap: mode === 'production' ? false : true, // 프로덕션에서는 sourcemap 비활성화
+      minify: 'terser', // 코드 압축 최적화
+      terserOptions: {
+        compress: {
+          drop_console: mode === 'production', // 프로덕션에서 console 제거
+          drop_debugger: true,
         },
       },
+      chunkSizeWarningLimit: 1000, // 청크 크기 경고 임계값 (KB)
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            // React 관련 라이브러리
+            if (id.includes('node_modules/react') ||
+                id.includes('node_modules/react-dom') ||
+                id.includes('node_modules/react-router-dom')) {
+              return 'react-vendor';
+            }
+            // Three.js 및 3D 관련 라이브러리 (큰 용량)
+            if (id.includes('node_modules/three') ||
+                id.includes('node_modules/@react-three')) {
+              return 'three-vendor';
+            }
+            // Chart.js 및 차트 관련
+            if (id.includes('node_modules/chart.js') ||
+                id.includes('node_modules/react-chartjs-2')) {
+              return 'chart-vendor';
+            }
+            // 날짜 관련 라이브러리
+            if (id.includes('node_modules/date-fns')) {
+              return 'calendar-vendor';
+            }
+            // UI/UX 라이브러리
+            if (id.includes('node_modules/@dnd-kit') ||
+                id.includes('node_modules/framer-motion')) {
+              return 'ui-vendor';
+            }
+            // Markdown 및 문서 관련
+            if (id.includes('node_modules/react-markdown') ||
+                id.includes('node_modules/html2canvas') ||
+                id.includes('node_modules/jspdf')) {
+              return 'document-vendor';
+            }
+            // 나머지 node_modules
+            if (id.includes('node_modules')) {
+              return 'vendor';
+            }
+          },
+          // 파일명 패턴 (캐시 최적화)
+          entryFileNames: 'assets/[name]-[hash].js',
+          chunkFileNames: 'assets/[name]-[hash].js',
+          assetFileNames: 'assets/[name]-[hash].[ext]',
+        },
+      },
+      // 자산 인라인 제한 (4kb 이하는 base64로 인라인)
+      assetsInlineLimit: 4096,
     },
   };
 });
