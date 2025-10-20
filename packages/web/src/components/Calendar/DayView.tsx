@@ -7,6 +7,7 @@ import DiaryBookModal from '@/components/DiaryBookModal';
 import TodayFortuneSection from '@/components/TodayFortuneSection';
 import EditTodoModal from '@/components/EditTodoModal';
 import { Todo } from '@/contexts/CalendarContext';
+import QimenEventIndicator from './QimenEventIndicator';
 
 const HOURS = Array.from({ length: 10 }, (_, i) => i + 9); // 9시-18시
 
@@ -153,7 +154,14 @@ export default function DayView({
                   onClick={() => onEditEvent(event)}
                   title={event.description || event.title}
                 >
-                  <span>{event.title}</span>
+                  <span className="flex items-center gap-1">
+                    <QimenEventIndicator
+                      startTime={event.start_time}
+                      endTime={event.end_time}
+                      compact={true}
+                    />
+                    {event.title}
+                  </span>
                   {onDeleteEvent && (
                     <button
                       onClick={(e) => {
@@ -238,7 +246,12 @@ export default function DayView({
                   >
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <div className="text-sm font-semibold mb-1" style={{ color: event.color || '#3b82f6' }}>
+                        <div className="text-sm font-semibold mb-1 flex items-center gap-2" style={{ color: event.color || '#3b82f6' }}>
+                          <QimenEventIndicator
+                            startTime={event.start_time}
+                            endTime={event.end_time}
+                            compact={true}
+                          />
                           {format(new Date(event.start_time), 'HH:mm')} - {format(new Date(event.end_time), 'HH:mm')}
                         </div>
                         <div className="font-semibold text-foreground text-lg mb-1">{event.title}</div>

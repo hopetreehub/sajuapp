@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import React, { useState, useEffect, useMemo } from 'react';
+import { format, addDays } from 'date-fns';
 import { CalendarEvent, eventService, Tag } from '../services/api';
 import { useCalendar } from '../contexts/CalendarContext';
 import TagSelector from './TagSelector';
+import { useQimenCalendarIntegration } from '../hooks/useQimenCalendarIntegration';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -42,6 +43,53 @@ const EventModal: React.FC<EventModalProps> = ({
     date: initialDate ? format(initialDate, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd'),
   });
 
+  // 귀문둔갑 통합 - 최적 시간 추천을 위한 날짜 범위 설정
+  const qimenDateRange = useMemo(() => {
+    if (!formData.start_time) return { startDate: new Date(), endDate: addDays(new Date(), 1) };
+
+    const startDate = new Date(formData.start_time);
+    const dayStart = new Date(startDate);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(startDate);
+    dayEnd.setHours(23, 59, 59, 999);
+
+    return { startDate: dayStart, endDate: dayEnd };
+  }, [formData.start_time]);
+
+  const {
+    evaluateEvent,
+    getFortuneDisplay,
+    getBestTimeForDay,
+  } = useQimenCalendarIntegration({
+    startDate: qimenDateRange.startDate,
+    endDate: qimenDateRange.endDate,
+    autoCalculate: activeTab === 'event', // 일정 탭에서만 자동 계산
+  });
+
+  // 현재 일정의 귀문둔갑 평가
+  const eventEvaluation = useMemo(() => {
+    if (activeTab !== 'event' || !formData.start_time) return null;
+
+    const startTime = new Date(formData.start_time);
+    const endTime = formData.end_time ? new Date(formData.end_time) : undefined;
+
+    return evaluateEvent(startTime, endTime);
+  }, [activeTab, formData.start_time, formData.end_time, evaluateEvent]);
+
+  // 최적 시간 추천
+  const optimalTimeInfo = useMemo(() => {
+    if (activeTab !== 'event' || !formData.start_time) return null;
+
+    const startTime = new Date(formData.start_time);
+    const bestTime = getBestTimeForDay(startTime);
+
+    // 현재 선택된 시간과 최적 시간이 다르고, 점수 차이가 20점 이상인 경우에만 추천
+    if (bestTime && eventEvaluation && (bestTime.score - eventEvaluation.score) >= 20) {
+      return bestTime;
+    }
+
+    return null;
+  }, [activeTab, formData.start_time, eventEvaluation, getBestTimeForDay]);
 
   useEffect(() => {
     if (event) {
@@ -307,6 +355,86 @@ const EventModal: React.FC<EventModalProps> = ({
                   />
                 </div>
               </div>
+
+              {/* 귀문둔갑 시간 평가 섹션 */}
+              {eventEvaluation && (
+                <div className="border border-border rounded-md p-4 bg-muted/50">
+                  <h3 className="text-sm font-semibold mb-2 text-foreground flex items-center">
+                    <span className="mr-2">🔮</span>
+                    귀문둔갑 시간 평가
+                  </h3>
+
+                  <div className="space-y-2">
+                    {/* 현재 선택된 시간의 점수 */}
+                    <div className={`flex items-center justify-between p-2 rounded-md ${getFortuneDisplay(eventEvaluation.fortune).bgColor}`}>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-2xl">{getFortuneDisplay(eventEvaluation.fortune).icon}</span>
+                        <div>
+                          <div className={`font-medium ${getFortuneDisplay(eventEvaluation.fortune).color}`}>
+                            {eventEvaluation.fortune === 'excellent' && '대길 (大吉)'}
+                            {eventEvaluation.fortune === 'good' && '길 (吉)'}
+                            {eventEvaluation.fortune === 'neutral' && '평 (平)'}
+                            {eventEvaluation.fortune === 'bad' && '흉 (凶)'}
+                            {eventEvaluation.fortune === 'terrible' && '대흉 (大凶)'}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            점수: {eventEvaluation.score}/100
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 요약 */}
+                    <p className="text-xs text-foreground/80 leading-relaxed">
+                      {eventEvaluation.summary}
+                    </p>
+
+                    {/* 최적 시간 추천 */}
+                    {optimalTimeInfo && (
+                      <div className="mt-3 pt-3 border-t border-border">
+                        <p className="text-xs font-medium text-foreground mb-2">
+                          💡 더 좋은 시간 추천
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const timeStr = format(optimalTimeInfo.time, "yyyy-MM-dd'T'HH:mm");
+                            setFormData({
+                              ...formData,
+                              start_time: timeStr,
+                              end_time: formData.end_time
+                                ? format(
+                                    new Date(
+                                      optimalTimeInfo.time.getTime() +
+                                        (new Date(formData.end_time).getTime() - new Date(formData.start_time).getTime())
+                                    ),
+                                    "yyyy-MM-dd'T'HH:mm"
+                                  )
+                                : timeStr,
+                            });
+                          }}
+                          className="w-full text-left p-2 rounded-md bg-green-100 dark:bg-green-900 hover:bg-green-200 dark:hover:bg-green-800 transition-colors"
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-lg">🌟</span>
+                              <div>
+                                <div className="text-sm font-medium text-green-700 dark:text-green-300">
+                                  {format(optimalTimeInfo.time, 'HH:mm')} 시작
+                                </div>
+                                <div className="text-xs text-green-600 dark:text-green-400">
+                                  점수: {optimalTimeInfo.score}/100 (+{optimalTimeInfo.score - eventEvaluation.score}점 향상)
+                                </div>
+                              </div>
+                            </div>
+                            <span className="text-xs text-green-600 dark:text-green-400">적용 →</span>
+                          </div>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-medium mb-1 text-foreground">위치</label>

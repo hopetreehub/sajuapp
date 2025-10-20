@@ -6,6 +6,7 @@ import DiaryBookModal from '@/components/DiaryBookModal';
 import EditTodoModal from '@/components/EditTodoModal';
 import { Todo } from '@/contexts/CalendarContext';
 import { ITEM_COLORS } from '@/types/todo';
+import QimenEventIndicator from './QimenEventIndicator';
 import {
   startOfWeek,
   endOfWeek,
@@ -211,7 +212,14 @@ export default function WeekView({
                       onEditEvent(event);
                     }}
                   >
-                    <span className="truncate">{event.title}</span>
+                    <span className="truncate flex items-center gap-1">
+                      <QimenEventIndicator
+                        startTime={event.start_time}
+                        endTime={event.end_time}
+                        compact={true}
+                      />
+                      {event.title}
+                    </span>
                     {onDeleteEvent && (
                       <button
                         onClick={(e) => {
@@ -313,7 +321,12 @@ export default function WeekView({
                                   onEditEvent(event);
                                 }}
                               >
-                                <span className="truncate">
+                                <span className="truncate flex items-center gap-1">
+                                  <QimenEventIndicator
+                                    startTime={event.start_time}
+                                    endTime={event.end_time}
+                                    compact={true}
+                                  />
                                   {format(startTime, 'HH:mm')} {event.title}
                                 </span>
                                 {onDeleteEvent && (

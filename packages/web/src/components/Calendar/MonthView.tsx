@@ -6,6 +6,7 @@ import EditTodoModal from '@/components/EditTodoModal';
 import { Todo } from '@/contexts/CalendarContext';
 import { TraditionalPattern } from '@/components/WuxingElements';
 import DailyFortuneIndicator from './DailyFortuneIndicator';
+import QimenEventIndicator from './QimenEventIndicator';
 import {
   startOfMonth,
   endOfMonth,
@@ -310,7 +311,14 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                     }}
                     onClick={(e) => handleEventClick(event, e)}
                   >
-                    <span className="flex-1 truncate">
+                    <span className="flex-1 truncate flex items-center gap-1">
+                      {!event.all_day && (
+                        <QimenEventIndicator
+                          startTime={event.start_time}
+                          endTime={event.end_time}
+                          compact={true}
+                        />
+                      )}
                       {event.all_day && <span className="font-semibold">종일 </span>}
                       {!event.all_day && format(new Date(event.start_time), 'HH:mm')} {event.title}
                     </span>
