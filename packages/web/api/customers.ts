@@ -7,16 +7,12 @@ import {
   deleteCustomer,
   type Customer,
 } from './database/db';
+import { applySecurity, validateInput } from './middleware/security';
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS 헤더 설정
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  // OPTIONS 요청 처리 (CORS preflight)
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  // 보안 미들웨어 적용 (CORS, Security Headers, Rate Limiting)
+  if (!applySecurity(req, res)) {
+    return; // 이미 응답이 전송됨
   }
 
   const { method } = req;
@@ -82,16 +78,43 @@ async function handleCreateCustomer(req: VercelRequest, res: VercelResponse) {
     saju_data,
   } = req.body;
 
+  // 필수 필드 체크
   if (!name || !birth_date || !birth_time || !gender || !lunar_solar) {
     return res.status(400).json({
       error: 'Name, birth_date, birth_time, gender, and lunar_solar are required',
     });
   }
 
+  // 입력 검증
+  const nameValidation = validateInput(name, 'name');
+  if (!nameValidation.valid) {
+    return res.status(400).json({ error: nameValidation.error });
+  }
+
+  const birthDateValidation = validateInput(birth_date, 'birth_date');
+  if (!birthDateValidation.valid) {
+    return res.status(400).json({ error: birthDateValidation.error });
+  }
+
+  const birthTimeValidation = validateInput(birth_time, 'birth_time');
+  if (!birthTimeValidation.valid) {
+    return res.status(400).json({ error: birthTimeValidation.error });
+  }
+
+  // Gender 검증
+  if (!['male', 'female'].includes(gender)) {
+    return res.status(400).json({ error: 'gender must be male or female' });
+  }
+
+  // Lunar/Solar 검증
+  if (!['lunar', 'solar'].includes(lunar_solar)) {
+    return res.status(400).json({ error: 'lunar_solar must be lunar or solar' });
+  }
+
   const newCustomer = await createCustomer({
-    name,
-    birth_date,
-    birth_time,
+    name: nameValidation.sanitized!,
+    birth_date: birthDateValidation.sanitized!,
+    birth_time: birthTimeValidation.sanitized!,
     phone: phone || '',
     gender,
     lunar_solar,
