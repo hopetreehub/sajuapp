@@ -80,3 +80,8 @@ Thumbs.db
 .parcel-cache/packages/web/dist/
 
 .vercel
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
