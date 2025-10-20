@@ -28,6 +28,7 @@ import { exportContentToPDF } from '@/utils/pdfExport';
 import NotificationSettings from './NotificationSettings';
 import BookmarkButton from './BookmarkButton';
 import ShareModal from './ShareModal';
+import StatsDashboard from './StatsDashboard';
 
 export default function QimenView() {
   // 상태 관리
@@ -70,6 +71,9 @@ export default function QimenView() {
 
   // 공유 모달 상태
   const [showShareModal, setShowShareModal] = useState(false);
+
+  // 통계 대시보드 상태
+  const [showStatsDashboard, setShowStatsDashboard] = useState(false);
 
   // 변경 히스토리
   const [changeHistory, setChangeHistory] = useState<Array<{
@@ -310,6 +314,13 @@ export default function QimenView() {
             >
               <span>🔔</span>
               <span>알림 설정</span>
+            </button>
+            <button
+              onClick={() => setShowStatsDashboard(true)}
+              className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-full text-sm font-medium hover:from-cyan-600 hover:to-blue-600 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+            >
+              <span>📊</span>
+              <span>통계 분석</span>
             </button>
           </div>
           <p className="text-gray-600 dark:text-gray-300 text-lg mb-2">
@@ -756,6 +767,12 @@ export default function QimenView() {
           chart={chart}
           elementId="qimen-content"
           customerName={appliedCustomer?.name}
+        />
+
+        {/* 통계 대시보드 */}
+        <StatsDashboard
+          isOpen={showStatsDashboard}
+          onClose={() => setShowStatsDashboard(false)}
         />
 
         {/* 토스트 알림 */}
