@@ -27,6 +27,7 @@ import Toast, { type ToastType } from '../Common/Toast';
 import { exportContentToPDF } from '@/utils/pdfExport';
 import NotificationSettings from './NotificationSettings';
 import BookmarkButton from './BookmarkButton';
+import ShareModal from './ShareModal';
 
 export default function QimenView() {
   // 상태 관리
@@ -66,6 +67,9 @@ export default function QimenView() {
 
   // 알림 설정 모달 상태
   const [showNotificationSettings, setShowNotificationSettings] = useState(false);
+
+  // 공유 모달 상태
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // 변경 히스토리
   const [changeHistory, setChangeHistory] = useState<Array<{
@@ -386,6 +390,13 @@ export default function QimenView() {
                 customerBirthDate={appliedCustomer?.birth_date}
                 context={selectedContext}
               />
+              <button
+                onClick={() => setShowShareModal(true)}
+                className="px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-lg font-medium hover:from-pink-600 hover:to-rose-600 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
+              >
+                <span>📤</span>
+                <span>공유하기</span>
+              </button>
             </div>
             {selectedContext !== 'general' && (
               <div className="text-center text-sm text-gray-600 dark:text-gray-400 mb-4">
@@ -736,6 +747,15 @@ export default function QimenView() {
         <NotificationSettings
           isOpen={showNotificationSettings}
           onClose={() => setShowNotificationSettings(false)}
+        />
+
+        {/* 공유 모달 */}
+        <ShareModal
+          isOpen={showShareModal}
+          onClose={() => setShowShareModal(false)}
+          chart={chart}
+          elementId="qimen-content"
+          customerName={appliedCustomer?.name}
         />
 
         {/* 토스트 알림 */}
