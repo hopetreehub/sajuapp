@@ -22,7 +22,7 @@ export interface TimeSlotScore {
 export function calculateTimeRangeScores(
   startDate: Date,
   endDate: Date,
-  intervalMinutes: number = 60
+  intervalMinutes: number = 60,
 ): TimeSlotScore[] {
   const results: TimeSlotScore[] = [];
   let currentTime = new Date(startDate);
@@ -49,7 +49,7 @@ export function calculateTimeRangeScores(
  */
 export function suggestOptimalTime(
   startDate: Date,
-  endDate: Date
+  endDate: Date,
 ): TimeSlotScore {
   const scores = calculateTimeRangeScores(startDate, endDate, 60);
 
@@ -115,7 +115,7 @@ export function getFortuneBgColor(fortune: Fortune): string {
  */
 export function evaluateEventTiming(
   startTime: Date,
-  endTime?: Date
+  endTime?: Date,
 ): { score: number; fortune: Fortune; summary: string } {
   const startChart = calculateQimenChart({ dateTime: startTime });
 
@@ -129,7 +129,7 @@ export function evaluateEventTiming(
 
   const endChart = calculateQimenChart({ dateTime: endTime });
   const avgScore = Math.round(
-    (startChart.overallFortune.score + endChart.overallFortune.score) / 2
+    (startChart.overallFortune.score + endChart.overallFortune.score) / 2,
   );
 
   // 평균 점수로 Fortune 레벨 결정

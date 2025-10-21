@@ -271,7 +271,7 @@ export default function QimenView() {
         'qimen-content',
         '⚡ 귀문둔갑 분석 결과',
         `${chart.yinYang === 'yang' ? '양둔' : '음둔'} ${chart.ju}국 | ${chart.solarTerm.name} | ${timeInfo}`,
-        `귀문둔갑_${customerInfo}`
+        `귀문둔갑_${customerInfo}`,
       );
       alert('PDF 출력이 완료되었습니다.');
     } catch (error) {

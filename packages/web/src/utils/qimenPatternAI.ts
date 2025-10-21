@@ -65,7 +65,7 @@ function assessDataQuality(bookmarks: QimenBookmark[]): {
 } {
   const count = bookmarks.length;
   const uniqueDates = new Set(
-    bookmarks.map((b) => new Date(b.dateTime).toDateString())
+    bookmarks.map((b) => new Date(b.dateTime).toDateString()),
   ).size;
 
   if (count >= 90 && uniqueDates >= 30) {
@@ -95,13 +95,13 @@ function assessDataQuality(bookmarks: QimenBookmark[]): {
  * 전반적 트렌드 분석
  */
 function analyzeTrend(
-  bookmarks: QimenBookmark[]
+  bookmarks: QimenBookmark[],
 ): 'improving' | 'stable' | 'declining' {
   if (bookmarks.length < 10) return 'stable';
 
   // 최근 데이터와 과거 데이터 비교
   const sortedBookmarks = [...bookmarks].sort(
-    (a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+    (a, b) => new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime(),
   );
 
   const recentCount = Math.floor(bookmarks.length / 3);
@@ -129,7 +129,7 @@ function findTimePatterns(bookmarks: QimenBookmark[], stats: QimenStats): QimenP
 
   // 최고 시간대 패턴
   const bestHour = stats.hourlyDistribution.reduce((best, current) =>
-    current.avgScore > best.avgScore ? current : best
+    current.avgScore > best.avgScore ? current : best,
   );
 
   if (bestHour.count >= 3) {
@@ -138,10 +138,10 @@ function findTimePatterns(bookmarks: QimenBookmark[], stats: QimenStats): QimenP
       type: 'insight',
       title: '최적 시간대 발견',
       description: `${String(bestHour.hour).padStart(2, '0')}:00-${String(
-        (bestHour.hour + 1) % 24
+        (bestHour.hour + 1) % 24,
       ).padStart(
         2,
-        '0'
+        '0',
       )}:00 시간대에서 평균 ${bestHour.avgScore}점으로 가장 높은 운세를 보입니다. 이 시간대에 중요한 일정을 계획하세요.`,
       confidence: Math.min(95, 60 + bestHour.count * 5),
       importance: 'high',
@@ -155,7 +155,7 @@ function findTimePatterns(bookmarks: QimenBookmark[], stats: QimenStats): QimenP
 
   // 저조한 시간대 경고
   const worstHour = stats.hourlyDistribution.reduce((worst, current) =>
-    current.avgScore < worst.avgScore ? current : worst
+    current.avgScore < worst.avgScore ? current : worst,
   );
 
   if (worstHour.count >= 3 && worstHour.avgScore < 40) {
@@ -164,17 +164,17 @@ function findTimePatterns(bookmarks: QimenBookmark[], stats: QimenStats): QimenP
       type: 'warning',
       title: '주의 필요 시간대',
       description: `${String(worstHour.hour).padStart(2, '0')}:00-${String(
-        (worstHour.hour + 1) % 24
+        (worstHour.hour + 1) % 24,
       ).padStart(
         2,
-        '0'
+        '0',
       )}:00 시간대는 평균 ${worstHour.avgScore}점으로 저조합니다. 이 시간대는 중요한 결정을 피하는 것이 좋습니다.`,
       confidence: Math.min(90, 55 + worstHour.count * 5),
       importance: 'medium',
       actionable: true,
       relatedData: {
         timeRange: `${String(worstHour.hour).padStart(2, '0')}:00-${String(
-          (worstHour.hour + 1) % 24
+          (worstHour.hour + 1) % 24,
         ).padStart(2, '0')}:00`,
         score: worstHour.avgScore,
       },
@@ -192,7 +192,7 @@ function findContextPatterns(stats: QimenStats): QimenPattern[] {
 
   // 성공률이 높은 컨텍스트
   const bestContext = stats.contextStats.reduce((best, current) =>
-    current.successRate > best.successRate ? current : best
+    current.successRate > best.successRate ? current : best,
   );
 
   if (bestContext.count >= 5 && bestContext.successRate >= 70) {
@@ -224,7 +224,7 @@ function findContextPatterns(stats: QimenStats): QimenPattern[] {
 
   // 성공률이 낮은 컨텍스트
   const worstContext = stats.contextStats.reduce((worst, current) =>
-    current.successRate < worst.successRate ? current : worst
+    current.successRate < worst.successRate ? current : worst,
   );
 
   if (worstContext.count >= 5 && worstContext.successRate <= 40) {
@@ -266,7 +266,7 @@ function findDirectionPatterns(stats: QimenStats): QimenPattern[] {
   if (stats.directionStats.length === 0) return patterns;
 
   const bestDirection = stats.directionStats.reduce((best, current) =>
-    current.avgScore > best.avgScore ? current : best
+    current.avgScore > best.avgScore ? current : best,
   );
 
   if (bestDirection.count >= 5) {
@@ -325,9 +325,9 @@ function findMonthlyPatterns(stats: QimenStats): QimenPattern[] {
       type: 'insight',
       title: '운세 상승 추세',
       description: `최근 3개월 평균(${Math.round(
-        recentAvg
+        recentAvg,
       )}점)이 전체 평균(${Math.round(
-        overallAvg
+        overallAvg,
       )}점)보다 높습니다. 긍정적인 흐름이 지속되고 있습니다.`,
       confidence: 80,
       importance: 'high',
@@ -339,9 +339,9 @@ function findMonthlyPatterns(stats: QimenStats): QimenPattern[] {
       type: 'warning',
       title: '운세 하락 주의',
       description: `최근 3개월 평균(${Math.round(
-        recentAvg
+        recentAvg,
       )}점)이 전체 평균(${Math.round(
-        overallAvg
+        overallAvg,
       )}점)보다 낮습니다. 더 신중한 접근이 필요합니다.`,
       confidence: 75,
       importance: 'medium',
@@ -357,7 +357,7 @@ function findMonthlyPatterns(stats: QimenStats): QimenPattern[] {
  */
 function generatePredictions(
   bookmarks: QimenBookmark[],
-  stats: QimenStats
+  stats: QimenStats,
 ): QimenPrediction[] {
   const predictions: QimenPrediction[] = [];
 
@@ -367,10 +367,10 @@ function generatePredictions(
   // 다음 7일간의 최적 시간대 예측
   const today = new Date();
   const bestHour = stats.hourlyDistribution.reduce((best, current) =>
-    current.avgScore > best.avgScore ? current : best
+    current.avgScore > best.avgScore ? current : best,
   );
   const bestContext = stats.contextStats.reduce((best, current) =>
-    current.avgScore > best.avgScore ? current : best
+    current.avgScore > best.avgScore ? current : best,
   );
 
   for (let i = 1; i <= 7; i++) {
@@ -380,7 +380,7 @@ function generatePredictions(
     // 요일별 패턴 분석
     const dayOfWeek = futureDate.getDay();
     const sameDayBookmarks = bookmarks.filter(
-      (b) => new Date(b.dateTime).getDay() === dayOfWeek
+      (b) => new Date(b.dateTime).getDay() === dayOfWeek,
     );
 
     let predictedScore = stats.averageScore;
@@ -401,7 +401,7 @@ function generatePredictions(
     if (bestHour.count >= 5) {
       predictedScore = Math.round((predictedScore + bestHour.avgScore) / 2);
       confidence += 10;
-      reasons.push(`최적 시간대 활용`);
+      reasons.push('최적 시간대 활용');
     }
 
     // 트렌드 반영
@@ -419,7 +419,7 @@ function generatePredictions(
     predictions.push({
       date: futureDate,
       timeRange: `${String(bestHour.hour).padStart(2, '0')}:00-${String(
-        (bestHour.hour + 1) % 24
+        (bestHour.hour + 1) % 24,
       ).padStart(2, '0')}:00`,
       predictedScore,
       confidence: Math.min(85, confidence),
@@ -443,7 +443,7 @@ function generatePredictions(
  */
 export function analyzeUserPatterns(
   bookmarks: QimenBookmark[],
-  stats: QimenStats
+  stats: QimenStats,
 ): QimenAnalysis {
   const dataQualityResult = assessDataQuality(bookmarks);
   const trend = analyzeTrend(bookmarks);
@@ -478,7 +478,7 @@ export function analyzeUserPatterns(
 
   stats.hourlyDistribution.forEach((h) => {
     const timeStr = `${String(h.hour).padStart(2, '0')}:00-${String(
-      (h.hour + 1) % 24
+      (h.hour + 1) % 24,
     ).padStart(2, '0')}:00`;
     if (h.avgScore >= 70 && h.count >= 3) {
       bestTimes.push(timeStr);
@@ -538,7 +538,7 @@ export function filterActionablePatterns(patterns: QimenPattern[]): QimenPattern
  */
 export function filterPatternsByType(
   patterns: QimenPattern[],
-  type: QimenPattern['type']
+  type: QimenPattern['type'],
 ): QimenPattern[] {
   return patterns.filter((p) => p.type === type);
 }

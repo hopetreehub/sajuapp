@@ -35,7 +35,7 @@ export default function UnifiedSajuAnalysisPage() {
       await exportUnifiedSajuToPDF(
         selectedCustomer.birth_date,
         selectedCustomer.birth_time,
-        date
+        date,
       );
       alert('PDF 출력이 완료되었습니다.');
     } catch (error) {

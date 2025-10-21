@@ -87,7 +87,7 @@ export const useAuthStore = create<AuthState>()(
         } catch (error: any) {
           set({
             error: error.message || '로그인 중 오류가 발생했습니다.',
-            isLoading: false
+            isLoading: false,
           });
           throw error;
         }
@@ -115,7 +115,7 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           token: null,
           error: null,
-          isLoading: false
+          isLoading: false,
         });
 
         // localStorage 강제 초기화 (persist 미들웨어 지연 방지)
@@ -151,12 +151,12 @@ export const useAuthStore = create<AuthState>()(
 
           // 성공 메시지를 에러 필드에 임시 저장 (UI에서 표시용)
           set({
-            error: result.message || '회원가입이 완료되었습니다. 관리자 승인 후 로그인이 가능합니다.'
+            error: result.message || '회원가입이 완료되었습니다. 관리자 승인 후 로그인이 가능합니다.',
           });
         } catch (error: any) {
           set({
             error: error.message || '회원가입 중 오류가 발생했습니다.',
-            isLoading: false
+            isLoading: false,
           });
           throw error;
         }
@@ -193,7 +193,7 @@ export const useAuthStore = create<AuthState>()(
           set({
             isAuthenticated: false,
             user: null,
-            token: null
+            token: null,
           });
         }
       },
@@ -209,8 +209,8 @@ export const useAuthStore = create<AuthState>()(
         user: state.user,
         isAuthenticated: state.isAuthenticated,
       }),
-    }
-  )
+    },
+  ),
 );
 
 export default useAuthStore;

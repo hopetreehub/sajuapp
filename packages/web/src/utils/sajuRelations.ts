@@ -249,7 +249,7 @@ export function calculateDaewoon(birthYear: number, gender: 'male' | 'female', m
   const isForward = (gender === 'male' && isYangYear) || (gender === 'female' && !isYangYear);
 
   // 대운은 보통 3-10세 사이에 시작 (간단화하여 5세로 고정)
-  let startAge = 5;
+  const startAge = 5;
 
   const daewoonList: Daewoon[] = [];
   let currentGan = monthGan;

@@ -70,7 +70,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
   const handleKakaoShare = () => {
     // TODO: Kakao SDK 연동 필요
     alert(
-      '🚧 카카오톡 공유 기능은 개발 중입니다.\n\nKakao SDK 설정이 필요합니다.\n대신 "이미지 다운로드" 후 직접 공유해주세요.'
+      '🚧 카카오톡 공유 기능은 개발 중입니다.\n\nKakao SDK 설정이 필요합니다.\n대신 "이미지 다운로드" 후 직접 공유해주세요.',
     );
   };
 
@@ -78,7 +78,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
   const handleFacebookShare = () => {
     // TODO: Facebook SDK 또는 공개 URL 필요
     alert(
-      '🚧 Facebook 공유 기능은 개발 중입니다.\n\n공개 URL 생성 기능이 필요합니다.\n대신 "이미지 다운로드" 후 직접 공유해주세요.'
+      '🚧 Facebook 공유 기능은 개발 중입니다.\n\n공개 URL 생성 기능이 필요합니다.\n대신 "이미지 다운로드" 후 직접 공유해주세요.',
     );
   };
 
@@ -86,7 +86,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
   const handleTwitterShare = () => {
     // TODO: Twitter API 또는 공개 URL 필요
     alert(
-      '🚧 Twitter 공유 기능은 개발 중입니다.\n\n공개 URL 생성 기능이 필요합니다.\n대신 "이미지 다운로드" 후 직접 공유해주세요.'
+      '🚧 Twitter 공유 기능은 개발 중입니다.\n\n공개 URL 생성 기능이 필요합니다.\n대신 "이미지 다운로드" 후 직접 공유해주세요.',
     );
   };
 
@@ -94,7 +94,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
   const handleCopyURL = () => {
     // TODO: 백엔드 서비스에서 공유 URL 생성 필요
     alert(
-      '🚧 공유 URL 생성 기능은 개발 중입니다.\n\n백엔드 서비스 개발이 필요합니다.\n대신 "이미지 다운로드" 후 직접 공유해주세요.'
+      '🚧 공유 URL 생성 기능은 개발 중입니다.\n\n백엔드 서비스 개발이 필요합니다.\n대신 "이미지 다운로드" 후 직접 공유해주세요.',
     );
   };
 

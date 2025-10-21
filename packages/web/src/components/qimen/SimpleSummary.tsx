@@ -63,13 +63,13 @@ function SimpleSummary({
   // 생년 기반 개인화 분석 (메모이제이션)
   const birthAnalysis = useMemo<BirthYearAnalysis | null>(
     () => (customerBirthDate ? analyzeBirthDate(customerBirthDate) : null),
-    [customerBirthDate]
+    [customerBirthDate],
   );
 
   // 개인화된 점수 계산 (메모이제이션)
   const personalizedScore = useMemo(
     () => calculatePersonalizedOverallScore(chart, birthAnalysis),
-    [chart, birthAnalysis]
+    [chart, birthAnalysis],
   );
 
   // 상황별 조언 생성 (메모이제이션)
@@ -118,7 +118,7 @@ function SimpleSummary({
   // 상황별 추천 (메모이제이션)
   const situationAdvice = useMemo(
     () => getSituationAdvice(chart, birthAnalysis),
-    [chart, birthAnalysis]
+    [chart, birthAnalysis],
   );
 
   const colors = colorClasses[advice.color as keyof typeof colorClasses];

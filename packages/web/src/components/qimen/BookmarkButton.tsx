@@ -73,7 +73,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
       (b) =>
         new Date(b.dateTime).toISOString() === dateTime.toISOString() &&
         b.customerName === customerName &&
-        b.context === context
+        b.context === context,
     );
 
     if (bookmark) {

@@ -27,7 +27,7 @@ function QimenChart3x3({
     (palace: Palace) => {
       onPalaceSelect(palace);
     },
-    [onPalaceSelect]
+    [onPalaceSelect],
   );
 
   // 궁 카드 렌더링 최적화
@@ -46,9 +46,9 @@ function QimenChart3x3({
               onClick={() => handlePalaceClick(palace)}
             />
           );
-        })
+        }),
       ),
-    [chart.palaces, selectedPalace, handlePalaceClick]
+    [chart.palaces, selectedPalace, handlePalaceClick],
   );
 
   return (

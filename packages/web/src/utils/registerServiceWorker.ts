@@ -103,7 +103,7 @@ export async function clearServiceWorkerCache(): Promise<boolean> {
 
       navigator.serviceWorker.controller.postMessage(
         { type: 'CLEAR_CACHE' },
-        [messageChannel.port2]
+        [messageChannel.port2],
       );
     });
   } catch (error) {
@@ -133,7 +133,7 @@ export async function cacheUrls(urls: string[]): Promise<boolean> {
 
       navigator.serviceWorker.controller.postMessage(
         { type: 'CACHE_URLS', urls },
-        [messageChannel.port2]
+        [messageChannel.port2],
       );
     });
   } catch (error) {
@@ -162,7 +162,7 @@ export async function getCacheStatus(): Promise<Array<{ name: string; count: num
 
       navigator.serviceWorker.controller.postMessage(
         { type: 'GET_CACHE_STATUS' },
-        [messageChannel.port2]
+        [messageChannel.port2],
       );
     });
   } catch (error) {
@@ -180,7 +180,7 @@ export async function getCacheStatus(): Promise<Array<{ name: string; count: num
  */
 export function setupNetworkListeners(
   onOnline: () => void,
-  onOffline: () => void
+  onOffline: () => void,
 ): () => void {
   window.addEventListener('online', onOnline);
   window.addEventListener('offline', onOffline);

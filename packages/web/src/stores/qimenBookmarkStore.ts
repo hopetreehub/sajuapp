@@ -144,7 +144,7 @@ export const useQimenBookmarkStore = create<QimenBookmarkStore>()(
                   ...data,
                   updatedAt: new Date(),
                 }
-              : b
+              : b,
           ),
         }));
       },
@@ -163,7 +163,7 @@ export const useQimenBookmarkStore = create<QimenBookmarkStore>()(
             (b) =>
               b.note.toLowerCase().includes(query) ||
               b.customerName?.toLowerCase().includes(query) ||
-              b.tags.some((tag) => tag.toLowerCase().includes(query))
+              b.tags.some((tag) => tag.toLowerCase().includes(query)),
           );
         }
 
@@ -188,7 +188,7 @@ export const useQimenBookmarkStore = create<QimenBookmarkStore>()(
         // 태그 필터
         if (options.tags && options.tags.length > 0) {
           results = results.filter((b) =>
-            options.tags!.some((tag) => b.tags.includes(tag))
+            options.tags!.some((tag) => b.tags.includes(tag)),
           );
         }
 
@@ -202,7 +202,7 @@ export const useQimenBookmarkStore = create<QimenBookmarkStore>()(
 
       getAllBookmarks: () => {
         return [...get().bookmarks].sort(
-          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
         );
       },
 
@@ -231,7 +231,7 @@ export const useQimenBookmarkStore = create<QimenBookmarkStore>()(
                   shareUuid,
                   updatedAt: new Date(),
                 }
-              : b
+              : b,
           ),
         }));
       },
@@ -246,7 +246,7 @@ export const useQimenBookmarkStore = create<QimenBookmarkStore>()(
                   shareUuid: undefined,
                   updatedAt: new Date(),
                 }
-              : b
+              : b,
           ),
         }));
       },
@@ -260,6 +260,6 @@ export const useQimenBookmarkStore = create<QimenBookmarkStore>()(
     {
       name: 'qimen-bookmark-storage',
       version: 1,
-    }
-  )
+    },
+  ),
 );

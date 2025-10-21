@@ -5,7 +5,6 @@ import {
   createCustomer,
   updateCustomer,
   deleteCustomer,
-  type Customer,
 } from './database/db';
 import { applySecurity, validateInput } from '../lib/security';
 
@@ -112,9 +111,9 @@ async function handleCreateCustomer(req: VercelRequest, res: VercelResponse) {
   }
 
   const newCustomer = await createCustomer({
-    name: nameValidation.sanitized!,
-    birth_date: birthDateValidation.sanitized!,
-    birth_time: birthTimeValidation.sanitized!,
+    name: nameValidation.sanitized || name,
+    birth_date: birthDateValidation.sanitized || birth_date,
+    birth_time: birthTimeValidation.sanitized || birth_time,
     phone: phone || '',
     gender,
     lunar_solar,

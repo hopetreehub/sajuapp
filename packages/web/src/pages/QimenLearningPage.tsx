@@ -67,7 +67,7 @@ function QimenLearningPage() {
       ...progress,
       progressPercentage: calculateProgress(
         selectedCourse.id,
-        progress.completedLessons
+        progress.completedLessons,
       ),
     };
   }, [selectedCourse, userProgress]);
@@ -146,10 +146,10 @@ function QimenLearningPage() {
             };
           }
           return p;
-        })
+        }),
       );
     },
-    [selectedLesson, selectedCourse]
+    [selectedLesson, selectedCourse],
   );
 
   // 퀴즈 재시도 핸들러
@@ -176,7 +176,7 @@ function QimenLearningPage() {
       const progress = userProgress.find((p) => p.courseId === selectedCourse.id);
       return progress?.completedLessons.includes(lessonId) || false;
     },
-    [selectedCourse, userProgress]
+    [selectedCourse, userProgress],
   );
 
   // 레슨 퀴즈 점수 가져오기
@@ -186,7 +186,7 @@ function QimenLearningPage() {
       const progress = userProgress.find((p) => p.courseId === selectedCourse.id);
       return progress?.quizScores[lessonId];
     },
-    [selectedCourse, userProgress]
+    [selectedCourse, userProgress],
   );
 
   return (

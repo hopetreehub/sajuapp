@@ -6,7 +6,7 @@ import {
   getFortuneIcon,
   getFortuneColor,
   getFortuneBgColor,
-  type TimeSlotScore
+  type TimeSlotScore,
 } from '@/utils/qimenOptimalTime';
 import type { Fortune } from '@/types/qimen';
 
@@ -54,7 +54,7 @@ interface UseQimenCalendarIntegrationOptions {
  * @returns Qimen 계산 결과 및 헬퍼 함수들
  */
 export const useQimenCalendarIntegration = (
-  options: UseQimenCalendarIntegrationOptions = {}
+  options: UseQimenCalendarIntegrationOptions = {},
 ) => {
   const {
     startDate,
@@ -101,7 +101,7 @@ export const useQimenCalendarIntegration = (
       const scores = calculateTimeRangeScores(
         defaultStartDate,
         defaultEndDate,
-        intervalMinutes
+        intervalMinutes,
       );
 
       const optimal = scores.length > 0
@@ -141,7 +141,7 @@ export const useQimenCalendarIntegration = (
     (startTime: Date, endTime?: Date) => {
       return evaluateEventTiming(startTime, endTime);
     },
-    []
+    [],
   );
 
   /**
@@ -153,7 +153,7 @@ export const useQimenCalendarIntegration = (
     (time: Date): TimeSlotScore | undefined => {
       // 정확히 일치하는 시간 찾기
       const exactMatch = state.timeSlotScores.find(
-        slot => slot.time.getTime() === time.getTime()
+        slot => slot.time.getTime() === time.getTime(),
       );
       if (exactMatch) return exactMatch;
 
@@ -166,7 +166,7 @@ export const useQimenCalendarIntegration = (
 
       return closest;
     },
-    [state.timeSlotScores]
+    [state.timeSlotScores],
   );
 
   /**
@@ -192,7 +192,7 @@ export const useQimenCalendarIntegration = (
       if (!state.optimalTime) return false;
       return state.optimalTime.time.getTime() === time.getTime();
     },
-    [state.optimalTime]
+    [state.optimalTime],
   );
 
   /**
@@ -208,16 +208,16 @@ export const useQimenCalendarIntegration = (
       dayEnd.setHours(23, 59, 59, 999);
 
       const daySlots = state.timeSlotScores.filter(
-        slot => slot.time >= dayStart && slot.time <= dayEnd
+        slot => slot.time >= dayStart && slot.time <= dayEnd,
       );
 
       if (daySlots.length === 0) return undefined;
 
       return daySlots.reduce((best, current) =>
-        current.score > best.score ? current : best
+        current.score > best.score ? current : best,
       );
     },
-    [state.timeSlotScores]
+    [state.timeSlotScores],
   );
 
   /**
@@ -229,7 +229,7 @@ export const useQimenCalendarIntegration = (
     (fortune: Fortune): TimeSlotScore[] => {
       return state.timeSlotScores.filter(slot => slot.fortune === fortune);
     },
-    [state.timeSlotScores]
+    [state.timeSlotScores],
   );
 
   /**

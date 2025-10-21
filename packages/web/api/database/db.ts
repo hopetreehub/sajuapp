@@ -51,7 +51,7 @@ export async function getCustomerById(id: number): Promise<Customer | null> {
  * 고객 생성
  */
 export async function createCustomer(
-  data: Omit<Customer, 'id' | 'created_at' | 'updated_at'>
+  data: Omit<Customer, 'id' | 'created_at' | 'updated_at'>,
 ): Promise<Customer> {
   const { rows } = await sql<Customer>`
     INSERT INTO customers (name, birth_date, birth_time, phone, gender, lunar_solar, memo, saju_data)
@@ -75,7 +75,7 @@ export async function createCustomer(
  */
 export async function updateCustomer(
   id: number,
-  data: Partial<Omit<Customer, 'id' | 'created_at' | 'updated_at'>>
+  data: Partial<Omit<Customer, 'id' | 'created_at' | 'updated_at'>>,
 ): Promise<Customer | null> {
   const updates: string[] = [];
   const values: unknown[] = [];
@@ -119,7 +119,7 @@ export async function updateCustomer(
     return getCustomerById(id);
   }
 
-  updates.push(`updated_at = NOW()`);
+  updates.push('updated_at = NOW()');
   values.push(id);
 
   const query = `
@@ -151,7 +151,7 @@ export async function deleteCustomer(id: number): Promise<Customer | null> {
 export async function searchCustomersByName(name: string): Promise<Customer[]> {
   const { rows } = await sql<Customer>`
     SELECT * FROM customers
-    WHERE name ILIKE ${'%' + name + '%'}
+    WHERE name ILIKE ${'%'}${name}${'%'}
     ORDER BY created_at DESC
   `;
   return rows;
@@ -220,7 +220,7 @@ export async function getEventById(id: number): Promise<Event | null> {
 export async function getEventsByDateRange(
   startDate: string,
   endDate: string,
-  userId: string = 'default-user'
+  userId: string = 'default-user',
 ): Promise<Event[]> {
   const { rows } = await sql<Event>`
     SELECT * FROM events
@@ -236,7 +236,7 @@ export async function getEventsByDateRange(
  * 이벤트 생성
  */
 export async function createEvent(
-  data: Omit<Event, 'id' | 'created_at' | 'updated_at'>
+  data: Omit<Event, 'id' | 'created_at' | 'updated_at'>,
 ): Promise<Event> {
   const { rows } = await sql<Event>`
     INSERT INTO events (
@@ -265,7 +265,7 @@ export async function createEvent(
  */
 export async function updateEvent(
   id: number,
-  data: Partial<Omit<Event, 'id' | 'created_at' | 'updated_at'>>
+  data: Partial<Omit<Event, 'id' | 'created_at' | 'updated_at'>>,
 ): Promise<Event | null> {
   const updates: string[] = [];
   const values: unknown[] = [];
@@ -312,7 +312,7 @@ export async function updateEvent(
     return getEventById(id);
   }
 
-  updates.push(`updated_at = NOW()`);
+  updates.push('updated_at = NOW()');
   values.push(id);
 
   const query = `
@@ -384,7 +384,7 @@ export async function getDiaryById(id: number): Promise<Diary | null> {
  */
 export async function getDiaryByDate(
   date: string,
-  userId: string = 'default-user'
+  userId: string = 'default-user',
 ): Promise<Diary | null> {
   const { rows } = await sql<Diary>`
     SELECT * FROM diaries
@@ -398,7 +398,7 @@ export async function getDiaryByDate(
  */
 export async function getDiariesByTag(
   tag: string,
-  userId: string = 'default-user'
+  userId: string = 'default-user',
 ): Promise<Diary[]> {
   const { rows } = await sql<Diary>`
     SELECT * FROM diaries
@@ -413,7 +413,7 @@ export async function getDiariesByTag(
  * 일기 생성
  */
 export async function createDiary(
-  data: Omit<Diary, 'id' | 'created_at' | 'updated_at'>
+  data: Omit<Diary, 'id' | 'created_at' | 'updated_at'>,
 ): Promise<Diary> {
   const { rows } = await sql<Diary>`
     INSERT INTO diaries (
@@ -438,7 +438,7 @@ export async function createDiary(
  */
 export async function updateDiary(
   id: number,
-  data: Partial<Omit<Diary, 'id' | 'user_id' | 'created_at' | 'updated_at'>>
+  data: Partial<Omit<Diary, 'id' | 'user_id' | 'created_at' | 'updated_at'>>,
 ): Promise<Diary | null> {
   const updates: string[] = [];
   const values: unknown[] = [];
@@ -473,7 +473,7 @@ export async function updateDiary(
     return getDiaryById(id);
   }
 
-  updates.push(`updated_at = NOW()`);
+  updates.push('updated_at = NOW()');
   values.push(id);
 
   const query = `
@@ -541,7 +541,7 @@ export async function getTagById(id: number): Promise<Tag | null> {
  */
 export async function getTagByName(
   name: string,
-  userId: string = 'default-user'
+  userId: string = 'default-user',
 ): Promise<Tag | null> {
   const { rows } = await sql<Tag>`
     SELECT * FROM tags
@@ -554,7 +554,7 @@ export async function getTagByName(
  * 태그 생성 (중복 방지)
  */
 export async function createTag(
-  data: Omit<Tag, 'id' | 'created_at' | 'updated_at'>
+  data: Omit<Tag, 'id' | 'created_at' | 'updated_at'>,
 ): Promise<Tag> {
   const { rows } = await sql<Tag>`
     INSERT INTO tags (user_id, name, color)
@@ -575,7 +575,7 @@ export async function createTag(
  */
 export async function updateTag(
   id: number,
-  data: Partial<Omit<Tag, 'id' | 'user_id' | 'created_at' | 'updated_at'>>
+  data: Partial<Omit<Tag, 'id' | 'user_id' | 'created_at' | 'updated_at'>>,
 ): Promise<Tag | null> {
   const updates: string[] = [];
   const values: unknown[] = [];
@@ -594,7 +594,7 @@ export async function updateTag(
     return getTagById(id);
   }
 
-  updates.push(`updated_at = NOW()`);
+  updates.push('updated_at = NOW()');
   values.push(id);
 
   const query = `

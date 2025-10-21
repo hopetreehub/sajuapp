@@ -37,7 +37,7 @@ function Quiz({ quiz, onComplete, onExit }: QuizProps) {
   // 진행률 계산
   const progress = useMemo(
     () => Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100),
-    [currentQuestionIndex, totalQuestions]
+    [currentQuestionIndex, totalQuestions],
   );
 
   // 답변 제출

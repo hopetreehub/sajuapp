@@ -200,17 +200,17 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
             화: 20,
             토: 20,
             금: 20,
-            수: 20
+            수: 20,
           },
           sipSungBalance: {
             비겁: 10,
             식상: 10,
             재성: 10,
             관성: 10,
-            인성: 10
+            인성: 10,
           },
           // 차트 에러 방지용 플래그
-          _isMinimal: true
+          _isMinimal: true,
         };
         console.log('✅ [사주분석] AI용 기본 데이터 생성 완료');
       }
@@ -282,7 +282,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
       console.log('🤖 [AI 버튼] analysisResult 생성 불가:', {
         customerSajuData: !!customerSajuData,
         fourPillars: !!fourPillars,
-        appliedCustomer: !!appliedCustomer
+        appliedCustomer: !!appliedCustomer,
       });
       return null;
     }
@@ -340,7 +340,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
                 customerSajuData: !!customerSajuData,
                 fourPillars: !!fourPillars,
                 analysisResult: !!analysisResult,
-                모두충족: !!(appliedCustomer && customerSajuData && fourPillars && analysisResult)
+                모두충족: !!(appliedCustomer && customerSajuData && fourPillars && analysisResult),
               });
               return null;
             })()}
@@ -578,7 +578,7 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
                 minute: parseInt(appliedCustomer.birth_time.split(':')[1]),
                 isLunar: appliedCustomer.lunar_solar === 'lunar',
                 gender: appliedCustomer.gender,
-              }
+              },
             } as any}
             onClose={() => setShowAIChat(false)}
           />

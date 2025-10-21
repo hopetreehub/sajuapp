@@ -66,7 +66,7 @@ export async function getCustomers(
           (c) =>
             c.name.toLowerCase().includes(searchLower) ||
             c.phone?.includes(searchLower) ||
-            c.memo?.toLowerCase().includes(searchLower)
+            c.memo?.toLowerCase().includes(searchLower),
         );
       }
 

@@ -18,7 +18,7 @@ export interface PDFExportOptions {
  */
 export const exportToPDF = async (
   elementId: string,
-  options: PDFExportOptions
+  options: PDFExportOptions,
 ): Promise<void> => {
   try {
     const element = document.getElementById(elementId);
@@ -88,7 +88,7 @@ export const exportToPDF = async (
 export const exportTarotReadingToPDF = async (
   spreadName: string,
   question: string,
-  date: string
+  date: string,
 ): Promise<void> => {
   const filename = `타로_상담_${spreadName}_${date}.pdf`;
   await exportToPDF('tarot-reading-content', {
@@ -103,7 +103,7 @@ export const exportTarotReadingToPDF = async (
  */
 export const exportZiweiReadingToPDF = async (
   birthDate: string,
-  date: string
+  date: string,
 ): Promise<void> => {
   const filename = `자미두수_상담_${birthDate}_${date}.pdf`;
   await exportToPDF('ziwei-reading-content', {
@@ -119,7 +119,7 @@ export const exportZiweiReadingToPDF = async (
 export const exportSajuAnalysisToPDF = async (
   birthDate: string,
   birthTime: string,
-  date: string
+  date: string,
 ): Promise<void> => {
   const filename = `사주분석_${birthDate}_${date}.pdf`;
   await exportToPDF('saju-analysis-content', {
@@ -135,7 +135,7 @@ export const exportSajuAnalysisToPDF = async (
 export const exportUnifiedSajuToPDF = async (
   birthDate: string,
   birthTime: string,
-  date: string
+  date: string,
 ): Promise<void> => {
   const filename = `통합사주분석_${birthDate}_${date}.pdf`;
   await exportToPDF('unified-saju-content', {
@@ -152,7 +152,7 @@ export const exportContentToPDF = async (
   contentId: string,
   title: string,
   subtitle: string,
-  filenamePrefix: string
+  filenamePrefix: string,
 ): Promise<void> => {
   const date = formatDateForFilename();
   const filename = `${filenamePrefix}_${date}.pdf`;

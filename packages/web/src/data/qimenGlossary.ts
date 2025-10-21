@@ -1190,7 +1190,7 @@ export function searchTerms(query: string): GlossaryTerm[] {
       term.hanja.toLowerCase().includes(lowerQuery) ||
       term.shortDescription.toLowerCase().includes(lowerQuery) ||
       term.detailedDescription.toLowerCase().includes(lowerQuery) ||
-      term.synonyms?.some((syn) => syn.toLowerCase().includes(lowerQuery))
+      term.synonyms?.some((syn) => syn.toLowerCase().includes(lowerQuery)),
   );
 }
 

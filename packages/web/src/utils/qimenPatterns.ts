@@ -331,7 +331,7 @@ export function adjustFortuneWithPatterns(
 
   // 가장 강한 패턴의 영향력 적용
   const strongestPattern = patterns.reduce((prev, current) =>
-    current.strength > prev.strength ? current : prev
+    current.strength > prev.strength ? current : prev,
   );
 
   // 대길격이면 excellent로 상향

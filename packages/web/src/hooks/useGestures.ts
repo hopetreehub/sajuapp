@@ -79,7 +79,7 @@ const DEFAULT_OPTIONS: GestureOptions = {
  */
 export function useGestures<T extends HTMLElement = HTMLDivElement>(
   handlers: GestureHandlers,
-  options: GestureOptions = {}
+  options: GestureOptions = {},
 ): React.RefObject<T> {
   const elementRef = useRef<T>(null);
   const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
@@ -114,7 +114,7 @@ export function useGestures<T extends HTMLElement = HTMLDivElement>(
 
       return null;
     },
-    [opts.swipeThreshold]
+    [opts.swipeThreshold],
   );
 
   // 제스처 이벤트 생성
@@ -127,7 +127,7 @@ export function useGestures<T extends HTMLElement = HTMLDivElement>(
       endX: number,
       endY: number,
       duration: number,
-      scale?: number
+      scale?: number,
     ): GestureEvent => {
       const deltaX = endX - startX;
       const deltaY = endY - startY;
@@ -147,7 +147,7 @@ export function useGestures<T extends HTMLElement = HTMLDivElement>(
         scale,
       };
     },
-    []
+    [],
   );
 
   // Touch Start 핸들러
@@ -183,7 +183,7 @@ export function useGestures<T extends HTMLElement = HTMLDivElement>(
             touch.clientY,
             touch.clientX,
             touch.clientY,
-            0
+            0,
           );
           handlers.onDoubleTap(gestureEvent);
         }
@@ -203,7 +203,7 @@ export function useGestures<T extends HTMLElement = HTMLDivElement>(
                 touchStartRef.current.y,
                 touchStartRef.current.x,
                 touchStartRef.current.y,
-                opts.longPressDelay || 500
+                opts.longPressDelay || 500,
               );
               handlers.onLongPress!(gestureEvent);
               touchStartRef.current = null; // 이동 방지
@@ -212,7 +212,7 @@ export function useGestures<T extends HTMLElement = HTMLDivElement>(
         }
       }
     },
-    [handlers, opts, createGestureEvent]
+    [handlers, opts, createGestureEvent],
   );
 
   // Touch Move 핸들러
@@ -238,7 +238,7 @@ export function useGestures<T extends HTMLElement = HTMLDivElement>(
             touch.clientX,
             touch.clientY,
             0,
-            scale
+            scale,
           );
           handlers.onPinch(gestureEvent);
         }
@@ -248,7 +248,7 @@ export function useGestures<T extends HTMLElement = HTMLDivElement>(
       // 이동 중이면 길게 누르기 취소
       clearLongPressTimer();
     },
-    [handlers, opts, createGestureEvent]
+    [handlers, opts, createGestureEvent],
   );
 
   // Touch End 핸들러
@@ -279,7 +279,7 @@ export function useGestures<T extends HTMLElement = HTMLDivElement>(
           touchStartRef.current.y,
           endX,
           endY,
-          duration
+          duration,
         );
 
         switch (swipeDirection) {
@@ -306,7 +306,7 @@ export function useGestures<T extends HTMLElement = HTMLDivElement>(
           touchStartRef.current.y,
           endX,
           endY,
-          duration
+          duration,
         );
         handlers.onTap(gestureEvent);
       }
@@ -315,7 +315,7 @@ export function useGestures<T extends HTMLElement = HTMLDivElement>(
       pinchStartDistanceRef.current = null;
       touchStartRef.current = null;
     },
-    [handlers, opts, createGestureEvent, getSwipeDirection]
+    [handlers, opts, createGestureEvent, getSwipeDirection],
   );
 
   // 길게 누르기 타이머 제거
@@ -356,7 +356,7 @@ export function useGestures<T extends HTMLElement = HTMLDivElement>(
  */
 export function useWheelZoom<T extends HTMLElement = HTMLDivElement>(
   onZoom: (scale: number) => void,
-  options: { enabled?: boolean; sensitivity?: number } = {}
+  options: { enabled?: boolean; sensitivity?: number } = {},
 ): React.RefObject<T> {
   const elementRef = useRef<T>(null);
   const { enabled = true, sensitivity = 0.01 } = options;

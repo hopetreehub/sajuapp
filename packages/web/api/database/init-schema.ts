@@ -59,9 +59,9 @@ async function initializeSchema() {
         // 이미 존재하는 객체는 무시
         const errorMessage = error instanceof Error ? error.message : String(error);
         if (errorMessage.includes('already exists')) {
-          console.log(`   ℹ️  이미 존재함 (건너뜀)`);
+          console.log('   ℹ️  이미 존재함 (건너뜀)');
         } else {
-          console.error(`   ❌ 오류:`, errorMessage);
+          console.error('   ❌ 오류:', errorMessage);
           throw error;
         }
       }

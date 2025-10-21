@@ -83,7 +83,7 @@ function getHour(date: Date): number {
  */
 function incrementLevelCount(
   counts: { excellent: number; good: number; neutral: number; bad: number; terrible: number },
-  level: string
+  level: string,
 ): void {
   if (level === 'excellent') counts.excellent++;
   else if (level === 'good') counts.good++;
@@ -128,7 +128,7 @@ export function useQimenStats(): QimenStats {
     const scores = bookmarks.map((b) => b.chart.overallFortune.score);
     const totalChecks = bookmarks.length;
     const averageScore = Math.round(
-      scores.reduce((sum, score) => sum + score, 0) / scores.length
+      scores.reduce((sum, score) => sum + score, 0) / scores.length,
     );
     const highestScore = Math.max(...scores);
     const lowestScore = Math.min(...scores);
@@ -139,7 +139,7 @@ export function useQimenStats(): QimenStats {
       contextCounts[b.context] = (contextCounts[b.context] || 0) + 1;
     });
     const mostFrequentContext = Object.entries(contextCounts).reduce((a, b) =>
-      b[1] > a[1] ? b : a
+      b[1] > a[1] ? b : a,
     )[0] as QimenContext;
 
     // 3. 시간대별 점수 분석
@@ -163,10 +163,10 @@ export function useQimenStats(): QimenStats {
 
     // 최고 점수 시간대 찾기
     const bestHourData = hourlyDistribution.reduce((best, current) =>
-      current.avgScore > best.avgScore ? current : best
+      current.avgScore > best.avgScore ? current : best,
     );
     const bestTimeOfDay = `${String(bestHourData.hour).padStart(2, '0')}:00-${String(
-      (bestHourData.hour + 1) % 24
+      (bestHourData.hour + 1) % 24,
     ).padStart(2, '0')}:00`;
 
     // 4. 방향 분석 (가장 좋은 궁의 방향)
@@ -192,7 +192,7 @@ export function useQimenStats(): QimenStats {
     const directionStats = Object.entries(directionData).map(([direction, data]) => {
       const avgScore = Math.round(data.sum / data.count);
       const bestPalace = Object.entries(data.palaces).reduce((a, b) =>
-        b[1] > a[1] ? b : a
+        b[1] > a[1] ? b : a,
       )[0] as Palace;
       return {
         direction: direction as Direction,
@@ -205,14 +205,14 @@ export function useQimenStats(): QimenStats {
     const favoriteDirection =
       directionStats.length > 0
         ? directionStats.reduce((best, current) =>
-            current.avgScore > best.avgScore ? current : best
+            current.avgScore > best.avgScore ? current : best,
           ).direction
         : ('N' as Direction);
 
     const bestPalace =
       directionStats.length > 0
         ? directionStats.reduce((best, current) =>
-            current.avgScore > best.avgScore ? current : best
+            current.avgScore > best.avgScore ? current : best,
           ).bestPalace
         : ('center' as Palace);
 

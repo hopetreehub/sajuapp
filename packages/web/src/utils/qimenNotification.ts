@@ -197,7 +197,7 @@ export function checkAndNotify(settings: QimenNotificationSettings): {
  */
 export function startPeriodicCheck(
   settings: QimenNotificationSettings,
-  onCheck?: (result: ReturnType<typeof checkAndNotify>) => void
+  onCheck?: (result: ReturnType<typeof checkAndNotify>) => void,
 ): () => void {
   // 빈도에 따른 interval 시간 설정
   let intervalMs: number;

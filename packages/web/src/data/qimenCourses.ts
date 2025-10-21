@@ -1036,14 +1036,14 @@ export interface UserProgress {
 // 진행률 계산
 export function calculateProgress(
   courseId: string,
-  completedLessons: string[]
+  completedLessons: string[],
 ): number {
   const course = getCourseById(courseId);
   if (!course) return 0;
 
   const totalLessons = course.lessons.length;
   const completed = completedLessons.filter((lessonId) =>
-    course.lessons.some((l) => l.id === lessonId)
+    course.lessons.some((l) => l.id === lessonId),
   ).length;
 
   return Math.round((completed / totalLessons) * 100);

@@ -446,7 +446,7 @@ export default function ZiweiPage() {
                 </h2>
                 {(() => {
                   const currentFortune = chart.majorFortunes.find(
-                    f => chart.yearlyFortune.age >= f.startAge && chart.yearlyFortune.age <= f.endAge
+                    f => chart.yearlyFortune.age >= f.startAge && chart.yearlyFortune.age <= f.endAge,
                   );
                   return currentFortune ? (
                     <div className="space-y-4">

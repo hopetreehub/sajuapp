@@ -510,7 +510,7 @@ export function getSpreadById(id: string): TarotSpread | undefined {
  */
 export function performSpread(
   spreadId: string,
-  cards: TarotCard[]
+  cards: TarotCard[],
 ): TarotCardPosition[] | null {
   const spread = getSpreadById(spreadId);
   if (!spread) return null;
@@ -889,7 +889,7 @@ const SITUATION_ADVICE: Record<SituationCategory, SituationAdvice> = {
  */
 export function generateSituationAdvice(
   category: SituationCategory,
-  cardPositions: TarotCardPosition[]
+  cardPositions: TarotCardPosition[],
 ): string {
   const advice = SITUATION_ADVICE[category];
   const categoryName = {
@@ -995,7 +995,7 @@ export function analyzeCardCombinations(cardPositions: TarotCardPosition[]): Car
   const suits = ['wands', 'cups', 'swords', 'pentacles'];
   for (const suit of suits) {
     const sameSuit = cardPositions.filter(cp =>
-      cp.card.suit === suit
+      cp.card.suit === suit,
     );
 
     if (sameSuit.length >= 3) {
@@ -1556,7 +1556,7 @@ ${overallTiming.recommendations.map((rec, i) => `${i + 1}. ${rec}`).join('\n')}
 export function generateSpreadPrompt(
   spreadId: string,
   cardPositions: TarotCardPosition[],
-  userQuestion: string
+  userQuestion: string,
 ): string {
   const spread = getSpreadById(spreadId);
   if (!spread) return '';

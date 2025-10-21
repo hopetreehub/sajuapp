@@ -40,7 +40,7 @@ const SIZE_MAP: Record<QimenImageExportOptions['size'], { width: number; height:
 export async function exportQimenToImage(
   elementId: string,
   chart: QimenChart,
-  options: Partial<QimenImageExportOptions> = {}
+  options: Partial<QimenImageExportOptions> = {},
 ): Promise<Blob> {
   // 기본 옵션
   const opts: QimenImageExportOptions = {
@@ -91,7 +91,7 @@ export async function exportQimenToImage(
         }
       },
       mimeType,
-      opts.quality
+      opts.quality,
     );
   });
 
@@ -104,7 +104,7 @@ export async function exportQimenToImage(
 function resizeCanvas(
   sourceCanvas: HTMLCanvasElement,
   targetWidth: number,
-  targetHeight: number
+  targetHeight: number,
 ): HTMLCanvasElement {
   const resizedCanvas = document.createElement('canvas');
   resizedCanvas.width = targetWidth;
@@ -149,7 +149,7 @@ function resizeCanvas(
 async function addWatermark(
   canvas: HTMLCanvasElement,
   chart: QimenChart,
-  theme: 'light' | 'dark'
+  theme: 'light' | 'dark',
 ): Promise<HTMLCanvasElement> {
   const ctx = canvas.getContext('2d');
   if (!ctx) {
@@ -234,7 +234,7 @@ async function addWatermark(
 export async function downloadQimenImage(
   elementId: string,
   chart: QimenChart,
-  options: Partial<QimenImageExportOptions> = {}
+  options: Partial<QimenImageExportOptions> = {},
 ): Promise<void> {
   const blob = await exportQimenToImage(elementId, chart, options);
 
@@ -278,7 +278,7 @@ export async function downloadQimenImage(
 export async function copyQimenImageToClipboard(
   elementId: string,
   chart: QimenChart,
-  options: Partial<QimenImageExportOptions> = {}
+  options: Partial<QimenImageExportOptions> = {},
 ): Promise<void> {
   // 클립보드 API 지원 확인
   if (!navigator.clipboard || !navigator.clipboard.write) {
@@ -301,7 +301,7 @@ export async function copyQimenImageToClipboard(
 export async function exportQimenToBase64(
   elementId: string,
   chart: QimenChart,
-  options: Partial<QimenImageExportOptions> = {}
+  options: Partial<QimenImageExportOptions> = {},
 ): Promise<string> {
   const blob = await exportQimenToImage(elementId, chart, options);
 
@@ -324,7 +324,7 @@ export async function exportQimenToBase64(
  */
 export async function createQimenThumbnail(
   elementId: string,
-  chart: QimenChart
+  chart: QimenChart,
 ): Promise<Blob> {
   return exportQimenToImage(elementId, chart, {
     format: 'jpg',

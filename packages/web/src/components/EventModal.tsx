@@ -406,9 +406,9 @@ const EventModal: React.FC<EventModalProps> = ({
                                 ? format(
                                     new Date(
                                       optimalTimeInfo.time.getTime() +
-                                        (new Date(formData.end_time).getTime() - new Date(formData.start_time).getTime())
+                                        (new Date(formData.end_time).getTime() - new Date(formData.start_time).getTime()),
                                     ),
-                                    "yyyy-MM-dd'T'HH:mm"
+                                    "yyyy-MM-dd'T'HH:mm",
                                   )
                                 : timeStr,
                             });

@@ -167,7 +167,7 @@ export const useQimenNotificationStore = create<QimenNotificationStore>()(
       markAsClicked: (id) => {
         set((state) => ({
           history: state.history.map((item) =>
-            item.id === id ? { ...item, clicked: true } : item
+            item.id === id ? { ...item, clicked: true } : item,
           ),
         }));
       },
@@ -195,6 +195,6 @@ export const useQimenNotificationStore = create<QimenNotificationStore>()(
     {
       name: 'qimen-notification-storage',
       version: 1,
-    }
-  )
+    },
+  ),
 );

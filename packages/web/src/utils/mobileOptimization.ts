@@ -208,7 +208,7 @@ export function touchToMouse(touchEvent: TouchEvent): MouseEvent {
  */
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
-  wait: number
+  wait: number,
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout | null = null;
 
@@ -230,7 +230,7 @@ export function debounce<T extends (...args: any[]) => any>(
  */
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
-  limit: number
+  limit: number,
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
   let lastResult: ReturnType<T>;
@@ -256,7 +256,7 @@ export function throttle<T extends (...args: any[]) => any>(
  * Intersection Observer를 사용한 lazy loading
  */
 export function setupLazyLoading(
-  images?: NodeListOf<HTMLImageElement> | HTMLImageElement[]
+  images?: NodeListOf<HTMLImageElement> | HTMLImageElement[],
 ): void {
   const imageElements =
     images || document.querySelectorAll<HTMLImageElement>('img[data-src]');
@@ -479,7 +479,7 @@ export async function requestWakeLock(): Promise<WakeLockSentinel | null> {
 export function getResponsiveFontSize(
   baseFontSize: number,
   minFontSize: number = 12,
-  maxFontSize: number = 24
+  maxFontSize: number = 24,
 ): number {
   const viewportWidth = window.innerWidth;
   const scale = viewportWidth / 375; // iPhone SE 기준

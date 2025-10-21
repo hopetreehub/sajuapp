@@ -144,7 +144,7 @@ export default function FortuneHeatmap({
               const hasPatterns = palaceInfo.patterns && palaceInfo.patterns.length > 0;
               const strongPattern = hasPatterns && palaceInfo.patterns
                 ? palaceInfo.patterns.reduce((prev, curr) =>
-                    curr.strength > prev.strength ? curr : prev
+                    curr.strength > prev.strength ? curr : prev,
                   )
                 : null;
 

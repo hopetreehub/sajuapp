@@ -10,7 +10,7 @@ interface Customer {
   gender: 'male' | 'female';
   lunar_solar: 'lunar' | 'solar';
   memo?: string;
-  saju_data?: any;
+  saju_data?: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }

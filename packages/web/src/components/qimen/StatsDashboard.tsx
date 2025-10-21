@@ -37,7 +37,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
 );
 
 interface StatsDashboardProps {
@@ -56,7 +56,7 @@ export default function StatsDashboard({ isOpen, onClose }: StatsDashboardProps)
   const bookmarks = getAllBookmarks();
 
   const [activeTab, setActiveTab] = useState<'overview' | 'patterns' | 'predictions' | 'charts'>(
-    'overview'
+    'overview',
   );
 
   // AI 분석 실행
@@ -117,7 +117,7 @@ export default function StatsDashboard({ isOpen, onClose }: StatsDashboardProps)
             ? 'rgba(59, 130, 246, 0.8)'
             : h.avgScore >= 30
             ? 'rgba(251, 191, 36, 0.8)'
-            : 'rgba(239, 68, 68, 0.8)'
+            : 'rgba(239, 68, 68, 0.8)',
         ),
       },
     ],

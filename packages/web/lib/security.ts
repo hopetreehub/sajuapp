@@ -50,7 +50,7 @@ export function setSecurityHeaders(res: VercelResponse) {
       "object-src 'none'; " +
       "base-uri 'self'; " +
       "form-action 'self'; " +
-      "upgrade-insecure-requests;"
+      'upgrade-insecure-requests;',
   );
 
   // Strict Transport Security (HTTPS 강제)
@@ -62,7 +62,7 @@ export function setSecurityHeaders(res: VercelResponse) {
   // Permissions Policy (Feature Policy)
   res.setHeader(
     'Permissions-Policy',
-    'camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=()'
+    'camera=(), microphone=(), geolocation=(), interest-cohort=(), payment=()',
   );
 
   // Content-Type 강제
@@ -294,7 +294,7 @@ export function applySecurityMiddleware(
   options: {
     enableCSRF?: boolean;
     csrfToken?: string;
-  } = {}
+  } = {},
 ): void | VercelResponse {
   // 1. CORS 헤더 설정
   setCORSHeaders(res);

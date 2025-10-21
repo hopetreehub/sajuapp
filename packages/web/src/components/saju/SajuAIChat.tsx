@@ -63,7 +63,7 @@ function generateSajuAIPrompt(
     birthMonth,
     customer.gender,
     fourPillars.month.heavenly as any,
-    fourPillars.month.earthly as any
+    fourPillars.month.earthly as any,
   );
 
   // 세운(歲運) 계산
@@ -299,7 +299,7 @@ export default function SajuAIChat({ customer, fourPillars, analysisResult, onCl
         },
         body: JSON.stringify({
           prompt: aiPrompt,
-          userQuestion: userQuestion,
+          userQuestion,
         }),
       });
 
@@ -503,7 +503,7 @@ export default function SajuAIChat({ customer, fourPillars, analysisResult, onCl
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder={isListening ? "음성 인식 중..." : "질문을 입력하세요..."}
+              placeholder={isListening ? '음성 인식 중...' : '질문을 입력하세요...'}
               disabled={isLoading}
               className="flex-1 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
             />
