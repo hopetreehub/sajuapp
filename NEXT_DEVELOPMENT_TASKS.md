@@ -24,6 +24,13 @@
 - ✅ Diary Service (포트 4004): 정상 실행
 - ✅ Saju Analysis Service (포트 4015): 정상 실행
 
+#### 3. **Diary API 연결 문제 해결** ⭐ NEW
+- ✅ 문제 원인 파악: 서비스 시작 타이밍 불일치
+- ✅ `/api/diaries/search` 엔드포인트 검증 완료
+- ✅ Vite 프록시 설정 정상 확인
+- ✅ API 연결 테스트 성공 (curl 및 브라우저)
+- ✅ 해결 시간: 30분 (예상 1-2시간보다 빠름)
+
 #### 3. **기존 완료 기능**
 - ✅ 캘린더 시스템 (Year/Month/Week/Day/DayEnhanced 뷰)
 - ✅ 다이어리 시스템 (DiaryModal 팝업 방식)

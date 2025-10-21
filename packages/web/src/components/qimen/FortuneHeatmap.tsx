@@ -89,8 +89,9 @@ function getScoreIntensity(fortune: Fortune): string {
 
 /**
  * 궁 번호를 그리드 좌표로 변환 (3x3)
+ * @deprecated Currently not used, reserved for future grid-based layout
  */
-function getPalaceGridPosition(palace: Palace): { row: number; col: number } {
+function _getPalaceGridPosition(palace: Palace): { row: number; col: number } {
   const grid = [
     [4, 9, 2],  // 상단
     [3, 5, 7],  // 중단

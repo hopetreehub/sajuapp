@@ -14,8 +14,6 @@ import {
   getCurrentDaewoon,
   getCurrentSewoon,
   calculateMonthlyFortune,
-  type Daewoon,
-  type Sewoon,
 } from '@/utils/sajuRelations';
 import { getDailyPillar, getDailyFortuneModifier } from '@/utils/dailyFortune';
 import type { SajuData } from '@/utils/sajuScoreCalculator';

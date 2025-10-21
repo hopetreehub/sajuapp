@@ -125,7 +125,7 @@ const fortuneDescriptions: { [key: string]: string } = {
 
 const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate, onDiaryClick: _onDiaryClick, hasDiary: _hasDiary }) => {
   const { birthInfo, setBirthInfo } = useSajuSettingsStore();
-  const { user } = useAuthStore();
+  const { user: _user } = useAuthStore();
 
   // localStorage에서 데이터 불러오기 및 Store 동기화
   React.useEffect(() => {
@@ -158,11 +158,8 @@ const TodayFortuneSection: React.FC<TodayFortuneSectionProps> = ({ currentDate, 
         } catch (error) {
           console.error('[TodayFortuneSection] localStorage 파싱 오류:', error);
         }
-      } else {
-
       }
-    } else {
-
+      // birthInfo가 이미 있으면 아무것도 하지 않음
     }
   }, [birthInfo, setBirthInfo]);
 

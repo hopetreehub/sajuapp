@@ -14,7 +14,7 @@ export default function CustomerSelector({
   selectedCustomer,
   showAddButton = true,
 }: CustomerSelectorProps) {
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,7 +65,7 @@ export default function CustomerSelector({
   };
 
   // 고객이 없을 때도 정상적인 UI를 유지하고 안내 메시지만 추가
-  const hasNoCustomers = !loading && customers.length === 0 && !selectedCustomer;
+  const _hasNoCustomers = !loading && customers.length === 0 && !selectedCustomer;
 
   return (
     <div className="relative">

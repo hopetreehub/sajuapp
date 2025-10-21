@@ -64,24 +64,25 @@ export default function StatsDashboard({ isOpen, onClose }: StatsDashboardProps)
     return analyzeUserPatterns(bookmarks, stats);
   }, [bookmarks, stats]);
 
-  const sortedPatterns = useMemo(() => {
+  const _sortedPatterns = useMemo(() => {
     return sortPatternsByImportance(analysis.patterns);
   }, [analysis.patterns]);
 
-  const actionablePatterns = useMemo(() => {
+  const _actionablePatterns = useMemo(() => {
     return filterActionablePatterns(analysis.patterns);
   }, [analysis.patterns]);
 
-  if (!isOpen) return null;
-
   // ESC 키로 닫기
   React.useEffect(() => {
+    if (!isOpen) return;
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
-  }, [onClose]);
+  }, [onClose, isOpen]);
+
+  if (!isOpen) return null;
 
   // 차트 색상 (다크모드 지원)
   const isDark = document.documentElement.classList.contains('dark');

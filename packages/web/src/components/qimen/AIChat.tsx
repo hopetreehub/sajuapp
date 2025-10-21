@@ -165,13 +165,12 @@ export default function AIChat({ chart, context, customer, onClose }: AIChatProp
   const generateRuleBasedResponse = (
     question: string,
     chart: QimenChart,
-    context?: QimenContext,
+    _context?: QimenContext,
   ): string => {
     const q = question.toLowerCase();
 
     // 키워드 기반 응답
     if (q.includes('언제') || q.includes('시간') || q.includes('타이밍')) {
-      const bestTime = chart.hourGanZhi;
       return `현재 ${chart.yinYang === 'yang' ? '양둔' : '음둔'} ${chart.ju}국이며, 전체 운세는 ${chart.overallFortune.score}점입니다. ${chart.overallFortune.summary} 가장 좋은 방위는 ${chart.overallFortune.bestPalaces.map(p => `${p}궁(${chart.palaces[p].direction})`).join(', ')}입니다. 😊`;
     }
 

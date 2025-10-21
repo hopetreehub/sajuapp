@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useMemo, useCallback } from 'react';
-import type { Quiz as QuizData, QuizQuestion } from '@/data/qimenCourses';
+import type { Quiz as QuizData } from '@/data/qimenCourses';
 
 interface QuizProps {
   quiz: QuizData;

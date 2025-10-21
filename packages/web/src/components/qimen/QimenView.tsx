@@ -22,7 +22,6 @@ import CustomerSelector from '../saju/CustomerSelector';
 import { analyzeBirthDate } from '@/utils/birthYearAnalysis';
 import { calculatePersonalizedOverallScore } from '@/utils/qimenPersonalization';
 import { getAllContexts, type QimenContext } from '@/data/qimenContextWeights';
-import { generateAIPrompt } from '@/utils/qimenContextEvaluator';
 import AIChat from './AIChat';
 import Toast, { type ToastType } from '../Common/Toast';
 import { exportContentToPDF } from '@/utils/pdfExport';
@@ -179,8 +178,6 @@ export default function QimenView() {
     const calculateTimeUntilChange = () => {
       const now = new Date();
       const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-      const currentSecond = now.getSeconds();
 
       // 다음 2시간 경계 (팔신 변경)
       const nextEvenHour = currentHour % 2 === 0 ? currentHour + 2 : currentHour + 1;
