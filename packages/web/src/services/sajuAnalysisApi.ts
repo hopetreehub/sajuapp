@@ -10,11 +10,7 @@ const SAJU_ANALYSIS_API_BASE = import.meta.env.DEV
   ? '/api/saju'  // 로컬 개발 환경 (Vite 프록시 사용)
   : '/api/saju';  // 프로덕션 환경 (Vercel 풀스택)
 
-// 디버깅용 로그
-if (typeof window !== 'undefined') {
-
-
-}
+// 디버깅용 로그 (removed for production)
 
 export interface ApiCategoryResponse {
   success: boolean;

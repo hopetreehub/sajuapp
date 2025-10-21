@@ -8,9 +8,7 @@ function getBaseUrl(): string {
 
 const baseURL = getBaseUrl();
 
-// 디버깅용 로그
-if (typeof window !== 'undefined') {
-}
+// 디버깅용 로그 (removed for production)
 
 // 캘린더 서비스용 axios 인스턴스
 const api = axios.create({
