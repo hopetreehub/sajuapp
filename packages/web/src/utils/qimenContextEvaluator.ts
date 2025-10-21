@@ -103,7 +103,7 @@ export function generateContextualInterpretation(
   palace: PalaceInfo,
   context?: QimenContext,
 ): string {
-  const weights = getContextWeights(context);
+  const _weights = getContextWeights(context);
   const { gate, star, spirit, direction } = palace;
 
   let interpretation = `${direction} 방위는 `;
@@ -375,7 +375,7 @@ export function generateContextualRecommendations(
   context?: QimenContext,
 ): string[] {
   const recommendations: string[] = [];
-  const weights = getContextWeights(context);
+  const _weights = getContextWeights(context);
 
   if (!context || context === 'general') {
     return palace.recommendations;
@@ -419,10 +419,10 @@ export function generateAIPrompt(
   customer?: Customer | null,
 ): string {
   const weights = getContextWeights(context);
-  const contextLabel = context ? weights.description : '일반적인 상담';
+  const _contextLabel = context ? weights.description : '일반적인 상담';
 
   // 9궁 정보를 간단하게 정리
-  const palaceInfo = Object.values(chart.palaces).map(p => {
+  const _palaceInfo = Object.values(chart.palaces).map(p => {
     const evaluation = evaluateFortuneWithContext(p.gate, p.star, p.spirit, context);
     return `${p.palace}궁(${p.direction}): ${p.gate}, ${p.star}, ${p.spirit || '없음'} - ${evaluation.score}점`;
   }).join(', ');
@@ -432,8 +432,8 @@ export function generateAIPrompt(
   if (customer) {
     const birthAnalysis = analyzeBirthDate(customer.birth_date);
     const birthYear = parseInt(customer.birth_date.split('-')[0]);
-    const birthMonth = parseInt(customer.birth_date.split('-')[1]);
-    const birthDay = parseInt(customer.birth_date.split('-')[2]);
+    const _birthMonth = parseInt(customer.birth_date.split('-')[1]);
+    const _birthDay = parseInt(customer.birth_date.split('-')[2]);
     const age = new Date().getFullYear() - birthYear;
 
     if (birthAnalysis) {
@@ -497,7 +497,7 @@ ${customerInfo}
 }
 
 // 헬퍼 함수들
-function getSolarTermMeaning(name: string): string {
+function _getSolarTermMeaning(name: string): string {
   const meanings: Record<string, string> = {
     '입춘': '봄의 시작, 만물이 소생하는 시기',
     '우수': '눈이 비로 변하는 때',
@@ -527,7 +527,7 @@ function getSolarTermMeaning(name: string): string {
   return meanings[name] || '24절기 중 하나';
 }
 
-function getGanZhiMeaning(ganZhi: { gan: string; zhi: string }): string {
+function _getGanZhiMeaning(ganZhi: { gan: string; zhi: string }): string {
   const ganMeanings: Record<string, string> = {
     '갑': '양목(陽木), 큰 나무',
     '을': '음목(陰木), 작은 풀',
@@ -559,7 +559,7 @@ function getGanZhiMeaning(ganZhi: { gan: string; zhi: string }): string {
   return `${ganMeanings[ganZhi.gan] || ganZhi.gan}, ${zhiMeanings[ganZhi.zhi] || ganZhi.zhi}`;
 }
 
-function getFortuneDescription(fortune: Fortune): string {
+function _getFortuneDescription(fortune: Fortune): string {
   const descriptions: Record<Fortune, string> = {
     'excellent': '대길(大吉) - 모든 일이 순조로운 최상의 시기',
     'good': '길(吉) - 긍정적이고 유리한 흐름',
@@ -570,7 +570,7 @@ function getFortuneDescription(fortune: Fortune): string {
   return descriptions[fortune];
 }
 
-function getFortuneEmoji(fortune: Fortune): string {
+function _getFortuneEmoji(fortune: Fortune): string {
   const emojis: Record<Fortune, string> = {
     'excellent': '🌟',
     'good': '✨',
@@ -581,7 +581,7 @@ function getFortuneEmoji(fortune: Fortune): string {
   return emojis[fortune];
 }
 
-function getDirectionEmoji(direction: string): string {
+function _getDirectionEmoji(direction: string): string {
   const emojis: Record<string, string> = {
     '북': '⬆️',
     '남': '⬇️',

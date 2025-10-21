@@ -1,4 +1,4 @@
-import type { QimenChart, Palace, Direction } from '@/types/qimen';
+import type { QimenChart as _QimenChart, Palace as _Palace, Direction } from '@/types/qimen';
 import type { QimenContext } from '@/data/qimenContextWeights';
 import type { QimenBookmark } from '@/stores/qimenBookmarkStore';
 import type { QimenStats } from '@/hooks/useQimenStats';

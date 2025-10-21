@@ -17,7 +17,7 @@ export class AuthenticSajuTest {
     try {
       // 1. 직접 계산기 테스트
       const 사주 = AuthenticSajuCalculator.createParkJunSooTestCase();
-      const 결과 = AuthenticSajuCalculator.calculateAuthenticLifeChart(사주, 1971);
+      const _결과 = AuthenticSajuCalculator.calculateAuthenticLifeChart(사주, 1971);
 
 
       // 2. API 테스트
@@ -32,7 +32,7 @@ export class AuthenticSajuTest {
       });
 
       if (apiResult.success) {
-        const 분석 = apiResult.data.analysis;
+        const _분석 = apiResult.data.analysis;
 
 
         // 용신 부합도 검증
@@ -71,7 +71,7 @@ export class AuthenticSajuTest {
     try {
       // 1. 직접 계산기 테스트
       const 사주 = AuthenticSajuCalculator.createJeongBiJeTestCase();
-      const 결과 = AuthenticSajuCalculator.calculateAuthenticLifeChart(사주, 1976);
+      const _결과 = AuthenticSajuCalculator.calculateAuthenticLifeChart(사주, 1976);
 
 
       // 2. API 테스트
@@ -86,7 +86,7 @@ export class AuthenticSajuTest {
       });
 
       if (apiResult.success) {
-        const 분석 = apiResult.data.analysis;
+        const _분석 = apiResult.data.analysis;
 
 
         // 용신 부합도 검증

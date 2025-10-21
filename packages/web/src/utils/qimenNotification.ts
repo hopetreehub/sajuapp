@@ -142,7 +142,7 @@ export function checkAndNotify(settings: QimenNotificationSettings): {
   const now = new Date();
   const currentHour = now.getHours();
   const currentMinute = now.getMinutes();
-  const currentTimeStr = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
+  const _currentTimeStr = `${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}`;
 
   // 시간대 체크
   const [startHour, startMinute] = settings.timeRange.start.split(':').map(Number);

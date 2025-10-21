@@ -375,7 +375,7 @@ function evaluateFortune(
   star: Star,
   spirit?: Spirit,
 ): Fortune {
-  const combinedNature = calculateCombinedNature(gate, star, spirit);
+  const _combinedNature = calculateCombinedNature(gate, star, spirit);
 
   // 점수 계산 (0-100)
   let score = 50; // 기본 중립

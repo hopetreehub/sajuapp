@@ -16,7 +16,7 @@ import {
 import { calculateLifeChartScore } from './sajuScoreCalculator';
 
 // 디버깅용 로그 플래그
-const DEBUG_MODE = true; // 임시로 true로 설정하여 디버깅
+const _DEBUG_MODE = true; // 임시로 true로 설정하여 디버깅
 
 // 오행 상생상극 관계
 const _WUXING_RELATIONS = {
