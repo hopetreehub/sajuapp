@@ -14,7 +14,7 @@ import {
 import { Radar, Bar } from 'react-chartjs-2';
 import { SajuRadarData, TimeFrame, TimeFrameWeights } from '@/types/sajuRadar';
 import { CHART_DESIGN_SYSTEM, getTimeFrameColors, getChartOptions } from '@/constants/chartDesignSystem';
-import { calculateMultiLayerScore, calculateSajuScore, SajuData } from '@/utils/sajuScoreCalculator';
+import { calculateMultiLayerScore, calculateSajuScore as _calculateSajuScore, SajuData } from '@/utils/sajuScoreCalculator';
 import { ChartStyleUtils, TimeFrameData } from '@/utils/chartStyleUtils';
 
 ChartJS.register(

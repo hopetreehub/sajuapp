@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { SAJU_RADAR_CATEGORIES, setGlobalSajuData, loadDynamicSajuCategories, getSajuRadarCategories } from '@/data/sajuRadarData';
+import { SAJU_RADAR_CATEGORIES, setGlobalSajuData, loadDynamicSajuCategories as _loadDynamicSajuCategories, getSajuRadarCategories } from '@/data/sajuRadarData';
 import { SajuRadarData, SajuRadarCategory } from '@/types/sajuRadar';
 import SajuCategoryNavigation from '@/components/saju/SajuCategoryNavigation';
 import SajuSubcategoryTabs from '@/components/saju/SajuSubcategoryTabs';

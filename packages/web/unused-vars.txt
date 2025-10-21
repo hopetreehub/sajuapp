@@ -1,0 +1,79 @@
+   26:15  error    'Direction' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   17:36  error    'calculateSajuScore' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   58:10  error    'responseCache' is assigned a value but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+   58:25  error    'setResponseCache' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  181:42  error    'ms' is defined but never used. Allowed unused args must match /^_/u                         @typescript-eslint/no-unused-vars
+  57:10  error    'isLoadingTodos' is assigned a value but never used. Allowed unused vars must match /^_/u                                       @typescript-eslint/no-unused-vars
+  11:25  error  'AuxiliaryStar' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   22:10  error    'interpretationService' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  347:20  error    'event' is defined but never used. Allowed unused args must match /^_/u                                               @typescript-eslint/no-unused-vars
+  142:9   error    'formatBirthDate' is assigned a value but never used. Allowed unused vars must match /^_/u                                @typescript-eslint/no-unused-vars
+  122:9   error    'formatBirthDate' is assigned a value but never used. Allowed unused vars must match /^_/u                                    @typescript-eslint/no-unused-vars
+  12:3  error  'getLessonById' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  15:26  error    'formatFourPillarsDetailed' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   99:15   error    'savedBirthInfo' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   52:9  error  'sajuData' is assigned a value but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+  102:9  error  'analysisResult' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   16:28  error    'getTarotReadings' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+  188:60  error    'question' is defined but never used. Allowed unused args must match /^_/u           @typescript-eslint/no-unused-vars
+  223:72  error    'question' is defined but never used. Allowed unused args must match /^_/u           @typescript-eslint/no-unused-vars
+  249:13  error    'middle' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  269:94  error    'question' is defined but never used. Allowed unused args must match /^_/u           @typescript-eslint/no-unused-vars
+  272:11  error    'hasMajor' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  319:68  error    'question' is defined but never used. Allowed unused args must match /^_/u           @typescript-eslint/no-unused-vars
+    2:52   error    'loadDynamicSajuCategories' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  283:28  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  295:32  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  306:34  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  317:30  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  327:29  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  338:35  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  349:29  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  232:11  error    'startTime' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  262:37  error    'index' is defined but never used. Allowed unused args must match /^_/u               @typescript-eslint/no-unused-vars
+  284:15  error    'endTime' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  93:11  error  'get' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+   1:10  error    'expect' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  323:9  error    'calculatedDay' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  334:9  error    'test1984' is assigned a value but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  336:9  error    'test2000' is assigned a value but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  434:32  error    '대운' is defined but never used. Allowed unused args must match /^_/u              @typescript-eslint/no-unused-vars
+  698:11  error    '박준수결과' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  704:11  error    '정비제결과' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   20:13  error    '결과' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   35:15  error    '분석' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   74:13  error    '결과' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   89:15  error    '분석' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  131:9  error  'result' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   36:59  error  'Pattern' is defined but never used. Allowed unused vars must match /^_/u                   @typescript-eslint/no-unused-vars
+  178:9   error  'basePalaceOrder' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  328:3   error  'dateTime' is defined but never used. Allowed unused args must match /^_/u                  @typescript-eslint/no-unused-vars
+  378:9   error  'combinedNature' is assigned a value but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+  106:9   error  'weights' is assigned a value but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  378:9   error  'weights' is assigned a value but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  422:9   error  'contextLabel' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  425:9   error  'palaceInfo' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  435:11  error  'birthMonth' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  436:11  error  'birthDay' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  500:10  error  'getSolarTermMeaning' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  530:10  error  'getGanZhiMeaning' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  562:10  error  'getFortuneDescription' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  573:10  error  'getFortuneEmoji' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+  584:10  error  'getDirectionEmoji' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  145:9   error    'currentTimeStr' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  1:15  error  'QimenChart' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  1:27  error  'Palace' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  376:58  error  'system' is defined but never used. Allowed unused args must match /^_/u    @typescript-eslint/no-unused-vars
+  540:3   error  'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  585:3   error  'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  617:3   error  'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  655:3   error  'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  289:11  error    'result1' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  300:11  error    'result2' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  323:41  error    'fourPillars' is defined but never used. Allowed unused args must match /^_/u       @typescript-eslint/no-unused-vars
+  317:9   error  'result1' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  328:11  error  'result' is assigned a value but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+  292:31  error    'saju' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  292:55  error    'label' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+   940:39  error    'i' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+   19:7   error    'DEBUG_MODE' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars

@@ -54,7 +54,7 @@ export const CalendarProvider: React.FC<CalendarProviderProps> = ({ children }) 
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [isLoadingTodos, setIsLoadingTodos] = useState(false);
+  const [_isLoadingTodos, _setIsLoadingTodos] = useState(false);
 
   const [settings] = useState<UserSettings>({
     timezone: 'Asia/Seoul',

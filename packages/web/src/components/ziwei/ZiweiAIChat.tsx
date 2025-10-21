@@ -54,8 +54,8 @@ export default function ZiweiAIChat({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // AI 응답 캐시
-  const [responseCache, setResponseCache] = useState<Map<string, string>>(new Map());
+  // AI 응답 캐시 (reserved for future caching feature)
+  const [_responseCache, _setResponseCache] = useState<Map<string, string>>(new Map());
 
   // 음성 인식 상태
   const [isListening, setIsListening] = useState(false);
@@ -178,7 +178,7 @@ ${Object.entries(chart.palaces)
     const transformations = info.auxiliaryStars.filter(star =>
       ['化祿', '化權', '化科', '化忌'].includes(star),
     );
-    const mainStar = info.mainStars.find(ms =>
+    const mainStar = info.mainStars.find(_ms =>
       transformations.length > 0,
     );
     return transformations.map(t =>

@@ -73,7 +73,7 @@ export interface ComprehensiveRelationshipReport {
  * 7대 인간관계운 시스템 점수 계산 (메인 함수)
  */
 export function calculateRelationshipScores(
-  sajuData: SajuData,
+  _sajuData: SajuData,
   birthYear: number,
   targetDate?: Date,
 ): ComprehensiveRelationshipReport {
@@ -142,7 +142,7 @@ export function calculateRelationshipScores(
  */
 function calculateSingleRelationshipScore(
   system: RelationshipSystem,
-  sajuData: SajuData,
+  _sajuData: SajuData,
   birthYear: number,
   age: number,
   targetDate: Date,
@@ -264,7 +264,7 @@ function getUserElements(sajuData: SajuData): Record<OhHaeng, number> {
 function calculateRelationshipElementScore(
   systemElements: OhHaeng[],
   userElements: Record<OhHaeng, number>,
-  sajuData: SajuData,
+  _sajuData: SajuData,
 ): number {
   let score = 40; // 기본값
 
@@ -318,7 +318,7 @@ function getConflictingElements(element: OhHaeng): OhHaeng[] {
 /**
  * 십신 분석 (인간관계의 핵심)
  */
-function analyzeSibsinForRelationship(sajuData: SajuData, system: RelationshipSystem): number {
+function analyzeSibsinForRelationship(_sajuData: SajuData, system: RelationshipSystem): number {
   let bonus = 0;
 
   // 십신 카운트 (간단한 구현 - 실제로는 더 복잡)
@@ -373,7 +373,7 @@ function analyzeSibsinForRelationship(sajuData: SajuData, system: RelationshipSy
 /**
  * 합형충파해 점수 분석
  */
-function analyzeHarmonyConflictScore(sajuData: SajuData, system: RelationshipSystem): number {
+function analyzeHarmonyConflictScore(_sajuData: SajuData, system: RelationshipSystem): number {
   let score = 0;
 
   const jijis = [
@@ -537,7 +537,7 @@ function evaluateHarmony(score: number): 'excellent' | 'good' | 'fair' | 'poor' 
 function extractStrengthsWeaknesses(
   system: RelationshipSystem,
   score: number,
-  sajuData: SajuData,
+  _sajuData: SajuData,
 ): { strengths: string[]; weaknesses: string[] } {
   const strengths: string[] = [];
   const weaknesses: string[] = [];
@@ -582,7 +582,7 @@ function extractStrengthsWeaknesses(
 function generateSystemAdvice(
   system: RelationshipSystem,
   score: number,
-  sajuData: SajuData,
+  _sajuData: SajuData,
 ): string[] {
   const advice: string[] = [];
 
@@ -614,7 +614,7 @@ function generateSystemAdvice(
  */
 function evaluateSocialSkill(
   scores: RelationshipScoreResult[],
-  sajuData: SajuData,
+  _sajuData: SajuData,
 ): 'high' | 'medium' | 'low' {
   // 사회 관계 + 직장 관계 평균
   const socialScores = scores.filter(s =>
@@ -652,7 +652,7 @@ function evaluateConflictLevel(sajuData: SajuData): 'high' | 'medium' | 'low' {
  */
 function analyzePersonalityStyle(
   scores: RelationshipScoreResult[],
-  sajuData: SajuData,
+  _sajuData: SajuData,
 ): { type: string; description: string; bestApproach: string } {
   const familyAvg = scores.filter(s => s.category === 'family')
     .reduce((sum, s) => sum + s.baseScore, 0) / 3;
@@ -742,7 +742,7 @@ function analyzeHarmonyConflict(sajuData: SajuData): { harmonies: string[]; conf
  */
 function generateRelationshipRecommendations(
   scores: RelationshipScoreResult[],
-  sajuData: SajuData,
+  _sajuData: SajuData,
   harmonyAnalysis: { harmonies: string[]; conflicts: string[] },
 ): { immediate: string[]; longTerm: string[] } {
   const immediate: string[] = [];

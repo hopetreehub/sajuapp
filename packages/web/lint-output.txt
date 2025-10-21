@@ -1,0 +1,1056 @@
+
+> @sajuapp/web@1.0.6 lint
+> eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0
+
+
+E:\projects\sajuapp\packages\web\api\database\init-schema.ts
+  22:1   warning  Unexpected console statement                           no-console
+  27:5   warning  Unexpected console statement                           no-console
+  33:5   warning  Unexpected console statement                           no-console
+  34:5   warning  Unexpected console statement                           no-console
+  43:5   warning  Unexpected console statement                           no-console
+  50:1   warning  This line has a length of 102. Maximum allowed is 100  max-len
+  53:9   warning  Unexpected console statement                           no-console
+  62:11  warning  Unexpected console statement                           no-console
+  70:5   warning  Unexpected console statement                           no-console
+  80:5   warning  Unexpected console statement                           no-console
+  82:7   warning  Unexpected console statement                           no-console
+  85:5   warning  Unexpected console statement                           no-console
+
+E:\projects\sajuapp\packages\web\api\tags\events\[eventId]\tags.ts
+   84:1  warning  This line has a length of 103. Maximum allowed is 100  max-len
+   98:1  warning  This line has a length of 105. Maximum allowed is 100  max-len
+  135:1  warning  This line has a length of 109. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\AddItemModal.tsx
+  17:1  warning  This line has a length of 105. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\Admin\CourseManagement.tsx
+  31:1  warning  This line has a length of 101. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\Admin\EnrollmentStats.tsx
+  137:1  warning  This line has a length of 115. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\Auth\QRCodeGenerator.tsx
+  32:43  warning  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+E:\projects\sajuapp\packages\web\src\components\Auth\ReferralSection.tsx
+   23:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  252:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  323:32  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\components\Auth\SignUpForm.tsx
+  90:1  warning  This line has a length of 119. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\Calendar\DayView.backup.tsx
+   27:3   warning  Unexpected console statement                           no-console
+   39:3   warning  Unexpected console statement                           no-console
+   59:1   warning  This line has a length of 110. Maximum allowed is 100  max-len
+  260:11  warning  Unexpected console statement                           no-console
+
+E:\projects\sajuapp\packages\web\src\components\Calendar\DayView.tsx
+   50:1   warning  This line has a length of 104. Maximum allowed is 100  max-len
+   51:1   warning  This line has a length of 108. Maximum allowed is 100  max-len
+   67:1   warning  This line has a length of 110. Maximum allowed is 100  max-len
+  170:41  warning  Forbidden non-null assertion                           @typescript-eslint/no-non-null-assertion
+  272:45  warning  Forbidden non-null assertion                           @typescript-eslint/no-non-null-assertion
+
+E:\projects\sajuapp\packages\web\src\components\Calendar\DayViewEnhanced.tsx
+   19:1   warning  This line has a length of 103. Maximum allowed is 100  max-len
+   23:63  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   32:50  warning  Forbidden non-null assertion                           @typescript-eslint/no-non-null-assertion
+  101:35  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  193:1   warning  This line has a length of 117. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\Calendar\MonthView.tsx
+   24:1   warning  This line has a length of 107. Maximum allowed is 100  max-len
+   39:1   warning  This line has a length of 139. Maximum allowed is 100  max-len
+  330:45  warning  Forbidden non-null assertion                           @typescript-eslint/no-non-null-assertion
+  345:1   warning  This line has a length of 105. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\Calendar\WeekView.tsx
+  228:43  warning  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  337:55  warning  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+E:\projects\sajuapp\packages\web\src\components\Calendar\YearViewEnhanced.tsx
+  27:1  warning  This line has a length of 143. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\CompatibilityRadarChart.tsx
+  93:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\components\Dashboard\WeeklyStats.tsx
+  179:1  warning  This line has a length of 108. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\DiaryBookModal.tsx
+   61:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   73:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  204:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  260:19  warning  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+  310:25  warning  Forbidden non-null assertion              @typescript-eslint/no-non-null-assertion
+
+E:\projects\sajuapp\packages\web\src\components\DiaryModal.tsx
+   44:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  100:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\components\DiaryNotebookModal.tsx
+   34:1   warning  This line has a length of 104. Maximum allowed is 100                                                                max-len
+   44:1   warning  This line has a length of 105. Maximum allowed is 100                                                                max-len
+   50:6   warning  React Hook useEffect has a missing dependency: 'loadDiaryEntries'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  140:27  warning  Forbidden non-null assertion                                                                                         @typescript-eslint/no-non-null-assertion
+
+E:\projects\sajuapp\packages\web\src\components\EventModal.tsx
+  167:1   warning  This line has a length of 106. Maximum allowed is 100  max-len
+  179:64  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  186:21  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  277:93  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  409:1   warning  This line has a length of 122. Maximum allowed is 100  max-len
+  426:1   warning  This line has a length of 120. Maximum allowed is 100  max-len
+  453:87  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  487:1   warning  This line has a length of 108. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\Fortune\TodayFortuneWidget.tsx
+   75:1  warning  This line has a length of 109. Maximum allowed is 100                                                                                 max-len
+  152:1  warning  This line has a length of 107. Maximum allowed is 100                                                                                 max-len
+  183:6  warning  React Hook useEffect has missing dependencies: 'activeSajuData' and 'targetDate'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\projects\sajuapp\packages\web\src\components\ImageViewer.tsx
+  43:6  warning  React Hook useEffect has missing dependencies: 'handleNextImage', 'handlePrevImage', and 'onClose'. Either include them or remove the dependency array. If 'onClose' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+
+E:\projects\sajuapp\packages\web\src\components\NotificationSettings.tsx
+  26:76  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\components\SearchBar.tsx
+  100:6  warning  React Hook useEffect has a missing dependency: 'performSearch'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\projects\sajuapp\packages\web\src\components\TodayFortuneSection.tsx
+  126:1  warning  This line has a length of 136. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\User\UserSelectionPanel.tsx
+  193:1  warning  This line has a length of 106. Maximum allowed is 100  max-len
+  203:1  warning  This line has a length of 107. Maximum allowed is 100  max-len
+  223:1  warning  This line has a length of 105. Maximum allowed is 100  max-len
+  236:1  warning  This line has a length of 106. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\charts\HundredYearChart.bak.tsx
+   75:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   83:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  215:27  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  256:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\components\charts\HundredYearChart.tsx
+   82:38  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+   94:34  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  230:27  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  272:24  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  305:7   warning  React Hook useMemo has a missing dependency: 'currentYear'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\projects\sajuapp\packages\web\src\components\charts\HundredYearChartFixed.tsx
+   55:1   warning  This line has a length of 102. Maximum allowed is 100                                                         max-len
+   58:1   warning  This line has a length of 106. Maximum allowed is 100                                                         max-len
+   83:38  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+   91:34  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  224:27  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  258:59  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  298:1   warning  This line has a length of 109. Maximum allowed is 100                                                         max-len
+  317:27  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  359:24  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  392:7   warning  React Hook useMemo has a missing dependency: 'currentYear'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\projects\sajuapp\packages\web\src\components\charts\InterpretationSummaryCard.tsx
+   97:1  warning  This line has a length of 101. Maximum allowed is 100  max-len
+  153:1  warning  This line has a length of 112. Maximum allowed is 100  max-len
+  178:1  warning  This line has a length of 119. Maximum allowed is 100  max-len
+  189:1  warning  This line has a length of 115. Maximum allowed is 100  max-len
+  199:1  warning  This line has a length of 109. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\charts\UniversalLifeChart.tsx
+   86:27  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  110:27  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  159:26  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  165:26  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  173:30  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  270:1   warning  This line has a length of 104. Maximum allowed is 100  max-len
+  330:60  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  384:39  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  392:36  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  394:52  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\components\compatibility\DetailedAnalysisTabs.tsx
+  234:97  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  257:91  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  280:83  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  303:87  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  329:96  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  412:90  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  495:82  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  578:86  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\components\compatibility\EnhancedCompatibilityChart.tsx
+  25:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  27:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  28:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\components\qimen\AIChat.tsx
+   48:33  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   63:1   warning  This line has a length of 109. Maximum allowed is 100  max-len
+   63:44  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   63:81  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   69:49  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   75:48  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  116:9   warning  Unexpected console statement                           no-console
+  117:16  warning  Forbidden non-null assertion                           @typescript-eslint/no-non-null-assertion
+  121:7   warning  Unexpected console statement                           no-console
+  123:7   warning  Unexpected console statement                           no-console
+  126:7   warning  Unexpected console statement                           no-console
+  145:7   warning  Unexpected console statement                           no-console
+  150:9   warning  Unexpected console statement                           no-console
+
+E:\projects\sajuapp\packages\web\src\components\qimen\BeginnerGuide.tsx
+  153:1  warning  This line has a length of 109. Maximum allowed is 100  max-len
+  183:1  warning  This line has a length of 106. Maximum allowed is 100  max-len
+  196:1  warning  This line has a length of 119. Maximum allowed is 100  max-len
+  225:1  warning  This line has a length of 103. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\qimen\BookmarkButton.tsx
+  35:53  warning  React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+
+E:\projects\sajuapp\packages\web\src\components\qimen\NotificationSettings.tsx
+   38:7   warning  Unexpected console statement              no-console
+  223:61  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\components\qimen\Qimen3DRenderer.tsx
+  164:1  warning  This line has a length of 117. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\qimen\QimenView.tsx
+  107:7  warning  Unexpected console statement                                                                              no-console
+  140:1  warning  This line has a length of 120. Maximum allowed is 100                                                     max-len
+  168:7  warning  Unexpected console statement                                                                              no-console
+  174:6  warning  React Hook useEffect has a missing dependency: 'chart'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  223:9  warning  Unexpected console statement                                                                              no-console
+  245:5  warning  Unexpected console statement                                                                              no-console
+  251:5  warning  Unexpected console statement                                                                              no-console
+  413:1  warning  This line has a length of 120. Maximum allowed is 100                                                     max-len
+  442:1  warning  This line has a length of 104. Maximum allowed is 100                                                     max-len
+
+E:\projects\sajuapp\packages\web\src\components\qimen\SimpleSummary.tsx
+  60:1  warning  This line has a length of 106. Maximum allowed is 100  max-len
+  61:1  warning  This line has a length of 109. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\qimen\StatsDashboard.tsx
+   26:15  error    'Direction' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  186:1   warning  This line has a length of 116. Maximum allowed is 100                        max-len
+  356:53  warning  Unexpected any. Specify a different type                                     @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\components\saju\BirthInfoHeader.tsx
+  198:1  warning  This line has a length of 101. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\saju\SajuAIChat.tsx
+   63:35  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   64:34  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   72:47  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   72:84  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   73:49  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   73:87  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   74:45  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   74:81  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   75:47  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   75:84  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   77:8   warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  196:1   warning  This line has a length of 105. Maximum allowed is 100  max-len
+  214:33  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  229:1   warning  This line has a length of 109. Maximum allowed is 100  max-len
+  229:44  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  229:81  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  235:49  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  241:48  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  282:9   warning  Unexpected console statement                           no-console
+  283:16  warning  Forbidden non-null assertion                           @typescript-eslint/no-non-null-assertion
+  287:7   warning  Unexpected console statement                           no-console
+  289:7   warning  Unexpected console statement                           no-console
+  292:7   warning  Unexpected console statement                           no-console
+  310:7   warning  Unexpected console statement                           no-console
+  314:9   warning  Unexpected console statement                           no-console
+
+E:\projects\sajuapp\packages\web\src\components\saju\SajuBeginnerGuide.tsx
+  242:1  warning  This line has a length of 101. Maximum allowed is 100  max-len
+  267:1  warning  This line has a length of 105. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\saju\charts\CompatibilityRadarChart.tsx
+  112:28  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  115:28  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  120:32  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  134:29  warning  Unexpected any. Specify a different type                                                                      @typescript-eslint/no-explicit-any
+  141:6   warning  React Hook useMemo has a missing dependency: 'getMaxValue'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\projects\sajuapp\packages\web\src\components\saju\charts\FiveElementsBalanceChart.tsx
+  149:1  warning  This line has a length of 102. Maximum allowed is 100  max-len
+  153:1  warning  This line has a length of 102. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\saju\charts\FiveElementsChart.tsx
+  210:1  warning  This line has a length of 113. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\saju\charts\HealthRadarChart.tsx
+   75:5   warning  Unexpected console statement                           no-console
+   77:7   warning  Unexpected console statement                           no-console
+   78:7   warning  Unexpected console statement                           no-console
+   79:7   warning  Unexpected console statement                           no-console
+   80:7   warning  Unexpected console statement                           no-console
+   81:7   warning  Unexpected console statement                           no-console
+  110:21  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  183:30  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  251:1   warning  This line has a length of 113. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\saju\charts\RelationshipRadarChart.tsx
+   98:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  171:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\components\saju\charts\TwelveEarthlyBranchesChart.tsx
+  121:6  warning  React Hook useMemo has a missing dependency: 'analysis.data'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  139:6  warning  React Hook useMemo has a missing dependency: 'analysis'. Either include it or remove the dependency array       react-hooks/exhaustive-deps
+  252:1  warning  This line has a length of 102. Maximum allowed is 100                                                           max-len
+  402:1  warning  This line has a length of 102. Maximum allowed is 100                                                           max-len
+  403:1  warning  This line has a length of 101. Maximum allowed is 100                                                           max-len
+
+E:\projects\sajuapp\packages\web\src\components\saju\charts\UnifiedSajuRadarChart.tsx
+   17:36  error    'calculateSajuScore' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  131:36  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  223:17  warning  Forbidden non-null assertion                                                          @typescript-eslint/no-non-null-assertion
+  234:1   warning  This line has a length of 123. Maximum allowed is 100                                 max-len
+  273:30  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  361:28  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  432:1   warning  This line has a length of 140. Maximum allowed is 100                                 max-len
+
+E:\projects\sajuapp\packages\web\src\components\saju\charts\WealthRadarChart.tsx
+   98:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  171:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\components\saju\charts\common\StandardTimeFrameSelector.tsx
+  35:1  warning  This line has a length of 141. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\components\ziwei\ZiweiAIChat.tsx
+   58:10  error    'responseCache' is assigned a value but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+   58:25  error    'setResponseCache' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   62:33  warning  Unexpected any. Specify a different type                                                     @typescript-eslint/no-explicit-any
+   78:20  warning  Unexpected any. Specify a different type                                                     @typescript-eslint/no-explicit-any
+   78:57  warning  Unexpected any. Specify a different type                                                     @typescript-eslint/no-explicit-any
+   84:49  warning  Unexpected any. Specify a different type                                                     @typescript-eslint/no-explicit-any
+   90:49  warning  Unexpected any. Specify a different type                                                     @typescript-eslint/no-explicit-any
+  181:42  error    'ms' is defined but never used. Allowed unused args must match /^_/u                         @typescript-eslint/no-unused-vars
+  268:1   warning  This line has a length of 126. Maximum allowed is 100                                        max-len
+
+E:\projects\sajuapp\packages\web\src\components\ziwei\ZiweiBeginnerGuide.tsx
+  186:1  warning  This line has a length of 113. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\config\api.config.ts
+  31:38  error  Empty block statement  no-empty
+
+E:\projects\sajuapp\packages\web\src\constants\chartDesignSystem.ts
+  306:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\contexts\CalendarContext.tsx
+  39:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  57:10  error    'isLoadingTodos' is assigned a value but never used. Allowed unused vars must match /^_/u                                       @typescript-eslint/no-unused-vars
+  94:6   warning  React Hook useEffect has a missing dependency: 'loadTodos'. Either include it or remove the dependency array                    react-hooks/exhaustive-deps
+
+E:\projects\sajuapp\packages\web\src\contexts\ThemeContext.tsx
+  11:14  warning  Fast refresh only works when a file only exports components. Move your React context(s) to a separate file                      react-refresh/only-export-components
+  80:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+E:\projects\sajuapp\packages\web\src\contexts\YearlyMemoContext.tsx
+  20:14  warning  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  42:50  warning  Unexpected any. Specify a different type                                                                                        @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\data\mockCustomerData.ts
+  119:71  warning  Forbidden non-null assertion                           @typescript-eslint/no-non-null-assertion
+  137:1   warning  This line has a length of 103. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\data\qimenContextWeights.ts
+  291:1  warning  This line has a length of 116. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\data\tarotCards.ts
+  7:1  warning  This line has a length of 118. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\data\ziweiTransformations.ts
+  11:25  error  'AuxiliaryStar' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\hooks\useDiaryData.ts
+  69:1  warning  This line has a length of 115. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\hooks\useGestures.ts
+  208:15  warning  Forbidden non-null assertion                                                                                              @typescript-eslint/no-non-null-assertion
+  215:5   warning  React Hook useCallback has a missing dependency: 'clearLongPressTimer'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  251:5   warning  React Hook useCallback has a missing dependency: 'clearLongPressTimer'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  318:5   warning  React Hook useCallback has a missing dependency: 'clearLongPressTimer'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\projects\sajuapp\packages\web\src\hooks\useQimenStats.ts
+  176:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\hooks\useStandardRadarChart.ts
+    6:13  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+    8:16  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  134:6   warning  React Hook useMemo has a missing dependency: 'timeFrameLabels'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  193:30  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\main.tsx
+  12:21  warning  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  23:9   warning  Unexpected console statement  no-console
+
+E:\projects\sajuapp\packages\web\src\pages\AdminUserManagementPage.tsx
+   60:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   92:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  131:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  156:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  183:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  247:62  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  325:88  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\pages\CompatibilityPage.tsx
+   16:1   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+   22:10  error    'interpretationService' is defined but never used. Allowed unused vars must match /^_/u                              @typescript-eslint/no-unused-vars
+   45:38  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   46:38  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+   61:9   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+   72:1   warning  This line has a length of 113. Maximum allowed is 100                                                                max-len
+  119:1   warning  This line has a length of 104. Maximum allowed is 100                                                                max-len
+  234:1   warning  This line has a length of 101. Maximum allowed is 100                                                                max-len
+  269:1   warning  This line has a length of 111. Maximum allowed is 100                                                                max-len
+
+E:\projects\sajuapp\packages\web\src\pages\CustomerManagementPage.tsx
+   37:6   warning  React Hook useEffect has a missing dependency: 'loadCustomers'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   58:30  warning  Forbidden non-null assertion                                                                                      @typescript-eslint/no-non-null-assertion
+   69:21  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+   95:21  warning  Unexpected any. Specify a different type                                                                          @typescript-eslint/no-explicit-any
+  176:1   warning  This line has a length of 118. Maximum allowed is 100                                                             max-len
+  207:55  warning  Forbidden non-null assertion                                                                                      @typescript-eslint/no-non-null-assertion
+
+E:\projects\sajuapp\packages\web\src\pages\DashboardPage.tsx
+   25:58  warning  Unexpected any. Specify a different type                                                                              @typescript-eslint/no-explicit-any
+   63:6   warning  React Hook useEffect has a missing dependency: 'loadDashboardData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  329:1   warning  This line has a length of 103. Maximum allowed is 100                                                                 max-len
+  347:20  error    'event' is defined but never used. Allowed unused args must match /^_/u                                               @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\pages\DetailedFortunePage.tsx
+    2:1   warning  This line has a length of 114. Maximum allowed is 100                                                                     max-len
+   57:6   warning  React Hook useEffect has a missing dependency: 'generateFortuneScores'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   85:56  warning  Unexpected any. Specify a different type                                                                                  @typescript-eslint/no-explicit-any
+   93:1   warning  This line has a length of 122. Maximum allowed is 100                                                                     max-len
+   94:1   warning  This line has a length of 118. Maximum allowed is 100                                                                     max-len
+   95:1   warning  This line has a length of 109. Maximum allowed is 100                                                                     max-len
+   96:1   warning  This line has a length of 110. Maximum allowed is 100                                                                     max-len
+   97:1   warning  This line has a length of 118. Maximum allowed is 100                                                                     max-len
+   98:1   warning  This line has a length of 117. Maximum allowed is 100                                                                     max-len
+   99:1   warning  This line has a length of 117. Maximum allowed is 100                                                                     max-len
+  101:1   warning  This line has a length of 120. Maximum allowed is 100                                                                     max-len
+  102:1   warning  This line has a length of 115. Maximum allowed is 100                                                                     max-len
+  103:1   warning  This line has a length of 117. Maximum allowed is 100                                                                     max-len
+  104:1   warning  This line has a length of 126. Maximum allowed is 100                                                                     max-len
+  105:1   warning  This line has a length of 117. Maximum allowed is 100                                                                     max-len
+  106:1   warning  This line has a length of 122. Maximum allowed is 100                                                                     max-len
+  107:1   warning  This line has a length of 116. Maximum allowed is 100                                                                     max-len
+  108:1   warning  This line has a length of 111. Maximum allowed is 100                                                                     max-len
+  142:9   error    'formatBirthDate' is assigned a value but never used. Allowed unused vars must match /^_/u                                @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\pages\DiaryPage.tsx
+  234:1  warning  This line has a length of 161. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\pages\FortunePage.tsx
+  116:6  warning  React Hook useEffect has a missing dependency: 'generateFortune'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\projects\sajuapp\packages\web\src\pages\LearningPage.tsx
+   79:6  warning  React Hook useEffect has missing dependencies: 'loadCourse' and 'loadProgress'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  173:1  warning  This line has a length of 105. Maximum allowed is 100                                                                               max-len
+  183:1  warning  This line has a length of 106. Maximum allowed is 100                                                                               max-len
+  184:1  warning  This line has a length of 117. Maximum allowed is 100                                                                               max-len
+  324:1  warning  This line has a length of 104. Maximum allowed is 100                                                                               max-len
+  388:1  warning  This line has a length of 106. Maximum allowed is 100                                                                               max-len
+
+E:\projects\sajuapp\packages\web\src\pages\PersonalityAnalysisPage.tsx
+    2:1   warning  This line has a length of 120. Maximum allowed is 100                                                                         max-len
+   57:6   warning  React Hook useEffect has a missing dependency: 'generatePersonalityTraits'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   85:50  warning  Unexpected any. Specify a different type                                                                                      @typescript-eslint/no-explicit-any
+   92:1   warning  This line has a length of 116. Maximum allowed is 100                                                                         max-len
+   93:1   warning  This line has a length of 118. Maximum allowed is 100                                                                         max-len
+   94:1   warning  This line has a length of 114. Maximum allowed is 100                                                                         max-len
+   95:1   warning  This line has a length of 116. Maximum allowed is 100                                                                         max-len
+   96:1   warning  This line has a length of 121. Maximum allowed is 100                                                                         max-len
+   97:1   warning  This line has a length of 123. Maximum allowed is 100                                                                         max-len
+   98:1   warning  This line has a length of 119. Maximum allowed is 100                                                                         max-len
+  122:9   error    'formatBirthDate' is assigned a value but never used. Allowed unused vars must match /^_/u                                    @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\pages\QimenLearningPage.tsx
+  12:3  error  'getLessonById' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\pages\QimenSharePage.tsx
+  30:42  warning  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+E:\projects\sajuapp\packages\web\src\pages\SajuAnalysisPageEnhanced.tsx
+  15:26  error    'formatFourPillarsDetailed' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  58:28  warning  Forbidden non-null assertion                                                                 @typescript-eslint/no-non-null-assertion
+  69:21  warning  Unexpected any. Specify a different type                                                     @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\pages\SearchPage.tsx
+  42:6  warning  React Hook useEffect has a missing dependency: 'performSearch'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+E:\projects\sajuapp\packages\web\src\pages\SettingsPage.tsx
+   99:15   error    'savedBirthInfo' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  142:57   warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  182:1    warning  This line has a length of 105. Maximum allowed is 100                                      max-len
+  197:1    warning  This line has a length of 105. Maximum allowed is 100                                      max-len
+  248:1    warning  This line has a length of 104. Maximum allowed is 100                                      max-len
+  263:1    warning  This line has a length of 114. Maximum allowed is 100                                      max-len
+  294:1    warning  This line has a length of 106. Maximum allowed is 100                                      max-len
+  294:101  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  309:1    warning  This line has a length of 109. Maximum allowed is 100                                      max-len
+  309:104  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  323:1    warning  This line has a length of 102. Maximum allowed is 100                                      max-len
+  345:1    warning  This line has a length of 112. Maximum allowed is 100                                      max-len
+  345:107  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  361:1    warning  This line has a length of 123. Maximum allowed is 100                                      max-len
+  361:118  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  374:1    warning  This line has a length of 115. Maximum allowed is 100                                      max-len
+  386:1    warning  This line has a length of 109. Maximum allowed is 100                                      max-len
+
+E:\projects\sajuapp\packages\web\src\pages\SixAreasPage.tsx
+   52:9  error  'sajuData' is assigned a value but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+  102:9  error  'analysisResult' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\pages\TarotPage.tsx
+   16:28  error    'getTarotReadings' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+  109:11  warning  Unexpected console statement                                                         no-console
+  122:7   warning  Unexpected console statement                                                         no-console
+  188:60  error    'question' is defined but never used. Allowed unused args must match /^_/u           @typescript-eslint/no-unused-vars
+  223:1   warning  This line has a length of 101. Maximum allowed is 100                                max-len
+  223:72  error    'question' is defined but never used. Allowed unused args must match /^_/u           @typescript-eslint/no-unused-vars
+  249:13  error    'middle' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  269:1   warning  This line has a length of 123. Maximum allowed is 100                                max-len
+  269:94  error    'question' is defined but never used. Allowed unused args must match /^_/u           @typescript-eslint/no-unused-vars
+  272:11  error    'hasMajor' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  319:68  error    'question' is defined but never used. Allowed unused args must match /^_/u           @typescript-eslint/no-unused-vars
+  622:1   warning  This line has a length of 104. Maximum allowed is 100                                max-len
+  623:1   warning  This line has a length of 107. Maximum allowed is 100                                max-len
+
+E:\projects\sajuapp\packages\web\src\pages\UnifiedSajuAnalysisPage.tsx
+   19:60   warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  180:1    warning  This line has a length of 119. Maximum allowed is 100  max-len
+  180:98   warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  181:1    warning  This line has a length of 137. Maximum allowed is 100  max-len
+  181:111  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  381:47   warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\pages\UnifiedSajuAnalysisPageWithLifeChart.tsx
+    2:52   error    'loadDynamicSajuCategories' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   27:60   warning  Unexpected any. Specify a different type                                                     @typescript-eslint/no-explicit-any
+   42:5    warning  Unexpected console statement                                                                 no-console
+   43:5    warning  Unexpected console statement                                                                 no-console
+   44:5    warning  Unexpected console statement                                                                 no-console
+   45:5    warning  Unexpected console statement                                                                 no-console
+   50:5    warning  Unexpected console statement                                                                 no-console
+   51:5    warning  Unexpected console statement                                                                 no-console
+   52:5    warning  Unexpected console statement                                                                 no-console
+   53:5    warning  Unexpected console statement                                                                 no-console
+   58:7    warning  Unexpected console statement                                                                 no-console
+   62:5    warning  Unexpected console statement                                                                 no-console
+   84:5    warning  Unexpected console statement                                                                 no-console
+  103:11   warning  Unexpected console statement                                                                 no-console
+  120:5    warning  Unexpected console statement                                                                 no-console
+  141:21   warning  Unexpected any. Specify a different type                                                     @typescript-eslint/no-explicit-any
+  151:7    warning  Unexpected console statement                                                                 no-console
+  154:7    warning  Unexpected console statement                                                                 no-console
+  155:7    warning  Unexpected console statement                                                                 no-console
+  160:9    warning  Unexpected console statement                                                                 no-console
+  161:47   warning  Unexpected any. Specify a different type                                                     @typescript-eslint/no-explicit-any
+  162:9    warning  Unexpected console statement                                                                 no-console
+  174:7    warning  Unexpected console statement                                                                 no-console
+  175:7    warning  Unexpected console statement                                                                 no-console
+  176:7    warning  Unexpected console statement                                                                 no-console
+  180:7    warning  Unexpected console statement                                                                 no-console
+  181:7    warning  Unexpected console statement                                                                 no-console
+  186:11   warning  Unexpected console statement                                                                 no-console
+  195:9    warning  Unexpected console statement                                                                 no-console
+  215:9    warning  Unexpected console statement                                                                 no-console
+  218:7    warning  Unexpected console statement                                                                 no-console
+  219:7    warning  Unexpected console statement                                                                 no-console
+  258:7    warning  Unexpected console statement                                                                 no-console
+  275:5    warning  Unexpected console statement                                                                 no-console
+  282:7    warning  Unexpected console statement                                                                 no-console
+  293:1    warning  This line has a length of 119. Maximum allowed is 100                                        max-len
+  293:98   warning  Unexpected any. Specify a different type                                                     @typescript-eslint/no-explicit-any
+  294:1    warning  This line has a length of 137. Maximum allowed is 100                                        max-len
+  294:111  warning  Unexpected any. Specify a different type                                                     @typescript-eslint/no-explicit-any
+  315:5    warning  Unexpected console statement                                                                 no-console
+  338:15   warning  Unexpected console statement                                                                 no-console
+  582:18   warning  Unexpected any. Specify a different type                                                     @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\pages\ZiweiPage.tsx
+  449:1  warning  This line has a length of 102. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\services\api.ts
+   12:36  error    Empty block statement                                                       no-empty
+  164:17  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  165:21  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  177:20  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  178:21  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  184:21  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  191:18  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  192:20  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  204:28  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  211:19  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  214:19  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  222:52  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  273:38  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  285:28  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  285:38  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  297:32  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  297:42  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  308:34  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  308:44  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  319:30  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  319:40  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  329:29  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  329:39  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  340:35  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  340:45  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  351:29  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  351:39  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\services\authService.ts
+  130:77  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  179:69  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  264:38  error    Empty block statement                     no-empty
+
+E:\projects\sajuapp\packages\web\src\services\customerApi-vercel.ts
+   21:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   37:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   38:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  160:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\services\customerApi.ts
+   18:3   warning  Unexpected console statement              no-console
+   31:15  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   47:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   48:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  299:12  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\services\dashboardService.ts
+   40:43  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   82:45  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  113:15  warning  Forbidden non-null assertion                           @typescript-eslint/no-non-null-assertion
+  114:15  warning  Forbidden non-null assertion                           @typescript-eslint/no-non-null-assertion
+  158:46  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  210:34  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  230:1   warning  This line has a length of 102. Maximum allowed is 100  max-len
+  250:47  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\services\lifetimeFortuneApi.ts
+   74:14  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   81:1   warning  This line has a length of 111. Maximum allowed is 100  max-len
+  111:1   warning  This line has a length of 101. Maximum allowed is 100  max-len
+  133:1   warning  This line has a length of 102. Maximum allowed is 100  max-len
+  142:1   warning  This line has a length of 118. Maximum allowed is 100  max-len
+  164:1   warning  This line has a length of 107. Maximum allowed is 100  max-len
+  165:1   warning  This line has a length of 108. Maximum allowed is 100  max-len
+  174:1   warning  This line has a length of 104. Maximum allowed is 100  max-len
+  196:25  error    Empty block statement                                  no-empty
+  198:10  error    Empty block statement                                  no-empty
+  226:1   warning  This line has a length of 113. Maximum allowed is 100  max-len
+  227:1   warning  This line has a length of 117. Maximum allowed is 100  max-len
+  228:1   warning  This line has a length of 109. Maximum allowed is 100  max-len
+  229:1   warning  This line has a length of 113. Maximum allowed is 100  max-len
+  298:1   warning  This line has a length of 107. Maximum allowed is 100  max-len
+  299:1   warning  This line has a length of 108. Maximum allowed is 100  max-len
+  300:1   warning  This line has a length of 108. Maximum allowed is 100  max-len
+  307:1   warning  This line has a length of 104. Maximum allowed is 100  max-len
+  354:1   warning  This line has a length of 101. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\services\sajuAnalysisApi.ts
+   14:36  error    Empty block statement                                  no-empty
+  126:1   warning  This line has a length of 111. Maximum allowed is 100  max-len
+  158:1   warning  This line has a length of 126. Maximum allowed is 100  max-len
+  179:1   warning  This line has a length of 126. Maximum allowed is 100  max-len
+  212:1   warning  This line has a length of 135. Maximum allowed is 100  max-len
+  237:1   warning  This line has a length of 135. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\services\searchService.ts
+   22:10  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+   33:31  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+   55:29  warning  Unexpected any. Specify a different type                                              @typescript-eslint/no-explicit-any
+  122:78  error    Empty block statement                                                                 no-empty
+  152:1   warning  This line has a length of 103. Maximum allowed is 100                                 max-len
+  201:79  error    Empty block statement                                                                 no-empty
+  232:11  error    'startTime' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  262:37  error    'index' is defined but never used. Allowed unused args must match /^_/u               @typescript-eslint/no-unused-vars
+  265:16  error    Empty block statement                                                                 no-empty
+  275:25  error    Empty block statement                                                                 no-empty
+  284:15  error    'endTime' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\services\universalLifeChartApi.ts
+  175:27  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  176:27  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  252:1   warning  This line has a length of 104. Maximum allowed is 100  max-len
+  272:1   warning  This line has a length of 112. Maximum allowed is 100  max-len
+  286:1   warning  This line has a length of 122. Maximum allowed is 100  max-len
+  287:1   warning  This line has a length of 122. Maximum allowed is 100  max-len
+  294:27  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\stores\authStore.ts
+   87:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  156:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  191:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\stores\qimenBookmarkStore.ts
+  184:26  warning  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  184:60  warning  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+  191:13  warning  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+E:\projects\sajuapp\packages\web\src\stores\qimenNotificationStore.ts
+  93:11  error  'get' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\test\setup.ts
+   1:10  error    'expect' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  98:27  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\types\academy.ts
+  350:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\types\calendar.ts
+  75:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\types\qimen.ts
+  280:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\types\user.ts
+  31:13  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\utils\accurateSajuCalculator.ts
+  254:1  warning  This line has a length of 115. Maximum allowed is 100                                     max-len
+  295:1  warning  This line has a length of 123. Maximum allowed is 100                                     max-len
+  323:9  error    'calculatedDay' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  334:9  error    'test1984' is assigned a value but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  336:9  error    'test2000' is assigned a value but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\utils\advancedCompatibilityCalculator.ts
+   94:1   warning  This line has a length of 111. Maximum allowed is 100  max-len
+  114:1   warning  This line has a length of 115. Maximum allowed is 100  max-len
+  171:1   warning  This line has a length of 106. Maximum allowed is 100  max-len
+  298:57  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  299:69  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  300:77  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  308:54  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  308:70  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  343:1   warning  This line has a length of 139. Maximum allowed is 100  max-len
+  388:1   warning  This line has a length of 112. Maximum allowed is 100  max-len
+  406:1   warning  This line has a length of 107. Maximum allowed is 100  max-len
+  435:52  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  435:66  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  447:57  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  447:71  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  452:1   warning  This line has a length of 103. Maximum allowed is 100  max-len
+  457:1   warning  This line has a length of 111. Maximum allowed is 100  max-len
+  464:1   warning  This line has a length of 103. Maximum allowed is 100  max-len
+  468:1   warning  This line has a length of 102. Maximum allowed is 100  max-len
+  473:1   warning  This line has a length of 107. Maximum allowed is 100  max-len
+  474:1   warning  This line has a length of 112. Maximum allowed is 100  max-len
+  477:1   warning  This line has a length of 101. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\utils\authenticSajuCalculator.ts
+  206:21  error    Empty block statement                                                             no-empty
+  226:21  error    Empty block statement                                                             no-empty
+  289:21  error    Empty block statement                                                             no-empty
+  358:21  error    Empty block statement                                                             no-empty
+  434:32  error    '대운' is defined but never used. Allowed unused args must match /^_/u              @typescript-eslint/no-unused-vars
+  548:19  warning  Forbidden non-null assertion                                                      @typescript-eslint/no-non-null-assertion
+  549:19  warning  Forbidden non-null assertion                                                      @typescript-eslint/no-non-null-assertion
+  698:11  error    '박준수결과' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  704:11  error    '정비제결과' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\utils\authenticSajuTest.ts
+   20:13  error    '결과' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   35:15  error    '분석' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   49:37  error    Empty block statement                                                          no-empty
+   51:16  error    Empty block statement                                                          no-empty
+   74:13  error    '결과' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   89:15  error    '분석' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  103:37  error    Empty block statement                                                          no-empty
+  105:16  error    Empty block statement                                                          no-empty
+  144:27  error    Empty block statement                                                          no-empty
+  146:18  error    Empty block statement                                                          no-empty
+  157:25  error    Empty block statement                                                          no-empty
+  159:16  error    Empty block statement                                                          no-empty
+  176:22  warning  Unexpected any. Specify a different type                                       @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\utils\chartStyleUtils.ts
+  119:1   warning  This line has a length of 125. Maximum allowed is 100  max-len
+  142:6   warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  344:39  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\utils\customerDataConverter.ts
+  27:17  error  Empty block statement  no-empty
+
+E:\projects\sajuapp\packages\web\src\utils\dailyFortune.ts
+  114:1  warning  This line has a length of 107. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\utils\dailyFortuneCalculator.ts
+  101:1  warning  This line has a length of 103. Maximum allowed is 100  max-len
+  139:1  warning  This line has a length of 110. Maximum allowed is 100  max-len
+  160:1  warning  This line has a length of 108. Maximum allowed is 100  max-len
+  161:1  warning  This line has a length of 108. Maximum allowed is 100  max-len
+  162:1  warning  This line has a length of 106. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\utils\depthSpecialCompatibilityCalculator.ts
+  233:1  warning  This line has a length of 112. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\utils\detailedCompatibilityCalculator.ts
+  162:1  warning  This line has a length of 103. Maximum allowed is 100  max-len
+  163:1  warning  This line has a length of 103. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\utils\fiveElementsAnalyzer.ts
+  203:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\utils\fiveElementsCalculator.ts
+  282:66  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  330:1   warning  This line has a length of 114. Maximum allowed is 100  max-len
+  434:6   warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\utils\lunarCalendar.ts
+  58:1  warning  This line has a length of 111. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\utils\mobileOptimization.ts
+   58:5   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  209:46  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  209:56  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  215:26  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  216:11  error    Unexpected aliasing of 'this' to local variable                                                                      @typescript-eslint/no-this-alias
+  231:46  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  231:56  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  238:26  warning  Unexpected any. Specify a different type                                                                             @typescript-eslint/no-explicit-any
+  239:11  error    Unexpected aliasing of 'this' to local variable                                                                      @typescript-eslint/no-this-alias
+  325:7   warning  Unexpected console statement                                                                                         no-console
+  338:3   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  340:5   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  363:3   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  388:3   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  390:5   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  443:1   warning  This line has a length of 104. Maximum allowed is 100                                                                max-len
+  463:7   error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  465:7   warning  Unexpected console statement                                                                                         no-console
+  530:1   warning  This line has a length of 101. Maximum allowed is 100                                                                max-len
+
+E:\projects\sajuapp\packages\web\src\utils\notifications.ts
+   11:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   22:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  187:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  241:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\utils\personalInfoToSaju.ts
+  131:9  error  'result' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\utils\qimenCalculator.ts
+   36:59  error  'Pattern' is defined but never used. Allowed unused vars must match /^_/u                   @typescript-eslint/no-unused-vars
+  178:9   error  'basePalaceOrder' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  328:3   error  'dateTime' is defined but never used. Allowed unused args must match /^_/u                  @typescript-eslint/no-unused-vars
+  378:9   error  'combinedNature' is assigned a value but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\utils\qimenContextEvaluator.ts
+  106:9   error  'weights' is assigned a value but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  378:9   error  'weights' is assigned a value but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  422:9   error  'contextLabel' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  425:9   error  'palaceInfo' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  435:11  error  'birthMonth' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  436:11  error  'birthDay' is assigned a value but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  500:10  error  'getSolarTermMeaning' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  530:10  error  'getGanZhiMeaning' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  562:10  error  'getFortuneDescription' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  573:10  error  'getFortuneEmoji' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+  584:10  error  'getDirectionEmoji' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\utils\qimenImageExport.ts
+  210:1  warning  This line has a length of 106. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\utils\qimenNotification.ts
+   77:10  warning  Unexpected any. Specify a different type                                                   @typescript-eslint/no-explicit-any
+  102:9   warning  Forbidden non-null assertion                                                               @typescript-eslint/no-non-null-assertion
+  145:9   error    'currentTimeStr' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\utils\qimenPatternAI.ts
+  1:15  error  'QimenChart' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  1:27  error  'Palace' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\utils\qimenPersonalization.ts
+   88:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  250:11  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\utils\registerServiceWorker.ts
+  26:5   warning  Unexpected console statement  no-console
+  31:7   warning  Unexpected console statement  no-console
+  37:13  warning  Unexpected console statement  no-console
+  51:7   warning  Unexpected console statement  no-console
+  76:7   warning  Unexpected console statement  no-console
+
+E:\projects\sajuapp\packages\web\src\utils\relationshipScoreCalculator.ts
+  376:58  error  'system' is defined but never used. Allowed unused args must match /^_/u    @typescript-eslint/no-unused-vars
+  540:3   error  'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  585:3   error  'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  617:3   error  'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  655:3   error  'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\utils\sajuCalculator.ts
+   70:1   warning  This line has a length of 109. Maximum allowed is 100                               max-len
+  134:1   warning  This line has a length of 138. Maximum allowed is 100                               max-len
+  170:1   warning  This line has a length of 135. Maximum allowed is 100                               max-len
+  196:1   warning  This line has a length of 171. Maximum allowed is 100                               max-len
+  252:29  error    'hour' is never reassigned. Use 'const' instead                                     prefer-const
+  252:35  error    'minute' is never reassigned. Use 'const' instead                                   prefer-const
+  289:11  error    'result1' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  300:11  error    'result2' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  319:49  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  323:41  error    'fourPillars' is defined but never used. Allowed unused args must match /^_/u       @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\utils\sajuCalculatorNew.ts
+  251:16  error  Empty block statement                                                               no-empty
+  317:9   error  'result1' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  328:11  error  'result' is assigned a value but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\utils\sajuDataCalculator.ts
+   11:1  error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  256:1  warning  This line has a length of 102. Maximum allowed is 100                                                                max-len
+  263:1  warning  This line has a length of 105. Maximum allowed is 100                                                                max-len
+  269:1  warning  This line has a length of 107. Maximum allowed is 100                                                                max-len
+  272:1  warning  This line has a length of 101. Maximum allowed is 100                                                                max-len
+  273:1  warning  This line has a length of 101. Maximum allowed is 100                                                                max-len
+  312:5  error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+
+E:\projects\sajuapp\packages\web\src\utils\sajuDataConverter.ts
+  159:16  warning  Unexpected any. Specify a different type                                 @typescript-eslint/no-explicit-any
+  160:17  warning  Unexpected any. Specify a different type                                 @typescript-eslint/no-explicit-any
+  177:14  error    Empty block statement                                                    no-empty
+  192:14  error    Empty block statement                                                    no-empty
+  292:31  error    'saju' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  292:55  error    'label' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+E:\projects\sajuapp\packages\web\src\utils\sajuScoreCalculator.ts
+   519:58  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   532:54  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   712:93  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   716:92  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1016:52  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1049:43  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1099:38  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1139:39  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1194:36  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1288:1   warning  This line has a length of 105. Maximum allowed is 100  max-len
+  1288:42  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1356:35  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1397:36  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1432:58  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1445:34  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1484:54  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1496:40  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1518:35  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1629:36  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1643:48  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  1702:1   warning  This line has a length of 104. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\utils\searchUtils.ts
+  35:5  warning  Forbidden non-null assertion  @typescript-eslint/no-non-null-assertion
+
+E:\projects\sajuapp\packages\web\src\utils\sixAreaProcessor.ts
+   49:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   49:66  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   73:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   73:64  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  103:49  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  103:68  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  133:43  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  133:62  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  163:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  163:60  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  187:48  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  187:67  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  216:56  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\utils\tarotSpread.ts
+   940:39  error    'i' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  1066:15  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1066:31  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1067:19  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1067:43  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1081:15  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1081:31  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1082:19  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1082:43  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1096:15  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1096:32  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1097:19  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1097:44  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1181:18  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1182:21  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+  1183:20  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion
+
+E:\projects\sajuapp\packages\web\src\utils\tarotStorage.ts
+   47:5  warning  Unexpected console statement  no-console
+   77:5  warning  Unexpected console statement  no-console
+  134:5  warning  Unexpected console statement  no-console
+  173:5  warning  Unexpected console statement  no-console
+
+E:\projects\sajuapp\packages\web\src\utils\tenGodsAnalyzer.ts
+  107:1  warning  This line has a length of 120. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\utils\testSajuCalculation.ts
+  50:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\utils\testUniqueValues.ts
+   44:37  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+   87:1   warning  This line has a length of 108. Maximum allowed is 100  max-len
+   97:1   warning  This line has a length of 108. Maximum allowed is 100  max-len
+  112:14  warning  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\src\utils\twelveEarthlyBranchesAnalyzer.ts
+  196:1  warning  This line has a length of 102. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\utils\universalSajuEngine.ts
+   19:7   error    'DEBUG_MODE' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  200:71  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  241:19  warning  Unexpected any. Specify a different type                                               @typescript-eslint/no-explicit-any
+  323:1   warning  This line has a length of 101. Maximum allowed is 100                                  max-len
+
+E:\projects\sajuapp\packages\web\src\utils\userStorage.ts
+  61:1  warning  This line has a length of 105. Maximum allowed is 100  max-len
+
+E:\projects\sajuapp\packages\web\src\utils\ziweiCalculator.ts
+  201:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  240:64  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  414:52  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+E:\projects\sajuapp\packages\web\tests\admin-user-management.spec.ts
+   94:7  warning  Unexpected console statement  no-console
+  137:7  warning  Unexpected console statement  no-console
+  164:7  warning  Unexpected console statement  no-console
+  170:7  warning  Unexpected console statement  no-console
+
+E:\projects\sajuapp\packages\web\tests\comprehensive-e2e-test.spec.ts
+   88:9   warning  Unexpected console statement                           no-console
+  101:1   warning  This line has a length of 103. Maximum allowed is 100  max-len
+  110:9   warning  Unexpected console statement                           no-console
+  157:7   warning  Unexpected console statement                           no-console
+  266:11  warning  Unexpected console statement                           no-console
+  403:11  warning  Unexpected console statement                           no-console
+  431:9   warning  Unexpected console statement                           no-console
+  448:9   warning  Unexpected console statement                           no-console
+  460:7   warning  Unexpected console statement                           no-console
+  475:7   warning  Unexpected console statement                           no-console
+  477:9   warning  Unexpected console statement                           no-console
+  491:7   warning  Unexpected console statement                           no-console
+  493:9   warning  Unexpected console statement                           no-console
+  506:7   warning  Unexpected console statement                           no-console
+  526:9   warning  Unexpected console statement                           no-console
+
+✖ 748 problems (120 errors, 628 warnings)
+
+npm error Lifecycle script `lint` failed with error:
+npm error code 1
+npm error path E:\projects\sajuapp\packages\web
+npm error workspace @sajuapp/web@1.0.6
+npm error location E:\projects\sajuapp\packages\web
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0

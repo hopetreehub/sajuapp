@@ -23,7 +23,7 @@ import {
   type QimenPattern,
 } from '@/utils/qimenPatternAI';
 import type { QimenContext } from '@/data/qimenContextWeights';
-import type { Direction } from '@/types/qimen';
+import type { Direction as _Direction } from '@/types/qimen';
 
 // Chart.js 등록
 ChartJS.register(

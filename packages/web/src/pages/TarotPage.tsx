@@ -185,7 +185,7 @@ export default function TarotPage() {
   };
 
   // 위치별 맥락 생성
-  const generatePositionContext = (pos: TarotCardPosition, question: string): string => {
+  const generatePositionContext = (pos: TarotCardPosition, _question: string): string => {
     const isReversed = pos.isReversed;
     const suit = pos.card.suit;
 
@@ -220,7 +220,7 @@ export default function TarotPage() {
   };
 
   // 카드 조합 분석
-  const generateCombinationAnalysis = (positions: TarotCardPosition[], question: string): string => {
+  const generateCombinationAnalysis = (positions: TarotCardPosition[], _question: string): string => {
     if (positions.length === 1) {
       return `단일 카드 리딩에서 ${positions[0].card.nameKo}는 현재 상황의 핵심을 명확히 보여줍니다. 이 카드의 메시지에 집중하세요.`;
     }
@@ -246,7 +246,7 @@ export default function TarotPage() {
     // 3장 이상일 때 시작-중간-끝 패턴 분석
     if (positions.length >= 3) {
       const first = positions[0];
-      const middle = positions[Math.floor(positions.length / 2)];
+      const _middle = positions[Math.floor(positions.length / 2)];
       const last = positions[positions.length - 1];
 
       analysis += '🔄 **흐름 패턴**: ';
@@ -266,10 +266,10 @@ export default function TarotPage() {
   };
 
   // 종합 해석
-  const generateOverallInterpretation = (positions: TarotCardPosition[], spreadName: string, question: string): string => {
+  const generateOverallInterpretation = (positions: TarotCardPosition[], spreadName: string, _question: string): string => {
     const hasReversed = positions.some(p => p.isReversed);
     const allReversed = positions.every(p => p.isReversed);
-    const hasMajor = positions.some(p => p.card.suit === 'major');
+    const _hasMajor = positions.some(p => p.card.suit === 'major');
 
     let overall = '';
 
@@ -316,7 +316,7 @@ export default function TarotPage() {
   };
 
   // 실천적 조언
-  const generatePracticalAdvice = (positions: TarotCardPosition[], question: string): string => {
+  const generatePracticalAdvice = (positions: TarotCardPosition[], _question: string): string => {
     let advice = '';
     const keywords = positions.flatMap(p =>
       p.isReversed ? p.card.reversedKeywords : p.card.uprightKeywords,
