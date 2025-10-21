@@ -55,7 +55,7 @@ export function getDeviceInfo(): DeviceInfo {
   const isTouch =
     'ontouchstart' in window ||
     navigator.maxTouchPoints > 0 ||
-    // @ts-ignore - msMaxTouchPoints는 IE에만 있음
+    // @ts-expect-error - msMaxTouchPoints는 IE에만 있음
     navigator.msMaxTouchPoints > 0;
 
   // OS 판별
@@ -335,9 +335,9 @@ export function getMemoryInfo(): {
   total: number;
   percentage: number;
 } | null {
-  // @ts-ignore - memory는 Chrome에만 있음
+  // @ts-expect-error - memory는 Chrome에만 있음
   if (performance.memory) {
-    // @ts-ignore
+    // @ts-expect-error
     const { usedJSHeapSize, totalJSHeapSize } = performance.memory;
     return {
       used: usedJSHeapSize,
@@ -360,7 +360,7 @@ export function getNetworkInfo(): {
 } {
   const online = navigator.onLine;
 
-  // @ts-ignore - connection은 일부 브라우저에만 있음
+  // @ts-expect-error - connection은 일부 브라우저에만 있음
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
 
   if (connection) {
@@ -385,9 +385,9 @@ export async function getBatteryInfo(): Promise<{
   chargingTime: number;
   dischargingTime: number;
 } | null> {
-  // @ts-ignore - getBattery는 일부 브라우저에만 있음
+  // @ts-expect-error - getBattery는 일부 브라우저에만 있음
   if ('getBattery' in navigator) {
-    // @ts-ignore
+    // @ts-expect-error
     const battery = await navigator.getBattery();
     return {
       charging: battery.charging,
@@ -460,7 +460,7 @@ export async function toggleFullscreen(element: HTMLElement = document.documentE
 export async function requestWakeLock(): Promise<WakeLockSentinel | null> {
   try {
     if ('wakeLock' in navigator) {
-      // @ts-ignore - wakeLock는 실험적 기능
+      // @ts-expect-error - wakeLock는 실험적 기능
       const wakeLock = await navigator.wakeLock.request('screen');
       console.log('Wake Lock activated');
       return wakeLock;

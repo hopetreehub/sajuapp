@@ -13,7 +13,7 @@ import {
   generateDetailedAdvice,
 } from '../utils/compatibilityCalculator';
 import { calculateCompleteSaju } from '../utils/accurateSajuCalculator';
-// @ts-ignore
+// @ts-expect-error - korean-lunar-calendar lacks TypeScript types
 import KoreanLunarCalendar from 'korean-lunar-calendar';
 import { analyzeRelationship, RelationshipAnalysis } from '../utils/detailedCompatibilityCalculator';
 import { analyzePractical, PracticalAnalysis } from '../utils/practicalCompatibilityCalculator';
@@ -58,7 +58,7 @@ export const CompatibilityPage: React.FC = () => {
       if (customer.lunar_solar === 'lunar') {
         const calendar = new KoreanLunarCalendar();
         calendar.setLunarDate(year, month, day, false);
-        // @ts-ignore
+        // @ts-expect-error - getSolarCalendar method exists but not typed
         const solarDate = calendar.getSolarCalendar();
         year = solarDate.year;
         month = solarDate.month;
@@ -131,7 +131,7 @@ export const CompatibilityPage: React.FC = () => {
         if (customer.lunar_solar === 'lunar') {
           const calendar = new KoreanLunarCalendar();
           calendar.setLunarDate(year, month, day, false);
-          // @ts-ignore
+          // @ts-expect-error
           const solarDate = calendar.getSolarCalendar();
           year = solarDate.year;
           month = solarDate.month;

@@ -8,7 +8,7 @@ import {
   SeventeenFortuneScores,
 } from '@/types/saju';
 import { calculateCompleteSaju } from './accurateSajuCalculator';
-// @ts-ignore
+// @ts-expect-error
 import KoreanLunarCalendar from 'korean-lunar-calendar';
 
 // 사주팔자 타입 정의
@@ -309,7 +309,7 @@ export function calculateSajuData(birthInfo: SajuBirthInfo): SajuData {
   if (birthInfo.isLunar) {
     const calendar = new KoreanLunarCalendar();
     calendar.setLunarDate(birthInfo.year, birthInfo.month, birthInfo.day, false);
-    // @ts-ignore - korean-lunar-calendar 라이브러리 타입 정의 누락
+    // @ts-expect-error - korean-lunar-calendar 라이브러리 타입 정의 누락
     const solarDate = calendar.getSolarCalendar();
     year = solarDate.year;
     month = solarDate.month;

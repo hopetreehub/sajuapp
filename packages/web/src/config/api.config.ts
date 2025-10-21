@@ -27,11 +27,8 @@ export const API_ENDPOINTS = {
 export const getApiUrl = (service: keyof typeof API_ENDPOINTS): string => {
   const url = API_ENDPOINTS[service];
 
-  // 디버깅용 로그 - v6
-  if (typeof window !== 'undefined') {
-
-
-  }
+  // 디버깅용 로그 - v6 (removed for production)
+  // Debug logging has been removed
 
   return url;
 };
