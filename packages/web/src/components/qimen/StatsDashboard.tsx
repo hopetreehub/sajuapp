@@ -64,11 +64,11 @@ export default function StatsDashboard({ isOpen, onClose }: StatsDashboardProps)
     return analyzeUserPatterns(bookmarks, stats);
   }, [bookmarks, stats]);
 
-  const _sortedPatterns = useMemo(() => {
+  const sortedPatterns = useMemo(() => {
     return sortPatternsByImportance(analysis.patterns);
   }, [analysis.patterns]);
 
-  const _actionablePatterns = useMemo(() => {
+  const actionablePatterns = useMemo(() => {
     return filterActionablePatterns(analysis.patterns);
   }, [analysis.patterns]);
 
