@@ -381,8 +381,8 @@ function analyzeRivalry(sajuData: SajuData): number {
  */
 function evaluateWealthPotential(
   score: number,
-  system: WealthSystem,
-  sajuData: SajuData,
+  _system: WealthSystem,
+  _sajuData: SajuData,
 ): 'high' | 'medium' | 'low' {
   if (score >= 65) return 'high';
   if (score >= 45) return 'medium';
@@ -395,7 +395,7 @@ function evaluateWealthPotential(
 function generateSystemWealthRecommendations(
   system: WealthSystem,
   score: number,
-  sajuData: SajuData,
+  _sajuData: SajuData,
 ): string[] {
   const recommendations: string[] = [];
 
@@ -451,7 +451,7 @@ function analyzeWealthTrend(scores: WealthScoreResult[]): 'rising' | 'stable' | 
  */
 function analyzeWealthType(
   scores: WealthScoreResult[],
-  sajuData: SajuData,
+  _sajuData: SajuData,
 ): { primary: string; secondary: string; avoid: string } {
   // 점수 순으로 정렬
   const sorted = [...scores].sort((a, b) => b.baseScore - a.baseScore);

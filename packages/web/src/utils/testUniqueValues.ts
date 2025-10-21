@@ -84,7 +84,7 @@ export function testUniqueValues() {
   // 각 구성요소별 차이 확인
 
   // 박준수님 분석
-  const parkGapja = ((CHEONGAN_MAP[PARK_SAJU.year.gan] - 1) * 12 + (JIJI_MAP[PARK_SAJU.year.ji] - 1)) % 60;
+  const _parkGapja = ((CHEONGAN_MAP[PARK_SAJU.year.gan] - 1) * 12 + (JIJI_MAP[PARK_SAJU.year.ji] - 1)) % 60;
   const parkElements: Record<string, number> = { 목: 0, 화: 0, 토: 0, 금: 0, 수: 0 };
   [PARK_SAJU.year.gan, PARK_SAJU.month.gan, PARK_SAJU.day.gan, PARK_SAJU.time.gan].forEach(gan => {
     parkElements[CHEONGAN_OHHAENG[gan]]++;
@@ -94,7 +94,7 @@ export function testUniqueValues() {
   });
 
   // 정비제님 분석
-  const jungGapja = ((CHEONGAN_MAP[JUNG_SAJU.year.gan] - 1) * 12 + (JIJI_MAP[JUNG_SAJU.year.ji] - 1)) % 60;
+  const _jungGapja = ((CHEONGAN_MAP[JUNG_SAJU.year.gan] - 1) * 12 + (JIJI_MAP[JUNG_SAJU.year.ji] - 1)) % 60;
   const jungElements: Record<string, number> = { 목: 0, 화: 0, 토: 0, 금: 0, 수: 0 };
   [JUNG_SAJU.year.gan, JUNG_SAJU.month.gan, JUNG_SAJU.day.gan, JUNG_SAJU.time.gan].forEach(gan => {
     jungElements[CHEONGAN_OHHAENG[gan]]++;

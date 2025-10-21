@@ -18,8 +18,8 @@ import {
   addTagToEvent,
   removeTagFromEvent,
   getTagsForEvent,
-  getEventsForTag,
-  type Tag,
+  getEventsForTag as _getEventsForTag,
+  type Tag as _Tag,
 } from './database/db';
 
 /**

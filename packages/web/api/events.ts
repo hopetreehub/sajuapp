@@ -10,7 +10,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { applySecurityMiddleware } from '../lib/security';
 import {
   getAllEvents,
-  getEventById,
+  getEventById as _getEventById,
   getEventsByDateRange,
   createEvent,
   updateEvent,

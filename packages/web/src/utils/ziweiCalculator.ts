@@ -642,7 +642,7 @@ function generateMajorFortuneDescription(
   startAge: number,
   palace: Palace,
   palaceInfo: PalaceInfo | undefined,
-  isForward: boolean,
+  _isForward: boolean,
 ): string {
   if (!palaceInfo) {
     return `${startAge}세부터 ${startAge + 9}세까지의 운세입니다.`;

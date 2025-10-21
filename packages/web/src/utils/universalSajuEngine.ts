@@ -53,17 +53,18 @@ export class UniversalSajuEngine {
     const currentYear = new Date().getFullYear();
     const currentAge = currentYear - birthYear + 1;
 
-    if (DEBUG_MODE) {
-
-
-    }
+    // DEBUG_MODE 로깅은 필요시 활성화
+    // if (DEBUG_MODE) {
+    //   console.log('personalInfo:', personalInfo);
+    // }
 
     // 실제 사주 기반 점수 계산 사용
     const scoreResult = calculateLifeChartScore(sajuData, birthYear);
 
-    if (DEBUG_MODE) {
-
-    }
+    // DEBUG_MODE 로깅은 필요시 활성화
+    // if (DEBUG_MODE) {
+    //   console.log('scoreResult:', scoreResult);
+    // }
 
     // 5차원 차트 데이터 생성 (실제 점수 기반)
     const chartData = this.generateChartFromScores(scoreResult.yearlyScores, birthYear, sajuData);
