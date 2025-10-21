@@ -96,7 +96,7 @@ export default function SettingsPage() {
         setBirthInfo(sajuBirthInfo);
 
         // Store에 제대로 저장되었는지 확인
-        const savedBirthInfo = useSajuSettingsStore.getState().birthInfo;
+        const _savedBirthInfo = useSajuSettingsStore.getState().birthInfo;
 
         // 사주 정보가 저장되었음을 다른 컴포넌트들에게 알림
         window.dispatchEvent(new CustomEvent('personalInfoUpdated', {

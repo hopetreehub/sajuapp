@@ -49,7 +49,7 @@ const SixAreasPage: React.FC = () => {
   };
 
   // 사주 데이터 계산 (해석 패널용) - Hook을 조건문 전에 호출
-  const sajuData = useMemo(() => {
+  const _sajuData = useMemo(() => {
     if (!currentUser?.birthInfo) return null;
 
     try {
@@ -99,7 +99,7 @@ const SixAreasPage: React.FC = () => {
     );
   }
 
-  const analysisResult = generateAnalysisResult(currentUser.birthInfo);
+  const _analysisResult = generateAnalysisResult(currentUser.birthInfo);
 
   return (
     <div className={CHART_DESIGN_SYSTEM.LAYOUT.pageContainer}>

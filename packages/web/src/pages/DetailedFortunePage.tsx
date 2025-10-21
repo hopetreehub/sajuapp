@@ -139,7 +139,7 @@ const DetailedFortunePage: React.FC = () => {
     }, 1000);
   };
 
-  const formatBirthDate = () => {
+  const _formatBirthDate = () => {
     if (!personalInfo) return null;
     
     const { year, month, day, hour, minute, isLunar } = personalInfo;

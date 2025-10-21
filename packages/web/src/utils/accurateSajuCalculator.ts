@@ -319,8 +319,8 @@ export function testAccurateSaju() {
   
   let resultIndex = (correctBaseIndex + dayDiff) % 60;
   if (resultIndex < 0) resultIndex += 60;
-  
-  const calculatedDay = SIXTY_CYCLE[resultIndex];
+
+  const _calculatedDay = SIXTY_CYCLE[resultIndex];
 
   // 1971년 11월 17일 04시 전체 사주 계산 (정확한 목표: 신해 기해 병오 경인)
 
@@ -331,9 +331,9 @@ export function testAccurateSaju() {
 
   // 추가 테스트 케이스
 
-  const test1984 = calculateCompleteSaju(1984, 2, 4, 12, 0);
+  const _test1984 = calculateCompleteSaju(1984, 2, 4, 12, 0);
 
-  const test2000 = calculateCompleteSaju(2000, 1, 1, 0, 0);
+  const _test2000 = calculateCompleteSaju(2000, 1, 1, 0, 0);
 
   return {
     target: result1971,

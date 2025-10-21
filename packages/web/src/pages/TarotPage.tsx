@@ -13,7 +13,7 @@ import {
 } from '@/utils/tarotSpread';
 import TarotSpreadView from '@/components/tarot/TarotSpreadView';
 import TarotHistoryView from '@/components/tarot/TarotHistoryView';
-import { saveTarotReading, getTarotReadings } from '@/utils/tarotStorage';
+import { saveTarotReading, getTarotReadings as _getTarotReadings } from '@/utils/tarotStorage';
 import { exportTarotReadingToPDF, formatDateForFilename } from '@/utils/pdfExport';
 
 type Stage = 'select-spread' | 'enter-question' | 'drawing-cards' | 'show-result';

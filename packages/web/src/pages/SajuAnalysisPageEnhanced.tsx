@@ -12,7 +12,7 @@ import { convertToLifetimeRequest, getCacheKey } from '@/utils/customerDataConve
 import { SajuBirthInfo, SajuAnalysisResult, SajuData } from '@/types/saju';
 import { UserProfile, AnalysisType } from '@/types/user';
 import { getCurrentUser, addAnalysisHistory } from '@/utils/userStorage';
-import { SajuCalculator, formatFourPillarsDetailed, FourPillarsResult } from '@/utils/sajuCalculator';
+import { SajuCalculator, formatFourPillarsDetailed as _formatFourPillarsDetailed, FourPillarsResult } from '@/utils/sajuCalculator';
 import { calculateSajuData } from '@/utils/sajuDataCalculator';
 import { CHART_DESIGN_SYSTEM } from '@/constants/chartDesignSystem';
 import { fetchLifetimeFortune, calculateCurrentAge, LifetimeFortuneResponse } from '@/services/lifetimeFortuneApi';

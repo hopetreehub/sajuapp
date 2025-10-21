@@ -695,13 +695,13 @@ export class AuthenticSajuCalculator {
     // 박준수 테스트
 
     const 박준수사주 = this.createParkJunSooTestCase();
-    const 박준수결과 = this.calculateAuthenticLifeChart(박준수사주, 1971);
+    const _박준수결과 = this.calculateAuthenticLifeChart(박준수사주, 1971);
 
 
     // 정비제 테스트
 
     const 정비제사주 = this.createJeongBiJeTestCase();
-    const 정비제결과 = this.calculateAuthenticLifeChart(정비제사주, 1976);
+    const _정비제결과 = this.calculateAuthenticLifeChart(정비제사주, 1976);
 
 
   }

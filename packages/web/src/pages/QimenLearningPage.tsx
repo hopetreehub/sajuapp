@@ -9,7 +9,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import {
   allCourses,
-  getLessonById,
+  getLessonById as _getLessonById,
   calculateProgress,
   type Course,
   type Lesson,

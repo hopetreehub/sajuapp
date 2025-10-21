@@ -6,7 +6,7 @@
  * @version 2.0.0
  */
 
-import type { AuxiliaryStar } from '@/types/ziwei';
+import type { AuxiliaryStar as _AuxiliaryStar } from '@/types/ziwei';
 
 // 보조성 카테고리
 export type AuxiliaryStarCategory =

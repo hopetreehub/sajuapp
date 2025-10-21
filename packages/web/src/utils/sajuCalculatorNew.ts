@@ -323,9 +323,9 @@ export function testSajuCalculation() {
     { year: 2000, month: 1, day: 1, hour: 0, desc: '2000년 1월 1일 (기준일)' },
     { year: 1976, month: 9, day: 16, hour: 10, desc: '1976년 9월 16일' },
   ];
-  
+
   testCases.forEach(tc => {
-    const result = calculateCompleteSaju(tc.year, tc.month, tc.day, tc.hour);
+    const _result = calculateCompleteSaju(tc.year, tc.month, tc.day, tc.hour);
 
 
   });

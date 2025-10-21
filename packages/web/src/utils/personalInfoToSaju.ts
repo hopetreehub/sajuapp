@@ -127,8 +127,8 @@ export function testSajuCalculation(): void {
     gender: 'male',
     birthPlace: '서울',
   };
-  
-  const result = convertPersonalInfoToSaju(testInfo);
+
+  const _result = convertPersonalInfoToSaju(testInfo);
 
 
 }

@@ -33,7 +33,7 @@ import { CheonGan, JiJi } from '@/utils/sajuScoreCalculator';
 import { calculateCurrentSolarTerm, type SolarTermInfo } from './solarTermCalculator';
 
 // 신격 조합 분석 모듈
-import { analyzePatterns, adjustFortuneWithPatterns, type Pattern } from './qimenPatterns';
+import { analyzePatterns, adjustFortuneWithPatterns, type Pattern as _Pattern } from './qimenPatterns';
 
 // ============================================
 // 천간지지 배열
@@ -175,7 +175,7 @@ function arrangePalaces(
   dateTime: Date,
 ): QimenChart['palaces'] {
   // 기본 구궁 순서 (낙서 순서)
-  const basePalaceOrder: Palace[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const _basePalaceOrder: Palace[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   // 국(局)에 따라 시작 궁 결정
   // 간단한 계산식: (ju - 1) % 9 + 1
