@@ -431,7 +431,7 @@ export class AuthenticSajuCalculator {
     if (this.DEBUG) {
 
 
-      대운목록.slice(0, 3).forEach(대운 => {
+      대운목록.slice(0, 3).forEach(_대운 => {
 
       });
     }

@@ -19,7 +19,7 @@ import { analyzeRelationship, RelationshipAnalysis } from '../utils/detailedComp
 import { analyzePractical, PracticalAnalysis } from '../utils/practicalCompatibilityCalculator';
 import { analyzeDepth, analyzeSpecial, DepthAnalysis, SpecialAnalysis } from '../utils/depthSpecialCompatibilityCalculator';
 import { EnhancedCompatibilityChart } from '../components/compatibility/EnhancedCompatibilityChart';
-import { interpretationService } from '../services/api';
+import { interpretationService as _interpretationService } from '../services/api';
 
 interface CompatibilityResult {
   totalScore: number;

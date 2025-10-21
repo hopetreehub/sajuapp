@@ -229,7 +229,7 @@ const mergeAndSortResults = (results: SearchResult[], options: SearchOptions): S
 export const searchService = {
   // 통합 검색 (성능 최적화 및 에러 처리 강화)
   searchAll: async (options: SearchOptions, todos: Todo[] = []): Promise<SearchResult[]> => {
-    const startTime = performance.now();
+    const _startTime = performance.now();
 
     try {
       // 입력 검증
@@ -259,7 +259,7 @@ export const searchService = {
       // Promise.allSettled로 일부 실패해도 다른 결과는 받을 수 있도록
       const asyncResults = await Promise.allSettled(promises);
 
-      asyncResults.forEach((result, index) => {
+      asyncResults.forEach((result, _index) => {
         if (result.status === 'fulfilled') {
           results.push(...result.value);
         } else {
@@ -281,7 +281,7 @@ export const searchService = {
 
       // 성능 로깅 (개발 모드에서만)
       if (process.env.NODE_ENV === 'development') {
-        const endTime = performance.now();
+        const _endTime = performance.now();
 
 
       }

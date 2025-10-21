@@ -8,7 +8,7 @@
  * @version 2.0.0
  */
 
-import type { MainStar, AuxiliaryStar } from '@/types/ziwei';
+import type { MainStar, AuxiliaryStar as _AuxiliaryStar } from '@/types/ziwei';
 
 // 사화 타입
 export type Transformation = '化祿' | '化權' | '化科' | '化忌';

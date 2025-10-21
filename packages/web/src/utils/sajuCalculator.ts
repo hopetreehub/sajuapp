@@ -286,7 +286,7 @@ export class SajuCalculator {
       isLunar: false,
     };
     
-    const result1 = this.calculateFourPillars(test1);
+    const _result1 = this.calculateFourPillars(test1);
     // 테스트 케이스 2: 1976년 9월 16일 09시 40분
     const test2: SajuBirthInfo = {
       year: 1976,
@@ -297,7 +297,7 @@ export class SajuCalculator {
       isLunar: false,
     };
     
-    const result2 = this.calculateFourPillars(test2);
+    const _result2 = this.calculateFourPillars(test2);
   }
 }
 
@@ -320,7 +320,7 @@ export function calculateFourPillars(birthInfo: any) {
   return SajuCalculator.calculateFourPillars(birthInfo);
 }
 
-export function calculateOhHaengBalance(fourPillars: FourPillarsResult) {
+export function calculateOhHaengBalance(_fourPillars: FourPillarsResult) {
   // 오행 균형 계산 로직 (임시)
   return {
     wood: 20,

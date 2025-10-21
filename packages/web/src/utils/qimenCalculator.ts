@@ -325,7 +325,7 @@ function createPalaceInfo(
   star: Star,
   spirit: Spirit | undefined,
   hourGanZhi: { gan: CheonGan; zhi: JiJi },
-  dateTime: Date,
+  _dateTime: Date,
 ): PalaceInfo {
   const direction = PALACE_TO_DIRECTION[palace];
 

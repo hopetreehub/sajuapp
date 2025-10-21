@@ -314,7 +314,7 @@ export function calculateCompleteSaju(
 export function testSajuCalculation() {
 
   // 1971년 11월 17일 04시 테스트
-  const result1 = calculateCompleteSaju(1971, 11, 17, 4);
+  const _result1 = calculateCompleteSaju(1971, 11, 17, 4);
 
 
   // 다른 테스트 케이스들

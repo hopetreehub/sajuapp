@@ -344,7 +344,7 @@ export default function DashboardPage() {
         <EventModal
           isOpen={showEventModal}
           onClose={() => setShowEventModal(false)}
-          onSave={(event) => {
+          onSave={(_event) => {
 
             setShowEventModal(false);
             loadDashboardData(true); // 데이터 새로고침

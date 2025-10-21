@@ -937,7 +937,7 @@ ${suitInsight}
 ${advice.focusAreas.map((area, i) => `${i + 1}. ${area}`).join('\n')}
 
 **💡 해석 가이드:**
-${advice.interpretationTips.map((tip, i) => `• ${tip}`).join('\n')}
+${advice.interpretationTips.map((tip, _i) => `• ${tip}`).join('\n')}
 
 **✅ 행동 지침:**
 ${advice.actionAdvice.map((action, i) => `${i + 1}. ${action}`).join('\n')}

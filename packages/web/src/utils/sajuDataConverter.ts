@@ -289,6 +289,6 @@ export function convertToUniversalSajuFormat(standardSaju: StandardSajuData) {
 /**
  * 디버깅용 사주 데이터 출력
  */
-export function debugSajuData(saju: StandardSajuData, label: string) {
+export function debugSajuData(_saju: StandardSajuData, _label: string) {
 
 }

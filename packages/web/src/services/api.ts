@@ -280,7 +280,7 @@ export const interpretationService = {
   },
 
   // 조후 분석 가져오기
-  getJohooAnalysis: async (sajuData: any): Promise<InterpretationResponse['johoo']> => {
+  getJohooAnalysis: async (_sajuData: any): Promise<InterpretationResponse['johoo']> => {
     return {
       season: '봄',
       seasonalCharacteristics: ['성장', '발전'],
@@ -292,7 +292,7 @@ export const interpretationService = {
   },
 
   // 신살 분석 가져오기
-  getSpiritualAnalysis: async (sajuData: any): Promise<InterpretationResponse['spiritual']> => {
+  getSpiritualAnalysis: async (_sajuData: any): Promise<InterpretationResponse['spiritual']> => {
     return {
       beneficialSpirits: ['천을귀인', '문창귀인'],
       harmfulSpirits: ['겁살', '망신살'],
@@ -303,7 +303,7 @@ export const interpretationService = {
   },
 
   // 성격 분석 가져오기
-  getPersonalityAnalysis: async (sajuData: any): Promise<InterpretationResponse['personality']> => {
+  getPersonalityAnalysis: async (_sajuData: any): Promise<InterpretationResponse['personality']> => {
     return {
       dominantTraits: { leadership: 80, creativity: 70 },
       strengths: ['리더십', '창의성', '추진력'],
@@ -314,7 +314,7 @@ export const interpretationService = {
   },
 
   // 운세 분석 가져오기
-  getFortuneAnalysis: async (sajuData: any): Promise<InterpretationResponse['fortune']> => {
+  getFortuneAnalysis: async (_sajuData: any): Promise<InterpretationResponse['fortune']> => {
     return {
       currentYear: { overall: 75, career: 80, health: 70 },
       monthlyTrends: [],
@@ -324,7 +324,7 @@ export const interpretationService = {
   },
 
   // 직업 지도 가져오기
-  getCareerGuidance: async (sajuData: any): Promise<InterpretationResponse['career']> => {
+  getCareerGuidance: async (_sajuData: any): Promise<InterpretationResponse['career']> => {
     return {
       suitableCareers: ['경영', '교육', '예술', 'IT'],
       avoidCareers: ['반복 업무', '단순 노동'],
@@ -335,7 +335,7 @@ export const interpretationService = {
   },
 
   // 관계 분석 가져오기
-  getRelationshipAnalysis: async (sajuData: any): Promise<InterpretationResponse['relationship']> => {
+  getRelationshipAnalysis: async (_sajuData: any): Promise<InterpretationResponse['relationship']> => {
     return {
       marriageCompatibility: { overall: 80, communication: 75 },
       relationshipPattern: '적극적이고 주도적',
@@ -346,7 +346,7 @@ export const interpretationService = {
   },
 
   // 건강 지도 가져오기
-  getHealthGuidance: async (sajuData: any): Promise<InterpretationResponse['health']> => {
+  getHealthGuidance: async (_sajuData: any): Promise<InterpretationResponse['health']> => {
     return {
       constitution: { type: '화체질', strength: 70 },
       vulnerabilities: ['심장', '소화기'],

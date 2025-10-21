@@ -1,0 +1,61 @@
+  11:25  error  'AuxiliaryStar' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+--
+   22:10  error    'interpretationService' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   45:38  warning  Unexpected any. Specify a different type                                                 @typescript-eslint/no-explicit-any
+--
+  347:20  error    'event' is defined but never used. Allowed unused args must match /^_/u                                               @typescript-eslint/no-unused-vars
+
+--
+  283:28  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  283:38  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  295:32  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  295:42  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  306:34  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  306:44  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  317:30  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  317:40  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  327:29  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  327:39  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  338:35  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  338:45  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+  349:29  error    'sajuData' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  349:39  warning  Unexpected any. Specify a different type                                    @typescript-eslint/no-explicit-any
+--
+  232:11  error    'startTime' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  262:37  error    'index' is defined but never used. Allowed unused args must match /^_/u               @typescript-eslint/no-unused-vars
+  265:16  error    Empty block statement                                                                 no-empty
+--
+  284:15  error    'endTime' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+
+--
+  93:11  error  'get' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+--
+   1:10  error    'expect' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  98:27  warning  Unexpected any. Specify a different type                                  @typescript-eslint/no-explicit-any
+--
+  434:32  error    '대운' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  548:19  warning  Forbidden non-null assertion                                          @typescript-eslint/no-non-null-assertion
+--
+  328:3  error  'dateTime' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+--
+  376:59  error  'system' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+--
+  289:11  error    'result1' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  300:11  error    'result2' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  319:49  warning  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  323:41  error    'fourPillars' is defined but never used. Allowed unused args must match /^_/u       @typescript-eslint/no-unused-vars
+
+--
+  317:9   error  'result1' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+--
+  292:31  error    'saju' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  292:55  error    'label' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+--
+   940:39  error    'i' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  1066:15  warning  Forbidden non-null assertion                                         @typescript-eslint/no-non-null-assertion

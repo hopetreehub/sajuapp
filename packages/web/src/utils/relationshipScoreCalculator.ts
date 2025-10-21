@@ -373,7 +373,7 @@ function analyzeSibsinForRelationship(_sajuData: SajuData, system: RelationshipS
 /**
  * 합형충파해 점수 분석
  */
-function analyzeHarmonyConflictScore(_sajuData: SajuData, system: RelationshipSystem): number {
+function analyzeHarmonyConflictScore(_sajuData: SajuData, _system: RelationshipSystem): number {
   let score = 0;
 
   const jijis = [

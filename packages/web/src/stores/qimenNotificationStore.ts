@@ -90,7 +90,7 @@ const defaultSettings: QimenNotificationSettings = {
 
 export const useQimenNotificationStore = create<QimenNotificationStore>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       settings: defaultSettings,
       history: [],
 
