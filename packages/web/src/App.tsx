@@ -82,9 +82,9 @@ function App() {
                 {/* 추가 예정 페이지 */}
                 <Route path="/compatibility" element={<ProtectedRoute><CompatibilityPage /></ProtectedRoute>} />
                 <Route path="/learning/:courseId" element={<ProtectedRoute><LearningPage /></ProtectedRoute>} />
-                {/* 귀문둔갑 */}
-                <Route path="/qimen" element={<ProtectedRoute><QimenView /></ProtectedRoute>} />
-                <Route path="/qimen/learning" element={<ProtectedRoute><QimenLearningPage /></ProtectedRoute>} />
+                {/* 귀문둔갑 - 인증 불필요 (개발/테스트용) */}
+                <Route path="/qimen" element={<QimenView />} />
+                <Route path="/qimen/learning" element={<QimenLearningPage />} />
                 {/* 자미두수 */}
                 <Route path="/ziwei" element={<ProtectedRoute><ZiweiPage /></ProtectedRoute>} />
                 {/* 타로 카드 */}

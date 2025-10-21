@@ -36,6 +36,7 @@ export default function QimenView() {
   const [selectedPalace, setSelectedPalace] = useState<Palace | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showGuide, setShowGuide] = useState(false);
   const [showSimpleSummary, setShowSimpleSummary] = useState(true);
   const [showHeatmap, setShowHeatmap] = useState(false);
@@ -93,8 +94,10 @@ export default function QimenView() {
 
   // 차트 계산 (적용된 고객 정보 사용)
   useEffect(() => {
+    console.log('🔮 [귀문둔갑] useEffect 실행 시작');
     try {
       setLoading(true);
+      setError(null);
 
       // 적용된 고객 생년월일 활용
       const birthInfo = appliedCustomer ? {
@@ -167,9 +170,11 @@ export default function QimenView() {
 
       console.log('✅ [귀문둔갑] 차트 계산 완료:', newChart.ju, newChart.yinYang);
     } catch (error) {
-      console.error('귀문둔갑 계산 에러:', error);
+      console.error('❌ [귀문둔갑] 계산 에러:', error);
+      setError(error instanceof Error ? error.message : String(error));
     } finally {
       setLoading(false);
+      console.log('🔮 [귀문둔갑] useEffect 완료, loading:', false);
     }
   }, [selectedDate, appliedCustomer]);
 
@@ -279,6 +284,25 @@ export default function QimenView() {
     }
   };
 
+  // 에러 화면
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900 dark:to-gray-900 flex items-center justify-center p-4">
+        <div className="text-center max-w-md bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg">
+          <div className="text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">귀문둔갑 계산 오류</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
+          >
+            새로고침
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // 로딩 중
   if (loading || !chart) {
     return (
@@ -286,6 +310,7 @@ export default function QimenView() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-500 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-300 text-lg">국(局) 계산 중...</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">Loading: {String(loading)}, Chart: {chart ? 'exists' : 'null'}</p>
         </div>
       </div>
     );

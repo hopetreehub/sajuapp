@@ -127,6 +127,11 @@ function analyzeTrend(
 function findTimePatterns(bookmarks: QimenBookmark[], stats: QimenStats): QimenPattern[] {
   const patterns: QimenPattern[] = [];
 
+  // 빈 배열 체크
+  if (stats.hourlyDistribution.length === 0) {
+    return patterns;
+  }
+
   // 최고 시간대 패턴
   const bestHour = stats.hourlyDistribution.reduce((best, current) =>
     current.avgScore > best.avgScore ? current : best,
@@ -189,6 +194,11 @@ function findTimePatterns(bookmarks: QimenBookmark[], stats: QimenStats): QimenP
  */
 function findContextPatterns(stats: QimenStats): QimenPattern[] {
   const patterns: QimenPattern[] = [];
+
+  // 빈 배열 체크
+  if (stats.contextStats.length === 0) {
+    return patterns;
+  }
 
   // 성공률이 높은 컨텍스트
   const bestContext = stats.contextStats.reduce((best, current) =>
@@ -363,6 +373,11 @@ function generatePredictions(
 
   // 데이터가 충분하지 않으면 예측하지 않음
   if (bookmarks.length < 30) return predictions;
+
+  // 빈 배열 체크
+  if (stats.hourlyDistribution.length === 0 || stats.contextStats.length === 0) {
+    return predictions;
+  }
 
   // 다음 7일간의 최적 시간대 예측
   const today = new Date();
