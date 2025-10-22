@@ -187,38 +187,27 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: (id) => {
-            // React 관련 라이브러리 (최우선 - 모든 React 기반 라이브러리 포함)
+            // React 및 React 생태계 (최우선 로드)
             if (id.includes('node_modules/react') ||
                 id.includes('node_modules/react-dom') ||
-                id.includes('node_modules/react-router-dom') ||
+                id.includes('node_modules/react-router') ||
                 id.includes('node_modules/@react-three') ||
                 id.includes('node_modules/react-chartjs-2') ||
                 id.includes('node_modules/react-markdown') ||
                 id.includes('node_modules/@dnd-kit') ||
                 id.includes('node_modules/framer-motion') ||
-                id.includes('node_modules/lucide-react')) {
+                id.includes('node_modules/lucide-react') ||
+                id.includes('node_modules/zustand')) {
               return 'react-vendor';
             }
-            // Three.js 라이브러리만
+            // Three.js 전용
             if (id.includes('node_modules/three')) {
               return 'three-vendor';
             }
-            // Chart.js (React 제외)
-            if (id.includes('node_modules/chart.js')) {
+            // Chart.js 전용
+            if (id.includes('node_modules/chart.js') ||
+                id.includes('node_modules/chartjs-')) {
               return 'chart-vendor';
-            }
-            // 날짜 관련 라이브러리
-            if (id.includes('node_modules/date-fns')) {
-              return 'calendar-vendor';
-            }
-            // 문서 생성 관련 (React 제외)
-            if (id.includes('node_modules/html2canvas') ||
-                id.includes('node_modules/jspdf')) {
-              return 'document-vendor';
-            }
-            // 나머지 node_modules
-            if (id.includes('node_modules')) {
-              return 'vendor';
             }
           },
           // 파일명 패턴 (캐시 최적화)
