@@ -187,34 +187,32 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: (id) => {
-            // React 관련 라이브러리 (React Three Fiber 포함)
+            // React 관련 라이브러리 (최우선 - 모든 React 기반 라이브러리 포함)
             if (id.includes('node_modules/react') ||
                 id.includes('node_modules/react-dom') ||
                 id.includes('node_modules/react-router-dom') ||
-                id.includes('node_modules/@react-three')) {
+                id.includes('node_modules/@react-three') ||
+                id.includes('node_modules/react-chartjs-2') ||
+                id.includes('node_modules/react-markdown') ||
+                id.includes('node_modules/@dnd-kit') ||
+                id.includes('node_modules/framer-motion') ||
+                id.includes('node_modules/lucide-react')) {
               return 'react-vendor';
             }
-            // Three.js 라이브러리만 (React Three Fiber는 react-vendor로 이동)
+            // Three.js 라이브러리만
             if (id.includes('node_modules/three')) {
               return 'three-vendor';
             }
-            // Chart.js 및 차트 관련
-            if (id.includes('node_modules/chart.js') ||
-                id.includes('node_modules/react-chartjs-2')) {
+            // Chart.js (React 제외)
+            if (id.includes('node_modules/chart.js')) {
               return 'chart-vendor';
             }
             // 날짜 관련 라이브러리
             if (id.includes('node_modules/date-fns')) {
               return 'calendar-vendor';
             }
-            // UI/UX 라이브러리
-            if (id.includes('node_modules/@dnd-kit') ||
-                id.includes('node_modules/framer-motion')) {
-              return 'ui-vendor';
-            }
-            // Markdown 및 문서 관련
-            if (id.includes('node_modules/react-markdown') ||
-                id.includes('node_modules/html2canvas') ||
+            // 문서 생성 관련 (React 제외)
+            if (id.includes('node_modules/html2canvas') ||
                 id.includes('node_modules/jspdf')) {
               return 'document-vendor';
             }
