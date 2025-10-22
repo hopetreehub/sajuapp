@@ -140,14 +140,18 @@ export default function StatsDashboard({ isOpen, onClose }: StatsDashboardProps)
 
   // 컨텍스트별 차트 데이터
   const contextNames: Record<QimenContext, string> = {
+    general: '일반/전체',
     business: '사업/투자',
+    love: '연애/결혼',
     meeting: '회의/협상',
     travel: '여행/이동',
     study: '학습/시험',
     health: '건강/치료',
+    wealth: '재물/투자',
     relationship: '인간관계',
     decision: '중요결정',
     lawsuit: '소송/법률',
+    education: '교육/학업',
   };
 
   const contextChartData = {

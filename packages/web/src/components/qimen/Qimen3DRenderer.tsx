@@ -185,7 +185,7 @@ function Scene({
 
       {/* 궁 큐브들 */}
       {Object.entries(chart.palaces).map(([palace, palaceData]) => {
-        const palaceKey = palace as PalaceKey;
+        const palaceKey = Number(palace) as PalaceKey;
         const position = palacePositions[palaceKey];
 
         return (

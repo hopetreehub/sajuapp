@@ -115,7 +115,7 @@ export function useQimenStats(): QimenStats {
         mostFrequentContext: 'business' as QimenContext,
         bestTimeOfDay: '00:00-00:00',
         favoriteDirection: 'N' as Direction,
-        bestPalace: 'center' as Palace,
+        bestPalace: 5 as Palace, // 5궁 = 중앙
         weeklyTrend: [],
         monthlyPatterns: [],
         hourlyDistribution: [],
@@ -191,9 +191,9 @@ export function useQimenStats(): QimenStats {
 
     const directionStats = Object.entries(directionData).map(([direction, data]) => {
       const avgScore = Math.round(data.sum / data.count);
-      const bestPalace = Object.entries(data.palaces).reduce((a, b) =>
+      const bestPalace = Number(Object.entries(data.palaces).reduce((a, b) =>
         b[1] > a[1] ? b : a,
-      )[0] as Palace;
+      )[0]) as Palace;
       return {
         direction: direction as Direction,
         avgScore,
@@ -214,7 +214,7 @@ export function useQimenStats(): QimenStats {
         ? directionStats.reduce((best, current) =>
             current.avgScore > best.avgScore ? current : best,
           ).bestPalace
-        : ('center' as Palace);
+        : (5 as Palace); // 5궁 = 중앙
 
     // 5. 주간 트렌드 분석
     const weeklyData: Record<string, { sum: number; count: number }> = {};

@@ -94,6 +94,12 @@ export interface PalaceInfo {
   /** 팔신 (5궁 중앙은 신이 없을 수 있음) */
   spirit?: Spirit;
 
+  /** 신격 (god) - 팔신의 별칭 또는 추가 신격 정보 */
+  god?: string;
+
+  /** 궁 점수 (종합 평가) */
+  score?: number;
+
   /** 천간 (天干) */
   tianGan: string;
 
