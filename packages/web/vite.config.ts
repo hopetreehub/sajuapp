@@ -96,6 +96,24 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           secure: false,
         },
+        '/api/events': {
+          target: 'http://localhost:4012',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/api/, '/api/calendar'),
+        },
+        '/api/tags': {
+          target: 'http://localhost:4012',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/api/, '/api/calendar'),
+        },
+        '/api/todos': {
+          target: 'http://localhost:4012',
+          changeOrigin: true,
+          secure: false,
+          rewrite: (path) => path.replace(/^\/api/, '/api/calendar'),
+        },
         // 사주 분석 서비스
         '/api/saju': {
           target: 'http://localhost:4015',

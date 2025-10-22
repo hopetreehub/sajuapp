@@ -20,7 +20,7 @@ import {
   getDay,
 } from 'date-fns';
 import { CalendarEvent } from '@/services/api';
-import { formatLunarDate, getSpecialLunarDay, getSolarTerm, solarToLunar } from '@/utils/lunarCalendar';
+import { formatLunarDate, getSolarTerm, solarToLunar } from '@/utils/lunarCalendar';
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 

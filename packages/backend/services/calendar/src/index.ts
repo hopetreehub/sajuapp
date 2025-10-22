@@ -24,6 +24,9 @@ const corsOptions = {
     const allowedOrigins = [
       'http://localhost:4000',
       'http://localhost:4001',
+      'http://localhost:4002',
+      'http://localhost:4003',
+      'http://localhost:4004',
       'https://fortune-compass.pages.dev',
       'https://*.fortune-compass.pages.dev',
       process.env.FRONTEND_URL

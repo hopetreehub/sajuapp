@@ -4,6 +4,7 @@ import { CalendarEvent, eventService, Tag } from '../services/api';
 import { useCalendar } from '../contexts/CalendarContext';
 import TagSelector from './TagSelector';
 import { useQimenCalendarIntegration } from '../hooks/useQimenCalendarIntegration';
+import { lunarToSolar, solarToLunar } from '../utils/lunarCalendar';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -36,6 +37,16 @@ const EventModal: React.FC<EventModalProps> = ({
   });
 
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+
+  // 음력 관련 상태
+  const [isLunar, setIsLunar] = useState(false);
+  const [lunarDate, setLunarDate] = useState({
+    year: new Date().getFullYear(),
+    month: 1,
+    day: 1,
+    isLeapMonth: false,
+  });
+  const [isYearlyRecurring, setIsYearlyRecurring] = useState(false);
 
   const [todoData, setTodoData] = useState({
     text: '',
@@ -90,6 +101,53 @@ const EventModal: React.FC<EventModalProps> = ({
 
     return null;
   }, [activeTab, formData.start_time, eventEvaluation, getBestTimeForDay]);
+
+  // 양력 날짜가 변경될 때 음력 날짜 업데이트
+  useEffect(() => {
+    if (formData.start_time && !isLunar) {
+      try {
+        const date = new Date(formData.start_time);
+        const lunar = solarToLunar(date);
+        setLunarDate({
+          year: lunar.year,
+          month: lunar.month,
+          day: lunar.day,
+          isLeapMonth: lunar.isLeapMonth || false,
+        });
+      } catch (error) {
+        console.error('Failed to convert solar to lunar:', error);
+      }
+    }
+  }, [formData.start_time, isLunar]);
+
+  // 음력 날짜가 변경될 때 양력 날짜 업데이트
+  useEffect(() => {
+    if (isLunar && lunarDate.year && lunarDate.month && lunarDate.day) {
+      try {
+        const solarDate = lunarToSolar(
+          lunarDate.year,
+          lunarDate.month,
+          lunarDate.day,
+          lunarDate.isLeapMonth,
+        );
+        const timeStr = formData.start_time ? formData.start_time.split('T')[1] || '09:00' : '09:00';
+
+        // 시작 시간 설정
+        const startDateTime = new Date(`${format(solarDate, 'yyyy-MM-dd')}T${timeStr}`);
+
+        // 종료 시간 = 시작 시간 + 1시간
+        const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000);
+
+        setFormData(prev => ({
+          ...prev,
+          start_time: format(startDateTime, "yyyy-MM-dd'T'HH:mm"),
+          end_time: format(endDateTime, "yyyy-MM-dd'T'HH:mm"),
+        }));
+      } catch (error) {
+        console.error('Failed to convert lunar to solar:', error);
+      }
+    }
+  }, [isLunar, lunarDate]);
 
   useEffect(() => {
     if (event) {
@@ -331,6 +389,90 @@ const EventModal: React.FC<EventModalProps> = ({
                   className="mr-2"
                 />
                 <label className="text-sm text-foreground">종일</label>
+              </div>
+
+              {/* 음력/양력 전환 토글 */}
+              <div className="border border-border rounded-md p-3 bg-muted/30">
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-sm font-medium text-foreground">날짜 유형</label>
+                  <button
+                    type="button"
+                    onClick={() => setIsLunar(!isLunar)}
+                    className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                      isLunar
+                        ? 'bg-purple-500 text-white'
+                        : 'bg-gray-200 dark:bg-gray-700 text-foreground'
+                    }`}
+                  >
+                    {isLunar ? '🌙 음력' : '☀️ 양력'}
+                  </button>
+                </div>
+
+                {/* 음력 날짜 입력 UI */}
+                {isLunar && (
+                  <div className="space-y-3 pt-2 border-t border-border">
+                    <div className="grid grid-cols-3 gap-2">
+                      <div>
+                        <label className="block text-xs font-medium mb-1 text-foreground">년</label>
+                        <input
+                          type="number"
+                          value={lunarDate.year}
+                          onChange={(e) => setLunarDate({ ...lunarDate, year: parseInt(e.target.value) })}
+                          min="1900"
+                          max="2100"
+                          className="w-full px-2 py-1 text-sm border border-border rounded-md bg-background text-foreground"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium mb-1 text-foreground">월</label>
+                        <input
+                          type="number"
+                          value={lunarDate.month}
+                          onChange={(e) => setLunarDate({ ...lunarDate, month: parseInt(e.target.value) })}
+                          min="1"
+                          max="12"
+                          className="w-full px-2 py-1 text-sm border border-border rounded-md bg-background text-foreground"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium mb-1 text-foreground">일</label>
+                        <input
+                          type="number"
+                          value={lunarDate.day}
+                          onChange={(e) => setLunarDate({ ...lunarDate, day: parseInt(e.target.value) })}
+                          min="1"
+                          max="30"
+                          className="w-full px-2 py-1 text-sm border border-border rounded-md bg-background text-foreground"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={lunarDate.isLeapMonth}
+                          onChange={(e) => setLunarDate({ ...lunarDate, isLeapMonth: e.target.checked })}
+                          className="mr-2"
+                        />
+                        <label className="text-xs text-foreground">윤달</label>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={isYearlyRecurring}
+                          onChange={(e) => setIsYearlyRecurring(e.target.checked)}
+                          className="mr-2"
+                        />
+                        <label className="text-xs text-foreground">매년 반복</label>
+                      </div>
+                    </div>
+
+                    <div className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-900/20 p-2 rounded">
+                      💡 양력: {formData.start_time ? format(new Date(formData.start_time), 'yyyy년 M월 d일') : '-'}
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">

@@ -42,9 +42,10 @@ const TagSelector: React.FC<TagSelectorProps> = ({
     try {
       setIsLoading(true);
       const tags = await tagService.getTags();
-      setAvailableTags(tags);
+      setAvailableTags(Array.isArray(tags) ? tags : []);
     } catch (error) {
       console.error('Failed to load tags:', error);
+      setAvailableTags([]); // 에러 시 빈 배열로 설정
     } finally {
       setIsLoading(false);
     }
@@ -82,8 +83,8 @@ const TagSelector: React.FC<TagSelectorProps> = ({
     }
   };
 
-  const filteredTags = availableTags.filter(
-    tag => 
+  const filteredTags = (availableTags || []).filter(
+    tag =>
       tag.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       !selectedTags.find(t => t.id === tag.id),
   );

@@ -22,21 +22,16 @@ export const solarToLunar = (date: Date): LunarDate => {
       date.getDate(),
     );
 
-    // 각각의 메서드를 개별 호출
-    const lunarYear = calendar.getLunarYear();
-    const lunarMonth = calendar.getLunarMonth();
-    const lunarDay = calendar.getLunarDay();
-    const isLeapMonth = calendar.getLunarLeapMonth();
-    const zodiac = calendar.getZodiac();
-    const chineseYear = calendar.getChineseYear();
+    // lunarCalendar 속성에서 값 가져오기 (메서드가 아님)
+    const lunar = (calendar as any).lunarCalendar;
 
     return {
-      year: lunarYear || date.getFullYear(),
-      month: lunarMonth || date.getMonth() + 1,
-      day: lunarDay || date.getDate(),
-      isLeapMonth: isLeapMonth || false,
-      zodiac: zodiac || '',
-      chineseYear: chineseYear || '',
+      year: lunar.year || date.getFullYear(),
+      month: lunar.month || date.getMonth() + 1,
+      day: lunar.day || date.getDate(),
+      isLeapMonth: lunar.intercalation || false,
+      zodiac: '', // 띠 정보는 별도 계산 필요
+      chineseYear: '', // 간지 정보는 별도 계산 필요
     };
   } catch (error) {
     console.error('Error converting solar to lunar:', error);
@@ -61,15 +56,13 @@ export const lunarToSolar = (year: number, month: number, day: number, isLeapMon
 
     calendar.setLunarDate(year, month, day, isLeapMonth);
 
-    // 각각의 메서드를 개별 호출
-    const solarYear = calendar.getSolarYear();
-    const solarMonth = calendar.getSolarMonth();
-    const solarDay = calendar.getSolarDay();
+    // solarCalendar 속성에서 값 가져오기 (메서드가 아님)
+    const solar = (calendar as any).solarCalendar;
 
     return new Date(
-      solarYear || year,
-      (solarMonth || month) - 1, // Convert to 0-indexed
-      solarDay || day,
+      solar.year || year,
+      (solar.month || month) - 1, // Convert to 0-indexed
+      solar.day || day,
     );
   } catch (error) {
     console.error('Error converting lunar to solar:', error);
