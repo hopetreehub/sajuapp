@@ -20,9 +20,7 @@ import {
   getDay,
 } from 'date-fns';
 import { CalendarEvent } from '@/services/api';
-// 음력 변환 기능 임시 비활성화 (Vercel 배포 문제 해결을 위해)
-// import { formatLunarDate, getSpecialLunarDay, getSolarTerm, solarToLunar } from '@/utils/lunarCalendar';
-import { getSolarTerm } from '@/utils/lunarCalendar';
+import { formatLunarDate, getSpecialLunarDay, getSolarTerm, solarToLunar } from '@/utils/lunarCalendar';
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -77,9 +75,7 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
             map.set(dateKey, solarTerm);
           }
         } else {
-          // 음력 변환 기능 임시 비활성화 (Vercel 배포 문제 해결을 위해)
-          // TODO: korean-lunar-calendar 라이브러리 문제 해결 후 재활성화
-          /*
+          // 음력 명절 확인
           try {
             const lunar = solarToLunar(day);
             let lunarSpecialDay = null;
@@ -96,9 +92,8 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
               map.set(dateKey, lunarSpecialDay);
             }
           } catch (error) {
-
+            // 음력 변환 에러는 무시 (로그 출력하지 않음)
           }
-          */
         }
       }
     });
@@ -235,11 +230,11 @@ export default function MonthView({ events, onCreateEvent, onDateClick, onEditEv
                     )}
                   </div>
 
-                  {/* 음력 날짜 표시 - 임시 비활성화 */}
+                  {/* 음력 날짜 표시 */}
                   <div className="flex flex-col">
-                    {/* <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
+                    <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium">
                       {formatLunarDate(day, false)}
-                    </span> */}
+                    </span>
                     {/* 특별한 음력 날짜 표시 (절기, 명절) */}
                     {specialDay && (
                       <span className="text-[9px] text-hanbok-red font-bold bg-hanbok-red/10 px-1 py-0.5 rounded mt-0.5 truncate">
