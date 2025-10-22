@@ -187,15 +187,15 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks: (id) => {
-            // React 관련 라이브러리
+            // React 관련 라이브러리 (React Three Fiber 포함)
             if (id.includes('node_modules/react') ||
                 id.includes('node_modules/react-dom') ||
-                id.includes('node_modules/react-router-dom')) {
+                id.includes('node_modules/react-router-dom') ||
+                id.includes('node_modules/@react-three')) {
               return 'react-vendor';
             }
-            // Three.js 및 3D 관련 라이브러리 (큰 용량)
-            if (id.includes('node_modules/three') ||
-                id.includes('node_modules/@react-three')) {
+            // Three.js 라이브러리만 (React Three Fiber는 react-vendor로 이동)
+            if (id.includes('node_modules/three')) {
               return 'three-vendor';
             }
             // Chart.js 및 차트 관련
