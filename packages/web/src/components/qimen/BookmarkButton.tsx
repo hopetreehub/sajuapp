@@ -54,6 +54,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({
       context,
       note: note || defaultNote,
       tags: tags.length > 0 ? tags : defaultTags,
+      isShared: false,
     });
 
     setIsBookmarked(true);

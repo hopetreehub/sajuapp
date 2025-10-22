@@ -13,7 +13,6 @@ import {
   generateDetailedAdvice,
 } from '../utils/compatibilityCalculator';
 import { calculateCompleteSaju } from '../utils/accurateSajuCalculator';
-// @ts-expect-error - korean-lunar-calendar lacks TypeScript types
 import KoreanLunarCalendar from 'korean-lunar-calendar';
 import { analyzeRelationship, RelationshipAnalysis } from '../utils/detailedCompatibilityCalculator';
 import { analyzePractical, PracticalAnalysis } from '../utils/practicalCompatibilityCalculator';

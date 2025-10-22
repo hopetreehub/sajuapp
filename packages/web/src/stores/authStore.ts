@@ -33,6 +33,12 @@ export interface LoginData {
   password: string;
 }
 
+interface ReferralValidation {
+  isValid: boolean;
+  message?: string;
+  referrerName?: string;
+}
+
 interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -40,11 +46,21 @@ interface AuthState {
   user: User | null;
   token: string | null;
 
+  // Referral code properties
+  referralCode: string | null;
+  isValidatingReferral: boolean;
+  referralValidation: ReferralValidation | null;
+
   login: (credentials: LoginData) => Promise<void>;
   logout: () => Promise<void>;
   signUp: (data: SignUpData) => Promise<void>;
   getCurrentUser: () => Promise<void>;
   setError: (error: string | null) => void;
+
+  // Referral code methods
+  setReferralCode: (code: string) => void;
+  validateReferralCode: (code: string) => Promise<boolean>;
+  clearReferralValidation: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -55,6 +71,11 @@ export const useAuthStore = create<AuthState>()(
       error: null,
       user: null,
       token: null,
+
+      // Referral code initial state
+      referralCode: null,
+      isValidatingReferral: false,
+      referralValidation: null,
 
       login: async (credentials: LoginData) => {
         set({ isLoading: true, error: null });
@@ -200,6 +221,52 @@ export const useAuthStore = create<AuthState>()(
 
       setError: (error: string | null) => {
         set({ error });
+      },
+
+      // Referral code methods
+      setReferralCode: (code: string) => {
+        set({ referralCode: code });
+      },
+
+      validateReferralCode: async (code: string): Promise<boolean> => {
+        set({ isValidatingReferral: true, referralValidation: null });
+
+        try {
+          // Import the referralAPI from authService
+          const { referralAPI } = await import('@/services/authService');
+
+          const result = await referralAPI.validateCode(code);
+
+          set({
+            isValidatingReferral: false,
+            referralValidation: {
+              isValid: result.data.isValid,
+              message: result.message || result.error,
+              referrerName: result.data.referrerName,
+            },
+          });
+
+          return result.data.isValid;
+        } catch (error) {
+          console.error('Referral validation error:', error);
+
+          set({
+            isValidatingReferral: false,
+            referralValidation: {
+              isValid: false,
+              message: '추천인 코드 확인 중 오류가 발생했습니다.',
+            },
+          });
+
+          return false;
+        }
+      },
+
+      clearReferralValidation: () => {
+        set({
+          referralCode: null,
+          referralValidation: null,
+        });
       },
     }),
     {

@@ -94,6 +94,12 @@ export async function clearServiceWorkerCache(): Promise<boolean> {
   }
 
   try {
+    if (!navigator.serviceWorker.controller) {
+      console.warn('⚠️ No service worker controller available');
+      return false;
+    }
+
+    const controller = navigator.serviceWorker.controller;
     const messageChannel = new MessageChannel();
 
     return new Promise((resolve) => {
@@ -101,7 +107,7 @@ export async function clearServiceWorkerCache(): Promise<boolean> {
         resolve(event.data.success);
       };
 
-      navigator.serviceWorker.controller.postMessage(
+      controller.postMessage(
         { type: 'CLEAR_CACHE' },
         [messageChannel.port2],
       );
@@ -124,6 +130,12 @@ export async function cacheUrls(urls: string[]): Promise<boolean> {
   }
 
   try {
+    if (!navigator.serviceWorker.controller) {
+      console.warn('⚠️ No service worker controller available');
+      return false;
+    }
+
+    const controller = navigator.serviceWorker.controller;
     const messageChannel = new MessageChannel();
 
     return new Promise((resolve) => {
@@ -131,7 +143,7 @@ export async function cacheUrls(urls: string[]): Promise<boolean> {
         resolve(event.data.success);
       };
 
-      navigator.serviceWorker.controller.postMessage(
+      controller.postMessage(
         { type: 'CACHE_URLS', urls },
         [messageChannel.port2],
       );
@@ -153,6 +165,12 @@ export async function getCacheStatus(): Promise<Array<{ name: string; count: num
   }
 
   try {
+    if (!navigator.serviceWorker.controller) {
+      console.warn('⚠️ No service worker controller available');
+      return [];
+    }
+
+    const controller = navigator.serviceWorker.controller;
     const messageChannel = new MessageChannel();
 
     return new Promise((resolve) => {
@@ -160,7 +178,7 @@ export async function getCacheStatus(): Promise<Array<{ name: string; count: num
         resolve(event.data.caches || []);
       };
 
-      navigator.serviceWorker.controller.postMessage(
+      controller.postMessage(
         { type: 'GET_CACHE_STATUS' },
         [messageChannel.port2],
       );

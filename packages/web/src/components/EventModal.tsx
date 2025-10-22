@@ -544,7 +544,7 @@ const EventModal: React.FC<EventModalProps> = ({
                             setFormData({
                               ...formData,
                               start_time: timeStr,
-                              end_time: formData.end_time
+                              end_time: formData.end_time && formData.start_time
                                 ? format(
                                     new Date(
                                       optimalTimeInfo.time.getTime() +

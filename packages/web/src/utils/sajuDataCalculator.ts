@@ -8,7 +8,6 @@ import {
   SeventeenFortuneScores,
 } from '@/types/saju';
 import { calculateCompleteSaju } from './accurateSajuCalculator';
-// @ts-expect-error
 import KoreanLunarCalendar from 'korean-lunar-calendar';
 
 // 사주팔자 타입 정의

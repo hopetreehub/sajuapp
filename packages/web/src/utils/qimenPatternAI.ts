@@ -280,7 +280,7 @@ function findDirectionPatterns(stats: QimenStats): QimenPattern[] {
   );
 
   if (bestDirection.count >= 5) {
-    const directionNames: Record<Direction, string> = {
+    const directionNames: Record<string, string> = {
       N: '북쪽',
       NE: '북동쪽',
       E: '동쪽',

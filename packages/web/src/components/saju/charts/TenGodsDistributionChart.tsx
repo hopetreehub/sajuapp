@@ -15,7 +15,7 @@ import { TenGodsAnalyzer } from '@/utils/tenGodsAnalyzer';
 import { TEN_GODS_INFO } from '@/types/tenGods';
 import { SajuData } from '@/types/saju';
 import InterpretationPanel from '@/components/charts/InterpretationPanel';
-import { InterpretationResponse } from '@/services/api';
+import { InterpretationResponse, interpretationService } from '@/services/api';
 
 // Chart.js 컴포넌트 등록
 ChartJS.register(

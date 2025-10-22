@@ -385,9 +385,8 @@ export async function getBatteryInfo(): Promise<{
   chargingTime: number;
   dischargingTime: number;
 } | null> {
-  // @ts-expect-error - getBattery는 일부 브라우저에만 있음
   if ('getBattery' in navigator) {
-    // @ts-expect-error
+    // @ts-expect-error - getBattery는 일부 브라우저에만 있음
     const battery = await navigator.getBattery();
     return {
       charging: battery.charging,
@@ -460,7 +459,6 @@ export async function toggleFullscreen(element: HTMLElement = document.documentE
 export async function requestWakeLock(): Promise<WakeLockSentinel | null> {
   try {
     if ('wakeLock' in navigator) {
-      // @ts-expect-error - wakeLock는 실험적 기능
       const wakeLock = await navigator.wakeLock.request('screen');
       console.log('Wake Lock activated');
       return wakeLock;
