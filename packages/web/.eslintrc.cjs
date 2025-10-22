@@ -10,7 +10,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', '**/*.backup.*', 'tests/**/*', 'api/database/init-schema.ts'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
@@ -82,4 +82,19 @@ module.exports = {
   globals: {
     NodeJS: true,
   },
+  // 파일별 규칙 재정의
+  overrides: [
+    {
+      // CLI 스크립트 및 유틸리티 파일에서는 console 허용
+      files: [
+        'api/**/*.ts',
+        'src/utils/**/*.ts',
+        'src/components/**/BeginnerGuide.tsx',
+        'src/components/**/Guide.tsx',
+      ],
+      rules: {
+        'no-console': 'off',
+      },
+    },
+  ],
 };
