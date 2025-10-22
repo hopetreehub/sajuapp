@@ -4,11 +4,6 @@
   "outputDirectory": "packages/web/dist",
   "installCommand": "npm install --prefix packages/web",
   "framework": "vite",
-  "functions": {
-    "packages/web/api/**/*.ts": {
-      "maxDuration": 10
-    }
-  },
   "rewrites": [
     {
       "source": "/api/:path*",
