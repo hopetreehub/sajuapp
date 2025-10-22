@@ -217,7 +217,7 @@ export const authAPI = {
   signUp: async (data: SignUpData): Promise<APIResponse<User>> => {
     try {
       // 입력 데이터 검증
-      if (!data.email || !data.password || !data.name) {
+      if (!data.email || !data.password || !data.username) {
         return {
           success: false,
           data: {} as User,
@@ -247,18 +247,20 @@ export const authAPI = {
       // TODO: 실제 회원가입 API 구현
       // 현재는 임시 구현으로 로컬 데이터 생성
       const newUser: User = {
-        id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: Date.now(),
         email: data.email.toLowerCase().trim(),
-        name: data.name.trim(),
-        createdAt: new Date().toISOString(),
-        referredBy: data.referralCode || undefined,
+        username: data.username.trim(),
+        role: 'user',
+        approval_status: 'approved',
+        created_at: new Date().toISOString(),
+        referral_code: data.referral_code || null,
       };
 
       // 추천인 코드가 있는 경우 적용
-      if (data.referralCode) {
+      if (data.referral_code) {
         const referralResult = await referralAPI.applyReferral({
-          userId: newUser.id,
-          referralCode: data.referralCode,
+          userId: newUser.id.toString(),
+          referralCode: data.referral_code,
         });
         
         if (!referralResult.success) {
@@ -302,10 +304,12 @@ export const authAPI = {
 
       // 임시 사용자 데이터
       const mockUser: User = {
-        id: 'user_mock_123',
+        id: 1,
         email: data.email,
-        name: '홍길동',
-        createdAt: '2024-01-01T00:00:00.000Z',
+        username: '홍길동',
+        role: 'user',
+        approval_status: 'approved',
+        created_at: '2024-01-01T00:00:00.000Z',
       };
 
       return {

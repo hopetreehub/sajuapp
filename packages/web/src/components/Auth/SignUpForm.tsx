@@ -127,8 +127,8 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
       await signUp({
         email: formData.email,
         password: formData.password,
-        name: formData.name,
-        referralCode: isReferralValid ? referralCodeValue : undefined,
+        username: formData.name,
+        referral_code: isReferralValid ? referralCodeValue : undefined,
       });
 
       // 회원가입 성공
