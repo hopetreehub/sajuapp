@@ -37,10 +37,26 @@ router.post('/chat', async (req: Request, res: Response, next: NextFunction) => 
       promptLength: prompt.length,
     });
 
-    // Claude API 호출
+    // Claude API 호출 (한국어 강제 시스템 프롬프트 추가)
     const message = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: 1024,
+      system: `🚨🚨🚨 CRITICAL LANGUAGE REQUIREMENT 🚨🚨🚨
+YOU MUST WRITE ONLY IN PURE KOREAN (순수 한국어)
+
+❌ ABSOLUTELY FORBIDDEN (절대 금지):
+- Chinese characters (漢字/汉字): 使用者❌, 金錢❌, 關係❌, 奇門遁甲❌, 局❌, 盤❌
+- Japanese (日本語): の❌, と❌, も❌, しました❌, との❌, です❌, ます❌
+- Chinese (中文): 使用❌, 金钱❌, 关系❌, 奇门遁甲❌
+- English words: palace❌, fortune❌, gate❌
+- ANY non-Korean characters
+
+✅ USE ONLY (반드시 사용):
+- Pure Korean: 사용자✓, 돈✓, 관계✓, 귀문둔갑✓, 국✓, 반✓
+- Korean particles: 은/는/이/가/을/를
+- Korean verbs: 하다/되다/되어/입니다
+
+당신은 전문 귀문둔갑(奇門遁甲) 상담사입니다. 100% 순수 한국어로만 답변하세요.`,
       messages: [
         {
           role: 'user',
@@ -136,6 +152,22 @@ ${customerInfo ? `\n## 고객 정보\n- 이름: ${customerInfo.name}\n- 생년�
     const message = await anthropic.messages.create({
       model: 'claude-3-5-sonnet-20241022',
       max_tokens: 2048,
+      system: `🚨🚨🚨 CRITICAL LANGUAGE REQUIREMENT 🚨🚨🚨
+YOU MUST WRITE ONLY IN PURE KOREAN (순수 한국어)
+
+❌ ABSOLUTELY FORBIDDEN (절대 금지):
+- Chinese characters (漢字/汉字): 使用者❌, 金錢❌, 關係❌, 奇門遁甲❌, 局❌, 盤❌
+- Japanese (日本語): の❌, と❌, も❌, しました❌, との❌, です❌, ます❌
+- Chinese (中文): 使用❌, 金钱❌, 关系❌, 奇门遁甲❌
+- English words: palace❌, fortune❌, gate❌
+- ANY non-Korean characters
+
+✅ USE ONLY (반드시 사용):
+- Pure Korean: 사용자✓, 돈✓, 관계✓, 귀문둔갑✓, 국✓, 반✓
+- Korean particles: 은/는/이/가/을/를
+- Korean verbs: 하다/되다/되어/입니다
+
+당신은 전문 귀문둔갑(奇門遁甲) 상담사입니다. 100% 순수 한국어로만 답변하세요.`,
       messages: [
         {
           role: 'user',
