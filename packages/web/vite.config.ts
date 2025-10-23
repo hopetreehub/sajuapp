@@ -152,7 +152,7 @@ export default defineConfig(({ mode }) => {
         },
         // AI 서비스 (타로)
         '/api/v1/tarot': {
-          target: 'http://localhost:4017',
+          target: 'http://localhost:4019',
           changeOrigin: true,
           secure: false,
         },
