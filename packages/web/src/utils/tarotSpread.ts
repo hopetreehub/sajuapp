@@ -22,12 +22,12 @@ export interface TarotCardPosition {
  */
 export type QuestionCategory =
   | 'health'       // 🏥 건강
-  | 'wealth'       // 💰 재물
+  | 'wealth'       // 💰 돈·재산
   | 'love'         // ❤️  사랑/연애
   | 'relationship' // 👥 인간관계
   | 'career'       // 💼 사업/커리어
   | 'study'        // 📚 학업/성장
-  | 'general';     // 🌟 일반/운세
+  | 'general';     // 🌟 일반/운
 
 /**
  * 카테고리 메타데이터 인터페이스
@@ -91,9 +91,9 @@ export const QUESTION_CATEGORIES: QuestionCategoryInfo[] = [
   },
   {
     id: 'wealth',
-    name: '재물',
+    name: '돈·재산',
     emoji: '💰',
-    description: '금전, 투자, 재산, 수입 관련',
+    description: '돈, 투자, 재산, 소득 관련',
     colorClasses: {
       active: 'bg-amber-500 dark:bg-amber-600 text-white shadow-lg',
       inactive: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300',
@@ -146,9 +146,9 @@ export const QUESTION_CATEGORIES: QuestionCategoryInfo[] = [
   },
   {
     id: 'general',
-    name: '일반/운세',
+    name: '일반/운',
     emoji: '🌟',
-    description: '오늘의 운세, 전반적 조언',
+    description: '오늘의 운, 전반적 조언',
     colorClasses: {
       active: 'bg-purple-500 dark:bg-purple-600 text-white shadow-lg',
       inactive: 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300',
@@ -166,11 +166,11 @@ export const TAROT_SPREADS: TarotSpread[] = [
     id: 'one-card',
     name: 'One Card',
     nameKo: '원 카드',
-    description: '오늘의 운세, 간단한 질문에 대한 답변',
+    description: '오늘의 운, 간단한 질문에 대한 답변',
     cardCount: 1,
     exampleQuestions: [
       '오늘 나에게 필요한 메시지는 무엇인가요?',
-      '오늘의 운세는 어떤가요?',
+      '오늘의 운는 어떤가요?',
       '지금 내가 가장 집중해야 할 것은?',
       '이번 주 나에게 가장 중요한 것은?',
       '오늘 조심해야 할 일이 있나요?',
@@ -185,8 +185,8 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'health', question: '이 증상이 호전될까요?' },
       { category: 'health', question: '건강을 위해 무엇을 해야 할까요?' },
 
-      // 재물
-      { category: 'wealth', question: '오늘 금전운은 어떤가요?' },
+      // 돈·재산
+      { category: 'wealth', question: '오늘 돈운은 어떤가요?' },
       { category: 'wealth', question: '이 투자 결정이 괜찮을까요?' },
       { category: 'wealth', question: '돈 관리에서 주의할 점은?' },
 
@@ -210,9 +210,9 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'study', question: '이 시험에 합격할까요?' },
       { category: 'study', question: '공부에서 집중해야 할 부분은?' },
 
-      // 일반/운세
+      // 일반/운
       { category: 'general', question: '오늘 나에게 필요한 메시지는?' },
-      { category: 'general', question: '오늘의 전체 운세는 어떤가요?' },
+      { category: 'general', question: '오늘의 전체 운는 어떤가요?' },
       { category: 'general', question: '이 결정을 내려도 괜찮을까요?' },
     ],
     positions: [
@@ -236,7 +236,7 @@ export const TAROT_SPREADS: TarotSpread[] = [
       '내 인생의 다음 단계는 무엇인가요?',
       '이 문제는 언제 해결될까요?',
       '내 사랑은 어떻게 흘러갈까요?',
-      '내 금전 운은 앞으로 어떻게 될까요?',
+      '내 돈 운은 앞으로 어떻게 될까요?',
       '건강 상태는 앞으로 어떻게 변할까요?',
       '이 프로젝트의 결과는 어떻게 될까요?',
       '내가 원하는 것을 이룰 수 있을까요?',
@@ -250,18 +250,18 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'health', question: '체력 회복은 언제쯤 될까요?' },
       { category: 'health', question: '운동 습관이 미래에 어떤 영향을 줄까요?' },
 
-      // 재물
-      { category: 'wealth', question: '내 재정 상태는 앞으로 어떻게 될까요?' },
+      // 돈·재산
+      { category: 'wealth', question: '내 돈 상태는 앞으로 어떻게 될까요?' },
       { category: 'wealth', question: '이 투자의 과거부터 미래까지 흐름은?' },
-      { category: 'wealth', question: '금전운이 앞으로 좋아질까요?' },
-      { category: 'wealth', question: '수입은 언제쯤 증가할까요?' },
+      { category: 'wealth', question: '돈운이 앞으로 좋아질까요?' },
+      { category: 'wealth', question: '소득은 언제쯤 증가할까요?' },
       { category: 'wealth', question: '재테크 계획이 성공할 수 있을까요?' },
 
       // 사랑/연애
       { category: 'love', question: '이 사람과의 관계는 어떻게 발전할까요?' },
       { category: 'love', question: '우리 사랑의 과거와 미래는?' },
       { category: 'love', question: '짝사랑은 언제쯤 이루어질까요?' },
-      { category: 'love', question: '연애 운명이 바뀔 시기는 언제인가요?' },
+      { category: 'love', question: '연애 앞날이 바뀔 시기는 언제인가요?' },
       { category: 'love', question: '이별 후 새로운 만남은 언제 올까요?' },
 
       // 인간관계
@@ -285,7 +285,7 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'study', question: '자기계발 노력이 결실을 맺을까요?' },
       { category: 'study', question: '배움의 여정은 어떻게 흘러갈까요?' },
 
-      // 일반/운세
+      // 일반/운
       { category: 'general', question: '내 인생은 앞으로 어떻게 변할까요?' },
       { category: 'general', question: '이 결정의 과거와 미래 영향은?' },
       { category: 'general', question: '운이 좋아지는 시기는 언제인가요?' },
@@ -337,9 +337,9 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'health', question: '다이어트에 성공하려면 무엇이 필요한가요?' },
       { category: 'health', question: '건강한 습관을 만들려면 어떻게 해야 할까요?' },
 
-      // 재물
+      // 돈·재산
       { category: 'wealth', question: '돈을 모으려면 어떻게 해야 할까요?' },
-      { category: 'wealth', question: '재정 문제를 해결하기 위한 방법은?' },
+      { category: 'wealth', question: '돈 문제를 해결하기 위한 방법은?' },
       { category: 'wealth', question: '투자 수익을 내려면 무엇을 해야 하나요?' },
       { category: 'wealth', question: '부자가 되기 위해 필요한 행동은?' },
       { category: 'wealth', question: '빚을 갚으려면 어떤 노력이 필요한가요?' },
@@ -349,7 +349,7 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'love', question: '이 사람의 마음을 얻으려면 무엇이 필요한가요?' },
       { category: 'love', question: '연인과의 갈등을 해결하려면?' },
       { category: 'love', question: '결혼까지 가려면 어떻게 해야 할까요?' },
-      { category: 'love', question: '새로운 인연을 만나려면 무엇을 해야 하나요?' },
+      { category: 'love', question: '새로운 만남을 만나려면 무엇을 해야 하나요?' },
 
       // 인간관계
       { category: 'relationship', question: '관계 개선을 위해 내가 할 수 있는 건?' },
@@ -372,7 +372,7 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'study', question: '자격증 취득에 성공하려면?' },
       { category: 'study', question: '실력 향상을 위해 필요한 행동은?' },
 
-      // 일반/운세
+      // 일반/운
       { category: 'general', question: '목표 달성을 위한 최선의 방법은?' },
       { category: 'general', question: '이 문제를 해결하려면 무엇을 해야 하나요?' },
       { category: 'general', question: '행운을 만들려면 어떻게 해야 할까요?' },
@@ -421,16 +421,16 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'health', question: '건강 회복을 위해 놓치고 있는 것은?' },
       { category: 'health', question: '전체적인 건강 흐름과 조언을 알려주세요' },
 
-      // 재물
-      { category: 'wealth', question: '재정 상태를 심층적으로 분석해주세요' },
+      // 돈·재산
+      { category: 'wealth', question: '돈 상태를 심층적으로 분석해주세요' },
       { category: 'wealth', question: '돈 문제의 숨겨진 원인은 무엇인가요?' },
-      { category: 'wealth', question: '재물운의 전체 흐름을 알고 싶습니다' },
+      { category: 'wealth', question: '돈·재산운의 전체 흐름을 알고 싶습니다' },
       { category: 'wealth', question: '경제적 자유를 위해 필요한 전략은?' },
 
       // 사랑/연애
       { category: 'love', question: '이 관계를 종합적으로 분석해주세요' },
       { category: 'love', question: '연애의 숨겨진 문제점은 무엇인가요?' },
-      { category: 'love', question: '사랑 운명의 전체 그림을 보여주세요' },
+      { category: 'love', question: '사랑 앞날의 전체 그림을 보여주세요' },
       { category: 'love', question: '관계 발전을 위한 심층 조언은?' },
 
       // 인간관계
@@ -451,7 +451,7 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'study', question: '배움의 여정을 종합적으로 봐주세요' },
       { category: 'study', question: '자기계발을 위한 심층 조언은?' },
 
-      // 일반/운세
+      // 일반/운
       { category: 'general', question: '현재 상황의 전체 그림을 보여주세요' },
       { category: 'general', question: '이 상황을 종합적으로 이해하고 싶습니다' },
       { category: 'general', question: '내 인생의 전반적인 흐름은 어떤가요?' },
@@ -508,10 +508,10 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'health', question: '건강 문제를 근본적으로 해결하고 싶습니다' },
       { category: 'health', question: '건강과 관련된 인생의 중대한 결정이 필요합니다' },
 
-      // 재물
-      { category: 'wealth', question: '재정 상황의 모든 면을 깊이 있게 분석해주세요' },
+      // 돈·재산
+      { category: 'wealth', question: '돈 상황의 모든 면을 깊이 있게 분석해주세요' },
       { category: 'wealth', question: '경제적 문제를 근본적으로 해결하고 싶습니다' },
-      { category: 'wealth', question: '재물과 관련된 중대한 결정이 필요합니다' },
+      { category: 'wealth', question: '돈·재산과 관련된 중대한 결정이 필요합니다' },
 
       // 사랑/연애
       { category: 'love', question: '이 관계의 모든 면을 깊이 알고 싶습니다' },
@@ -533,7 +533,7 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'study', question: '자기계발의 모든 측면을 종합적으로 봐주세요' },
       { category: 'study', question: '학업과 관련된 중요한 결정이 필요합니다' },
 
-      // 일반/운세
+      // 일반/운
       { category: 'general', question: '내 인생의 전체적인 방향성을 알고 싶습니다' },
       { category: 'general', question: '내 삶의 모든 측면을 종합적으로 봐주세요' },
       { category: 'general', question: '인생의 중요한 전환점에서 조언이 필요합니다' },
@@ -605,8 +605,8 @@ export const TAROT_SPREADS: TarotSpread[] = [
       '이 관계의 미래는 어떻게 될까요?',
       '이 사람과 연애해도 괜찮을까요?',
       '우리 관계가 더 나아질 수 있을까요?',
-      '이별 후 복원이 가능할까요?',
-      '소원이는 나를 좋아하나요?',
+      '이별 후 다시 만남이 가능할까요?',
+      '상대방은 나를 좋아하나요?',
       '이 사람과 결혼하면 행복할까요?',
       '친구와의 갈등을 어떻게 풀어야 할까요?',
       '가족 관계를 개선하려면 어떻게 해야 할까요?',
@@ -618,9 +618,9 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'health', question: '건강이 우리 관계에 미치는 영향은?' },
       { category: 'health', question: '상대방과 함께 건강을 관리하려면?' },
 
-      // 재물 (관계 맥락)
-      { category: 'wealth', question: '금전 문제가 관계에 미치는 영향은?' },
-      { category: 'wealth', question: '둘이 함께 재정을 관리하려면?' },
+      // 돈·재산 (관계 맥락)
+      { category: 'wealth', question: '돈 문제가 관계에 미치는 영향은?' },
+      { category: 'wealth', question: '둘이 함께 돈을 관리하려면?' },
       { category: 'wealth', question: '돈 때문에 생긴 갈등을 해결하려면?' },
 
       // 사랑/연애 (주력)
@@ -628,10 +628,10 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'love', question: '상대방은 나를 어떻게 생각하고 있나요?' },
       { category: 'love', question: '이 사람과 연애해도 괜찮을까요?' },
       { category: 'love', question: '우리 관계가 더 나아질 수 있을까요?' },
-      { category: 'love', question: '이별 후 복원이 가능할까요?' },
+      { category: 'love', question: '이별 후 다시 만남이 가능할까요?' },
       { category: 'love', question: '이 사람과 결혼하면 행복할까요?' },
       { category: 'love', question: '연인과의 갈등을 해결하려면?' },
-      { category: 'love', question: '두 사람의 궁합은 어떤가요?' },
+      { category: 'love', question: '두 사람의 어울림은 어떤가요?' },
 
       // 인간관계 (주력)
       { category: 'relationship', question: '우리 관계에서 개선해야 할 점은?' },
@@ -652,9 +652,9 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'study', question: '스터디 그룹 내 관계는 어떤가요?' },
       { category: 'study', question: '선생님과의 관계는 어떤가요?' },
 
-      // 일반/운세 (관계 맥락)
-      { category: 'general', question: '전반적인 대인 운세는 어떤가요?' },
-      { category: 'general', question: '새로운 인연을 만날 수 있을까요?' },
+      // 일반/운 (관계 맥락)
+      { category: 'general', question: '전반적인 사람 운는 어떤가요?' },
+      { category: 'general', question: '새로운 만남을 만날 수 있을까요?' },
       { category: 'general', question: '인간관계에서 주의할 점은?' },
     ],
     positions: [
@@ -721,9 +721,9 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'health', question: '건강이 직장 생활에 미치는 영향은?' },
       { category: 'health', question: '워라밸을 맞추려면 어떻게 해야 할까요?' },
 
-      // 재물 (커리어 맥락)
+      // 돈·재산 (커리어 맥락)
       { category: 'wealth', question: '연봉 협상은 어떻게 해야 할까요?' },
-      { category: 'wealth', question: '직장에서 수입을 늘리려면?' },
+      { category: 'wealth', question: '직장에서 소득을 늘리려면?' },
       { category: 'wealth', question: '사업 수익은 증가할까요?' },
 
       // 사랑/연애 (커리어 맥락)
@@ -754,7 +754,7 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'study', question: '커리어 발전을 위한 교육이 필요한가요?' },
       { category: 'study', question: '업무 능력 향상을 위해 배워야 할 것은?' },
 
-      // 일반/운세 (커리어 맥락)
+      // 일반/운 (커리어 맥락)
       { category: 'general', question: '전반적인 직업운은 어떤가요?' },
       { category: 'general', question: '커리어에서 기회가 올까요?' },
       { category: 'general', question: '직장 생활에서 주의할 점은?' },
@@ -817,7 +817,7 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'health', question: '운동을 시작할까요, 식이요법을 할까요?' },
       { category: 'health', question: '병원 A와 B 중 어디로 가야 할까요?' },
 
-      // 재물
+      // 돈·재산
       { category: 'wealth', question: '투자를 할까요, 저축을 할까요?' },
       { category: 'wealth', question: '집을 살까요, 전세로 살까요?' },
       { category: 'wealth', question: 'A 사업과 B 사업 중 어느 것을 해야 할까요?' },
@@ -830,7 +830,7 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'love', question: '고백할까요, 기다릴까요?' },
 
       // 인간관계
-      { category: 'relationship', question: '화해할까요, 인연을 끊을까요?' },
+      { category: 'relationship', question: '화해할까요, 만남을 끊을까요?' },
       { category: 'relationship', question: '새 친구를 사귈까요, 기존 관계를 유지할까요?' },
       { category: 'relationship', question: '먼저 연락할까요, 기다릴까요?' },
 
@@ -847,7 +847,7 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'study', question: '학원을 다닐까요, 독학할까요?' },
       { category: 'study', question: '국내 대학 vs 해외 대학, 어디로 갈까요?' },
 
-      // 일반/운세
+      // 일반/운
       { category: 'general', question: '두 가지 선택 중 어느 것이 나에게 더 좋을까요?' },
       { category: 'general', question: '지금 결정할까요, 더 기다릴까요?' },
       { category: 'general', question: '변화를 시도할까요, 현상을 유지할까요?' },
@@ -893,42 +893,42 @@ export const TAROT_SPREADS: TarotSpread[] = [
   {
     id: 'year-ahead',
     name: 'Year Ahead Spread',
-    nameKo: '올해의 운세',
-    description: '12개월 동안의 운세 전망',
+    nameKo: '올해의 운',
+    description: '12개월 동안의 운 전망',
     cardCount: 13,
     exampleQuestions: [
       '올해 나에게는 어떤 일들이 기다리고 있나요?',
-      '2025년 나의 운세는 어떤가요?',
+      '2025년 나의 운는 어떤가요?',
       '올 한 해 매달 주의해야 할 점은?',
       '이번 해의 전체적인 흐름을 알고 싶습니다',
       '올해 나에게 행운이 올 시기는 언제인가요?',
       '이번 해에 조심해야 할 달은 언제인가요?',
       '올해의 연애운은 어떤가요?',
-      '올해의 재물운은 어떤가요?',
+      '올해의 돈·재산운은 어떤가요?',
     ],
-    // 카테고리별 질문 (연간 운세에 초점)
+    // 카테고리별 질문 (연간 운에 초점)
     categorizedQuestions: [
       // 건강
       { category: 'health', question: '올해 나의 건강운은 어떤가요?' },
       { category: 'health', question: '올 한 해 건강 관리에서 주의할 점은?' },
       { category: 'health', question: '건강이 좋아지는 달은 언제인가요?' },
 
-      // 재물
-      { category: 'wealth', question: '올해의 재물운은 어떤가요?' },
-      { category: 'wealth', question: '올 한 해 매달 금전 흐름은 어떤가요?' },
+      // 돈·재산
+      { category: 'wealth', question: '올해의 돈·재산운은 어떤가요?' },
+      { category: 'wealth', question: '올 한 해 매달 돈 흐름은 어떤가요?' },
       { category: 'wealth', question: '돈이 들어오는 시기는 언제인가요?' },
-      { category: 'wealth', question: '재정 관리에서 조심해야 할 달은?' },
+      { category: 'wealth', question: '돈 관리에서 조심해야 할 달은?' },
 
       // 사랑/연애
       { category: 'love', question: '올해의 연애운은 어떤가요?' },
       { category: 'love', question: '올 한 해 사랑의 흐름은 어떻게 될까요?' },
-      { category: 'love', question: '인연을 만날 수 있는 시기는 언제인가요?' },
+      { category: 'love', question: '만남을 만날 수 있는 시기는 언제인가요?' },
       { category: 'love', question: '관계가 발전하는 달은 언제인가요?' },
 
       // 인간관계
-      { category: 'relationship', question: '올해의 인간관계 운세는 어떤가요?' },
-      { category: 'relationship', question: '올 한 해 대인관계 흐름은?' },
-      { category: 'relationship', question: '새로운 인맥을 만날 시기는 언제인가요?' },
+      { category: 'relationship', question: '올해의 인간관계 운는 어떤가요?' },
+      { category: 'relationship', question: '올 한 해 사람관계 흐름은?' },
+      { category: 'relationship', question: '새로운 사람들을 만날 시기는 언제인가요?' },
 
       // 사업/커리어
       { category: 'career', question: '올해의 직업운은 어떤가요?' },
@@ -941,9 +941,9 @@ export const TAROT_SPREADS: TarotSpread[] = [
       { category: 'study', question: '올 한 해 공부의 흐름은 어떻게 될까요?' },
       { category: 'study', question: '시험 합격이 가능한 시기는 언제인가요?' },
 
-      // 일반/운세
+      // 일반/운
       { category: 'general', question: '올해 나에게는 어떤 일들이 기다리고 있나요?' },
-      { category: 'general', question: '2025년 나의 운세는 어떤가요?' },
+      { category: 'general', question: '2025년 나의 운는 어떤가요?' },
       { category: 'general', question: '이번 해의 전체적인 흐름을 알고 싶습니다' },
       { category: 'general', question: '올해 나에게 행운이 올 시기는 언제인가요?' },
       { category: 'general', question: '이번 해에 조심해야 할 달은 언제인가요?' },
@@ -957,62 +957,62 @@ export const TAROT_SPREADS: TarotSpread[] = [
       {
         position: 2,
         name: '1월',
-        meaning: '1월의 운세와 주제',
+        meaning: '1월의 운와 주제',
       },
       {
         position: 3,
         name: '2월',
-        meaning: '2월의 운세와 주제',
+        meaning: '2월의 운와 주제',
       },
       {
         position: 4,
         name: '3월',
-        meaning: '3월의 운세와 주제',
+        meaning: '3월의 운와 주제',
       },
       {
         position: 5,
         name: '4월',
-        meaning: '4월의 운세와 주제',
+        meaning: '4월의 운와 주제',
       },
       {
         position: 6,
         name: '5월',
-        meaning: '5월의 운세와 주제',
+        meaning: '5월의 운와 주제',
       },
       {
         position: 7,
         name: '6월',
-        meaning: '6월의 운세와 주제',
+        meaning: '6월의 운와 주제',
       },
       {
         position: 8,
         name: '7월',
-        meaning: '7월의 운세와 주제',
+        meaning: '7월의 운와 주제',
       },
       {
         position: 9,
         name: '8월',
-        meaning: '8월의 운세와 주제',
+        meaning: '8월의 운와 주제',
       },
       {
         position: 10,
         name: '9월',
-        meaning: '9월의 운세와 주제',
+        meaning: '9월의 운와 주제',
       },
       {
         position: 11,
         name: '10월',
-        meaning: '10월의 운세와 주제',
+        meaning: '10월의 운와 주제',
       },
       {
         position: 12,
         name: '11월',
-        meaning: '11월의 운세와 주제',
+        meaning: '11월의 운와 주제',
       },
       {
         position: 13,
         name: '12월',
-        meaning: '12월의 운세와 주제',
+        meaning: '12월의 운와 주제',
       },
     ],
   },
@@ -1188,7 +1188,7 @@ export function interpretSpread(cardPositions: TarotCardPosition[]): string {
 export type SituationCategory =
   | 'love' // 연애/결혼
   | 'career' // 직업/커리어
-  | 'finance' // 재정/돈
+  | 'finance' // 돈/돈
   | 'health' // 건강
   | 'relationship' // 인간관계/우정
   | 'spiritual' // 영적 성장/자아
@@ -1210,8 +1210,8 @@ const SITUATION_KEYWORDS: Record<SituationCategory, string[]> = {
     '성과', '성취', '목표', '비즈니스', '경력', '진로', '직업',
   ],
   finance: [
-    '돈', '재정', '재산', '투자', '주식', '부동산', '저축', '수입',
-    '지출', '빚', '대출', '경제', '금전', '수익', '손실', '금융',
+    '돈', '돈', '재산', '투자', '주식', '부동산', '저축', '소득',
+    '지출', '빚', '대출', '경제', '돈', '수익', '손실', '금융',
     '자산', '코인', '암호화폐', '펀드', '예금', '보험',
   ],
   health: [
@@ -1233,7 +1233,7 @@ const SITUATION_KEYWORDS: Record<SituationCategory, string[]> = {
     '선택', '결정', '고민', '망설임', '갈림길', '기로', '딜레마',
     '판단', '결심', '결단', '선택지', '옵션', '대안', '방법',
   ],
-  general: ['운세', '오늘', '이번주', '이번달', '올해', '미래', '전체', '종합'],
+  general: ['운', '오늘', '이번주', '이번달', '올해', '미래', '전체', '종합'],
 };
 
 /**
@@ -1317,15 +1317,15 @@ const SITUATION_ADVICE: Record<SituationCategory, SituationAdvice> = {
     ],
   },
   finance: {
-    focusAreas: ['수입원', '지출 관리', '투자 기회', '재정 안정성'],
+    focusAreas: ['소득원', '지출 관리', '투자 기회', '돈 안정성'],
     interpretationTips: [
-      '펜타클 수트는 금전과 물질적 상황을 나타냅니다',
-      '에이스는 새로운 재정 기회를 암시합니다',
+      '펜타클 수트는 돈과 물질적 상황을 나타냅니다',
+      '에이스는 새로운 돈 기회를 암시합니다',
       '4는 안정과 보존, 10은 완성과 풍요를 의미합니다',
-      '5는 재정적 어려움이나 손실을 경고합니다',
+      '5는 돈적 어려움이나 손실을 경고합니다',
     ],
     actionAdvice: [
-      '수입과 지출을 철저히 관리하세요',
+      '소득과 지출을 철저히 관리하세요',
       '장기적 관점에서 계획을 세우세요',
       '위험 분산을 고려하세요',
       '전문가의 조언을 구하는 것도 좋습니다',
@@ -1419,12 +1419,12 @@ export function generateSituationAdvice(
   const categoryName = {
     love: '연애/사랑',
     career: '직업/커리어',
-    finance: '재정/금전',
+    finance: '돈/돈',
     health: '건강',
     relationship: '인간관계',
     spiritual: '영적 성장',
     decision: '선택/결정',
-    general: '종합 운세',
+    general: '종합 운',
   }[category];
 
   // 카드 분석
@@ -1511,7 +1511,7 @@ export function analyzeCardCombinations(cardPositions: TarotCardPosition[]): Car
       positions: majorArcana.map(cp => cp.positionName),
       strength: 'strong',
       message: '**메이저 아르카나가 3장 이상 출현**했습니다. 이는 **인생의 중대한 전환점**을 의미합니다.',
-      advice: '이 시기는 운명적인 변화가 일어나는 중요한 순간입니다. 신중하되 과감하게 결정을 내리세요.',
+      advice: '이 시기는 앞날적인 변화가 일어나는 중요한 순간입니다. 신중하되 과감하게 결정을 내리세요.',
     });
   }
 
@@ -1537,8 +1537,8 @@ export function analyzeCardCombinations(cardPositions: TarotCardPosition[]): Car
           advice: '**명확한 판단**이 필요합니다. 복잡한 상황을 논리적으로 분석하고 어려운 결정을 내려야 합니다.',
         },
         pentacles: {
-          message: '**펜타클 수트 3장 이상** - 물질, 재정, 실용성이 핵심 테마입니다.',
-          advice: '**현실적 계획**에 집중하세요. 재정 관리, 커리어 발전, 장기적 안정성을 추구하세요.',
+          message: '**펜타클 수트 3장 이상** - 물질, 돈, 실용성이 핵심 테마입니다.',
+          advice: '**현실적 계획**에 집중하세요. 돈 관리, 커리어 발전, 장기적 안정성을 추구하세요.',
         },
       };
 
@@ -1881,7 +1881,7 @@ const CARD_TIMING: Record<string, { upright: TimingAttribute; reversed: TimingAt
   'Nine of Swords': { upright: 'immediate', reversed: 'soon' },
   'Ten of Swords': { upright: 'immediate', reversed: 'soon' },
 
-  // 펜타클 수트 - 물질, 재정 (점진적, 장기적 타이밍)
+  // 펜타클 수트 - 물질, 돈 (점진적, 장기적 타이밍)
   'Ace of Pentacles': { upright: 'soon', reversed: 'near-future' },
   'Two of Pentacles': { upright: 'cyclical', reversed: 'gradual' },
   'Three of Pentacles': { upright: 'gradual', reversed: 'mid-term' },
@@ -2113,7 +2113,7 @@ ${cp.position}. ${cp.positionName} (${cp.positionMeaning})
   const categoryNameKo = {
     love: '연애/사랑',
     career: '직업/커리어',
-    finance: '재정/금전',
+    finance: '돈/돈',
     health: '건강',
     relationship: '인간관계',
     spiritual: '영적 성장',
@@ -2332,7 +2332,7 @@ const CARD_RISK_LEVELS: Record<string, { upright: RiskLevel; reversed: RiskLevel
   'Nine of Swords': { upright: 'critical', reversed: 'high' },
   'Ten of Swords': { upright: 'critical', reversed: 'high' },
 
-  // 펜타클 수트 - 물질, 재정
+  // 펜타클 수트 - 물질, 돈
   'Ace of Pentacles': { upright: 'safe', reversed: 'moderate' },
   'Two of Pentacles': { upright: 'low', reversed: 'moderate' },
   'Three of Pentacles': { upright: 'safe', reversed: 'moderate' },
@@ -2505,7 +2505,7 @@ export function analyzeOverallRisk(cardPositions: TarotCardPosition[]): {
   let summary = '';
   if (maxLevel === 'critical') {
     summary = '🚨 **매우 위험한 상황**입니다. 즉각적인 행동이 필요합니다.';
-    allWarnings.push('현재 상황은 심각하며, 신속하고 현명한 대응이 필수입니다');
+    allWarnings.push('현재 상황은 심각하며, 신속하고 현명한 대응이 필소득니다');
     allPrecautions.push('모든 중요한 결정을 중단하고 상황을 재평가하세요');
     allPrecautions.push('전문가나 신뢰할 수 있는 조언자의 도움을 구하세요');
   } else if (maxLevel === 'high') {
