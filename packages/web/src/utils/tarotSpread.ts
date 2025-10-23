@@ -13,19 +13,149 @@ export interface TarotCardPosition {
   isReversed: boolean;
 }
 
+// =====================
+// 질문 카테고리 시스템
+// =====================
+
+/**
+ * 타로 질문 카테고리 타입
+ */
+export type QuestionCategory =
+  | 'health'       // 🏥 건강
+  | 'wealth'       // 💰 재물
+  | 'love'         // ❤️  사랑/연애
+  | 'relationship' // 👥 인간관계
+  | 'career'       // 💼 사업/커리어
+  | 'study'        // 📚 학업/성장
+  | 'general';     // 🌟 일반/운세
+
+/**
+ * 카테고리 메타데이터 인터페이스
+ */
+export interface QuestionCategoryInfo {
+  id: QuestionCategory;
+  name: string;
+  emoji: string;
+  description: string;
+  // 다크모드 최적화 색상 클래스 (Tailwind)
+  colorClasses: {
+    active: string;      // 선택된 탭
+    inactive: string;    // 선택되지 않은 탭
+    hover: string;       // 호버 상태
+  };
+}
+
+/**
+ * 카테고리별 질문 구조
+ */
+export interface CategorizedQuestion {
+  category: QuestionCategory;
+  question: string;
+}
+
 export interface TarotSpread {
   id: string;
   name: string;
   nameKo: string;
   description: string;
   cardCount: number;
-  exampleQuestions?: string[]; // 질문 예제
+  exampleQuestions?: string[]; // @deprecated - 호환성 유지용
+  categorizedQuestions?: CategorizedQuestion[]; // 새로운 카테고리 기반 질문
   positions: Array<{
     position: number;
     name: string;
     meaning: string;
   }>;
 }
+
+// =====================
+// 질문 카테고리 메타데이터
+// =====================
+
+/**
+ * 7대 질문 카테고리 정의
+ * - 다크모드 최적화: 낮은 채도의 부드러운 색상 사용
+ * - 기존 시스템 색상과 조화: Purple/Pink/Blue 계열 중심
+ */
+export const QUESTION_CATEGORIES: QuestionCategoryInfo[] = [
+  {
+    id: 'health',
+    name: '건강',
+    emoji: '🏥',
+    description: '건강, 질병, 치료, 웰빙 관련',
+    colorClasses: {
+      active: 'bg-emerald-500 dark:bg-emerald-600 text-white shadow-lg',
+      inactive: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300',
+      hover: 'hover:bg-emerald-200 dark:hover:bg-emerald-900/50',
+    },
+  },
+  {
+    id: 'wealth',
+    name: '재물',
+    emoji: '💰',
+    description: '금전, 투자, 재산, 수입 관련',
+    colorClasses: {
+      active: 'bg-amber-500 dark:bg-amber-600 text-white shadow-lg',
+      inactive: 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300',
+      hover: 'hover:bg-amber-200 dark:hover:bg-amber-900/50',
+    },
+  },
+  {
+    id: 'love',
+    name: '사랑/연애',
+    emoji: '❤️',
+    description: '연애, 결혼, 이별, 만남 관련',
+    colorClasses: {
+      active: 'bg-rose-500 dark:bg-rose-600 text-white shadow-lg',
+      inactive: 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300',
+      hover: 'hover:bg-rose-200 dark:hover:bg-rose-900/50',
+    },
+  },
+  {
+    id: 'relationship',
+    name: '인간관계',
+    emoji: '👥',
+    description: '친구, 가족, 직장 동료 관계',
+    colorClasses: {
+      active: 'bg-sky-500 dark:bg-sky-600 text-white shadow-lg',
+      inactive: 'bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300',
+      hover: 'hover:bg-sky-200 dark:hover:bg-sky-900/50',
+    },
+  },
+  {
+    id: 'career',
+    name: '사업/커리어',
+    emoji: '💼',
+    description: '직장, 사업, 승진, 이직 관련',
+    colorClasses: {
+      active: 'bg-indigo-500 dark:bg-indigo-600 text-white shadow-lg',
+      inactive: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300',
+      hover: 'hover:bg-indigo-200 dark:hover:bg-indigo-900/50',
+    },
+  },
+  {
+    id: 'study',
+    name: '학업/성장',
+    emoji: '📚',
+    description: '공부, 시험, 자기계발 관련',
+    colorClasses: {
+      active: 'bg-violet-500 dark:bg-violet-600 text-white shadow-lg',
+      inactive: 'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300',
+      hover: 'hover:bg-violet-200 dark:hover:bg-violet-900/50',
+    },
+  },
+  {
+    id: 'general',
+    name: '일반/운세',
+    emoji: '🌟',
+    description: '오늘의 운세, 전반적 조언',
+    colorClasses: {
+      active: 'bg-purple-500 dark:bg-purple-600 text-white shadow-lg',
+      inactive: 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300',
+      hover: 'hover:bg-purple-200 dark:hover:bg-purple-900/50',
+    },
+  },
+];
 
 // =====================
 // 타로 스프레드 정의
@@ -47,6 +177,43 @@ export const TAROT_SPREADS: TarotSpread[] = [
       '지금 나에게 필요한 조언은?',
       '오늘의 행운 키워드는?',
       '이 결정을 내려도 괜찮을까요?',
+    ],
+    // 카테고리별 질문 (새로운 방식)
+    categorizedQuestions: [
+      // 건강
+      { category: 'health', question: '오늘 내 건강 상태는 어떤가요?' },
+      { category: 'health', question: '이 증상이 호전될까요?' },
+      { category: 'health', question: '건강을 위해 무엇을 해야 할까요?' },
+
+      // 재물
+      { category: 'wealth', question: '오늘 금전운은 어떤가요?' },
+      { category: 'wealth', question: '이 투자 결정이 괜찮을까요?' },
+      { category: 'wealth', question: '돈 관리에서 주의할 점은?' },
+
+      // 사랑/연애
+      { category: 'love', question: '오늘 연애운은 어떤가요?' },
+      { category: 'love', question: '이 사람과의 관계는 어떻게 될까요?' },
+      { category: 'love', question: '고백해도 괜찮을까요?' },
+
+      // 인간관계
+      { category: 'relationship', question: '오늘 인간관계운은 어떤가요?' },
+      { category: 'relationship', question: '이 사람과의 갈등은 해결될까요?' },
+      { category: 'relationship', question: '친구 관계에서 주의할 점은?' },
+
+      // 사업/커리어
+      { category: 'career', question: '오늘 업무운은 어떤가요?' },
+      { category: 'career', question: '이 프로젝트는 성공할까요?' },
+      { category: 'career', question: '이직해도 괜찮을까요?' },
+
+      // 학업/성장
+      { category: 'study', question: '오늘 학업운은 어떤가요?' },
+      { category: 'study', question: '이 시험에 합격할까요?' },
+      { category: 'study', question: '공부에서 집중해야 할 부분은?' },
+
+      // 일반/운세
+      { category: 'general', question: '오늘 나에게 필요한 메시지는?' },
+      { category: 'general', question: '오늘의 전체 운세는 어떤가요?' },
+      { category: 'general', question: '이 결정을 내려도 괜찮을까요?' },
     ],
     positions: [
       {

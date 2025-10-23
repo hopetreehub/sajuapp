@@ -13,6 +13,7 @@ import {
 } from '@/utils/tarotSpread';
 import TarotSpreadView from '@/components/tarot/TarotSpreadView';
 import TarotHistoryView from '@/components/tarot/TarotHistoryView';
+import QuestionSelector from '@/components/tarot/QuestionSelector';
 import { saveTarotReading, getTarotReadings as _getTarotReadings } from '@/utils/tarotStorage';
 import { exportTarotReadingToPDF, formatDateForFilename } from '@/utils/pdfExport';
 
@@ -513,24 +514,33 @@ export default function TarotPage() {
               className="w-full h-32 p-4 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             />
 
-            {/* 질문 예제 */}
-            {selectedSpread.exampleQuestions && selectedSpread.exampleQuestions.length > 0 && (
-              <div className="mt-4">
-                <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  💡 질문 예시 (클릭하면 자동 입력됩니다)
+            {/* 질문 선택기 - 카테고리 기반 */}
+            {selectedSpread.categorizedQuestions && selectedSpread.categorizedQuestions.length > 0 ? (
+              <QuestionSelector
+                questions={selectedSpread.categorizedQuestions}
+                onSelectQuestion={(question) => setUserQuestion(question)}
+                currentQuestion={userQuestion}
+              />
+            ) : (
+              /* 레거시: 기존 exampleQuestions 호환성 유지 */
+              selectedSpread.exampleQuestions && selectedSpread.exampleQuestions.length > 0 && (
+                <div className="mt-4">
+                  <div className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    💡 질문 예시 (클릭하면 자동 입력됩니다)
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedSpread.exampleQuestions.map((question, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setUserQuestion(question)}
+                        className="px-3 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg text-sm hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors"
+                      >
+                        {question}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {selectedSpread.exampleQuestions.map((question, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setUserQuestion(question)}
-                      className="px-3 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg text-sm hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors"
-                    >
-                      {question}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              )
             )}
 
             <div className="flex justify-between mt-4">
