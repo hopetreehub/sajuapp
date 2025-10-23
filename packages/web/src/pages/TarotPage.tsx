@@ -82,6 +82,7 @@ export default function TarotPage() {
         body: JSON.stringify({
           prompt,
           userQuestion,
+          cardCount: cardPositions.length,
         }),
       });
 
@@ -673,10 +674,8 @@ export default function TarotPage() {
                     <span>🤖</span>
                     <span>AI 타로 해석</span>
                   </h3>
-                  <div className="prose prose-lg dark:prose-invert max-w-none">
-                    <div className="whitespace-pre-wrap text-gray-900 dark:text-gray-100 leading-relaxed">
-                      {aiInterpretation}
-                    </div>
+                  <div className="text-gray-900 dark:text-gray-100 overflow-hidden break-words whitespace-pre-line leading-relaxed">
+                    {aiInterpretation}
                   </div>
                 </div>
               )}
