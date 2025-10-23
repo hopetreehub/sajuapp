@@ -1,47 +1,39 @@
 /**
  * 귀문둔갑 AI 챗 라우트
  *
- * Claude API를 사용하여 귀문둔갑 관련 질문에 답변
  * @author Claude Code
- * @version 1.0.0
+ * @version 2.0.0
+ * @updated 2025-10-24 - AI Orchestrator 적용으로 다중 AI 제공자 지원
  */
 
-import express, { Request, Response, NextFunction } from 'express';
+import { Router, Request, Response } from 'express';
+import { v4 as uuidv4 } from 'uuid';
+import { aiOrchestrator } from '@/services/ai-orchestrator.service';
+import { AIRequest, AIRequestType } from '@/types/ai.types';
 import { logger } from '@/utils/logger';
-import Anthropic from '@anthropic-ai/sdk';
 
-const router = express.Router();
-
-// Anthropic SDK 초기화
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
+const router = Router();
 
 /**
- * POST /api/v1/qimen/chat
  * 귀문둔갑 AI 채팅 엔드포인트
+ * POST /api/v1/qimen/chat
  */
-router.post('/chat', async (req: Request, res: Response, next: NextFunction) => {
+router.post('/chat', async (req: Request, res: Response) => {
   try {
     const { prompt, userQuestion } = req.body;
 
     if (!prompt || !userQuestion) {
       return res.status(400).json({
         success: false,
-        error: 'prompt와 userQuestion은 필수입니다.',
+        error: '프롬프트와 사용자 질문이 필요합니다',
       });
     }
 
-    logger.info('🤖 [귀문둔갑 AI] 요청 받음:', {
-      questionLength: userQuestion.length,
-      promptLength: prompt.length,
-    });
-
-    // Claude API 호출 (한국어 강제 시스템 프롬프트 추가)
-    const message = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 1024,
-      system: `🚨🚨🚨 CRITICAL LANGUAGE REQUIREMENT 🚨🚨🚨
+    // AI Orchestrator를 통해 요청 처리
+    const aiRequest: AIRequest = {
+      id: uuidv4(),
+      requestType: AIRequestType.QIMEN,
+      systemPrompt: `🚨🚨🚨 CRITICAL LANGUAGE REQUIREMENT 🚨🚨🚨
 YOU MUST WRITE ONLY IN PURE KOREAN (순수 한국어)
 
 ❌ ABSOLUTELY FORBIDDEN (절대 금지):
@@ -56,149 +48,81 @@ YOU MUST WRITE ONLY IN PURE KOREAN (순수 한국어)
 - Korean particles: 은/는/이/가/을/를
 - Korean verbs: 하다/되다/되어/입니다
 
-당신은 전문 귀문둔갑(奇門遁甲) 상담사입니다. 100% 순수 한국어로만 답변하세요.`,
-      messages: [
-        {
-          role: 'user',
-          content: prompt,
-        },
-      ],
-    });
+당신은 30년 경력의 전문 귀문둔갑(奇門遁甲) 상담사입니다.
 
-    // 응답 추출
-    const responseText = message.content[0].type === 'text'
-      ? message.content[0].text
-      : '';
+**핵심 원칙:**
+1. 100% 순수 한국어로만 작성 (중국어, 일본어, 영어 문자 절대 금지)
+2. 사용자의 질문에 직접적으로 답변
+3. 구궁(九宮)의 정보와 팔신(八神), 팔문(八門), 구성(九星) 등을 활용하여 구체적으로 해석
+4. 실천 가능한 조언 제공
+5. "사용자님"이라고 쓰기 (使用者님❌, 使用者様❌)
 
-    logger.info('✅ [귀문둔갑 AI] 응답 생성 완료');
+**답변 형식:**
+사용자님의 질문에 대한 답변을 명확하게 제시하고, 귀문둔갑의 정보를 근거로 설명해주세요.
+길흉화복을 직접적으로 판단하고, 구체적인 행동 지침을 제공하세요.
 
-    res.json({
+반드시 순수 한국어로만 자연스럽고 명확하게 답변해주세요.`,
+      userPrompt: prompt,
+      temperature: 0.8,
+      maxTokens: 1500,
+      metadata: {
+        userQuestion,
+        language: 'ko'
+      }
+    };
+
+    logger.info(`Processing qimen request: ${aiRequest.id}`);
+
+    const aiResponse = await aiOrchestrator.processRequest(aiRequest);
+
+    if (!aiResponse.success) {
+      throw new Error(aiResponse.error || 'AI 응답 생성 실패');
+    }
+
+    // 응답 검증 및 정제
+    const cleanedResponse = cleanAIResponse(aiResponse.content);
+
+    return res.json({
       success: true,
-      response: responseText,
-      usage: {
-        input_tokens: message.usage.input_tokens,
-        output_tokens: message.usage.output_tokens,
-      },
+      response: cleanedResponse,
+      provider: aiResponse.provider,
+      model: aiResponse.model,
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error: any) {
-    logger.error('❌ [귀문둔갑 AI] 오류 발생:', error);
+    logger.error('[Qimen AI] Error:', error);
 
-    // Anthropic API 에러 처리
-    if (error.status === 401) {
-      return res.status(401).json({
-        success: false,
-        error: 'API 키가 유효하지 않습니다.',
-      });
-    }
-
-    if (error.status === 429) {
-      return res.status(429).json({
-        success: false,
-        error: 'API 요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요.',
-      });
-    }
-
-    res.status(500).json({
+    // 에러 응답
+    return res.status(500).json({
       success: false,
-      error: '서버 내부 오류가 발생했습니다.',
+      error: 'AI 응답 생성 중 오류가 발생했습니다',
       details: error.message,
     });
   }
 });
 
 /**
- * POST /api/v1/qimen/interpret
- * 귀문둔갑 차트 전체 해석 (한 번에 전체 해석 요청)
+ * AI 응답 정제 함수
+ * - <think> 태그만 제거
+ * - 기본적인 정리만 수행
  */
-router.post('/interpret', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { chart, context, customerInfo } = req.body;
+function cleanAIResponse(text: string): string {
+  let cleaned = text;
 
-    if (!chart) {
-      return res.status(400).json({
-        success: false,
-        error: 'chart 정보는 필수입니다.',
-      });
-    }
+  // 1. <think> 태그 및 사고 과정 제거
+  cleaned = cleaned.replace(/<think>.*?<\/think>/gs, '');
+  cleaned = cleaned.replace(/<\/?think>/g, '');
 
-    logger.info('📊 [귀문둔갑 AI] 전체 해석 요청');
+  // 2. 기본 공백 정리만 수행
+  cleaned = cleaned.replace(/\n{4,}/g, '\n\n\n'); // 4개 이상 개행만 제거
+  cleaned = cleaned.trim();
 
-    // 전체 해석 프롬프트 생성
-    const interpretPrompt = `
-당신은 전문 귀문둔갑(奇門遁甲) 상담사입니다. 다음 정보를 바탕으로 종합적인 해석을 제공해주세요.
-
-## 귀문둔갑 차트 정보
-- 국(局): ${chart.yinYang === 'yang' ? '양둔' : '음둔'} ${chart.ju}국
-- 절기: ${chart.solarTerm.name}
-- 시간 간지: ${chart.hourGanZhi.gan}${chart.hourGanZhi.zhi}
-- 전체 점수: ${chart.overallFortune.score}점
-
-${context && context !== 'general' ? `\n## 상담 목적\n- ${context}\n` : ''}
-
-${customerInfo ? `\n## 고객 정보\n- 이름: ${customerInfo.name}\n- 생년월일: ${customerInfo.birthDate}\n` : ''}
-
-## 요청사항
-다음 항목에 대해 친절하고 이해하기 쉽게 설명해주세요:
-
-1. 현재 시간의 전반적인 길흉과 의미
-2. 가장 좋은 방위와 그 이유
-3. 조심해야 할 방위와 주의사항
-4. ${context !== 'general' ? `${context} 목적에 특화된` : '일상생활을 위한'} 실용적인 조언
-
-답변은 공손하고 따뜻한 말투로, 2-3문단 정도로 작성해주세요.
-`;
-
-    const message = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: 2048,
-      system: `🚨🚨🚨 CRITICAL LANGUAGE REQUIREMENT 🚨🚨🚨
-YOU MUST WRITE ONLY IN PURE KOREAN (순수 한국어)
-
-❌ ABSOLUTELY FORBIDDEN (절대 금지):
-- Chinese characters (漢字/汉字): 使用者❌, 金錢❌, 關係❌, 奇門遁甲❌, 局❌, 盤❌
-- Japanese (日本語): の❌, と❌, も❌, しました❌, との❌, です❌, ます❌
-- Chinese (中文): 使用❌, 金钱❌, 关系❌, 奇门遁甲❌
-- English words: palace❌, fortune❌, gate❌
-- ANY non-Korean characters
-
-✅ USE ONLY (반드시 사용):
-- Pure Korean: 사용자✓, 돈✓, 관계✓, 귀문둔갑✓, 국✓, 반✓
-- Korean particles: 은/는/이/가/을/를
-- Korean verbs: 하다/되다/되어/입니다
-
-당신은 전문 귀문둔갑(奇門遁甲) 상담사입니다. 100% 순수 한국어로만 답변하세요.`,
-      messages: [
-        {
-          role: 'user',
-          content: interpretPrompt,
-        },
-      ],
-    });
-
-    const responseText = message.content[0].type === 'text'
-      ? message.content[0].text
-      : '';
-
-    logger.info('✅ [귀문둔갑 AI] 전체 해석 완료');
-
-    res.json({
-      success: true,
-      interpretation: responseText,
-      usage: {
-        input_tokens: message.usage.input_tokens,
-        output_tokens: message.usage.output_tokens,
-      },
-    });
-
-  } catch (error: any) {
-    logger.error('❌ [귀문둔갑 AI] 해석 오류:', error);
-    res.status(500).json({
-      success: false,
-      error: '해석 생성 중 오류가 발생했습니다.',
-      details: error.message,
-    });
+  // 3. 최소 길이 검증
+  if (cleaned.length < 20) {
+    return '죄송합니다. 귀문둔갑 해석을 생성하는 데 문제가 발생했습니다. 다시 질문해 주세요.';
   }
-});
+
+  return cleaned;
+}
 
 export default router;
