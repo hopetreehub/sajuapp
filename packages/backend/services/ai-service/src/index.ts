@@ -12,6 +12,7 @@ import healthRoutes from '@/routes/health.routes';
 import qimenRoutes from '@/routes/qimen.routes';
 import ziweiRoutes from '@/routes/ziwei.routes';
 import tarotRoutes from '@/routes/tarot.routes';
+import sajuRoutes from '@/routes/saju.routes';
 
 // Middleware
 import { requestLogger } from '@/middleware/request-logger.middleware';
@@ -123,6 +124,7 @@ class AIServiceApplication {
     this.app.use(`${API_PREFIX}/qimen`, qimenRoutes);
     this.app.use(`${API_PREFIX}/ziwei`, ziweiRoutes);
     this.app.use(`${API_PREFIX}/tarot`, tarotRoutes);
+    this.app.use(`${API_PREFIX}/saju`, sajuRoutes);
 
     // Root endpoint
     this.app.get('/', (req, res) => {

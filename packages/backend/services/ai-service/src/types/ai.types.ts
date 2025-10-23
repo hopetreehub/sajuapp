@@ -43,7 +43,8 @@ export enum AIRequestType {
   HEALTH_ADVICE = 'health_advice',
   TAROT = 'tarot',
   ZIWEI = 'ziwei',
-  QIMEN = 'qimen'
+  QIMEN = 'qimen',
+  SAJU = 'saju'
 }
 
 export interface AIResponse {
