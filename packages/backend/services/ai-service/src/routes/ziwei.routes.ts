@@ -2,16 +2,17 @@
  * 자미두수(紫微斗數) AI 채팅 라우트
  *
  * @author Claude Code
- * @version 1.0.0
+ * @version 2.0.0
+ * @updated 2025-10-23 - AI Orchestrator 적용으로 다중 AI 제공자 지원 (재시작)
  */
 
 import { Router, Request, Response } from 'express';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { v4 as uuidv4 } from 'uuid';
+import { aiOrchestrator } from '@/services/ai-orchestrator.service';
+import { AIRequest, AIRequestType } from '@/types/ai.types';
+import { logger } from '@/utils/logger';
 
 const router = Router();
-
-// Gemini API 초기화
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '');
 
 /**
  * 자미두수 AI 채팅 엔드포인트
@@ -28,39 +29,68 @@ router.post('/chat', async (req: Request, res: Response) => {
       });
     }
 
-    // Gemini 2.0 Flash Exp 모델 사용
-    const model = genAI.getGenerativeModel({
-      model: process.env.GOOGLE_MODEL || 'gemini-2.0-flash-exp',
-    });
+    // AI Orchestrator를 통해 요청 처리
+    const aiRequest: AIRequest = {
+      id: uuidv4(),
+      requestType: AIRequestType.ZIWEI,
+      systemPrompt: `🚨🚨🚨 CRITICAL LANGUAGE REQUIREMENT 🚨🚨🚨
+YOU MUST WRITE ONLY IN PURE KOREAN (순수 한국어)
 
-    // 생성 설정
-    const generationConfig = {
-      temperature: 0.9,
-      topP: 0.95,
-      topK: 40,
-      maxOutputTokens: 500,
+❌ ABSOLUTELY FORBIDDEN (절대 금지):
+- Chinese characters (漢字/汉字): 使用者❌, 金錢❌, 關係❌, 命宮❌, 財帛宮❌
+- Japanese (日本語): の❌, と❌, も❌, しました❌, との❌, です❌, ます❌
+- Chinese (中文): 使用❌, 金钱❌, 关系❌
+- English words: palace❌, fortune❌, star❌
+- ANY non-Korean characters
+
+✅ USE ONLY (반드시 사용):
+- Pure Korean: 사용자✓, 돈✓, 관계✓, 명궁✓, 재백궁✓
+- Korean particles: 은/는/이/가/을/를
+- Korean verbs: 하다/되다/되어/입니다
+
+당신은 30년 경력의 전문 자미두수(紫微斗數) 상담사입니다.
+
+**핵심 원칙:**
+1. 100% 순수 한국어로만 작성 (중국어, 일본어, 영어 문자 절대 금지)
+2. 사용자의 질문에 직접적으로 답변
+3. 명반(命盤)의 궁위와 성요(星耀)를 활용하여 구체적으로 해석
+4. 실천 가능한 조언 제공
+5. "사용자님"이라고 쓰기 (使用者님❌, 使用者様❌)
+
+**답변 형식:**
+사용자님의 질문에 대한 답변을 명확하게 제시하고, 명반의 정보를 근거로 설명해주세요.
+길흉화복을 직접적으로 판단하고, 구체적인 행동 지침을 제공하세요.
+
+반드시 순수 한국어로만 자연스럽고 명확하게 답변해주세요.`,
+      userPrompt: prompt,
+      temperature: 0.8,
+      maxTokens: 1500,
+      metadata: {
+        userQuestion,
+        language: 'ko'
+      }
     };
 
-    // AI 응답 생성
-    const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
-      generationConfig,
-    });
+    logger.info(`Processing ziwei request: ${aiRequest.id}`);
 
-    const response = result.response;
-    const text = response.text();
+    const aiResponse = await aiOrchestrator.processRequest(aiRequest);
+
+    if (!aiResponse.success) {
+      throw new Error(aiResponse.error || 'AI 응답 생성 실패');
+    }
 
     // 응답 검증 및 정제
-    const cleanedResponse = cleanAIResponse(text);
+    const cleanedResponse = cleanAIResponse(aiResponse.content);
 
     return res.json({
       success: true,
       response: cleanedResponse,
-      model: 'gemini-2.0-flash-exp',
+      provider: aiResponse.provider,
+      model: aiResponse.model,
       timestamp: new Date().toISOString(),
     });
   } catch (error: any) {
-    console.error('[Ziwei AI] Error:', error);
+    logger.error('[Ziwei AI] Error:', error);
 
     // 에러 응답
     return res.status(500).json({
@@ -73,9 +103,8 @@ router.post('/chat', async (req: Request, res: Response) => {
 
 /**
  * AI 응답 정제 함수
- * - 외국어 제거
- * - 마크다운 형식 제거
- * - 불완전한 문장 수정
+ * - <think> 태그만 제거
+ * - 기본적인 정리만 수행
  */
 function cleanAIResponse(text: string): string {
   let cleaned = text;
@@ -84,36 +113,13 @@ function cleanAIResponse(text: string): string {
   cleaned = cleaned.replace(/<think>.*?<\/think>/gs, '');
   cleaned = cleaned.replace(/<\/?think>/g, '');
 
-  // 2. 마크다운 형식 제거
-  cleaned = cleaned.replace(/#{1,6}\s/g, ''); // 헤딩
-  cleaned = cleaned.replace(/\*\*(.*?)\*\*/g, '$1'); // 볼드
-  cleaned = cleaned.replace(/\*(.*?)\*/g, '$1'); // 이탤릭
-  cleaned = cleaned.replace(/^[-*+]\s/gm, ''); // 리스트
-  cleaned = cleaned.replace(/^\d+\.\s/gm, ''); // 번호 리스트
-
-  // 3. 외국어 감지 및 제거 (영어, 중국어, 일본어, 러시아어 등)
-  const foreignRegex = /[a-zA-Z\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FF\u0400-\u04FF\u0600-\u06FF]+/g;
-  const lines = cleaned.split('\n');
-  const koreanLines = lines.filter((line) => {
-    // 숫자와 문장부호는 허용
-    const nonKoreanChars = line.replace(/[0-9\s.,!?~():;'"'""\-]/g, '');
-    const hasForeignChars = foreignRegex.test(nonKoreanChars);
-    return !hasForeignChars || line.trim().length === 0;
-  });
-
-  cleaned = koreanLines.join('\n');
-
-  // 4. 불완전한 문장 제거
-  cleaned = cleaned.replace(/\s+[을를이가에와과]$/gm, ''); // 끝나지 않은 조사
-  cleaned = cleaned.replace(/\s+있어$/gm, '있어요'); // 불완전한 종결어미
-
-  // 5. 공백 정리
-  cleaned = cleaned.replace(/\n{3,}/g, '\n\n'); // 3개 이상 개행 제거
+  // 2. 기본 공백 정리만 수행
+  cleaned = cleaned.replace(/\n{4,}/g, '\n\n\n'); // 4개 이상 개행만 제거
   cleaned = cleaned.trim();
 
-  // 6. 최소 길이 검증
+  // 3. 최소 길이 검증
   if (cleaned.length < 20) {
-    return '죄송합니다. 답변을 생성하는 데 문제가 발생했습니다. 다시 질문해 주세요.';
+    return '죄송합니다. 자미두수 해석을 생성하는 데 문제가 발생했습니다. 다시 질문해 주세요.';
   }
 
   return cleaned;

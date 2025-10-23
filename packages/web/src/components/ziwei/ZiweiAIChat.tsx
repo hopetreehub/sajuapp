@@ -9,6 +9,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { ZiweiChart, Palace } from '@/types/ziwei';
 import type { Customer } from '@/services/customerApi';
+import QuestionSelector from '@/components/tarot/QuestionSelector';
+import { ZIWEI_QUESTIONS } from '@/utils/ziweiQuestions';
 
 interface ZiweiAIChatProps {
   chart: ZiweiChart;
@@ -51,6 +53,7 @@ export default function ZiweiAIChat({
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedContext, setSelectedContext] = useState<ZiweiContext>('general');
+  const [selectedQuestion, setSelectedQuestion] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -543,25 +546,17 @@ ${userQuestion}
           <div ref={messagesEndRef} />
         </div>
 
-        {/* 샘플 질문 */}
-        {messages.length === 1 && (
-          <div className="px-4 py-2 border-t border-gray-200 dark:border-gray-700">
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-              💡 이런 질문을 해보세요:
-            </p>
-            <div className="flex gap-2 flex-wrap">
-              {contextQuestions[selectedContext].map((q, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setInput(q)}
-                  className="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                >
-                  {q}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* 질문 선택기 */}
+        <div className="px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+          <QuestionSelector
+            questions={ZIWEI_QUESTIONS}
+            onSelectQuestion={(question) => {
+              setSelectedQuestion(question);
+              setInput(question);
+            }}
+            currentQuestion={selectedQuestion}
+          />
+        </div>
 
         {/* 입력 영역 */}
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">

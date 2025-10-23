@@ -41,7 +41,9 @@ export enum AIRequestType {
   COMPATIBILITY_ANALYSIS = 'compatibility_analysis',
   CAREER_GUIDANCE = 'career_guidance',
   HEALTH_ADVICE = 'health_advice',
-  TAROT = 'tarot'
+  TAROT = 'tarot',
+  ZIWEI = 'ziwei',
+  QIMEN = 'qimen'
 }
 
 export interface AIResponse {

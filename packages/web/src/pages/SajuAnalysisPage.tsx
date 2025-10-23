@@ -9,8 +9,6 @@ import ChartNavigation from '@/components/Common/ChartNavigation';
 import CustomerSelector from '@/components/saju/CustomerSelector';
 import UniversalLifeChart from '@/components/charts/UniversalLifeChart';
 import SajuAIChat from '@/components/saju/SajuAIChat';
-import QuestionSelector from '@/components/tarot/QuestionSelector';
-import { SAJU_QUESTIONS } from '@/utils/sajuQuestions';
 import { SajuBirthInfo, SajuAnalysisResult, SajuData } from '@/types/saju';
 import { Customer } from '@/services/customerApi';
 import { customerToSajuBirthInfo, formatCustomerBirthDate } from '@/utils/customerConverter';
@@ -34,7 +32,6 @@ const SajuAnalysisPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'analysis' | 'chart' | 'hundred-year'>('analysis');
   const [selectedDimensions, setSelectedDimensions] = useState<ChartDimensionType[]>(['geunbon', 'woon', 'haeng', 'hyeong', 'byeon']);
   const [showAIChat, setShowAIChat] = useState(false);
-  const [selectedAIQuestion, setSelectedAIQuestion] = useState<string>('');
 
   // 초기 로드 (고객 선택 패널 표시)
   useEffect(() => {
@@ -571,28 +568,6 @@ const SajuAnalysisPage: React.FC = () => {
             )}
           </div>
         </div>
-
-        {/* AI 질문 선택 섹션 */}
-        {selectedCustomer && fourPillars && analysisResult && (
-          <div className="mt-12 bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-blue-900/20 rounded-xl shadow-lg p-6 border border-purple-200 dark:border-purple-800">
-            <div className="text-center mb-4">
-              <div className="text-4xl mb-3">🤖⭐</div>
-              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-                AI 상담사에게 질문하기
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                사주 AI가 {selectedCustomer?.name || '당신'}님의 사주를 바탕으로 궁금한 점을 자세히 답변해드립니다
-              </p>
-            </div>
-
-            {/* 질문 선택기 */}
-            <QuestionSelector
-              questions={SAJU_QUESTIONS}
-              onSelectQuestion={(question) => setSelectedAIQuestion(question)}
-              currentQuestion={selectedAIQuestion}
-            />
-          </div>
-        )}
 
         {/* 하단 정보 */}
         <div className="mt-12 text-center text-sm text-gray-500 dark:text-gray-500">
