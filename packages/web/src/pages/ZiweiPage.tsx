@@ -17,6 +17,8 @@ import ZiweiChartView from '@/components/ziwei/ZiweiChartView';
 import ZiweiPalaceDetail from '@/components/ziwei/ZiweiPalaceDetail';
 import ZiweiAIChat from '@/components/ziwei/ZiweiAIChat';
 import ZiweiBeginnerGuide from '@/components/ziwei/ZiweiBeginnerGuide';
+import QuestionSelector from '@/components/tarot/QuestionSelector';
+import { ZIWEI_QUESTIONS } from '@/utils/ziweiQuestions';
 
 export default function ZiweiPage() {
   // 상태 관리
@@ -26,6 +28,7 @@ export default function ZiweiPage() {
   const [error, setError] = useState<string | null>(null);
   const [showAIChat, setShowAIChat] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
+  const [selectedAIQuestion, setSelectedAIQuestion] = useState<string>('');
 
   // 고객 선택 관련 상태
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -502,9 +505,17 @@ export default function ZiweiPage() {
                 자미두수 AI가 {appliedCustomer?.name || '당신'}님의 명반을 분석하여<br />
                 직업, 재물, 건강, 결혼 등 궁금한 점을 자세히 답변해드립니다
               </p>
+
+              {/* 질문 선택기 */}
+              <QuestionSelector
+                questions={ZIWEI_QUESTIONS}
+                onSelectQuestion={(question) => setSelectedAIQuestion(question)}
+                currentQuestion={selectedAIQuestion}
+              />
+
               <button
                 onClick={() => setShowAIChat(true)}
-                className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-bold hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="mt-4 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-bold hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 🤖 AI 상담 시작하기
               </button>

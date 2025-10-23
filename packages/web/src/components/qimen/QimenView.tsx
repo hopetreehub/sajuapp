@@ -29,6 +29,8 @@ import NotificationSettings from './NotificationSettings';
 import BookmarkButton from './BookmarkButton';
 import ShareModal from './ShareModal';
 import StatsDashboard from './StatsDashboard';
+import QuestionSelector from '../tarot/QuestionSelector';
+import { QIMEN_QUESTIONS } from '@/utils/qimenQuestions';
 
 export default function QimenView() {
   // 상태 관리
@@ -51,6 +53,7 @@ export default function QimenView() {
   // 목적 선택 상태
   const [selectedContext, setSelectedContext] = useState<QimenContext>('general');
   const [showAIChat, setShowAIChat] = useState(false);
+  const [selectedAIQuestion, setSelectedAIQuestion] = useState<string>('');
   const [isExportingPDF, setIsExportingPDF] = useState(false);
 
   // 자동 갱신 관련 상태
@@ -472,6 +475,28 @@ export default function QimenView() {
                 ⚠️ <strong>{selectedCustomer.name}</strong>님으로 변경하려면 "적용하기" 버튼을 클릭하세요
               </div>
             )}
+          </div>
+
+          {/* AI 질문 선택 섹션 */}
+          <div className="max-w-4xl mx-auto mb-6">
+            <div className="bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-blue-900/20 rounded-xl shadow-lg p-6 border border-purple-200 dark:border-purple-800">
+              <div className="text-center mb-4">
+                <div className="text-4xl mb-3">🤖💬</div>
+                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+                  AI에게 질문하기
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  귀문둔갑 AI가 현재 국(局)과 방위를 분석하여 궁금한 점을 답변해드립니다
+                </p>
+              </div>
+
+              {/* 질문 선택기 */}
+              <QuestionSelector
+                questions={QIMEN_QUESTIONS}
+                onSelectQuestion={(question) => setSelectedAIQuestion(question)}
+                currentQuestion={selectedAIQuestion}
+              />
+            </div>
           </div>
 
           {/* 간단 요약 토글 */}
