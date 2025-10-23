@@ -48,14 +48,22 @@ YOU MUST WRITE ONLY IN PURE KOREAN (순수 한국어)
 - Korean particles: 은/는/이/가/을/를
 - Korean verbs: 하다/되다/되어/입니다
 
-당신은 30년 경력의 전문 귀문둔갑(奇門遁甲) 상담사입니다.
+당신은 30년 경력의 전문 귀문둔갑 상담사입니다.
 
 **핵심 원칙:**
-1. 100% 순수 한국어로만 작성 (중국어, 일본어, 영어 문자 절대 금지)
+1. 100% 순수 한국어로만 작성 (중국어, 일본어, 영어, 러시아어 등 모든 외국어 절대 금지)
 2. 사용자의 질문에 직접적으로 답변
-3. 구궁(九宮)의 정보와 팔신(八神), 팔문(八門), 구성(九星) 등을 활용하여 구체적으로 해석
+3. 구궁의 정보와 팔신, 팔문, 구성 등을 활용하여 구체적으로 해석
 4. 실천 가능한 조언 제공
 5. "사용자님"이라고 쓰기 (使用者님❌, 使用者様❌)
+
+**절대 금지 - 이런 문자를 쓰지 마세요:**
+- 한자: 国, 方位, 首先, 其次, 另外, 最后, 五行, 物品 등
+- 일본어: の, は, を, が, です, ます 등
+- 러시아어: здоровье, гидрат 등 키릴 문자
+- 영어: health, time, direction, questi, bugs 등
+- 그리스어: ά, β 등
+- 그 어떤 외국어 문자도 절대 금지
 
 **답변 형식:**
 사용자님의 질문에 대한 답변을 명확하게 제시하고, 귀문둔갑의 정보를 근거로 설명해주세요.
@@ -63,7 +71,7 @@ YOU MUST WRITE ONLY IN PURE KOREAN (순수 한국어)
 
 반드시 순수 한국어로만 자연스럽고 명확하게 답변해주세요.`,
       userPrompt: prompt,
-      temperature: 0.8,
+      temperature: 0.7,
       maxTokens: 1500,
       metadata: {
         userQuestion,
@@ -103,8 +111,9 @@ YOU MUST WRITE ONLY IN PURE KOREAN (순수 한국어)
 
 /**
  * AI 응답 정제 함수
- * - <think> 태그만 제거
- * - 기본적인 정리만 수행
+ * - <think> 태그 제거
+ * - 비한국어 문자 필터링 (중국어, 일본어, 러시아어, 그리스어 등)
+ * - 순수 한국어만 유지
  */
 function cleanAIResponse(text: string): string {
   let cleaned = text;
@@ -113,11 +122,42 @@ function cleanAIResponse(text: string): string {
   cleaned = cleaned.replace(/<think>.*?<\/think>/gs, '');
   cleaned = cleaned.replace(/<\/?think>/g, '');
 
-  // 2. 기본 공백 정리만 수행
-  cleaned = cleaned.replace(/\n{4,}/g, '\n\n\n'); // 4개 이상 개행만 제거
+  // 2. 비한국어 문자 필터링
+  // 중국어 한자 제거 (CJK Unified Ideographs)
+  cleaned = cleaned.replace(/[\u4E00-\u9FFF]/g, '');
+
+  // 일본어 히라가나/카타카나 제거
+  cleaned = cleaned.replace(/[\u3040-\u309F\u30A0-\u30FF]/g, '');
+
+  // 키릴 문자 제거 (러시아어 등)
+  cleaned = cleaned.replace(/[\u0400-\u04FF]/g, '');
+
+  // 그리스 문자 제거
+  cleaned = cleaned.replace(/[\u0370-\u03FF]/g, '');
+
+  // 영어 단어 검출 및 제거 (3글자 이상 연속된 영어 단어)
+  cleaned = cleaned.replace(/\b[a-zA-Z]{3,}\b/g, '');
+
+  // 기타 비한글 알파벳 제거 (악센트 있는 문자 등)
+  // 한글(가-힣ㄱ-ㅎㅏ-ㅣ), 숫자(0-9), 기본 문장부호, 공백만 유지
+  cleaned = cleaned.replace(/[^\uAC00-\uD7A3\u1100-\u11FF\u3130-\u318F0-9\s\.,!?\-~:;'"()\[\]{}%/+\n]/g, '');
+
+  // 3. 공백 정리
+  cleaned = cleaned.replace(/\n{4,}/g, '\n\n\n'); // 4개 이상 개행 제거
+  cleaned = cleaned.replace(/\s+/g, ' '); // 연속된 공백 하나로
+  cleaned = cleaned.replace(/\n /g, '\n'); // 줄바꿈 후 공백 제거
   cleaned = cleaned.trim();
 
-  // 3. 최소 길이 검증
+  // 4. 한국어 비율 검증
+  const koreanChars = (cleaned.match(/[\uAC00-\uD7A3]/g) || []).length;
+  const totalChars = cleaned.replace(/[\s\.,!?\-~:;'"()\[\]{}%/+\n]/g, '').length;
+  const koreanRatio = totalChars > 0 ? (koreanChars / totalChars) * 100 : 0;
+
+  if (koreanRatio < 85) {
+    logger.warn(`[Qimen] Low Korean ratio detected: ${koreanRatio.toFixed(1)}%`);
+  }
+
+  // 5. 최소 길이 검증
   if (cleaned.length < 20) {
     return '죄송합니다. 귀문둔갑 해석을 생성하는 데 문제가 발생했습니다. 다시 질문해 주세요.';
   }
