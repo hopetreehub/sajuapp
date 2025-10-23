@@ -74,13 +74,13 @@ export default defineConfig(({ mode }) => {
       proxy: {
         // 인증 서비스
         '/api/auth': {
-          target: 'http://localhost:4018',
+          target: 'http://localhost:4019',
           changeOrigin: true,
           secure: false,
         },
         // 관리자 서비스
         '/api/admin': {
-          target: 'http://localhost:4018',
+          target: 'http://localhost:4019',
           changeOrigin: true,
           secure: false,
         },
@@ -134,19 +134,19 @@ export default defineConfig(({ mode }) => {
         },
         // AI 서비스 (귀문둔갑)
         '/api/v1/qimen': {
-          target: 'http://localhost:4018',
+          target: 'http://localhost:4019',
           changeOrigin: true,
           secure: false,
         },
         // AI 서비스 (자미두수)
         '/api/v1/ziwei': {
-          target: 'http://localhost:4018',
+          target: 'http://localhost:4019',
           changeOrigin: true,
           secure: false,
         },
         // AI 서비스 (사주)
         '/api/v1/saju': {
-          target: 'http://localhost:4018',
+          target: 'http://localhost:4019',
           changeOrigin: true,
           secure: false,
         },
