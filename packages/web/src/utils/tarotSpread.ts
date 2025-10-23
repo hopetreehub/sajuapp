@@ -241,6 +241,57 @@ export const TAROT_SPREADS: TarotSpread[] = [
       '이 프로젝트의 결과는 어떻게 될까요?',
       '내가 원하는 것을 이룰 수 있을까요?',
     ],
+    // 카테고리별 질문 (과거-현재-미래 흐름에 초점)
+    categorizedQuestions: [
+      // 건강
+      { category: 'health', question: '내 건강 상태는 앞으로 어떻게 변할까요?' },
+      { category: 'health', question: '이 증상의 과거 원인과 미래 경과는?' },
+      { category: 'health', question: '건강 개선의 흐름은 어떻게 될까요?' },
+      { category: 'health', question: '체력 회복은 언제쯤 될까요?' },
+      { category: 'health', question: '운동 습관이 미래에 어떤 영향을 줄까요?' },
+
+      // 재물
+      { category: 'wealth', question: '내 재정 상태는 앞으로 어떻게 될까요?' },
+      { category: 'wealth', question: '이 투자의 과거부터 미래까지 흐름은?' },
+      { category: 'wealth', question: '금전운이 앞으로 좋아질까요?' },
+      { category: 'wealth', question: '수입은 언제쯤 증가할까요?' },
+      { category: 'wealth', question: '재테크 계획이 성공할 수 있을까요?' },
+
+      // 사랑/연애
+      { category: 'love', question: '이 사람과의 관계는 어떻게 발전할까요?' },
+      { category: 'love', question: '우리 사랑의 과거와 미래는?' },
+      { category: 'love', question: '짝사랑은 언제쯤 이루어질까요?' },
+      { category: 'love', question: '연애 운명이 바뀔 시기는 언제인가요?' },
+      { category: 'love', question: '이별 후 새로운 만남은 언제 올까요?' },
+
+      // 인간관계
+      { category: 'relationship', question: '이 사람과의 관계는 앞으로 어떻게 될까요?' },
+      { category: 'relationship', question: '갈등이 해결되고 관계가 회복될까요?' },
+      { category: 'relationship', question: '친구 관계가 더 깊어질 수 있을까요?' },
+      { category: 'relationship', question: '가족 관계의 변화 흐름은?' },
+      { category: 'relationship', question: '직장 내 인간관계는 어떻게 변할까요?' },
+
+      // 사업/커리어
+      { category: 'career', question: '내 커리어는 앞으로 어떻게 될까요?' },
+      { category: 'career', question: '이 프로젝트의 결과는 어떻게 될까요?' },
+      { category: 'career', question: '승진 기회는 언제쯤 올까요?' },
+      { category: 'career', question: '사업 흐름이 호전될까요?' },
+      { category: 'career', question: '직장 생활의 미래 전망은?' },
+
+      // 학업/성장
+      { category: 'study', question: '학업 성적은 앞으로 어떻게 될까요?' },
+      { category: 'study', question: '이 공부가 미래에 도움이 될까요?' },
+      { category: 'study', question: '시험 합격은 언제쯤 가능할까요?' },
+      { category: 'study', question: '자기계발 노력이 결실을 맺을까요?' },
+      { category: 'study', question: '배움의 여정은 어떻게 흘러갈까요?' },
+
+      // 일반/운세
+      { category: 'general', question: '내 인생은 앞으로 어떻게 변할까요?' },
+      { category: 'general', question: '이 결정의 과거와 미래 영향은?' },
+      { category: 'general', question: '운이 좋아지는 시기는 언제인가요?' },
+      { category: 'general', question: '지금 상황이 언제 해결될까요?' },
+      { category: 'general', question: '내가 원하는 것을 이룰 수 있을까요?' },
+    ],
     positions: [
       {
         position: 1,
@@ -277,6 +328,57 @@ export const TAROT_SPREADS: TarotSpread[] = [
       '시험에 합격하려면 어떻게 해야 하나요?',
       '건강을 회복하려면 무엇을 해야 할까요?',
     ],
+    // 카테고리별 질문 (문제 해결과 행동 지침에 초점)
+    categorizedQuestions: [
+      // 건강
+      { category: 'health', question: '건강을 회복하려면 무엇을 해야 할까요?' },
+      { category: 'health', question: '체력을 증진시키기 위한 행동은?' },
+      { category: 'health', question: '이 질병을 극복하려면 어떻게 해야 하나요?' },
+      { category: 'health', question: '다이어트에 성공하려면 무엇이 필요한가요?' },
+      { category: 'health', question: '건강한 습관을 만들려면 어떻게 해야 할까요?' },
+
+      // 재물
+      { category: 'wealth', question: '돈을 모으려면 어떻게 해야 할까요?' },
+      { category: 'wealth', question: '재정 문제를 해결하기 위한 방법은?' },
+      { category: 'wealth', question: '투자 수익을 내려면 무엇을 해야 하나요?' },
+      { category: 'wealth', question: '부자가 되기 위해 필요한 행동은?' },
+      { category: 'wealth', question: '빚을 갚으려면 어떤 노력이 필요한가요?' },
+
+      // 사랑/연애
+      { category: 'love', question: '고백을 성공시키려면 어떻게 해야 할까요?' },
+      { category: 'love', question: '이 사람의 마음을 얻으려면 무엇이 필요한가요?' },
+      { category: 'love', question: '연인과의 갈등을 해결하려면?' },
+      { category: 'love', question: '결혼까지 가려면 어떻게 해야 할까요?' },
+      { category: 'love', question: '새로운 인연을 만나려면 무엇을 해야 하나요?' },
+
+      // 인간관계
+      { category: 'relationship', question: '관계 개선을 위해 내가 할 수 있는 건?' },
+      { category: 'relationship', question: '갈등을 해결하려면 어떤 행동이 필요한가요?' },
+      { category: 'relationship', question: '친구와 화해하려면 무엇을 해야 할까요?' },
+      { category: 'relationship', question: '좋은 인간관계를 만들려면?' },
+      { category: 'relationship', question: '오해를 풀기 위해 필요한 것은?' },
+
+      // 사업/커리어
+      { category: 'career', question: '이 프로젝트를 성공시키려면 어떻게 해야 하나요?' },
+      { category: 'career', question: '승진하려면 무엇이 필요한가요?' },
+      { category: 'career', question: '사업을 키우려면 어떤 노력이 필요한가요?' },
+      { category: 'career', question: '이직에 성공하려면 무엇을 해야 할까요?' },
+      { category: 'career', question: '직장에서 인정받으려면 어떻게 해야 하나요?' },
+
+      // 학업/성장
+      { category: 'study', question: '시험에 합격하려면 어떻게 해야 하나요?' },
+      { category: 'study', question: '성적을 올리기 위해 필요한 것은?' },
+      { category: 'study', question: '공부 습관을 만들려면 어떻게 해야 할까요?' },
+      { category: 'study', question: '자격증 취득에 성공하려면?' },
+      { category: 'study', question: '실력 향상을 위해 필요한 행동은?' },
+
+      // 일반/운세
+      { category: 'general', question: '목표 달성을 위한 최선의 방법은?' },
+      { category: 'general', question: '이 문제를 해결하려면 무엇을 해야 하나요?' },
+      { category: 'general', question: '행운을 만들려면 어떻게 해야 할까요?' },
+      { category: 'general', question: '원하는 것을 얻으려면 무엇이 필요한가요?' },
+      { category: 'general', question: '상황을 개선하기 위한 행동은?' },
+    ],
     positions: [
       {
         position: 1,
@@ -310,6 +412,50 @@ export const TAROT_SPREADS: TarotSpread[] = [
       '이 문제의 근본 원인은 무엇인가요?',
       '내가 놓치고 있는 것은 무엇인가요?',
       '지금 나에게 가장 필요한 변화는?',
+    ],
+    // 카테고리별 질문 (심층 분석에 초점)
+    categorizedQuestions: [
+      // 건강
+      { category: 'health', question: '내 건강 문제의 근본 원인은 무엇인가요?' },
+      { category: 'health', question: '건강 상태를 종합적으로 분석해주세요' },
+      { category: 'health', question: '건강 회복을 위해 놓치고 있는 것은?' },
+      { category: 'health', question: '전체적인 건강 흐름과 조언을 알려주세요' },
+
+      // 재물
+      { category: 'wealth', question: '재정 상태를 심층적으로 분석해주세요' },
+      { category: 'wealth', question: '돈 문제의 숨겨진 원인은 무엇인가요?' },
+      { category: 'wealth', question: '재물운의 전체 흐름을 알고 싶습니다' },
+      { category: 'wealth', question: '경제적 자유를 위해 필요한 전략은?' },
+
+      // 사랑/연애
+      { category: 'love', question: '이 관계를 종합적으로 분석해주세요' },
+      { category: 'love', question: '연애의 숨겨진 문제점은 무엇인가요?' },
+      { category: 'love', question: '사랑 운명의 전체 그림을 보여주세요' },
+      { category: 'love', question: '관계 발전을 위한 심층 조언은?' },
+
+      // 인간관계
+      { category: 'relationship', question: '인간관계의 전반적인 상황은?' },
+      { category: 'relationship', question: '관계 문제의 근본 원인은 무엇인가요?' },
+      { category: 'relationship', question: '사람들과의 관계를 심층 분석해주세요' },
+      { category: 'relationship', question: '내가 놓치고 있는 인간관계 요소는?' },
+
+      // 사업/커리어
+      { category: 'career', question: '내 커리어의 전체적인 흐름은?' },
+      { category: 'career', question: '직업 생활의 숨겨진 문제는 무엇인가요?' },
+      { category: 'career', question: '사업 상황을 종합적으로 분석해주세요' },
+      { category: 'career', question: '커리어 발전을 위한 심층 조언은?' },
+
+      // 학업/성장
+      { category: 'study', question: '학업의 전반적인 상황을 분석해주세요' },
+      { category: 'study', question: '성장을 가로막는 숨겨진 요인은?' },
+      { category: 'study', question: '배움의 여정을 종합적으로 봐주세요' },
+      { category: 'study', question: '자기계발을 위한 심층 조언은?' },
+
+      // 일반/운세
+      { category: 'general', question: '현재 상황의 전체 그림을 보여주세요' },
+      { category: 'general', question: '이 상황을 종합적으로 이해하고 싶습니다' },
+      { category: 'general', question: '내 인생의 전반적인 흐름은 어떤가요?' },
+      { category: 'general', question: '지금 나에게 가장 필요한 변화는?' },
     ],
     positions: [
       {
@@ -354,6 +500,44 @@ export const TAROT_SPREADS: TarotSpread[] = [
       '이 관계의 모든 면을 깊이 알고 싶습니다',
       '내 커리어의 전체 흐름을 파악하고 싶습니다',
       '복잡한 문제를 근본적으로 해결하고 싶습니다',
+    ],
+    // 카테고리별 질문 (가장 포괄적이고 깊이 있는 분석)
+    categorizedQuestions: [
+      // 건강
+      { category: 'health', question: '내 건강의 모든 측면을 완전히 분석해주세요' },
+      { category: 'health', question: '건강 문제를 근본적으로 해결하고 싶습니다' },
+      { category: 'health', question: '건강과 관련된 인생의 중대한 결정이 필요합니다' },
+
+      // 재물
+      { category: 'wealth', question: '재정 상황의 모든 면을 깊이 있게 분석해주세요' },
+      { category: 'wealth', question: '경제적 문제를 근본적으로 해결하고 싶습니다' },
+      { category: 'wealth', question: '재물과 관련된 중대한 결정이 필요합니다' },
+
+      // 사랑/연애
+      { category: 'love', question: '이 관계의 모든 면을 깊이 알고 싶습니다' },
+      { category: 'love', question: '연애와 결혼에 대한 깊이 있는 조언이 필요합니다' },
+      { category: 'love', question: '사랑과 관련된 인생의 전환점에 서 있습니다' },
+
+      // 인간관계
+      { category: 'relationship', question: '복잡한 인간관계를 완전히 이해하고 싶습니다' },
+      { category: 'relationship', question: '관계의 모든 측면을 종합적으로 봐주세요' },
+      { category: 'relationship', question: '중요한 관계 결정에 대한 깊은 통찰이 필요합니다' },
+
+      // 사업/커리어
+      { category: 'career', question: '내 커리어의 전체 흐름을 파악하고 싶습니다' },
+      { category: 'career', question: '직업 생활의 모든 측면을 깊이 분석해주세요' },
+      { category: 'career', question: '커리어 전환점에서 중대한 결정이 필요합니다' },
+
+      // 학업/성장
+      { category: 'study', question: '배움과 성장의 전체적인 방향을 알고 싶습니다' },
+      { category: 'study', question: '자기계발의 모든 측면을 종합적으로 봐주세요' },
+      { category: 'study', question: '학업과 관련된 중요한 결정이 필요합니다' },
+
+      // 일반/운세
+      { category: 'general', question: '내 인생의 전체적인 방향성을 알고 싶습니다' },
+      { category: 'general', question: '내 삶의 모든 측면을 종합적으로 봐주세요' },
+      { category: 'general', question: '인생의 중요한 전환점에서 조언이 필요합니다' },
+      { category: 'general', question: '복잡한 문제를 근본적으로 해결하고 싶습니다' },
     ],
     positions: [
       {
@@ -428,6 +612,51 @@ export const TAROT_SPREADS: TarotSpread[] = [
       '가족 관계를 개선하려면 어떻게 해야 할까요?',
       '직장 상사와의 관계는 어떻게 될까요?',
     ],
+    // 카테고리별 질문 (관계 맥락에 초점)
+    categorizedQuestions: [
+      // 건강 (관계 맥락)
+      { category: 'health', question: '건강이 우리 관계에 미치는 영향은?' },
+      { category: 'health', question: '상대방과 함께 건강을 관리하려면?' },
+
+      // 재물 (관계 맥락)
+      { category: 'wealth', question: '금전 문제가 관계에 미치는 영향은?' },
+      { category: 'wealth', question: '둘이 함께 재정을 관리하려면?' },
+      { category: 'wealth', question: '돈 때문에 생긴 갈등을 해결하려면?' },
+
+      // 사랑/연애 (주력)
+      { category: 'love', question: '이 사람과의 관계는 어떻게 발전할까요?' },
+      { category: 'love', question: '상대방은 나를 어떻게 생각하고 있나요?' },
+      { category: 'love', question: '이 사람과 연애해도 괜찮을까요?' },
+      { category: 'love', question: '우리 관계가 더 나아질 수 있을까요?' },
+      { category: 'love', question: '이별 후 복원이 가능할까요?' },
+      { category: 'love', question: '이 사람과 결혼하면 행복할까요?' },
+      { category: 'love', question: '연인과의 갈등을 해결하려면?' },
+      { category: 'love', question: '두 사람의 궁합은 어떤가요?' },
+
+      // 인간관계 (주력)
+      { category: 'relationship', question: '우리 관계에서 개선해야 할 점은?' },
+      { category: 'relationship', question: '이 관계의 미래는 어떻게 될까요?' },
+      { category: 'relationship', question: '친구와의 갈등을 어떻게 풀어야 할까요?' },
+      { category: 'relationship', question: '가족 관계를 개선하려면 어떻게 해야 할까요?' },
+      { category: 'relationship', question: '직장 상사와의 관계는 어떻게 될까요?' },
+      { category: 'relationship', question: '동료와의 관계를 개선하려면?' },
+      { category: 'relationship', question: '부모님과의 관계 문제를 해결하려면?' },
+      { category: 'relationship', question: '형제자매와의 갈등을 풀려면?' },
+
+      // 사업/커리어 (관계 맥락)
+      { category: 'career', question: '직장 내 인간관계는 어떤가요?' },
+      { category: 'career', question: '비즈니스 파트너와의 관계는?' },
+      { category: 'career', question: '상사와의 관계를 개선하려면?' },
+
+      // 학업/성장 (관계 맥락)
+      { category: 'study', question: '스터디 그룹 내 관계는 어떤가요?' },
+      { category: 'study', question: '선생님과의 관계는 어떤가요?' },
+
+      // 일반/운세 (관계 맥락)
+      { category: 'general', question: '전반적인 대인 운세는 어떤가요?' },
+      { category: 'general', question: '새로운 인연을 만날 수 있을까요?' },
+      { category: 'general', question: '인간관계에서 주의할 점은?' },
+    ],
     positions: [
       {
         position: 1,
@@ -486,6 +715,50 @@ export const TAROT_SPREADS: TarotSpread[] = [
       '새로운 분야로 전환해도 될까요?',
       '사업 확장 시기가 맞나요?',
     ],
+    // 카테고리별 질문 (커리어 맥락에 초점)
+    categorizedQuestions: [
+      // 건강 (커리어 맥락)
+      { category: 'health', question: '건강이 직장 생활에 미치는 영향은?' },
+      { category: 'health', question: '워라밸을 맞추려면 어떻게 해야 할까요?' },
+
+      // 재물 (커리어 맥락)
+      { category: 'wealth', question: '연봉 협상은 어떻게 해야 할까요?' },
+      { category: 'wealth', question: '직장에서 수입을 늘리려면?' },
+      { category: 'wealth', question: '사업 수익은 증가할까요?' },
+
+      // 사랑/연애 (커리어 맥락)
+      { category: 'love', question: '직장에서 만난 사람과 연애해도 될까요?' },
+      { category: 'love', question: '연애와 커리어의 균형을 맞추려면?' },
+
+      // 인간관계 (커리어 맥락)
+      { category: 'relationship', question: '직장 내 인간관계는 어떤가요?' },
+      { category: 'relationship', question: '상사와의 관계를 개선하려면?' },
+      { category: 'relationship', question: '동료들과 협업을 잘하려면?' },
+
+      // 사업/커리어 (주력)
+      { category: 'career', question: '이직을 해도 괜찮을까요?' },
+      { category: 'career', question: '내 사업은 성공할 수 있을까요?' },
+      { category: 'career', question: '승진 기회가 올까요?' },
+      { category: 'career', question: '커리어에서 다음 단계는 무엇인가요?' },
+      { category: 'career', question: '지금 창업해도 괜찮을까요?' },
+      { category: 'career', question: '이 회사에 입사하면 어떨까요?' },
+      { category: 'career', question: '프리랜서로 전환하는 게 좋을까요?' },
+      { category: 'career', question: '내 일이 인정받을 수 있을까요?' },
+      { category: 'career', question: '직장을 그만둬도 괜찮을까요?' },
+      { category: 'career', question: '새로운 분야로 전환해도 될까요?' },
+      { category: 'career', question: '사업 확장 시기가 맞나요?' },
+      { category: 'career', question: '이 프로젝트는 성공할까요?' },
+
+      // 학업/성장 (커리어 맥락)
+      { category: 'study', question: '직무 관련 자격증을 취득해야 할까요?' },
+      { category: 'study', question: '커리어 발전을 위한 교육이 필요한가요?' },
+      { category: 'study', question: '업무 능력 향상을 위해 배워야 할 것은?' },
+
+      // 일반/운세 (커리어 맥락)
+      { category: 'general', question: '전반적인 직업운은 어떤가요?' },
+      { category: 'general', question: '커리어에서 기회가 올까요?' },
+      { category: 'general', question: '직장 생활에서 주의할 점은?' },
+    ],
     positions: [
       {
         position: 1,
@@ -536,6 +809,48 @@ export const TAROT_SPREADS: TarotSpread[] = [
       '대학원에 갈까요, 취업할까요?',
       '서울로 갈까요, 지방에 남을까요?',
       '공무원 시험 vs 민간 취업, 어느 게 나을까요?',
+    ],
+    // 카테고리별 질문 (선택과 결정에 초점)
+    categorizedQuestions: [
+      // 건강
+      { category: 'health', question: '수술할까요, 보존 치료할까요?' },
+      { category: 'health', question: '운동을 시작할까요, 식이요법을 할까요?' },
+      { category: 'health', question: '병원 A와 B 중 어디로 가야 할까요?' },
+
+      // 재물
+      { category: 'wealth', question: '투자를 할까요, 저축을 할까요?' },
+      { category: 'wealth', question: '집을 살까요, 전세로 살까요?' },
+      { category: 'wealth', question: 'A 사업과 B 사업 중 어느 것을 해야 할까요?' },
+      { category: 'wealth', question: '주식 vs 부동산, 어디에 투자할까요?' },
+
+      // 사랑/연애
+      { category: 'love', question: '결혼해야 할까요, 더 기다려야 할까요?' },
+      { category: 'love', question: '헤어져야 할까요, 관계를 이어가야 할까요?' },
+      { category: 'love', question: 'A와 B 중 누구를 선택해야 할까요?' },
+      { category: 'love', question: '고백할까요, 기다릴까요?' },
+
+      // 인간관계
+      { category: 'relationship', question: '화해할까요, 인연을 끊을까요?' },
+      { category: 'relationship', question: '새 친구를 사귈까요, 기존 관계를 유지할까요?' },
+      { category: 'relationship', question: '먼저 연락할까요, 기다릴까요?' },
+
+      // 사업/커리어
+      { category: 'career', question: 'A회사와 B회사 중 어디로 이직해야 할까요?' },
+      { category: 'career', question: '유학을 가야 할까요, 취업을 해야 할까요?' },
+      { category: 'career', question: '대학원에 갈까요, 취업할까요?' },
+      { category: 'career', question: '서울로 갈까요, 지방에 남을까요?' },
+      { category: 'career', question: '공무원 시험 vs 민간 취업, 어느 게 나을까요?' },
+      { category: 'career', question: '창업할까요, 직장을 다닐까요?' },
+
+      // 학업/성장
+      { category: 'study', question: 'A 전공과 B 전공 중 어느 것을 선택할까요?' },
+      { category: 'study', question: '학원을 다닐까요, 독학할까요?' },
+      { category: 'study', question: '국내 대학 vs 해외 대학, 어디로 갈까요?' },
+
+      // 일반/운세
+      { category: 'general', question: '두 가지 선택 중 어느 것이 나에게 더 좋을까요?' },
+      { category: 'general', question: '지금 결정할까요, 더 기다릴까요?' },
+      { category: 'general', question: '변화를 시도할까요, 현상을 유지할까요?' },
     ],
     positions: [
       {
@@ -590,6 +905,48 @@ export const TAROT_SPREADS: TarotSpread[] = [
       '이번 해에 조심해야 할 달은 언제인가요?',
       '올해의 연애운은 어떤가요?',
       '올해의 재물운은 어떤가요?',
+    ],
+    // 카테고리별 질문 (연간 운세에 초점)
+    categorizedQuestions: [
+      // 건강
+      { category: 'health', question: '올해 나의 건강운은 어떤가요?' },
+      { category: 'health', question: '올 한 해 건강 관리에서 주의할 점은?' },
+      { category: 'health', question: '건강이 좋아지는 달은 언제인가요?' },
+
+      // 재물
+      { category: 'wealth', question: '올해의 재물운은 어떤가요?' },
+      { category: 'wealth', question: '올 한 해 매달 금전 흐름은 어떤가요?' },
+      { category: 'wealth', question: '돈이 들어오는 시기는 언제인가요?' },
+      { category: 'wealth', question: '재정 관리에서 조심해야 할 달은?' },
+
+      // 사랑/연애
+      { category: 'love', question: '올해의 연애운은 어떤가요?' },
+      { category: 'love', question: '올 한 해 사랑의 흐름은 어떻게 될까요?' },
+      { category: 'love', question: '인연을 만날 수 있는 시기는 언제인가요?' },
+      { category: 'love', question: '관계가 발전하는 달은 언제인가요?' },
+
+      // 인간관계
+      { category: 'relationship', question: '올해의 인간관계 운세는 어떤가요?' },
+      { category: 'relationship', question: '올 한 해 대인관계 흐름은?' },
+      { category: 'relationship', question: '새로운 인맥을 만날 시기는 언제인가요?' },
+
+      // 사업/커리어
+      { category: 'career', question: '올해의 직업운은 어떤가요?' },
+      { category: 'career', question: '올 한 해 커리어 흐름은 어떻게 될까요?' },
+      { category: 'career', question: '승진이나 이직의 기회가 올 시기는?' },
+      { category: 'career', question: '사업이 번창할 달은 언제인가요?' },
+
+      // 학업/성장
+      { category: 'study', question: '올해의 학업운은 어떤가요?' },
+      { category: 'study', question: '올 한 해 공부의 흐름은 어떻게 될까요?' },
+      { category: 'study', question: '시험 합격이 가능한 시기는 언제인가요?' },
+
+      // 일반/운세
+      { category: 'general', question: '올해 나에게는 어떤 일들이 기다리고 있나요?' },
+      { category: 'general', question: '2025년 나의 운세는 어떤가요?' },
+      { category: 'general', question: '이번 해의 전체적인 흐름을 알고 싶습니다' },
+      { category: 'general', question: '올해 나에게 행운이 올 시기는 언제인가요?' },
+      { category: 'general', question: '이번 해에 조심해야 할 달은 언제인가요?' },
     ],
     positions: [
       {
