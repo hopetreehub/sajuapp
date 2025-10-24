@@ -1,9 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "npm install --prefix packages/web && npm run build --prefix packages/web",
+  "buildCommand": "npm install && npm install --prefix packages/web && npm run build --prefix packages/web",
   "outputDirectory": "packages/web/dist",
-  "installCommand": "npm install --prefix packages/web",
+  "installCommand": "npm install && npm install --prefix packages/web",
   "framework": "vite",
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "@vercel/node@3.3.1"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/:path*",
