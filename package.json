@@ -27,8 +27,10 @@
     "clean": "npm run clean --workspaces --if-present && rimraf node_modules"
   },
   "devDependencies": {
+    "@vercel/node": "^5.5.0",
     "concurrently": "^8.2.2",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.5",
+    "typescript": "^5.9.3"
   },
   "engines": {
     "node": ">=18.0.0",
