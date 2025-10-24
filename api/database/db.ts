@@ -415,6 +415,10 @@ export async function getDiariesByTag(
 export async function createDiary(
   data: Omit<Diary, 'id' | 'created_at' | 'updated_at'>,
 ): Promise<Diary> {
+  // Convert arrays to PostgreSQL array format or null
+  const tagsArray = data.tags && data.tags.length > 0 ? data.tags : null;
+  const imagesArray = data.images && data.images.length > 0 ? data.images : null;
+
   const { rows } = await sql<Diary>`
     INSERT INTO diaries (
       user_id, date, content, mood, weather, tags, images
@@ -425,8 +429,8 @@ export async function createDiary(
       ${data.content},
       ${data.mood || null},
       ${data.weather || null},
-      ${data.tags || []}::text[],
-      ${data.images || []}::text[]
+      ${tagsArray},
+      ${imagesArray}
     )
     RETURNING *
   `;

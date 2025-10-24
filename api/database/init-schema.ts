@@ -10,17 +10,14 @@
 import { sql } from '@vercel/postgres';
 import * as fs from 'fs';
 import * as path from 'path';
-import { fileURLToPath } from 'url';
-import { config } from 'dotenv';
 
-// ESM에서 __dirname 대체
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// CommonJS __dirname 사용
+const __dirname = __filename ? path.dirname(__filename) : process.cwd() + '/api/database';
 
-// .env.local 파일 로드
-const envPath = path.join(__dirname, '../../.env.local');
-console.log(`📁 환경 변수 파일: ${envPath}`);
-config({ path: envPath });
+// .env.local 파일 로드 (Vercel에서는 환경 변수 직접 사용)
+// const envPath = path.join(__dirname, '../../.env.local');
+// console.log(`📁 환경 변수 파일: ${envPath}`);
+// config({ path: envPath });
 
 async function initializeSchema() {
   try {
