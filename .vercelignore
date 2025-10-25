@@ -1,0 +1,13 @@
+# Exclude utility directories that are not API endpoints
+api/database/
+api/saju/
+api/customers/
+api/diaries/
+api/tags/
+
+# Exclude other non-essential files
+*.md
+.env.local
+.env.*.local
+node_modules/
+.git/
