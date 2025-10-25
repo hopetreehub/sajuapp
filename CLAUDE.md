@@ -1,5 +1,65 @@
 # 운명나침반 캘린더 앱 - Claude Code 개발 지침서
 
+## 🚨 다음 세션 작업 지침 (최우선)
+
+### ✅ 현재 완료 상태 (2025-10-26)
+- ✅ **Vercel 배포 성공** - 모든 API Functions 정상 작동
+- ✅ **로그인 기능 작동** (test@example.com / test1234)
+- ✅ **API 엔드포인트 13개 모두 배포됨**
+  - authLogin, authLogout, authMe, authSignup
+  - sajuChat, qimenChat, tarotChat, ziweiChat
+  - health, customers, events, diaries, tags
+- ⚠️ **AI 챗 서비스 미작동** - 환경 변수 설정 필요
+
+### 🎯 다음 세션 필수 작업
+
+#### 1단계: Vercel 환경 변수 설정 (최우선)
+```bash
+# Vercel 대시보드 → 프로젝트 → Settings → Environment Variables
+# https://vercel.com/johns-projects-bf5e60f3/sajuapp/settings/environment-variables
+
+변수명: GOOGLE_API_KEY
+값: [Google Gemini API Key]
+환경: Production, Preview, Development 모두 체크
+```
+
+**API Key 발급:**
+- URL: https://aistudio.google.com/app/apikey
+- "Create API Key" 클릭하여 발급
+
+#### 2단계: 재배포 및 테스트
+```bash
+# 환경 변수 설정 후 자동 재배포되거나 수동 재배포
+# 1-2분 대기 후 테스트
+
+# AI 챗 서비스 테스트
+curl -X POST https://sajuapp-web.vercel.app/api/sajuChat \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"당신은 사주 전문가입니다","userQuestion":"오늘의 운세는?"}'
+
+# 성공 시: {"success":true, "response":"AI 응답..."}
+# 실패 시: {"success":false, "error":"Google API Key not configured"}
+```
+
+#### 3단계: 브라우저 테스트
+- 로그인: https://sajuapp-web.vercel.app/auth?mode=login
+- 사주 분석 페이지에서 AI 챗 테스트
+- "AI 서비스가 일시적으로 사용 불가능" 메시지가 사라져야 함
+
+### 📝 문제 발생 시 체크리스트
+- [ ] Vercel 환경 변수가 올바르게 설정되었는지 확인
+- [ ] 재배포가 완료되었는지 확인 (Status: Ready)
+- [ ] Google API Key가 유효한지 확인
+- [ ] API 엔드포인트 직접 테스트 (curl)
+- [ ] 브라우저 캐시 강력 새로고침 (Ctrl+Shift+R)
+
+### 🔧 주요 파일 위치
+- API Functions: `packages/web/api/*.ts`
+- 프론트엔드 AI 챗: `packages/web/src/components/*/AIChat.tsx`
+- 환경 변수: `.env` (로컬), Vercel Dashboard (프로덕션)
+
+---
+
 ## 📋 프로젝트 개요
 - **프로젝트명**: 운명나침반 (Fortune Compass)
 - **유형**: 사주 운세 + 캘린더 + 다이어리 통합 웹 애플리케이션
