@@ -277,7 +277,7 @@ ${userQuestion}
       const aiPrompt = generateZiweiAIPrompt(userQuestion);
 
       // API 호출
-      const response = await fetch('/api/ziwei-chat', {
+      const response = await fetch('/api/ziweiChat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

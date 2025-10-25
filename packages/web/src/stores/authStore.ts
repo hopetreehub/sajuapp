@@ -80,7 +80,7 @@ export const useAuthStore = create<AuthState>()(
       login: async (credentials: LoginData) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await fetch('/api/auth-login', {
+          const response = await fetch('/api/authLogin', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ export const useAuthStore = create<AuthState>()(
 
         try {
           if (token) {
-            await fetch('/api/auth-logout', {
+            await fetch('/api/authLogout', {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${token}`,
@@ -150,7 +150,7 @@ export const useAuthStore = create<AuthState>()(
       signUp: async (data: SignUpData) => {
         set({ isLoading: true, error: null });
         try {
-          const response = await fetch('/api/auth-signup', {
+          const response = await fetch('/api/authSignup', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -192,7 +192,7 @@ export const useAuthStore = create<AuthState>()(
         }
 
         try {
-          const response = await fetch('/api/auth-me', {
+          const response = await fetch('/api/authMe', {
             method: 'GET',
             headers: {
               'Authorization': `Bearer ${token}`,
