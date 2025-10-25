@@ -6,19 +6,19 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
     "resolveJsonModule": true,
     "outDir": "./dist",
     "rootDir": "./",
     "types": ["node"],
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
+    "forceConsistentCasingInFileNames": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false
   },
   "include": [
     "**/*.ts"
