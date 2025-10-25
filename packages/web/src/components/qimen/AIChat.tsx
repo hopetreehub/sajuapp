@@ -127,7 +127,7 @@ export default function AIChat({ chart, context, customer, onClose }: AIChatProp
 
       // Claude API 호출
       console.log('🌐 [AI] API 호출 중...');
-      const response = await fetch('/api/v1/qimen/chat', {
+      const response = await fetch('/api/qimen-chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

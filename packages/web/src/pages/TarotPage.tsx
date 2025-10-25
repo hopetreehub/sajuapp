@@ -77,7 +77,7 @@ export default function TarotPage() {
     try {
       const prompt = generateSpreadPrompt(selectedSpreadId, cardPositions, userQuestion);
 
-      const response = await fetch('/api/v1/tarot/chat', {
+      const response = await fetch('/api/tarot-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

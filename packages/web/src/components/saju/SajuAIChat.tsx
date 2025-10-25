@@ -293,7 +293,7 @@ export default function SajuAIChat({ customer, fourPillars, analysisResult, onCl
 
       // AI API 호출 - 사주 전용 엔드포인트 사용
       console.log('🌐 [사주 AI] API 호출 중...');
-      const response = await fetch('/api/v1/saju/chat', {
+      const response = await fetch('/api/saju-chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
