@@ -25,6 +25,11 @@
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "database",
+    "saju",
+    "customers",
+    "diaries",
+    "tags"
   ]
 }
