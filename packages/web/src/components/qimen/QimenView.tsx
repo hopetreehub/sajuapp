@@ -381,7 +381,7 @@ export default function QimenView() {
 
           {/* 목적 선택 */}
           <div className="max-w-3xl mx-auto mb-6">
-            <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 🎯 목적:
               </label>
