@@ -38,7 +38,30 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // TODO: 데이터베이스 연결 필요
-    // 임시로 테스트 계정 하나 허용
+    // 관리자 계정
+    if (email === 'admin@sajuapp.com' && password === 'admin1234!') {
+      return res.status(200).json({
+        success: true,
+        message: '관리자 로그인 성공',
+        token: 'admin-token-67890',
+        user: {
+          id: 999,
+          email: 'admin@sajuapp.com',
+          username: 'Administrator',
+          role: 'admin',
+          approval_status: 'approved',
+          phone: null,
+          birth_date: null,
+          birth_time: null,
+          lunar_solar: null,
+          referral_code: 'ADMIN999',
+          created_at: new Date().toISOString(),
+          last_login_at: new Date().toISOString(),
+        },
+      });
+    }
+
+    // 일반 사용자 테스트 계정
     if (email === 'test@example.com' && password === 'test1234') {
       return res.status(200).json({
         success: true,
