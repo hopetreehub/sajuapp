@@ -79,13 +79,13 @@ export default function DiaryModal({ isOpen, onClose, date, onSave }: DiaryModal
       };
 
       let savedEntry: DiaryEntry;
-      
-      if (existingEntry?.id) {
-        // 기존 일기 수정
-        savedEntry = await diaryService.updateDiary(existingEntry.id, diaryData);
+
+      if (existingEntry) {
+        // 기존 일기 수정 (date를 키로 사용)
+        savedEntry = await diaryService.updateEntry(dateStr, diaryData);
       } else {
         // 새 일기 작성
-        savedEntry = await diaryService.createDiary(diaryData);
+        savedEntry = await diaryService.createEntry(diaryData);
       }
 
       // 부모 컴포넌트에 저장된 데이터 전달 (선택적)

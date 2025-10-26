@@ -1,0 +1,10 @@
+{
+  "name": "sajuapp-api",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@vercel/postgres": "^0.10.0",
+    "@neondatabase/serverless": "^0.10.1",
+    "@vercel/node": "^3.2.20"
+  }
+}

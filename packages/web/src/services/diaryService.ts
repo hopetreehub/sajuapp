@@ -14,8 +14,8 @@ export interface DiaryEntry {
 export const diaryService = {
   async getEntries(): Promise<DiaryEntry[]> {
     try {
-      const response = await apiClient.get('/diary/entries');
-      return response.data;
+      const response = await apiClient.get('/diaries');
+      return response.data.data || [];
     } catch (error) {
       console.error('Failed to fetch diary entries:', error);
       return [];
@@ -24,9 +24,15 @@ export const diaryService = {
 
   async getEntry(date: string): Promise<DiaryEntry | null> {
     try {
-      const response = await apiClient.get(`/diary/entries/${date}`);
-      return response.data;
-    } catch (error) {
+      const response = await apiClient.get(`/diaries`, {
+        params: { date }
+      });
+      return response.data.data;
+    } catch (error: any) {
+      // 404는 정상 상황 (해당 날짜에 일기가 없음)
+      if (error.response?.status === 404) {
+        return null;
+      }
       console.error('Failed to fetch diary entry:', error);
       return null;
     }
@@ -36,29 +42,45 @@ export const diaryService = {
     return this.getEntry(date);
   },
 
-  async createEntry(entry: Omit<DiaryEntry, 'id' | 'created_at' | 'updated_at'>): Promise<DiaryEntry | null> {
+  async createEntry(entry: Omit<DiaryEntry, 'id' | 'created_at' | 'updated_at'>): Promise<DiaryEntry> {
     try {
-      const response = await apiClient.post('/diary/entries', entry);
-      return response.data;
+      const response = await apiClient.post('/diaries', entry);
+      return response.data.data;
     } catch (error) {
       console.error('Failed to create diary entry:', error);
-      return null;
+      throw error; // 에러를 다시 throw하여 호출자가 처리하도록 함
     }
   },
 
-  async updateEntry(date: string, entry: Partial<DiaryEntry>): Promise<DiaryEntry | null> {
+  async updateEntry(date: string, entry: Partial<DiaryEntry>): Promise<DiaryEntry> {
     try {
-      const response = await apiClient.put(`/diary/entries/${date}`, entry);
-      return response.data;
+      // 날짜로 일기를 찾아서 ID를 가져옴
+      const existingDiary = await this.getDiaryByDate(date);
+      if (!existingDiary || !existingDiary.id) {
+        throw new Error('Diary not found for date: ' + date);
+      }
+
+      const response = await apiClient.put(`/diaries`, entry, {
+        params: { id: existingDiary.id }
+      });
+      return response.data.data;
     } catch (error) {
       console.error('Failed to update diary entry:', error);
-      return null;
+      throw error; // 에러를 다시 throw하여 호출자가 처리하도록 함
     }
   },
 
   async deleteEntry(date: string): Promise<boolean> {
     try {
-      await apiClient.delete(`/diary/entries/${date}`);
+      // 날짜로 일기를 찾아서 ID를 가져옴
+      const existingDiary = await this.getDiaryByDate(date);
+      if (!existingDiary || !existingDiary.id) {
+        return false;
+      }
+
+      await apiClient.delete(`/diaries`, {
+        params: { id: existingDiary.id }
+      });
       return true;
     } catch (error) {
       console.error('Failed to delete diary entry:', error);

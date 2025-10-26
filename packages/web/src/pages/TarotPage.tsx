@@ -25,6 +25,8 @@ export default function TarotPage() {
   const [userQuestion, setUserQuestion] = useState<string>('');
   const [cardPositions, setCardPositions] = useState<TarotCardPosition[]>([]);
   const [aiInterpretation, setAiInterpretation] = useState<string>('');
+  const [aiProvider, setAiProvider] = useState<string>('');
+  const [aiModel, setAiModel] = useState<string>('');
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -96,6 +98,8 @@ export default function TarotPage() {
 
       if (data.success) {
         setAiInterpretation(data.response);
+        setAiProvider(data.provider || 'unknown');
+        setAiModel(data.model || 'unknown');
 
         // 타로 기록 저장
         const spread = TAROT_SPREADS.find(s => s.id === selectedSpreadId);
@@ -680,11 +684,21 @@ export default function TarotPage() {
               {/* AI 해석 결과 */}
               {aiInterpretation && (
                 <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border-2 border-amber-200 dark:border-amber-700 p-6">
-                  <h3 className="text-2xl font-bold text-amber-800 dark:text-amber-300 mb-4 flex items-center gap-2">
-                    <span>🤖</span>
-                    <span>AI 타로 해석</span>
-                  </h3>
-                  <div className="text-gray-900 dark:text-gray-100 overflow-hidden break-words whitespace-pre-line leading-relaxed">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-2xl font-bold text-amber-800 dark:text-amber-300 flex items-center gap-2">
+                      <span>🤖</span>
+                      <span>AI 타로 해석</span>
+                    </h3>
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="px-2 py-1 bg-amber-200 dark:bg-amber-900/40 text-amber-900 dark:text-amber-300 rounded font-mono">
+                        {aiProvider === 'openai' && '우선순위 1: OpenAI GPT-4o'}
+                        {aiProvider === 'google-gemini' && '우선순위 2: Google Gemini'}
+                        {aiProvider === 'deepinfra' && '우선순위 3: DeepInfra'}
+                        {!['openai', 'google-gemini', 'deepinfra'].includes(aiProvider) && aiProvider}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-gray-900 dark:text-gray-100 overflow-hidden break-words whitespace-pre-wrap leading-relaxed">
                     {aiInterpretation}
                   </div>
                 </div>

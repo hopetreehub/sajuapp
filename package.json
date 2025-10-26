@@ -51,6 +51,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@vercel/postgres": "^0.10.0",
+    "dotenv": "^17.2.3",
     "playwright": "^1.55.0"
   }
 }

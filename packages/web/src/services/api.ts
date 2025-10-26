@@ -390,20 +390,21 @@ export const diaryService = {
 
   // Get diaries for date range (for calendar views)
   getDiariesForDateRange: async (startDate: string, endDate: string): Promise<DiaryEntry[]> => {
-    // Use searchDiaries endpoint which supports date range
-    const response = await api.get('/diaries/search', {
+    // Use query params for date range filtering
+    const response = await api.get('/diaries', {
       params: { startDate, endDate },
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
-    return response.data;
+    return response.data.data || [];
   },
 
   // Get diary entry by date
   getDiaryByDate: async (date: string): Promise<DiaryEntry> => {
-    const response = await api.get(`/diaries?date=${date}`, {
+    const response = await api.get(`/diaries`, {
+      params: { date },
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
-    return response.data;
+    return response.data.data;
   },
 
   // Create diary entry
@@ -411,20 +412,22 @@ export const diaryService = {
     const response = await api.post('/diaries', diary, {
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
-    return response.data;
+    return response.data.data;
   },
 
   // Update diary entry
   updateDiary: async (id: string, diary: Partial<DiaryEntry>): Promise<DiaryEntry> => {
-    const response = await api.put(`/diaries?id=${id}`, diary, {
+    const response = await api.put(`/diaries`, diary, {
+      params: { id },
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
-    return response.data;
+    return response.data.data;
   },
 
   // Delete diary entry
   deleteDiary: async (id: string): Promise<void> => {
-    await api.delete(`/diaries?id=${id}`, {
+    await api.delete(`/diaries`, {
+      params: { id },
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
   },
@@ -436,11 +439,11 @@ export const diaryService = {
     startDate?: string;
     endDate?: string;
   }): Promise<DiaryEntry[]> => {
-    const response = await api.get('/diaries/search', {
+    const response = await api.get('/diaries', {
       params,
       headers: { 'x-user-id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11' },
     });
-    return response.data;
+    return response.data.data || [];
   },
 };
 
