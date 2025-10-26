@@ -2,11 +2,18 @@
 
 ## 🚨 다음 세션 작업 지침 (최우선)
 
-### ✅ 현재 완료 상태 (2025-10-26)
+### ✅ 현재 완료 상태 (2025-10-27)
 - ✅ **Vercel 배포 성공** - 모든 API Functions 정상 작동
-- ✅ **로그인 기능 작동** (test@example.com / test1234)
-- ✅ **API 엔드포인트 13개 모두 배포됨**
+- ✅ **관리자 회원 승인 시스템 완성**
+  - API: packages/web/api/adminUsers.ts (GET/POST)
+  - 승인/거부/정지/활성화 기능 완료
+  - 헤더에 "회원관리" 메뉴 추가
+- ✅ **로그인 기능 작동**
+  - 관리자: admin@sajuapp.com / admin1234!
+  - 테스트: test@example.com / test1234
+- ✅ **API 엔드포인트 14개 배포 완료**
   - authLogin, authLogout, authMe, authSignup
+  - adminUsers (NEW!)
   - sajuChat, qimenChat, tarotChat, ziweiChat
   - health, customers, events, diaries, tags
 - ⚠️ **AI 챗 서비스 미작동** - 환경 변수 설정 필요
@@ -45,6 +52,20 @@ curl -X POST https://sajuapp-web.vercel.app/api/sajuChat \
 - 로그인: https://sajuapp-web.vercel.app/auth?mode=login
 - 사주 분석 페이지에서 AI 챗 테스트
 - "AI 서비스가 일시적으로 사용 불가능" 메시지가 사라져야 함
+
+### 📝 관리자 회원 관리 시스템 사용법
+**관리자 로그인:**
+1. https://sajuapp-web.vercel.app/auth?mode=login
+2. admin@sajuapp.com / admin1234!
+
+**회원 관리:**
+1. 헤더에서 "회원관리" 메뉴 클릭
+2. 상태별 필터링: 전체/승인대기/승인됨/거부됨/정지됨
+3. 버튼 기능:
+   - 승인 대기 → "승인" (초록색) / "거부" (빨간색)
+   - 승인됨 → "정지" (회색)
+   - 정지됨 → "활성화" (파란색)
+4. 역할 변경: 드롭다운에서 user/admin/super_admin 선택
 
 ### 📝 문제 발생 시 체크리스트
 - [ ] Vercel 환경 변수가 올바르게 설정되었는지 확인
