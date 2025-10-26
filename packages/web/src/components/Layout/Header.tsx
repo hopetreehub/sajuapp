@@ -10,7 +10,8 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuthStore();
 
-  const navItems = [
+  // 기본 메뉴 항목
+  const baseNavItems = [
     { path: '/', label: '캘린더', icon: '📅' },
     { path: '/saju', label: '사주분석', icon: '🔮' },
     { path: '/qimen', label: '귀문둔갑', icon: '⚡' },
@@ -19,6 +20,15 @@ const Header: React.FC = () => {
     { path: '/compatibility', label: '궁합', icon: '💑' },
     { path: '/settings', label: '설정', icon: '⚙️' },
   ];
+
+  // 관리자 메뉴 추가
+  const navItems = user?.role === 'admin' || user?.role === 'super_admin'
+    ? [
+        ...baseNavItems.slice(0, -1), // 설정 전까지
+        { path: '/admin/users', label: '회원관리', icon: '👥' },
+        baseNavItems[baseNavItems.length - 1], // 설정
+      ]
+    : baseNavItems;
 
   const isActive = (path: string) => {
     return location.pathname === path;

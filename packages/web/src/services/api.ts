@@ -451,36 +451,36 @@ export const diaryService = {
 export const todoService = {
   // Get all todos
   getTodos: async (): Promise<Todo[]> => {
-    const response = await axios.get('http://localhost:4012/api/calendar/todos');
+    const response = await axios.get('/api/calendar/todos');
     return response.data;
   },
 
   // Get todos by date
   getTodosByDate: async (date: string): Promise<Todo[]> => {
-    const response = await axios.get(`http://localhost:4012/api/calendar/todos/${date}`);
+    const response = await axios.get(`/api/calendar/todos/${date}`);
     return response.data;
   },
 
   // Create todo
   createTodo: async (todo: Omit<Todo, 'id' | 'created_at' | 'updated_at' | 'customer_id'>): Promise<Todo> => {
-    const response = await axios.post('http://localhost:4012/api/calendar/todos', todo);
+    const response = await axios.post('/api/calendar/todos', todo);
     return response.data;
   },
 
   // Update todo
   updateTodo: async (id: string, todo: Partial<Todo>): Promise<Todo> => {
-    const response = await axios.put(`http://localhost:4012/api/calendar/todos/${id}`, todo);
+    const response = await axios.put(`/api/calendar/todos/${id}`, todo);
     return response.data;
   },
 
   // Delete todo
   deleteTodo: async (id: string): Promise<void> => {
-    await axios.delete(`http://localhost:4012/api/calendar/todos/${id}`);
+    await axios.delete(`/api/calendar/todos/${id}`);
   },
 
   // Toggle todo completion
   toggleTodo: async (id: string): Promise<Todo> => {
-    const response = await axios.patch(`http://localhost:4012/api/calendar/todos/${id}/toggle`);
+    const response = await axios.patch(`/api/calendar/todos/${id}/toggle`);
     return response.data;
   },
 };
