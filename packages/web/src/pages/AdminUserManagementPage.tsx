@@ -44,7 +44,7 @@ const AdminUserManagementPage: React.FC = () => {
       if (filter !== 'all') params.append('approval_status', filter);
       if (searchTerm) params.append('search', searchTerm);
 
-      const response = await fetch(`/api/admin/users?${params}`, {
+      const response = await fetch(`/api/adminUsers?${params}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -74,11 +74,13 @@ const AdminUserManagementPage: React.FC = () => {
     if (!token || !confirm('이 사용자를 승인하시겠습니까?')) return;
 
     try {
-      const response = await fetch(`/api/admin/users/${userId}/approve`, {
+      const response = await fetch(`/api/adminUsers`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ action: 'approve', userId }),
       });
 
       const data = await response.json();
@@ -109,13 +111,13 @@ const AdminUserManagementPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`/api/admin/users/${selectedUser.id}/reject`, {
+      const response = await fetch(`/api/adminUsers`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ reason: rejectReason }),
+        body: JSON.stringify({ action: 'reject', userId: selectedUser.id, reason: rejectReason }),
       });
 
       const data = await response.json();
@@ -138,11 +140,13 @@ const AdminUserManagementPage: React.FC = () => {
     if (!token || !confirm('이 사용자를 정지하시겠습니까?')) return;
 
     try {
-      const response = await fetch(`/api/admin/users/${userId}/suspend`, {
+      const response = await fetch(`/api/adminUsers`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ action: 'suspend', userId }),
       });
 
       const data = await response.json();
@@ -163,13 +167,13 @@ const AdminUserManagementPage: React.FC = () => {
     if (!token || !confirm(`역할을 ${newRole}(으)로 변경하시겠습니까?`)) return;
 
     try {
-      const response = await fetch(`/api/admin/users/${userId}/role`, {
-        method: 'PATCH',
+      const response = await fetch(`/api/adminUsers`, {
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ role: newRole }),
+        body: JSON.stringify({ action: 'change_role', userId, role: newRole }),
       });
 
       const data = await response.json();
