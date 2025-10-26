@@ -369,6 +369,14 @@ const AdminUserManagementPage: React.FC = () => {
                               정지
                             </button>
                           )}
+                          {user.approval_status === 'suspended' && (
+                            <button
+                              onClick={() => handleApprove(user.id)}
+                              className="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                              활성화
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
