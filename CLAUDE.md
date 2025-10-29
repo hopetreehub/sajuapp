@@ -279,39 +279,304 @@ echo "✨ 커밋 완료!"
 chmod +x auto-commit.sh
 ```
 
+## 🧪 TDD (Test-Driven Development) 지침
+
+### 핵심 원칙
+**⚠️ 절대 준수사항: 테스트 먼저, 코드는 나중에**
+
+TDD는 코드 품질과 신뢰성을 보장하는 가장 효과적인 개발 방법론입니다.
+
+### Red-Green-Refactor 사이클
+
+```
+🔴 RED    → 실패하는 테스트 작성 (요구사항 명확화)
+   ↓
+🟢 GREEN  → 테스트를 통과하는 최소한의 코드 작성
+   ↓
+🔵 REFACTOR → 코드 개선 (테스트는 여전히 통과)
+   ↓
+   (반복)
+```
+
+### TDD 개발 워크플로우
+
+1. **🔴 테스트 작성 (RED)**
+   ```bash
+   # 1단계: 테스트 파일 생성
+   # 예: aiCacheManager.test.ts
+
+   describe('AICacheManager', () => {
+     it('should cache and retrieve AI responses', () => {
+       // 테스트 코드 작성
+     });
+   });
+   ```
+
+2. **🟢 구현 (GREEN)**
+   ```bash
+   # 2단계: 테스트를 통과하는 최소 코드 작성
+   # 예: aiCacheManager.ts
+
+   export class AICacheManager {
+     get() { /* 구현 */ }
+     set() { /* 구현 */ }
+   }
+   ```
+
+3. **🔵 리팩토링 (REFACTOR)**
+   ```bash
+   # 3단계: 코드 개선 (테스트 통과 유지)
+   # - 중복 제거
+   # - 성능 최적화
+   # - 가독성 향상
+   ```
+
+4. **✅ 테스트 실행 및 검증**
+   ```bash
+   npm test                    # 전체 테스트 실행
+   npm test -- --coverage      # 커버리지 리포트
+   npm test aiCacheManager     # 특정 테스트만 실행
+   ```
+
+### 테스트 작성 우선순위
+
+#### 1순위: 핵심 비즈니스 로직
+- 사주 계산 알고리즘
+- 귀문둔갑 국 계산
+- 자미두수 명궁 계산
+- AI 응답 캐싱 로직
+
+#### 2순위: API 엔드포인트
+- 인증 API (로그인/로그아웃)
+- AI 챗 API (사주/귀문둔갑/타로/자미두수)
+- 고객 관리 API
+
+#### 3순위: 유틸리티 함수
+- 날짜 변환 함수
+- 문자열 처리 함수
+- 데이터 검증 함수
+
+#### 4순위: UI 컴포넌트
+- 중요한 사용자 인터랙션
+- 상태 관리 로직
+- 폼 검증
+
+### 테스트 종류별 가이드
+
+#### Unit Tests (단위 테스트)
+- **목적**: 개별 함수/클래스의 동작 검증
+- **도구**: Vitest, Jest
+- **예시**:
+  ```typescript
+  // aiCacheManager.test.ts
+  describe('AICacheManager', () => {
+    it('캐시 저장 후 조회 가능', () => {
+      const cache = new AICacheManager('test');
+      cache.set({ key: 'value' }, 'response', 'provider', 'model');
+      const result = cache.get({ key: 'value' });
+      expect(result?.response).toBe('response');
+    });
+
+    it('만료된 캐시는 null 반환', () => {
+      const cache = new AICacheManager('test', { ttl: 0 });
+      cache.set({ key: 'value' }, 'response', 'provider', 'model');
+      const result = cache.get({ key: 'value' });
+      expect(result).toBeNull();
+    });
+  });
+  ```
+
+#### Integration Tests (통합 테스트)
+- **목적**: 여러 모듈 간 상호작용 검증
+- **도구**: Vitest, Supertest
+- **예시**:
+  ```typescript
+  // api/sajuChat.test.ts
+  describe('POST /api/sajuChat', () => {
+    it('유효한 요청에 AI 응답 반환', async () => {
+      const response = await request(app)
+        .post('/api/sajuChat')
+        .send({
+          prompt: '당신은 사주 전문가입니다',
+          userQuestion: '오늘의 운세는?'
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.response).toBeTruthy();
+    });
+  });
+  ```
+
+#### E2E Tests (엔드투엔드 테스트)
+- **목적**: 사용자 시나리오 전체 플로우 검증
+- **도구**: Playwright, Cypress
+- **예시**:
+  ```typescript
+  // e2e/ai-chat.spec.ts
+  test('사주 AI 챗 사용 플로우', async ({ page }) => {
+    await page.goto('http://localhost:4000/saju');
+    await page.fill('[data-testid="ai-chat-input"]', '오늘의 운세는?');
+    await page.click('[data-testid="ai-chat-send"]');
+    await expect(page.locator('[data-testid="ai-response"]')).toBeVisible();
+  });
+  ```
+
+### 테스트 커버리지 목표
+
+- **유틸리티 함수**: 90% 이상
+- **비즈니스 로직**: 80% 이상
+- **API 엔드포인트**: 70% 이상
+- **UI 컴포넌트**: 60% 이상
+
+```bash
+# 커버리지 확인
+npm test -- --coverage
+
+# 커버리지 리포트 생성
+npm test -- --coverage --reporter=html
+```
+
+### 테스트 명명 규칙
+
+```typescript
+// ✅ 좋은 예
+describe('AICacheManager', () => {
+  describe('get()', () => {
+    it('캐시된 데이터를 올바르게 반환해야 함', () => {});
+    it('캐시가 없으면 null을 반환해야 함', () => {});
+    it('만료된 캐시는 삭제하고 null을 반환해야 함', () => {});
+  });
+
+  describe('set()', () => {
+    it('데이터를 캐시에 저장해야 함', () => {});
+    it('5MB를 초과하는 데이터는 저장하지 않아야 함', () => {});
+  });
+});
+
+// ❌ 나쁜 예
+describe('test', () => {
+  it('works', () => {});
+  it('test 2', () => {});
+});
+```
+
+### 테스트 모범 사례
+
+#### 1. AAA 패턴 사용
+```typescript
+it('캐시 저장 및 조회', () => {
+  // Arrange (준비)
+  const cache = new AICacheManager('test');
+  const params = { question: 'test' };
+
+  // Act (실행)
+  cache.set(params, 'response', 'provider', 'model');
+  const result = cache.get(params);
+
+  // Assert (검증)
+  expect(result?.response).toBe('response');
+});
+```
+
+#### 2. Mock 활용
+```typescript
+import { vi } from 'vitest';
+
+it('API 호출 시 에러 처리', async () => {
+  // fetch를 mock으로 대체
+  global.fetch = vi.fn().mockRejectedValue(new Error('Network error'));
+
+  const result = await getAIResponse('test question');
+
+  expect(result).toBe('규칙 기반 응답');
+});
+```
+
+#### 3. 테스트 격리
+```typescript
+describe('AICacheManager', () => {
+  beforeEach(() => {
+    // 각 테스트 전에 localStorage 초기화
+    localStorage.clear();
+  });
+
+  afterEach(() => {
+    // 각 테스트 후 정리
+    localStorage.clear();
+  });
+});
+```
+
+### 테스트 실행 명령어
+
+```bash
+# 전체 테스트 실행
+npm test
+
+# 특정 파일만 테스트
+npm test aiCacheManager
+
+# Watch 모드 (변경 시 자동 재실행)
+npm test -- --watch
+
+# 커버리지 리포트
+npm test -- --coverage
+
+# UI 모드로 실행 (Vitest)
+npm test -- --ui
+```
+
 ## 📊 개발 체크리스트
 
-### 🚀 개발 워크플로우 필수 단계
-**⚠️ 절대 준수사항: 모든 변경사항은 반드시 아래 순서로 진행**
+### 🚀 TDD 기반 개발 워크플로우 필수 단계
+**⚠️ 절대 준수사항: 테스트 → 구현 → 리팩토링 순서 준수**
 
 1. **📝 변경사항 계획 및 문서화**
    - [ ] TodoWrite 도구로 작업 계획 수립
    - [ ] 각 단계별 진행상황 추적
    - [ ] 완료된 작업은 즉시 completed로 마킹
 
-2. **💻 코드 개발 및 테스트**
+2. **🔴 테스트 작성 (RED)**
+   - [ ] 요구사항을 명확히 정의
+   - [ ] 실패하는 테스트 작성 (테스트 파일: `*.test.ts`)
+   - [ ] 테스트 실행하여 실패 확인 (`npm test`)
+   - [ ] 테스트가 정확히 원하는 동작을 검증하는지 확인
+
+3. **🟢 구현 (GREEN)**
+   - [ ] 테스트를 통과하는 최소한의 코드 작성
    - [ ] TypeScript 컴파일 에러 없음
+   - [ ] 테스트 실행하여 통과 확인
+   - [ ] 모든 테스트가 통과할 때까지 반복
+
+4. **🔵 리팩토링 (REFACTOR)**
+   - [ ] 코드 중복 제거
+   - [ ] 가독성 개선
+   - [ ] 성능 최적화
    - [ ] ESLint 경고/에러 해결
+   - [ ] 테스트가 여전히 통과하는지 확인
+
+5. **🔍 통합 테스트 및 검증**
    - [ ] 프론트엔드 서버 포트 4000으로 실행
    - [ ] 백엔드 서비스 정상 실행 확인
-
-3. **🔍 철저한 테스트 및 검증**
    - [ ] 브라우저에서 기능 동작 완전 확인
    - [ ] 모든 UI 인터랙션 테스트
    - [ ] 콘솔 에러 없음 확인
    - [ ] 네트워크 탭에서 API 호출 확인
    - [ ] 다양한 시나리오 테스트
 
-4. **📋 상세한 진행 보고**
+6. **📋 상세한 진행 보고**
    - [ ] 구현된 기능 목록 작성
+   - [ ] 작성된 테스트 목록 작성
+   - [ ] 테스트 커버리지 리포트
    - [ ] 변경사항 상세 설명
-   - [ ] 테스트 결과 보고
    - [ ] 스크린샷 또는 동작 확인 결과
 
-5. **💾 Git 커밋 및 문서화**
+7. **💾 Git 커밋 및 문서화**
+   - [ ] 테스트 커버리지 확인 (`npm test -- --coverage`)
    - [ ] git status로 변경사항 확인
    - [ ] git diff로 코드 변경 내용 검토
-   - [ ] 상세한 커밋 메시지 작성
+   - [ ] 상세한 커밋 메시지 작성 (test: 추가)
    - [ ] 관련 문서 업데이트
 
 ### 코드 작성 후 필수 확인사항
@@ -330,7 +595,9 @@ chmod +x auto-commit.sh
 - [ ] 로그 출력 정상
 
 ### ⛔ 절대 금지사항
-- 🚫 변경사항을 테스트 없이 커밋하는 것
+- 🚫 **테스트 없이 코드 작성하는 것** (TDD 원칙 위반)
+- 🚫 **테스트 없이 변경사항을 커밋하는 것**
+- 🚫 **실패하는 테스트를 무시하고 진행하는 것**
 - 🚫 프론트엔드를 4000 포트 외에 다른 포트로 실행하는 것
 - 🚫 진행상황을 보고하지 않고 작업하는 것
 - 🚫 TodoWrite 없이 복잡한 작업을 진행하는 것

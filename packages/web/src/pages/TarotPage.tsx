@@ -16,6 +16,7 @@ import TarotHistoryView from '@/components/tarot/TarotHistoryView';
 import QuestionSelector from '@/components/tarot/QuestionSelector';
 import { saveTarotReading, getTarotReadings as _getTarotReadings } from '@/utils/tarotStorage';
 import { exportTarotReadingToPDF, formatDateForFilename } from '@/utils/pdfExport';
+import { tarotCacheManager } from '@/utils/aiCacheManager';
 
 type Stage = 'select-spread' | 'enter-question' | 'drawing-cards' | 'show-result';
 
@@ -77,7 +78,43 @@ export default function TarotPage() {
     setAiInterpretation('');
 
     try {
+      // 영구 캐시 키 생성 (localStorage 기반)
+      const cacheParams = {
+        spreadId: selectedSpreadId,
+        question: userQuestion.toLowerCase().trim(),
+        cardNames: cardPositions.map(p => `${p.card.name}_${p.isReversed ? 'R' : 'U'}`).join('|'),
+        userId: 1, // TODO: 실제 사용자 ID로 변경
+      };
+
+      // 영구 캐시 확인
+      const cached = tarotCacheManager.get(cacheParams);
+      if (cached) {
+        console.log(`⚡ [타로 영구 캐시] 즉시 응답 (${cached.provider} ${cached.model})`);
+        setAiInterpretation(cached.response);
+        setAiProvider(cached.provider);
+        setAiModel(cached.model);
+        setIsLoadingAI(false);
+
+        // 타로 기록 저장
+        const spread = TAROT_SPREADS.find(s => s.id === selectedSpreadId);
+        if (spread) {
+          saveTarotReading({
+            userId: 1,
+            spreadId: selectedSpreadId,
+            spreadName: spread.nameKo,
+            question: userQuestion,
+            cards: cardPositions,
+            aiInterpretation: cached.response,
+          });
+        }
+        return;
+      }
+
       const prompt = generateSpreadPrompt(selectedSpreadId, cardPositions, userQuestion);
+
+      // API 호출 시작 시간 측정
+      const startTime = performance.now();
+      console.log('⏱️ [타로 AI] API 호출 시작...');
 
       const response = await fetch('/api/tarotChat', {
         method: 'POST',
@@ -95,11 +132,18 @@ export default function TarotPage() {
       }
 
       const data = await response.json();
+      const endTime = performance.now();
+      const responseTime = Math.round(endTime - startTime);
 
       if (data.success) {
+        console.log(`✅ [타로 AI] 응답 완료 (${responseTime}ms, ${data.provider} ${data.model})`);
+
         setAiInterpretation(data.response);
         setAiProvider(data.provider || 'unknown');
         setAiModel(data.model || 'unknown');
+
+        // 영구 캐시에 저장
+        tarotCacheManager.set(cacheParams, data.response, data.provider, data.model);
 
         // 타로 기록 저장
         const spread = TAROT_SPREADS.find(s => s.id === selectedSpreadId);
@@ -684,20 +728,10 @@ export default function TarotPage() {
               {/* AI 해석 결과 */}
               {aiInterpretation && (
                 <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border-2 border-amber-200 dark:border-amber-700 p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-2xl font-bold text-amber-800 dark:text-amber-300 flex items-center gap-2">
-                      <span>🤖</span>
-                      <span>AI 타로 해석</span>
-                    </h3>
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className="px-2 py-1 bg-amber-200 dark:bg-amber-900/40 text-amber-900 dark:text-amber-300 rounded font-mono">
-                        {aiProvider === 'openai' && '우선순위 1: OpenAI GPT-4o'}
-                        {aiProvider === 'google-gemini' && '우선순위 2: Google Gemini'}
-                        {aiProvider === 'deepinfra' && '우선순위 3: DeepInfra'}
-                        {!['openai', 'google-gemini', 'deepinfra'].includes(aiProvider) && aiProvider}
-                      </span>
-                    </div>
-                  </div>
+                  <h3 className="text-2xl font-bold text-amber-800 dark:text-amber-300 flex items-center gap-2 mb-4">
+                    <span>🤖</span>
+                    <span>AI 타로 해석</span>
+                  </h3>
                   <div className="text-gray-900 dark:text-gray-100 overflow-hidden break-words whitespace-pre-wrap leading-relaxed">
                     {aiInterpretation}
                   </div>

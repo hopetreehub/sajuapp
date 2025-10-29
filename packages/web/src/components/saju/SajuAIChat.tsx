@@ -19,6 +19,7 @@ import {
 } from '@/utils/sajuRelations';
 import { getDailyPillar, getDailyFortuneModifier } from '@/utils/dailyFortune';
 import type { SajuData } from '@/utils/sajuScoreCalculator';
+import { sajuCacheManager } from '@/utils/aiCacheManager';
 
 interface SajuAIChatProps {
   customer: Customer;
@@ -209,9 +210,6 @@ export default function SajuAIChat({ customer, fourPillars, analysisResult, onCl
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // AI 응답 캐시 (메모리 기반)
-  const [responseCache, setResponseCache] = useState<Map<string, string>>(new Map());
-
   // 음성 인식 상태
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<any>(null);
@@ -274,16 +272,28 @@ export default function SajuAIChat({ customer, fourPillars, analysisResult, onCl
     }
   };
 
-  // AI 응답 생성 (API 호출 + 캐싱)
+  // AI 응답 생성 (API 호출 + 영구 캐싱)
   const getAIResponse = async (userQuestion: string): Promise<string> => {
     try {
-      // 캐시 키 생성 (고객 ID + 질문)
-      const cacheKey = `${customer.id}_${userQuestion.toLowerCase().trim()}`;
+      // 캐시 파라미터 생성 (고객 정보 + 사주팔자 + 질문)
+      const cacheParams = {
+        customerId: customer.id,
+        birthDate: customer.birth_date,
+        birthTime: customer.birth_time,
+        fourPillars: {
+          year: fourPillars.year.combined,
+          month: fourPillars.month.combined,
+          day: fourPillars.day.combined,
+          hour: fourPillars.hour.combined,
+        },
+        question: userQuestion.toLowerCase().trim(),
+      };
 
-      // 캐시 확인
-      if (responseCache.has(cacheKey)) {
-        console.log('💾 [캐시] 저장된 응답 사용:', cacheKey);
-        return responseCache.get(cacheKey)!;
+      // 영구 캐시 확인 (localStorage)
+      const cached = sajuCacheManager.get(cacheParams);
+      if (cached) {
+        console.log(`⚡ [영구 캐시] 즉시 응답 (${cached.provider} ${cached.model})`);
+        return cached.response;
       }
 
       // 사주 분석 프롬프트 생성
@@ -293,6 +303,8 @@ export default function SajuAIChat({ customer, fourPillars, analysisResult, onCl
 
       // AI API 호출 - 사주 전용 엔드포인트 사용
       console.log('🌐 [사주 AI] API 호출 중...');
+      const startTime = performance.now();
+
       const response = await fetch('/api/sajuChat', {
         method: 'POST',
         headers: {
@@ -304,17 +316,21 @@ export default function SajuAIChat({ customer, fourPillars, analysisResult, onCl
         }),
       });
 
+      const endTime = performance.now();
+      const responseTime = Math.round(endTime - startTime);
+
       if (!response.ok) {
         console.error('❌ [AI] API 오류:', response.status, await response.text());
         return generateRuleBasedResponse(userQuestion, fourPillars, analysisResult);
       }
 
       const data = await response.json();
-      console.log('✅ [AI] 응답 받음:', data);
+      console.log(`✅ [AI] 응답 받음 (${responseTime}ms):`, data.provider, data.model);
 
       if (data.success && data.response) {
-        setResponseCache(prev => new Map(prev).set(cacheKey, data.response));
-        console.log('💾 [캐시] 응답 저장:', cacheKey);
+        // 영구 캐시에 저장 (localStorage)
+        sajuCacheManager.set(cacheParams, data.response, data.provider, data.model);
+
         return data.response;
       } else {
         console.error('❌ [AI] 응답 데이터 없음:', data);

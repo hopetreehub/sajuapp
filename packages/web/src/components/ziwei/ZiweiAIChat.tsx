@@ -11,6 +11,7 @@ import type { ZiweiChart, Palace } from '@/types/ziwei';
 import type { Customer } from '@/services/customerApi';
 import QuestionSelector from '@/components/tarot/QuestionSelector';
 import { ZIWEI_QUESTIONS } from '@/utils/ziweiQuestions';
+import { ziweiCacheManager } from '@/utils/aiCacheManager';
 
 interface ZiweiAIChatProps {
   chart: ZiweiChart;
@@ -57,8 +58,7 @@ export default function ZiweiAIChat({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // AI 응답 캐시 (reserved for future caching feature)
-  const [_responseCache, _setResponseCache] = useState<Map<string, string>>(new Map());
+  // AI 응답 캐시 제거됨 - 이제 영구 캐싱 시스템 사용 (aiCacheManager.ts)
 
   // 음성 인식 상태
   const [isListening, setIsListening] = useState(false);
@@ -267,16 +267,32 @@ ${userQuestion}
   // AI 응답 생성
   const getAIResponse = async (userQuestion: string): Promise<string> => {
     try {
-      // 캐시 비활성화: AI가 매번 새로운 답변을 생성하도록 함
-      // const cacheKey = `${chart.bureau}_${selectedContext}_${customer?.id || 'none'}_${userQuestion.toLowerCase().trim()}`;
-      // if (responseCache.has(cacheKey)) {
-      //   return responseCache.get(cacheKey)!;
-      // }
+      // 영구 캐시 키 생성 (localStorage 기반)
+      const cacheParams = {
+        customerId: customer?.id || 'guest',
+        birthDate: customer?.birth_date,
+        birthTime: customer?.birth_time,
+        bureau: chart.bureau,
+        lifePalaceBranch: chart.lifePalaceBranch,
+        bodyPalaceBranch: chart.bodyPalaceBranch,
+        selectedContext,
+        question: userQuestion.toLowerCase().trim(),
+      };
+
+      // 영구 캐시 확인
+      const cached = ziweiCacheManager.get(cacheParams);
+      if (cached) {
+        console.log(`⚡ [자미두수 영구 캐시] 즉시 응답 (${cached.provider} ${cached.model})`);
+        return cached.response;
+      }
 
       // 프롬프트 생성
       const aiPrompt = generateZiweiAIPrompt(userQuestion);
 
-      // API 호출
+      // API 호출 시작 시간 측정
+      const startTime = performance.now();
+      console.log('⏱️ [자미두수 AI] API 호출 시작...');
+
       const response = await fetch('/api/ziweiChat', {
         method: 'POST',
         headers: {
@@ -289,19 +305,27 @@ ${userQuestion}
       });
 
       if (!response.ok) {
+        console.warn('[자미두수 AI] API 응답 실패, 규칙 기반 응답 사용');
         return generateRuleBasedResponse(userQuestion);
       }
 
       const data = await response.json();
+      const endTime = performance.now();
+      const responseTime = Math.round(endTime - startTime);
 
       if (data.success && data.response) {
-        // 캐싱 비활성화
-        // setResponseCache((prev) => new Map(prev).set(cacheKey, data.response));
+        console.log(`✅ [자미두수 AI] 응답 완료 (${responseTime}ms, ${data.provider} ${data.model})`);
+
+        // 영구 캐시에 저장
+        ziweiCacheManager.set(cacheParams, data.response, data.provider, data.model);
+
         return data.response;
       } else {
+        console.warn('[자미두수 AI] 응답 실패, 규칙 기반 응답 사용');
         return generateRuleBasedResponse(userQuestion);
       }
     } catch (error) {
+      console.error('[자미두수 AI] 에러:', error);
       return generateRuleBasedResponse(userQuestion);
     }
   };

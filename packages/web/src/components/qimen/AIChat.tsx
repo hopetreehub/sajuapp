@@ -13,6 +13,7 @@ import type { Customer } from '@/services/customerApi';
 import { generateAIPrompt } from '@/utils/qimenContextEvaluator';
 import QuestionSelector from '@/components/tarot/QuestionSelector';
 import { QIMEN_QUESTIONS } from '@/utils/qimenQuestions';
+import { qimenCacheManager } from '@/utils/aiCacheManager';
 
 interface AIChatProps {
   chart: QimenChart;
@@ -42,9 +43,6 @@ export default function AIChat({ chart, context, customer, onClose }: AIChatProp
   const [selectedQuestion, setSelectedQuestion] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // AI 응답 캐시 (메모리 기반)
-  const [responseCache, setResponseCache] = useState<Map<string, string>>(new Map());
 
   // 음성 인식 상태
   const [isListening, setIsListening] = useState(false);
@@ -108,16 +106,23 @@ export default function AIChat({ chart, context, customer, onClose }: AIChatProp
     }
   };
 
-  // AI 응답 생성 (Claude API 호출 + 캐싱)
+  // AI 응답 생성 (API 호출 + 영구 캐싱)
   const getAIResponse = async (userQuestion: string): Promise<string> => {
     try {
-      // 캐시 키 생성 (국 + 목적 + 고객 + 질문)
-      const cacheKey = `${chart.ju}_${chart.yinYang}_${context}_${customer?.id || 'none'}_${userQuestion.toLowerCase().trim()}`;
+      // 캐시 파라미터 생성 (국 + 음양 + 목적 + 고객 + 질문)
+      const cacheParams = {
+        ju: chart.ju,
+        yinYang: chart.yinYang,
+        context: context || 'general',
+        customerId: customer?.id || 'anonymous',
+        question: userQuestion.toLowerCase().trim(),
+      };
 
-      // 캐시 확인
-      if (responseCache.has(cacheKey)) {
-        console.log('💾 [캐시] 저장된 응답 사용:', cacheKey);
-        return responseCache.get(cacheKey)!;
+      // 영구 캐시 확인 (localStorage)
+      const cached = qimenCacheManager.get(cacheParams);
+      if (cached) {
+        console.log(`⚡ [영구 캐시] 즉시 응답 (${cached.provider} ${cached.model})`);
+        return cached.response;
       }
 
       // 귀문둔갑 정보를 포함한 프롬프트 생성 (고객 정보 포함)
@@ -125,8 +130,10 @@ export default function AIChat({ chart, context, customer, onClose }: AIChatProp
       const aiPrompt = generateAIPrompt(chart, context, userQuestion, customer);
       console.log('✅ [AI] 프롬프트 생성 완료');
 
-      // Claude API 호출
-      console.log('🌐 [AI] API 호출 중...');
+      // AI API 호출
+      console.log('🌐 [귀문둔갑 AI] API 호출 중...');
+      const startTime = performance.now();
+
       const response = await fetch('/api/qimenChat', {
         method: 'POST',
         headers: {
@@ -138,6 +145,9 @@ export default function AIChat({ chart, context, customer, onClose }: AIChatProp
         }),
       });
 
+      const endTime = performance.now();
+      const responseTime = Math.round(endTime - startTime);
+
       if (!response.ok) {
         console.error('❌ [AI] API 오류:', response.status, await response.text());
         // 실패 시 규칙 기반 응답으로 대체
@@ -145,12 +155,12 @@ export default function AIChat({ chart, context, customer, onClose }: AIChatProp
       }
 
       const data = await response.json();
-      console.log('✅ [AI] 응답 받음:', data);
+      console.log(`✅ [AI] 응답 받음 (${responseTime}ms):`, data.provider, data.model);
 
       if (data.success && data.response) {
-        // 응답 캐싱
-        setResponseCache(prev => new Map(prev).set(cacheKey, data.response));
-        console.log('💾 [캐시] 응답 저장:', cacheKey);
+        // 영구 캐시에 저장 (localStorage)
+        qimenCacheManager.set(cacheParams, data.response, data.provider, data.model);
+
         return data.response;
       } else {
         console.error('❌ [AI] 응답 데이터 없음:', data);

@@ -49,7 +49,7 @@ Object.defineProperty(window, 'ResizeObserver', {
   value: ResizeObserverMock,
 });
 
-// localStorage 모킹
+// localStorage 모킹 (완전한 Storage 인터페이스 구현)
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
 
@@ -64,11 +64,21 @@ const localStorageMock = (() => {
     clear: () => {
       store = {};
     },
+    // length 속성: 저장된 항목 개수 반환
+    get length() {
+      return Object.keys(store).length;
+    },
+    // key() 메서드: 인덱스로 키 가져오기
+    key: (index: number) => {
+      const keys = Object.keys(store);
+      return keys[index] || null;
+    },
   };
 })();
 
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
+  writable: true,
 });
 
 // sessionStorage 모킹
