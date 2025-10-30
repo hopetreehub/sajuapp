@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 4
+      "actualWorkers": 2
     },
     "preserveOutput": "always",
     "reporter": [
@@ -41,7 +41,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 2
         },
         "id": "chromium",
         "name": "chromium",
@@ -57,7 +57,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 2
         },
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
@@ -83,20 +83,88 @@
   },
   "suites": [
     {
-      "title": "api.spec.ts",
-      "file": "api.spec.ts",
+      "title": "qimen-ai-chat.spec.ts",
+      "file": "qimen-ai-chat.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Customers API",
-          "file": "api.spec.ts",
-          "line": 6,
+          "title": "귀문둔갑 AI 챗 기능",
+          "file": "qimen-ai-chat.spec.ts",
+          "line": 11,
           "column": 6,
           "specs": [
             {
-              "title": "GET /api/customers - 모든 고객 조회",
+              "title": "귀문둔갑 페이지가 정상 로드되어야 함",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4816,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T17:07:21.959Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a2b4b5e334f291f46f74-022a1d0523d92f192acf",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 20,
+              "column": 3
+            },
+            {
+              "title": "AI 챗 버튼이 표시되어야 함",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1690,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T17:07:27.214Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a2b4b5e334f291f46f74-fed15d0c21ac6b73cc77",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 31,
+              "column": 3
+            },
+            {
+              "title": "AI 챗 버튼 클릭 시 모달이 열려야 함",
               "ok": false,
               "tags": [],
               "tests": [
@@ -111,51 +179,317 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 592,
+                      "duration": 1889,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:13:27",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:49:31",
                         "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 27,
-                          "line": 13
+                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                          "column": 31,
+                          "line": 49
                         },
-                        "snippet": "\u001b[0m \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[90m// 상태 코드 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 13 |\u001b[39m     expect(response\u001b[33m.\u001b[39mok())\u001b[33m.\u001b[39mtoBeTruthy()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 14 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m200\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 15 |\u001b[39m\n \u001b[90m 16 |\u001b[39m     \u001b[90m// 응답 본문 확인\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 47 |\u001b[39m     \u001b[90m// 모달 헤더 확인\u001b[39m\n \u001b[90m 48 |\u001b[39m     \u001b[36mconst\u001b[39m modalHeader \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=귀문둔갑 AI 상담사'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 49 |\u001b[39m     \u001b[36mawait\u001b[39m expect(modalHeader)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// 시스템 메시지 확인\u001b[39m\n \u001b[90m 52 |\u001b[39m     \u001b[36mconst\u001b[39m systemMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=/안녕하세요.*귀문둔갑 AI 상담사/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 27,
-                            "line": 13
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                            "column": 31,
+                            "line": 49
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n\n  11 |\n  12 |     // 상태 코드 확인\n> 13 |     expect(response.ok()).toBeTruthy();\n     |                           ^\n  14 |     expect(response.status()).toBe(200);\n  15 |\n  16 |     // 응답 본문 확인\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:13:27"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n\n  47 |     // 모달 헤더 확인\n  48 |     const modalHeader = page.locator('text=귀문둔갑 AI 상담사');\n> 49 |     await expect(modalHeader).toBeVisible({ timeout: 5000 });\n     |                               ^\n  50 |\n  51 |     // 시스템 메시지 확인\n  52 |     const systemMessage = page.locator('text=/안녕하세요.*귀문둔갑 AI 상담사/');\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:49:31"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-20T15:55:57.023Z",
+                      "startTime": "2025-10-30T17:07:28.929Z",
                       "annotations": [],
-                      "attachments": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-버튼-클릭-시-모달이-열려야-함-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-버튼-클릭-시-모달이-열려야-함-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-버튼-클릭-시-모달이-열려야-함-chromium\\error-context.md"
+                        }
+                      ],
                       "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 27,
-                        "line": 13
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                        "column": 31,
+                        "line": 49
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "1ea1b1599cbc08f16936-9da71448a67869d1d739",
-              "file": "api.spec.ts",
-              "line": 9,
+              "id": "a2b4b5e334f291f46f74-eb37cb5a682987e86a2a",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 40,
               "column": 3
             },
             {
-              "title": "POST /api/customers - 고객 생성 (메모리 모드)",
+              "title": "AI 챗 모달에서 질문 입력 및 전송이 가능해야 함",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2025,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T17:07:32.854Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a2b4b5e334f291f46f74-4a16d9e74c67a844fde7",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 56,
+              "column": 3
+            },
+            {
+              "title": "샘플 질문 선택이 가능해야 함",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1792,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T17:07:35.083Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a2b4b5e334f291f46f74-d667b7c90a51bdd84689",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 95,
+              "column": 3
+            },
+            {
+              "title": "모달 닫기 버튼이 작동해야 함",
               "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1530,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:131:31",
+                        "location": {
+                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                          "column": 31,
+                          "line": 131
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 129 |\u001b[39m     \u001b[90m// 모달 로드 대기\u001b[39m\n \u001b[90m 130 |\u001b[39m     \u001b[36mconst\u001b[39m modalHeader \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=귀문둔갑 AI 상담사'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 131 |\u001b[39m     \u001b[36mawait\u001b[39m expect(modalHeader)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 132 |\u001b[39m\n \u001b[90m 133 |\u001b[39m     \u001b[90m// 닫기 버튼 클릭 (X 버튼)\u001b[39m\n \u001b[90m 134 |\u001b[39m     \u001b[36mconst\u001b[39m closeButton \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button'\u001b[39m)\u001b[33m.\u001b[39mfilter({\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                            "column": 31,
+                            "line": 131
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n\n  129 |     // 모달 로드 대기\n  130 |     const modalHeader = page.locator('text=귀문둔갑 AI 상담사');\n> 131 |     await expect(modalHeader).toBeVisible({ timeout: 5000 });\n      |                               ^\n  132 |\n  133 |     // 닫기 버튼 클릭 (X 버튼)\n  134 |     const closeButton = page.locator('button').filter({\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:131:31"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T17:07:36.905Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-모달-닫기-버튼이-작동해야-함-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-모달-닫기-버튼이-작동해야-함-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-모달-닫기-버튼이-작동해야-함-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                        "column": 31,
+                        "line": 131
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "a2b4b5e334f291f46f74-aceb64477bd4e4b245a4",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 122,
+              "column": 3
+            },
+            {
+              "title": "음성 입력 버튼이 표시되어야 함",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1769,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T17:07:40.203Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a2b4b5e334f291f46f74-b6b2d440745de8366787",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 143,
+              "column": 3
+            },
+            {
+              "title": "목적(context) 선택이 반영되어야 함",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 1594,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:179:31",
+                        "location": {
+                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                          "column": 31,
+                          "line": 179
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 177 |\u001b[39m     \u001b[90m// 모달 로드 대기\u001b[39m\n \u001b[90m 178 |\u001b[39m     \u001b[36mconst\u001b[39m modalHeader \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=귀문둔갑 AI 상담사'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 179 |\u001b[39m     \u001b[36mawait\u001b[39m expect(modalHeader)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 180 |\u001b[39m\n \u001b[90m 181 |\u001b[39m     \u001b[90m// 헤더에 선택한 목적이 표시되는지 확인\u001b[39m\n \u001b[90m 182 |\u001b[39m     \u001b[36mconst\u001b[39m contextLabel \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=/사업.*전문 상담/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                            "column": 31,
+                            "line": 179
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n\n  177 |     // 모달 로드 대기\n  178 |     const modalHeader = page.locator('text=귀문둔갑 AI 상담사');\n> 179 |     await expect(modalHeader).toBeVisible({ timeout: 5000 });\n      |                               ^\n  180 |\n  181 |     // 헤더에 선택한 목적이 표시되는지 확인\n  182 |     const contextLabel = page.locator('text=/사업.*전문 상담/');\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:179:31"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T17:07:42.140Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-목적-context-선택이-반영되어야-함-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-목적-context-선택이-반영되어야-함-chromium\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-목적-context-선택이-반영되어야-함-chromium\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                        "column": 31,
+                        "line": 179
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "a2b4b5e334f291f46f74-8cffd4505ac439479685",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 160,
+              "column": 3
+            },
+            {
+              "title": "AI 응답이 캐싱되어야 함",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -168,129 +502,13 @@
                     {
                       "workerIndex": 5,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 54,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected value: \u001b[32m404\u001b[39m\nReceived array: \u001b[31m[500, 503]\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected value: \u001b[32m404\u001b[39m\nReceived array: \u001b[31m[500, 503]\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:46:26",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 26,
-                          "line": 46
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 44 |\u001b[39m     } \u001b[36melse\u001b[39m {\n \u001b[90m 45 |\u001b[39m       \u001b[90m// PostgreSQL이 설정되지 않은 경우 500 에러가 날 수 있음\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 46 |\u001b[39m       expect([\u001b[35m500\u001b[39m\u001b[33m,\u001b[39m \u001b[35m503\u001b[39m])\u001b[33m.\u001b[39mtoContain(response\u001b[33m.\u001b[39mstatus())\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 47 |\u001b[39m     }\n \u001b[90m 48 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 49 |\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 26,
-                            "line": 46
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected value: \u001b[32m404\u001b[39m\nReceived array: \u001b[31m[500, 503]\u001b[39m\n\n  44 |     } else {\n  45 |       // PostgreSQL이 설정되지 않은 경우 500 에러가 날 수 있음\n> 46 |       expect([500, 503]).toContain(response.status());\n     |                          ^\n  47 |     }\n  48 |   });\n  49 |\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:46:26"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:55:59.763Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 26,
-                        "line": 46
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-7f3eb1cf3236605da6b1",
-              "file": "api.spec.ts",
-              "line": 23,
-              "column": 3
-            },
-            {
-              "title": "POST /api/customers - 필수 필드 누락 시 400 에러",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 6,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 193,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m404\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m404\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:61:31",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 31,
-                          "line": 61
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m     \u001b[90m// 400 Bad Request\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 61 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m400\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 62 |\u001b[39m\n \u001b[90m 63 |\u001b[39m     \u001b[36mconst\u001b[39m data \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m response\u001b[33m.\u001b[39mjson()\u001b[33m;\u001b[39m\n \u001b[90m 64 |\u001b[39m     expect(data)\u001b[33m.\u001b[39mtoHaveProperty(\u001b[32m'error'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 31,
-                            "line": 61
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m404\u001b[39m\n\n  59 |\n  60 |     // 400 Bad Request\n> 61 |     expect(response.status()).toBe(400);\n     |                               ^\n  62 |\n  63 |     const data = await response.json();\n  64 |     expect(data).toHaveProperty('error');\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:61:31"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:02.581Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 31,
-                        "line": 61
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-7475ff9be04f4cc81923",
-              "file": "api.spec.ts",
-              "line": 50,
-              "column": 3
-            },
-            {
-              "title": "POST /api/customers - XSS 공격 차단",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 8,
-                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 77,
+                      "duration": 6565,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-20T15:56:05.767Z",
+                      "startTime": "2025-10-30T17:07:45.471Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -298,13 +516,81 @@
                   "status": "expected"
                 }
               ],
-              "id": "1ea1b1599cbc08f16936-2cd37af221cac157c21d",
-              "file": "api.spec.ts",
-              "line": 67,
+              "id": "a2b4b5e334f291f46f74-da788767b89b69b2a7dc",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 193,
               "column": 3
             },
             {
-              "title": "Rate Limiting - 60+ 요청 시 429 에러",
+              "title": "귀문둔갑 페이지가 정상 로드되어야 함",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 5156,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T17:07:21.959Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a2b4b5e334f291f46f74-dd9010e8e25566c554c6",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 20,
+              "column": 3
+            },
+            {
+              "title": "AI 챗 버튼이 표시되어야 함",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2177,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T17:07:27.530Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a2b4b5e334f291f46f74-508ec1e6d6f61755e613",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 31,
+              "column": 3
+            },
+            {
+              "title": "AI 챗 버튼 클릭 시 모달이 열려야 함",
               "ok": false,
               "tags": [],
               "tests": [
@@ -312,57 +598,73 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
                   "results": [
                     {
-                      "workerIndex": 8,
-                      "parallelIndex": 0,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "failed",
-                      "duration": 481,
+                      "duration": 2351,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:100:41",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:49:31",
                         "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 41,
-                          "line": 100
+                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                          "column": 31,
+                          "line": 49
                         },
-                        "snippet": "\u001b[0m \u001b[90m  98 |\u001b[39m     \u001b[90m// 마지막 요청들 중 일부는 429 에러가 나야 함\u001b[39m\n \u001b[90m  99 |\u001b[39m     \u001b[36mconst\u001b[39m rateLimitedResponses \u001b[33m=\u001b[39m responses\u001b[33m.\u001b[39mfilter((r) \u001b[33m=>\u001b[39m r\u001b[33m.\u001b[39mstatus() \u001b[33m===\u001b[39m \u001b[35m429\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 100 |\u001b[39m     expect(rateLimitedResponses\u001b[33m.\u001b[39mlength)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 101 |\u001b[39m\n \u001b[90m 102 |\u001b[39m     \u001b[90m// Rate Limit 헤더 확인\u001b[39m\n \u001b[90m 103 |\u001b[39m     \u001b[36mconst\u001b[39m lastResponse \u001b[33m=\u001b[39m responses[responses\u001b[33m.\u001b[39mlength \u001b[33m-\u001b[39m \u001b[35m1\u001b[39m]\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 47 |\u001b[39m     \u001b[90m// 모달 헤더 확인\u001b[39m\n \u001b[90m 48 |\u001b[39m     \u001b[36mconst\u001b[39m modalHeader \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=귀문둔갑 AI 상담사'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 49 |\u001b[39m     \u001b[36mawait\u001b[39m expect(modalHeader)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// 시스템 메시지 확인\u001b[39m\n \u001b[90m 52 |\u001b[39m     \u001b[36mconst\u001b[39m systemMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=/안녕하세요.*귀문둔갑 AI 상담사/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 41,
-                            "line": 100
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                            "column": 31,
+                            "line": 49
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n   98 |     // 마지막 요청들 중 일부는 429 에러가 나야 함\n   99 |     const rateLimitedResponses = responses.filter((r) => r.status() === 429);\n> 100 |     expect(rateLimitedResponses.length).toBeGreaterThan(0);\n      |                                         ^\n  101 |\n  102 |     // Rate Limit 헤더 확인\n  103 |     const lastResponse = responses[responses.length - 1];\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:100:41"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n\n  47 |     // 모달 헤더 확인\n  48 |     const modalHeader = page.locator('text=귀문둔갑 AI 상담사');\n> 49 |     await expect(modalHeader).toBeVisible({ timeout: 5000 });\n     |                               ^\n  50 |\n  51 |     // 시스템 메시지 확인\n  52 |     const systemMessage = page.locator('text=/안녕하세요.*귀문둔갑 AI 상담사/');\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:49:31"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-20T15:56:05.896Z",
+                      "startTime": "2025-10-30T17:07:29.742Z",
                       "annotations": [],
-                      "attachments": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-버튼-클릭-시-모달이-열려야-함-Mobile-Chrome\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-버튼-클릭-시-모달이-열려야-함-Mobile-Chrome\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-버튼-클릭-시-모달이-열려야-함-Mobile-Chrome\\error-context.md"
+                        }
+                      ],
                       "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 41,
-                        "line": 100
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                        "column": 31,
+                        "line": 49
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "1ea1b1599cbc08f16936-ec11374ffdfc5084f06c",
-              "file": "api.spec.ts",
-              "line": 89,
+              "id": "a2b4b5e334f291f46f74-f2ed6b51c990ffbac955",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 40,
               "column": 3
             },
             {
-              "title": "GET /api/customers - 모든 고객 조회",
+              "title": "AI 챗 모달에서 질문 입력 및 전송이 가능해야 함",
               "ok": false,
               "tags": [],
               "tests": [
@@ -375,52 +677,94 @@
                   "results": [
                     {
                       "workerIndex": 3,
-                      "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 643,
+                      "parallelIndex": 1,
+                      "status": "timedOut",
+                      "duration": 30557,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:13:27",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 27,
-                          "line": 13
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 11 |\u001b[39m\n \u001b[90m 12 |\u001b[39m     \u001b[90m// 상태 코드 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 13 |\u001b[39m     expect(response\u001b[33m.\u001b[39mok())\u001b[33m.\u001b[39mtoBeTruthy()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 14 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m200\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 15 |\u001b[39m\n \u001b[90m 16 |\u001b[39m     \u001b[90m// 응답 본문 확인\u001b[39m\u001b[0m"
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
                           "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 27,
-                            "line": 13
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                            "column": 22,
+                            "line": 76
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeTruthy\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mfalse\u001b[39m\n\n  11 |\n  12 |     // 상태 코드 확인\n> 13 |     expect(response.ok()).toBeTruthy();\n     |                           ^\n  14 |     expect(response.status()).toBe(200);\n  15 |\n  16 |     // 응답 본문 확인\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:13:27"
+                          "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"전송\")')\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-medium hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl\">전송</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    54 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n\n  74 |     const sendButton = page.locator('button:has-text(\"전송\")');\n  75 |     await expect(sendButton).toBeEnabled();\n> 76 |     await sendButton.click();\n     |                      ^\n  77 |\n  78 |     // 사용자 메시지가 표시되는지 확인\n  79 |     const userMessage = page.locator('text=오늘 좋은 방향은 어디인가요?');\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:76:22"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-20T15:55:56.985Z",
+                      "startTime": "2025-10-30T17:07:34.323Z",
                       "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 27,
-                        "line": 13
-                      }
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-모달에서-질문-입력-및-전송이-가능해야-함-Mobile-Chrome\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-모달에서-질문-입력-및-전송이-가능해야-함-Mobile-Chrome\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-모달에서-질문-입력-및-전송이-가능해야-함-Mobile-Chrome\\error-context.md"
+                        }
+                      ]
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "1ea1b1599cbc08f16936-ba209bd737e07770c85d",
-              "file": "api.spec.ts",
-              "line": 9,
+              "id": "a2b4b5e334f291f46f74-3fa37ce9fe624b31b23b",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 56,
               "column": 3
             },
             {
-              "title": "POST /api/customers - 고객 생성 (메모리 모드)",
+              "title": "샘플 질문 선택이 가능해야 함",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2257,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T17:08:06.653Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a2b4b5e334f291f46f74-e44aacacf70362f8fc98",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 95,
+              "column": 3
+            },
+            {
+              "title": "모달 닫기 버튼이 작동해야 함",
               "ok": false,
               "tags": [],
               "tests": [
@@ -432,53 +776,103 @@
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 3,
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 55,
+                      "duration": 2059,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected value: \u001b[32m404\u001b[39m\nReceived array: \u001b[31m[500, 503]\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected value: \u001b[32m404\u001b[39m\nReceived array: \u001b[31m[500, 503]\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:46:26",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:131:31",
                         "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 26,
-                          "line": 46
+                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                          "column": 31,
+                          "line": 131
                         },
-                        "snippet": "\u001b[0m \u001b[90m 44 |\u001b[39m     } \u001b[36melse\u001b[39m {\n \u001b[90m 45 |\u001b[39m       \u001b[90m// PostgreSQL이 설정되지 않은 경우 500 에러가 날 수 있음\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 46 |\u001b[39m       expect([\u001b[35m500\u001b[39m\u001b[33m,\u001b[39m \u001b[35m503\u001b[39m])\u001b[33m.\u001b[39mtoContain(response\u001b[33m.\u001b[39mstatus())\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 47 |\u001b[39m     }\n \u001b[90m 48 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 49 |\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 129 |\u001b[39m     \u001b[90m// 모달 로드 대기\u001b[39m\n \u001b[90m 130 |\u001b[39m     \u001b[36mconst\u001b[39m modalHeader \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=귀문둔갑 AI 상담사'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 131 |\u001b[39m     \u001b[36mawait\u001b[39m expect(modalHeader)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 132 |\u001b[39m\n \u001b[90m 133 |\u001b[39m     \u001b[90m// 닫기 버튼 클릭 (X 버튼)\u001b[39m\n \u001b[90m 134 |\u001b[39m     \u001b[36mconst\u001b[39m closeButton \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button'\u001b[39m)\u001b[33m.\u001b[39mfilter({\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 26,
-                            "line": 46
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                            "column": 31,
+                            "line": 131
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected value: \u001b[32m404\u001b[39m\nReceived array: \u001b[31m[500, 503]\u001b[39m\n\n  44 |     } else {\n  45 |       // PostgreSQL이 설정되지 않은 경우 500 에러가 날 수 있음\n> 46 |       expect([500, 503]).toContain(response.status());\n     |                          ^\n  47 |     }\n  48 |   });\n  49 |\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:46:26"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n\n  129 |     // 모달 로드 대기\n  130 |     const modalHeader = page.locator('text=귀문둔갑 AI 상담사');\n> 131 |     await expect(modalHeader).toBeVisible({ timeout: 5000 });\n      |                               ^\n  132 |\n  133 |     // 닫기 버튼 클릭 (X 버튼)\n  134 |     const closeButton = page.locator('button').filter({\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:131:31"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-20T15:55:59.777Z",
+                      "startTime": "2025-10-30T17:08:09.078Z",
                       "annotations": [],
-                      "attachments": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-모달-닫기-버튼이-작동해야-함-Mobile-Chrome\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-모달-닫기-버튼이-작동해야-함-Mobile-Chrome\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-모달-닫기-버튼이-작동해야-함-Mobile-Chrome\\error-context.md"
+                        }
+                      ],
                       "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 26,
-                        "line": 46
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                        "column": 31,
+                        "line": 131
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "1ea1b1599cbc08f16936-faf92ca25f5f8ada5484",
-              "file": "api.spec.ts",
-              "line": 23,
+              "id": "a2b4b5e334f291f46f74-871f3c67f41c828fd9fc",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 122,
               "column": 3
             },
             {
-              "title": "POST /api/customers - 필수 필드 누락 시 400 에러",
+              "title": "음성 입력 버튼이 표시되어야 함",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2025,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T17:08:12.782Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "a2b4b5e334f291f46f74-1f63132ae6fe32837d52",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 143,
+              "column": 3
+            },
+            {
+              "title": "목적(context) 선택이 반영되어야 함",
               "ok": false,
               "tags": [],
               "tests": [
@@ -491,851 +885,68 @@
                   "results": [
                     {
                       "workerIndex": 7,
-                      "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 98,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m404\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m404\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:61:31",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 31,
-                          "line": 61
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 59 |\u001b[39m\n \u001b[90m 60 |\u001b[39m     \u001b[90m// 400 Bad Request\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 61 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m400\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 62 |\u001b[39m\n \u001b[90m 63 |\u001b[39m     \u001b[36mconst\u001b[39m data \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m response\u001b[33m.\u001b[39mjson()\u001b[33m;\u001b[39m\n \u001b[90m 64 |\u001b[39m     expect(data)\u001b[33m.\u001b[39mtoHaveProperty(\u001b[32m'error'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 31,
-                            "line": 61
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m404\u001b[39m\n\n  59 |\n  60 |     // 400 Bad Request\n> 61 |     expect(response.status()).toBe(400);\n     |                               ^\n  62 |\n  63 |     const data = await response.json();\n  64 |     expect(data).toHaveProperty('error');\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:61:31"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:02.734Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 31,
-                        "line": 61
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-4c618b4e6b98c0f5d9cb",
-              "file": "api.spec.ts",
-              "line": 50,
-              "column": 3
-            },
-            {
-              "title": "POST /api/customers - XSS 공격 차단",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 9,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 64,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:05.870Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-98292a0849c3e8b0dfae",
-              "file": "api.spec.ts",
-              "line": 67,
-              "column": 3
-            },
-            {
-              "title": "Rate Limiting - 60+ 요청 시 429 에러",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 9,
-                      "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 703,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:100:41",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 41,
-                          "line": 100
-                        },
-                        "snippet": "\u001b[0m \u001b[90m  98 |\u001b[39m     \u001b[90m// 마지막 요청들 중 일부는 429 에러가 나야 함\u001b[39m\n \u001b[90m  99 |\u001b[39m     \u001b[36mconst\u001b[39m rateLimitedResponses \u001b[33m=\u001b[39m responses\u001b[33m.\u001b[39mfilter((r) \u001b[33m=>\u001b[39m r\u001b[33m.\u001b[39mstatus() \u001b[33m===\u001b[39m \u001b[35m429\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 100 |\u001b[39m     expect(rateLimitedResponses\u001b[33m.\u001b[39mlength)\u001b[33m.\u001b[39mtoBeGreaterThan(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 101 |\u001b[39m\n \u001b[90m 102 |\u001b[39m     \u001b[90m// Rate Limit 헤더 확인\u001b[39m\n \u001b[90m 103 |\u001b[39m     \u001b[36mconst\u001b[39m lastResponse \u001b[33m=\u001b[39m responses[responses\u001b[33m.\u001b[39mlength \u001b[33m-\u001b[39m \u001b[35m1\u001b[39m]\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 41,
-                            "line": 100
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m\n\n   98 |     // 마지막 요청들 중 일부는 429 에러가 나야 함\n   99 |     const rateLimitedResponses = responses.filter((r) => r.status() === 429);\n> 100 |     expect(rateLimitedResponses.length).toBeGreaterThan(0);\n      |                                         ^\n  101 |\n  102 |     // Rate Limit 헤더 확인\n  103 |     const lastResponse = responses[responses.length - 1];\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:100:41"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:05.977Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 41,
-                        "line": 100
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-39f84af6cc5ebe4d9710",
-              "file": "api.spec.ts",
-              "line": 89,
-              "column": 3
-            }
-          ]
-        },
-        {
-          "title": "보안 헤더",
-          "file": "api.spec.ts",
-          "line": 113,
-          "column": 6,
-          "specs": [
-            {
-              "title": "API 응답에 보안 헤더가 포함된다",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 10,
                       "parallelIndex": 0,
                       "status": "failed",
-                      "duration": 137,
+                      "duration": 2026,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeDefined\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mundefined\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeDefined\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mundefined\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:121:52",
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:179:31",
                         "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 52,
-                          "line": 121
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 119 |\u001b[39m\n \u001b[90m 120 |\u001b[39m     \u001b[90m// CORS 헤더\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 121 |\u001b[39m     expect(headers[\u001b[32m'access-control-allow-origin'\u001b[39m])\u001b[33m.\u001b[39mtoBeDefined()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 122 |\u001b[39m     expect(headers[\u001b[32m'access-control-allow-methods'\u001b[39m])\u001b[33m.\u001b[39mtoBeDefined()\u001b[33m;\u001b[39m\n \u001b[90m 123 |\u001b[39m\n \u001b[90m 124 |\u001b[39m     \u001b[90m// 보안 헤더\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 52,
-                            "line": 121
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeDefined\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mundefined\u001b[39m\n\n  119 |\n  120 |     // CORS 헤더\n> 121 |     expect(headers['access-control-allow-origin']).toBeDefined();\n      |                                                    ^\n  122 |     expect(headers['access-control-allow-methods']).toBeDefined();\n  123 |\n  124 |     // 보안 헤더\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:121:52"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:10.533Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 52,
-                        "line": 121
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-45b7e7dc4ac673ecf089",
-              "file": "api.spec.ts",
-              "line": 116,
-              "column": 3
-            },
-            {
-              "title": "OPTIONS 요청 (CORS preflight)이 처리된다",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 13,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 101,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m204\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m204\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:134:31",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
+                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
                           "column": 31,
-                          "line": 134
+                          "line": 179
                         },
-                        "snippet": "\u001b[0m \u001b[90m 132 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 133 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 134 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m200\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 135 |\u001b[39m     expect(response\u001b[33m.\u001b[39mheaders()[\u001b[32m'access-control-allow-methods'\u001b[39m])\u001b[33m.\u001b[39mtoBeDefined()\u001b[33m;\u001b[39m\n \u001b[90m 136 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 137 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
+                        "snippet": "\u001b[0m \u001b[90m 177 |\u001b[39m     \u001b[90m// 모달 로드 대기\u001b[39m\n \u001b[90m 178 |\u001b[39m     \u001b[36mconst\u001b[39m modalHeader \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=귀문둔갑 AI 상담사'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 179 |\u001b[39m     \u001b[36mawait\u001b[39m expect(modalHeader)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 180 |\u001b[39m\n \u001b[90m 181 |\u001b[39m     \u001b[90m// 헤더에 선택한 목적이 표시되는지 확인\u001b[39m\n \u001b[90m 182 |\u001b[39m     \u001b[36mconst\u001b[39m contextLabel \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=/사업.*전문 상담/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
                       },
                       "errors": [
                         {
                           "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
                             "column": 31,
-                            "line": 134
+                            "line": 179
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m204\u001b[39m\n\n  132 |     });\n  133 |\n> 134 |     expect(response.status()).toBe(200);\n      |                               ^\n  135 |     expect(response.headers()['access-control-allow-methods']).toBeDefined();\n  136 |   });\n  137 | });\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:134:31"
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n\n  177 |     // 모달 로드 대기\n  178 |     const modalHeader = page.locator('text=귀문둔갑 AI 상담사');\n> 179 |     await expect(modalHeader).toBeVisible({ timeout: 5000 });\n      |                               ^\n  180 |\n  181 |     // 헤더에 선택한 목적이 표시되는지 확인\n  182 |     const contextLabel = page.locator('text=/사업.*전문 상담/');\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:179:31"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-20T15:56:14.872Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 31,
-                        "line": 134
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-caf9b3237171c172b753",
-              "file": "api.spec.ts",
-              "line": 129,
-              "column": 3
-            },
-            {
-              "title": "API 응답에 보안 헤더가 포함된다",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 11,
-                      "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 165,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeDefined\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mundefined\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeDefined\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mundefined\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:121:52",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 52,
-                          "line": 121
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 119 |\u001b[39m\n \u001b[90m 120 |\u001b[39m     \u001b[90m// CORS 헤더\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 121 |\u001b[39m     expect(headers[\u001b[32m'access-control-allow-origin'\u001b[39m])\u001b[33m.\u001b[39mtoBeDefined()\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 122 |\u001b[39m     expect(headers[\u001b[32m'access-control-allow-methods'\u001b[39m])\u001b[33m.\u001b[39mtoBeDefined()\u001b[33m;\u001b[39m\n \u001b[90m 123 |\u001b[39m\n \u001b[90m 124 |\u001b[39m     \u001b[90m// 보안 헤더\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 52,
-                            "line": 121
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeDefined\u001b[2m()\u001b[22m\n\nReceived: \u001b[31mundefined\u001b[39m\n\n  119 |\n  120 |     // CORS 헤더\n> 121 |     expect(headers['access-control-allow-origin']).toBeDefined();\n      |                                                    ^\n  122 |     expect(headers['access-control-allow-methods']).toBeDefined();\n  123 |\n  124 |     // 보안 헤더\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:121:52"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:10.603Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 52,
-                        "line": 121
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-f4cb6c75c27ae4591e91",
-              "file": "api.spec.ts",
-              "line": 116,
-              "column": 3
-            },
-            {
-              "title": "OPTIONS 요청 (CORS preflight)이 처리된다",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 14,
-                      "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 90,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m204\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m204\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:134:31",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 31,
-                          "line": 134
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 132 |\u001b[39m     })\u001b[33m;\u001b[39m\n \u001b[90m 133 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 134 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m200\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 135 |\u001b[39m     expect(response\u001b[33m.\u001b[39mheaders()[\u001b[32m'access-control-allow-methods'\u001b[39m])\u001b[33m.\u001b[39mtoBeDefined()\u001b[33m;\u001b[39m\n \u001b[90m 136 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 137 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 31,
-                            "line": 134
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m204\u001b[39m\n\n  132 |     });\n  133 |\n> 134 |     expect(response.status()).toBe(200);\n      |                               ^\n  135 |     expect(response.headers()['access-control-allow-methods']).toBeDefined();\n  136 |   });\n  137 | });\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:134:31"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:14.841Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 31,
-                        "line": 134
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-a9fa4dbdaa0f04b137eb",
-              "file": "api.spec.ts",
-              "line": 129,
-              "column": 3
-            }
-          ]
-        },
-        {
-          "title": "에러 핸들링",
-          "file": "api.spec.ts",
-          "line": 142,
-          "column": 6,
-          "specs": [
-            {
-              "title": "존재하지 않는 엔드포인트 - 404",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 17,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 97,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m404\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m404\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:147:31",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 31,
-                          "line": 147
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 145 |\u001b[39m   test(\u001b[32m'존재하지 않는 엔드포인트 - 404'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\n \u001b[90m 146 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39m\u001b[36mget\u001b[39m(\u001b[32m`${baseURL}/api/nonexistent`\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 147 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m404\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 148 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 149 |\u001b[39m\n \u001b[90m 150 |\u001b[39m   test(\u001b[32m'잘못된 메서드 - 405'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 31,
-                            "line": 147
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m404\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n  145 |   test('존재하지 않는 엔드포인트 - 404', async ({ request }) => {\n  146 |     const response = await request.get(`${baseURL}/api/nonexistent`);\n> 147 |     expect(response.status()).toBe(404);\n      |                               ^\n  148 |   });\n  149 |\n  150 |   test('잘못된 메서드 - 405', async ({ request }) => {\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:147:31"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:17.813Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 31,
-                        "line": 147
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-867bc4cf4c81bfdc7dc9",
-              "file": "api.spec.ts",
-              "line": 145,
-              "column": 3
-            },
-            {
-              "title": "잘못된 메서드 - 405",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 20,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 70,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:20.375Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-9ffc1dad6ac8936d44d3",
-              "file": "api.spec.ts",
-              "line": 150,
-              "column": 3
-            },
-            {
-              "title": "SQL Injection 시도 차단",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 20,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 19,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected value: \u001b[32m404\u001b[39m\nReceived array: \u001b[31m[400, 500]\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected value: \u001b[32m404\u001b[39m\nReceived array: \u001b[31m[400, 500]\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:173:24",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 24,
-                          "line": 173
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 171 |\u001b[39m\n \u001b[90m 172 |\u001b[39m     \u001b[90m// 400 Bad Request (검증 실패) 또는 500 (에러 처리)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 173 |\u001b[39m     expect([\u001b[35m400\u001b[39m\u001b[33m,\u001b[39m \u001b[35m500\u001b[39m])\u001b[33m.\u001b[39mtoContain(response\u001b[33m.\u001b[39mstatus())\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 174 |\u001b[39m\n \u001b[90m 175 |\u001b[39m     \u001b[36mif\u001b[39m (response\u001b[33m.\u001b[39mstatus() \u001b[33m===\u001b[39m \u001b[35m400\u001b[39m) {\n \u001b[90m 176 |\u001b[39m       \u001b[36mconst\u001b[39m data \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m response\u001b[33m.\u001b[39mjson()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 24,
-                            "line": 173
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected value: \u001b[32m404\u001b[39m\nReceived array: \u001b[31m[400, 500]\u001b[39m\n\n  171 |\n  172 |     // 400 Bad Request (검증 실패) 또는 500 (에러 처리)\n> 173 |     expect([400, 500]).toContain(response.status());\n      |                        ^\n  174 |\n  175 |     if (response.status() === 400) {\n  176 |       const data = await response.json();\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:173:24"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:20.478Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 24,
-                        "line": 173
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-a32cc8d8e14a704af64e",
-              "file": "api.spec.ts",
-              "line": 159,
-              "column": 3
-            },
-            {
-              "title": "존재하지 않는 엔드포인트 - 404",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 16,
-                      "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 78,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m404\u001b[39m\nReceived: \u001b[31m200\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m404\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:147:31",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 31,
-                          "line": 147
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 145 |\u001b[39m   test(\u001b[32m'존재하지 않는 엔드포인트 - 404'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\n \u001b[90m 146 |\u001b[39m     \u001b[36mconst\u001b[39m response \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39m\u001b[36mget\u001b[39m(\u001b[32m`${baseURL}/api/nonexistent`\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 147 |\u001b[39m     expect(response\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m404\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 148 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 149 |\u001b[39m\n \u001b[90m 150 |\u001b[39m   test(\u001b[32m'잘못된 메서드 - 405'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ request }) \u001b[33m=>\u001b[39m {\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 31,
-                            "line": 147
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m404\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n  145 |   test('존재하지 않는 엔드포인트 - 404', async ({ request }) => {\n  146 |     const response = await request.get(`${baseURL}/api/nonexistent`);\n> 147 |     expect(response.status()).toBe(404);\n      |                               ^\n  148 |   });\n  149 |\n  150 |   test('잘못된 메서드 - 405', async ({ request }) => {\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:147:31"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:17.727Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 31,
-                        "line": 147
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-5ab5f623853b51fcddec",
-              "file": "api.spec.ts",
-              "line": 145,
-              "column": 3
-            },
-            {
-              "title": "잘못된 메서드 - 405",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 19,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 58,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:20.263Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-46d7e54313e28db15e02",
-              "file": "api.spec.ts",
-              "line": 150,
-              "column": 3
-            },
-            {
-              "title": "SQL Injection 시도 차단",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 19,
-                      "parallelIndex": 3,
-                      "status": "failed",
-                      "duration": 21,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected value: \u001b[32m404\u001b[39m\nReceived array: \u001b[31m[400, 500]\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected value: \u001b[32m404\u001b[39m\nReceived array: \u001b[31m[400, 500]\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:173:24",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                          "column": 24,
-                          "line": 173
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 171 |\u001b[39m\n \u001b[90m 172 |\u001b[39m     \u001b[90m// 400 Bad Request (검증 실패) 또는 500 (에러 처리)\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 173 |\u001b[39m     expect([\u001b[35m400\u001b[39m\u001b[33m,\u001b[39m \u001b[35m500\u001b[39m])\u001b[33m.\u001b[39mtoContain(response\u001b[33m.\u001b[39mstatus())\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 174 |\u001b[39m\n \u001b[90m 175 |\u001b[39m     \u001b[36mif\u001b[39m (response\u001b[33m.\u001b[39mstatus() \u001b[33m===\u001b[39m \u001b[35m400\u001b[39m) {\n \u001b[90m 176 |\u001b[39m       \u001b[36mconst\u001b[39m data \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m response\u001b[33m.\u001b[39mjson()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                            "column": 24,
-                            "line": 173
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoContain\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // indexOf\u001b[22m\n\nExpected value: \u001b[32m404\u001b[39m\nReceived array: \u001b[31m[400, 500]\u001b[39m\n\n  171 |\n  172 |     // 400 Bad Request (검증 실패) 또는 500 (에러 처리)\n> 173 |     expect([400, 500]).toContain(response.status());\n      |                        ^\n  174 |\n  175 |     if (response.status() === 400) {\n  176 |       const data = await response.json();\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts:173:24"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:20.357Z",
-                      "annotations": [],
-                      "attachments": [],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\api.spec.ts",
-                        "column": 24,
-                        "line": 173
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "1ea1b1599cbc08f16936-ea0f59446e8c7252c9e4",
-              "file": "api.spec.ts",
-              "line": 159,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "home.spec.ts",
-      "file": "home.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "홈페이지",
-          "file": "home.spec.ts",
-          "line": 6,
-          "column": 6,
-          "specs": [
-            {
-              "title": "홈페이지가 정상적으로 로드된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
-                      "status": "passed",
-                      "duration": 4541,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:55:57.002Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-f9216e27de6325c26422",
-              "file": "home.spec.ts",
-              "line": 11,
-              "column": 3
-            },
-            {
-              "title": "네비게이션 메뉴가 표시된다",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 6259,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: /홈/ })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /홈/ })\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: /홈/ })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /홈/ })\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts:26:57",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                          "column": 57,
-                          "line": 26
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 24 |\u001b[39m\n \u001b[90m 25 |\u001b[39m     \u001b[90m// 주요 메뉴 항목 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 26 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'link'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[35m/홈/\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                         \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 27 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'link'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[35m/사주/\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m 28 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 29 |\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                            "column": 57,
-                            "line": 26
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('link', { name: /홈/ })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('link', { name: /홈/ })\u001b[22m\n\n\n  24 |\n  25 |     // 주요 메뉴 항목 확인\n> 26 |     await expect(page.getByRole('link', { name: /홈/ })).toBeVisible();\n     |                                                         ^\n  27 |     await expect(page.getByRole('link', { name: /사주/ })).toBeVisible();\n  28 |   });\n  29 |\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts:26:57"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:02.046Z",
+                      "startTime": "2025-10-30T17:08:14.987Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-네비게이션-메뉴가-표시된다-chromium\\test-failed-1.png"
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-목적-context-선택이-반영되어야-함-Mobile-Chrome\\test-failed-1.png"
                         },
                         {
                           "name": "video",
                           "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-네비게이션-메뉴가-표시된다-chromium\\video.webm"
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-목적-context-선택이-반영되어야-함-Mobile-Chrome\\video.webm"
                         },
                         {
                           "name": "error-context",
                           "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-네비게이션-메뉴가-표시된다-chromium\\error-context.md"
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-목적-context-선택이-반영되어야-함-Mobile-Chrome\\error-context.md"
                         }
                       ],
                       "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                        "column": 57,
-                        "line": 26
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
+                        "column": 31,
+                        "line": 179
                       }
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "d318381359a9b96acb1e-621ce9a82ca732368bb0",
-              "file": "home.spec.ts",
-              "line": 20,
+              "id": "a2b4b5e334f291f46f74-822e27ecb9d7d62ad290",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 160,
               "column": 3
             },
             {
-              "title": "반응형 디자인이 작동한다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 12,
-                      "parallelIndex": 1,
-                      "status": "passed",
-                      "duration": 1045,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:12.456Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-2e94a084e1ba70187821",
-              "file": "home.spec.ts",
-              "line": 30,
-              "column": 3
-            },
-            {
-              "title": "푸터가 표시된다",
+              "title": "AI 응답이 캐싱되어야 함",
               "ok": false,
               "tags": [],
               "tests": [
@@ -1343,1206 +954,61 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
                   "results": [
                     {
-                      "workerIndex": 12,
-                      "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 1108,
+                      "workerIndex": 8,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30723,
                       "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('footer')\nExpected: visible\nError: strict mode violation: locator('footer') resolved to 2 elements:\n    1) <footer class=\"relative z-10 mt-16 text-center text-sm text-gray-500 dark:text-gray-400\">…</footer> aka getByText('© 2024 운명나침반. 모든 권리 보유.이용약관개인정보처리방침고객지원')\n    2) <footer class=\"bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800\">…</footer> aka getByRole('contentinfo')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('footer')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('footer')\nExpected: visible\nError: strict mode violation: locator('footer') resolved to 2 elements:\n    1) <footer class=\"relative z-10 mt-16 text-center text-sm text-gray-500 dark:text-gray-400\">…</footer> aka getByText('© 2024 운명나침반. 모든 권리 보유.이용약관개인정보처리방침고객지원')\n    2) <footer class=\"bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800\">…</footer> aka getByRole('contentinfo')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('footer')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts:52:28",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                          "column": 28,
-                          "line": 52
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 50 |\u001b[39m     \u001b[90m// 푸터가 있으면 확인\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[36mif\u001b[39m (\u001b[36mawait\u001b[39m footer\u001b[33m.\u001b[39mcount() \u001b[33m>\u001b[39m \u001b[35m0\u001b[39m) {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 52 |\u001b[39m       \u001b[36mawait\u001b[39m expect(footer)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 53 |\u001b[39m     }\n \u001b[90m 54 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 55 |\u001b[39m\u001b[0m"
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
                       },
                       "errors": [
                         {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                            "column": 28,
-                            "line": 52
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('footer')\nExpected: visible\nError: strict mode violation: locator('footer') resolved to 2 elements:\n    1) <footer class=\"relative z-10 mt-16 text-center text-sm text-gray-500 dark:text-gray-400\">…</footer> aka getByText('© 2024 운명나침반. 모든 권리 보유.이용약관개인정보처리방침고객지원')\n    2) <footer class=\"bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800\">…</footer> aka getByRole('contentinfo')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('footer')\u001b[22m\n\n\n  50 |     // 푸터가 있으면 확인\n  51 |     if (await footer.count() > 0) {\n> 52 |       await expect(footer).toBeVisible();\n     |                            ^\n  53 |     }\n  54 |   });\n  55 |\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts:52:28"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:13.880Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-푸터가-표시된다-chromium\\test-failed-1.png"
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
                         },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-푸터가-표시된다-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-푸터가-표시된다-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                        "column": 28,
-                        "line": 52
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-d2856c06e17986ea3ef5",
-              "file": "home.spec.ts",
-              "line": 43,
-              "column": 3
-            },
-            {
-              "title": "페이지가 3초 이내에 로드된다",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 18,
-                      "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 4543,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m3000\u001b[39m\nReceived:   \u001b[31m3338\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m3000\u001b[39m\nReceived:   \u001b[31m3338\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts:63:22",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                          "column": 22,
-                          "line": 63
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 61 |\u001b[39m\n \u001b[90m 62 |\u001b[39m     \u001b[90m// 3초 이내 로드 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 63 |\u001b[39m     expect(loadTime)\u001b[33m.\u001b[39mtoBeLessThan(\u001b[35m3000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 64 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 65 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 66 |\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
                         {
                           "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
                             "column": 22,
-                            "line": 63
+                            "line": 209
                           },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m3000\u001b[39m\nReceived:   \u001b[31m3338\u001b[39m\n\n  61 |\n  62 |     // 3초 이내 로드 확인\n> 63 |     expect(loadTime).toBeLessThan(3000);\n     |                      ^\n  64 |   });\n  65 | });\n  66 |\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts:63:22"
+                          "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"전송\")')\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-medium hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl\">전송</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    55 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is visible, enabled and stable\u001b[22m\n\u001b[2m    - scrolling into view if needed\u001b[22m\n\u001b[2m    - done scrolling\u001b[22m\n\n\n  207 |\n  208 |     const sendButton = page.locator('button:has-text(\"전송\")');\n> 209 |     await sendButton.click();\n      |                      ^\n  210 |\n  211 |     // 첫 번째 응답 대기\n  212 |     await page.waitForTimeout(3000);\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:209:22"
                         }
                       ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-20T15:56:17.854Z",
+                      "startTime": "2025-10-30T17:08:18.684Z",
                       "annotations": [],
                       "attachments": [
                         {
                           "name": "screenshot",
                           "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-페이지가-3초-이내에-로드된다-chromium\\test-failed-1.png"
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-응답이-캐싱되어야-함-Mobile-Chrome\\test-failed-1.png"
                         },
                         {
                           "name": "video",
                           "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-페이지가-3초-이내에-로드된다-chromium\\video.webm"
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-응답이-캐싱되어야-함-Mobile-Chrome\\video.webm"
                         },
                         {
                           "name": "error-context",
                           "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-페이지가-3초-이내에-로드된다-chromium\\error-context.md"
+                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-응답이-캐싱되어야-함-Mobile-Chrome\\error-context.md"
                         }
-                      ],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                        "column": 22,
-                        "line": 63
-                      }
+                      ]
                     }
                   ],
                   "status": "unexpected"
                 }
               ],
-              "id": "d318381359a9b96acb1e-1eb3e2425032b7b95e4a",
-              "file": "home.spec.ts",
-              "line": 56,
-              "column": 3
-            },
-            {
-              "title": "홈페이지가 정상적으로 로드된다",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 15,
-                      "parallelIndex": 2,
-                      "status": "failed",
-                      "duration": 6939,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('header')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('header')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('header')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('header')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts:17:26",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                          "column": 26,
-                          "line": 17
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 15 |\u001b[39m     \u001b[90m// 메인 헤더 확인\u001b[39m\n \u001b[90m 16 |\u001b[39m     \u001b[36mconst\u001b[39m header \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'header'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 17 |\u001b[39m     \u001b[36mawait\u001b[39m expect(header)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                          \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 18 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 19 |\u001b[39m\n \u001b[90m 20 |\u001b[39m   test(\u001b[32m'네비게이션 메뉴가 표시된다'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                            "column": 26,
-                            "line": 17
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('header')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('header')\u001b[22m\n\n\n  15 |     // 메인 헤더 확인\n  16 |     const header = page.locator('header');\n> 17 |     await expect(header).toBeVisible();\n     |                          ^\n  18 |   });\n  19 |\n  20 |   test('네비게이션 메뉴가 표시된다', async ({ page }) => {\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts:17:26"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:16.644Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-홈페이지가-정상적으로-로드된다-Mobile-Chrome\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-홈페이지가-정상적으로-로드된다-Mobile-Chrome\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-홈페이지가-정상적으로-로드된다-Mobile-Chrome\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                        "column": 26,
-                        "line": 17
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-086423d0586877b6682d",
-              "file": "home.spec.ts",
-              "line": 11,
-              "column": 3
-            },
-            {
-              "title": "네비게이션 메뉴가 표시된다",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 22,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 6652,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('nav')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav')\u001b[22m\n\u001b[2m    2 × locator resolved to <nav class=\"hidden md:flex items-center space-x-2\">…</nav>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('nav')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav')\u001b[22m\n\u001b[2m    2 × locator resolved to <nav class=\"hidden md:flex items-center space-x-2\">…</nav>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts:23:23",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                          "column": 23,
-                          "line": 23
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 21 |\u001b[39m     \u001b[90m// 네비게이션 항목 확인\u001b[39m\n \u001b[90m 22 |\u001b[39m     \u001b[36mconst\u001b[39m nav \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'nav'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 23 |\u001b[39m     \u001b[36mawait\u001b[39m expect(nav)\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 24 |\u001b[39m\n \u001b[90m 25 |\u001b[39m     \u001b[90m// 주요 메뉴 항목 확인\u001b[39m\n \u001b[90m 26 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mgetByRole(\u001b[32m'link'\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[35m/홈/\u001b[39m }))\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                            "column": 23,
-                            "line": 23
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('nav')\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav')\u001b[22m\n\u001b[2m    2 × locator resolved to <nav class=\"hidden md:flex items-center space-x-2\">…</nav>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n\n\n  21 |     // 네비게이션 항목 확인\n  22 |     const nav = page.locator('nav');\n> 23 |     await expect(nav).toBeVisible();\n     |                       ^\n  24 |\n  25 |     // 주요 메뉴 항목 확인\n  26 |     await expect(page.getByRole('link', { name: /홈/ })).toBeVisible();\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts:23:23"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:26.268Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-네비게이션-메뉴가-표시된다-Mobile-Chrome\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-네비게이션-메뉴가-표시된다-Mobile-Chrome\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-네비게이션-메뉴가-표시된다-Mobile-Chrome\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                        "column": 23,
-                        "line": 23
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-95bb8e2044cedd2f2a98",
-              "file": "home.spec.ts",
-              "line": 20,
-              "column": 3
-            },
-            {
-              "title": "반응형 디자인이 작동한다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 23,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1750,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:35.606Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-8a2dc5f532830bcf3cf3",
-              "file": "home.spec.ts",
-              "line": 30,
-              "column": 3
-            },
-            {
-              "title": "푸터가 표시된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 23,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 734,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:37.617Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-5dddf402c47d4f8e38b6",
-              "file": "home.spec.ts",
-              "line": 43,
-              "column": 3
-            },
-            {
-              "title": "페이지가 3초 이내에 로드된다",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 23,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 4106,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m3000\u001b[39m\nReceived:   \u001b[31m3198\u001b[39m",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m3000\u001b[39m\nReceived:   \u001b[31m3198\u001b[39m\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts:63:22",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                          "column": 22,
-                          "line": 63
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 61 |\u001b[39m\n \u001b[90m 62 |\u001b[39m     \u001b[90m// 3초 이내 로드 확인\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 63 |\u001b[39m     expect(loadTime)\u001b[33m.\u001b[39mtoBeLessThan(\u001b[35m3000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 64 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 65 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 66 |\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                            "column": 22,
-                            "line": 63
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: < \u001b[32m3000\u001b[39m\nReceived:   \u001b[31m3198\u001b[39m\n\n  61 |\n  62 |     // 3초 이내 로드 확인\n> 63 |     expect(loadTime).toBeLessThan(3000);\n     |                      ^\n  64 |   });\n  65 | });\n  66 |\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts:63:22"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:38.375Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-페이지가-3초-이내에-로드된다-Mobile-Chrome\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-페이지가-3초-이내에-로드된다-Mobile-Chrome\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\home-홈페이지-페이지가-3초-이내에-로드된다-Mobile-Chrome\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\home.spec.ts",
-                        "column": 22,
-                        "line": 63
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "d318381359a9b96acb1e-e8ff56e19cfd01be5f67",
-              "file": "home.spec.ts",
-              "line": 56,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "qimen.spec.ts",
-      "file": "qimen.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "귀문둔갑",
-          "file": "qimen.spec.ts",
-          "line": 6,
-          "column": 6,
-          "specs": [
-            {
-              "title": "귀문둔갑 페이지가 로드된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 4582,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:55:56.969Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-e6b9c39281e2d0876277",
-              "file": "qimen.spec.ts",
-              "line": 12,
-              "column": 3
-            },
-            {
-              "title": "날짜 선택이 가능하다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 1043,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:02.048Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-2e2c3ece6f001347f25e",
-              "file": "qimen.spec.ts",
-              "line": 21,
-              "column": 3
-            },
-            {
-              "title": "시간 선택이 가능하다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 1036,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:03.123Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-b96a3874b1128014931a",
-              "file": "qimen.spec.ts",
-              "line": 34,
-              "column": 3
-            },
-            {
-              "title": "귀문둔갑 차트가 표시된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 916,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:04.189Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-fc773b8e66d6cf440532",
-              "file": "qimen.spec.ts",
-              "line": 47,
-              "column": 3
-            },
-            {
-              "title": "9궁 레이아웃이 표시된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 1070,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:05.125Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-6dfb4c77e0247e7a59e1",
-              "file": "qimen.spec.ts",
-              "line": 56,
-              "column": 3
-            },
-            {
-              "title": "3D 뷰 토글이 작동한다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 1228,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:06.226Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-888a74b207dae15ba3be",
-              "file": "qimen.spec.ts",
-              "line": 65,
-              "column": 3
-            },
-            {
-              "title": "궁 클릭 시 상세 정보가 표시된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 1289,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:07.483Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-7fcb00edfce064711955",
-              "file": "qimen.spec.ts",
-              "line": 83,
-              "column": 3
-            },
-            {
-              "title": "귀문둔갑 페이지가 로드된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 21,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 1817,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:21.954Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-442392c3e5caa1b343a7",
-              "file": "qimen.spec.ts",
-              "line": 12,
-              "column": 3
-            },
-            {
-              "title": "날짜 선택이 가능하다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 21,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 1276,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:23.990Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-52dc6d0a4047d3215ce0",
-              "file": "qimen.spec.ts",
-              "line": 21,
-              "column": 3
-            },
-            {
-              "title": "시간 선택이 가능하다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 21,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 1369,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:25.293Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-0690604c74e55fb694f3",
-              "file": "qimen.spec.ts",
-              "line": 34,
-              "column": 3
-            },
-            {
-              "title": "귀문둔갑 차트가 표시된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 21,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 1396,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:26.687Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-42079ef2c8e49f2763d5",
-              "file": "qimen.spec.ts",
-              "line": 47,
-              "column": 3
-            },
-            {
-              "title": "9궁 레이아웃이 표시된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 21,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 1132,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:28.120Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-3732af6ae536b9bc8b32",
-              "file": "qimen.spec.ts",
-              "line": 56,
-              "column": 3
-            },
-            {
-              "title": "3D 뷰 토글이 작동한다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 21,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 1061,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:29.268Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-00b9872e5f6e51041b57",
-              "file": "qimen.spec.ts",
-              "line": 65,
-              "column": 3
-            },
-            {
-              "title": "궁 클릭 시 상세 정보가 표시된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 21,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 1065,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:30.344Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-762eb23af8e30a194a48",
-              "file": "qimen.spec.ts",
-              "line": 83,
-              "column": 3
-            }
-          ]
-        },
-        {
-          "title": "귀문둔갑 학습",
-          "file": "qimen.spec.ts",
-          "line": 109,
-          "column": 6,
-          "specs": [
-            {
-              "title": "학습 페이지가 로드된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 1214,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:08.800Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-351fc5ea11fcd1835cd1",
-              "file": "qimen.spec.ts",
-              "line": 114,
-              "column": 3
-            },
-            {
-              "title": "코스 목록이 표시된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 1120,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:10.039Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-ab6b432c2cb2973d8535",
-              "file": "qimen.spec.ts",
-              "line": 121,
-              "column": 3
-            },
-            {
-              "title": "용어집이 접근 가능하다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 1271,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:11.187Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-b927113b93be9e6ce37a",
-              "file": "qimen.spec.ts",
-              "line": 131,
-              "column": 3
-            },
-            {
-              "title": "검색 기능이 작동한다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
-                      "status": "passed",
-                      "duration": 1224,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:12.492Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-62efc98225fbf685761c",
-              "file": "qimen.spec.ts",
-              "line": 147,
-              "column": 3
-            },
-            {
-              "title": "학습 페이지가 로드된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 21,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 1484,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:31.423Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-cb03af791c644cb87a49",
-              "file": "qimen.spec.ts",
-              "line": 114,
-              "column": 3
-            },
-            {
-              "title": "코스 목록이 표시된다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 21,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 1435,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:32.927Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-925151f89832be7c88b6",
-              "file": "qimen.spec.ts",
-              "line": 121,
-              "column": 3
-            },
-            {
-              "title": "용어집이 접근 가능하다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 21,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 1245,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:34.383Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-71b2775e55a620164e7b",
-              "file": "qimen.spec.ts",
-              "line": 131,
-              "column": 3
-            },
-            {
-              "title": "검색 기능이 작동한다",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 21,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 1614,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-20T15:56:35.648Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "924df7c08c04feb36c05-5fe2121823c15c9fb27e",
-              "file": "qimen.spec.ts",
-              "line": 147,
+              "id": "a2b4b5e334f291f46f74-c78c8cc6384b24df97b2",
+              "file": "qimen-ai-chat.spec.ts",
+              "line": 193,
               "column": 3
             }
           ]
@@ -2552,11 +1018,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-10-20T15:55:53.081Z",
-    "duration": 49519.63,
-    "expected": 30,
+    "startTime": "2025-10-30T17:07:19.992Z",
+    "duration": 89810.077,
+    "expected": 10,
     "skipped": 0,
-    "unexpected": 22,
+    "unexpected": 8,
     "flaky": 0
   }
 }
