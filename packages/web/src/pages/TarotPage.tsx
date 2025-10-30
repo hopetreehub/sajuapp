@@ -14,6 +14,7 @@ import {
 import TarotSpreadView from '@/components/tarot/TarotSpreadView';
 import TarotHistoryView from '@/components/tarot/TarotHistoryView';
 import QuestionSelector from '@/components/tarot/QuestionSelector';
+import TarotAIChat from '@/components/tarot/TarotAIChat';
 import { saveTarotReading, getTarotReadings as _getTarotReadings } from '@/utils/tarotStorage';
 import { exportTarotReadingToPDF, formatDateForFilename } from '@/utils/pdfExport';
 import { tarotCacheManager } from '@/utils/aiCacheManager';
@@ -30,6 +31,7 @@ export default function TarotPage() {
   const [aiModel, setAiModel] = useState<string>('');
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
 
   // 1단계: 스프레드 선택
   const handleSpreadSelect = (spreadId: string) => {
@@ -751,13 +753,31 @@ export default function TarotPage() {
 
             {/* AI 해석 요청 버튼 (PDF 출력 대상 아님) */}
             {!aiInterpretation && (
-              <div className="flex justify-center">
+              <div className="flex justify-center gap-4">
                 <button
                   onClick={requestAIInterpretation}
                   disabled={isLoadingAI}
                   className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-lg font-semibold rounded-full hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoadingAI ? '🤖 AI가 해석 중...' : '🤖 AI 해석 받기'}
+                </button>
+                <button
+                  onClick={() => setShowAIChat(true)}
+                  className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-lg font-semibold rounded-full hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
+                >
+                  💬 AI에게 질문하기
+                </button>
+              </div>
+            )}
+
+            {/* AI 해석 후에도 AI 챗 버튼 표시 */}
+            {aiInterpretation && (
+              <div className="flex justify-center">
+                <button
+                  onClick={() => setShowAIChat(true)}
+                  className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-lg font-semibold rounded-full hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg"
+                >
+                  💬 AI에게 더 질문하기
                 </button>
               </div>
             )}
@@ -784,6 +804,16 @@ export default function TarotPage() {
           </>
         )}
       </div>
+
+      {/* AI 챗 모달 */}
+      {showAIChat && selectedSpread && cardPositions.length > 0 && (
+        <TarotAIChat
+          cardPositions={cardPositions}
+          spreadName={selectedSpread.nameKo}
+          userQuestion={userQuestion}
+          onClose={() => setShowAIChat(false)}
+        />
+      )}
     </div>
   );
 }
