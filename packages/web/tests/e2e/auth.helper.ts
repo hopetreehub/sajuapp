@@ -62,7 +62,7 @@ export async function login(page: Page, options: LoginOptions = {}): Promise<voi
   const {
     userType = 'user',
     redirectTo,
-    waitTime = 1000,
+    waitTime = 3000,
   } = options;
 
   const user = TEST_USERS[userType];
@@ -82,9 +82,9 @@ export async function login(page: Page, options: LoginOptions = {}): Promise<voi
           user: {
             id: userInfo.role === 'admin' ? 1 : 100,
             email: userInfo.email,
-            name: userInfo.role === 'admin' ? '관리자' : '테스트 사용자',
+            username: userInfo.role === 'admin' ? '관리자' : '테스트 사용자',
             role: userInfo.role,
-            status: 'approved',
+            approval_status: 'approved',
             created_at: new Date().toISOString(),
           },
           isAuthenticated: true,
@@ -92,10 +92,35 @@ export async function login(page: Page, options: LoginOptions = {}): Promise<voi
         version: 0,
       };
 
-      localStorage.setItem('auth-store', JSON.stringify(authState));
+      localStorage.setItem('auth-storage', JSON.stringify(authState));
     }, user);
 
     console.log(`✅ [인증 헬퍼] Mock 인증 완료: ${user.email}`);
+
+    // 페이지 새로고침하여 localStorage 인증 정보 적용
+    await page.reload();
+    await page.waitForLoadState('networkidle');
+
+    console.log(`🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨`);
+
+    // 로그인 모달이 사라질 때까지 대기 (최대 10초)
+    const loginModal = page.locator('h2:has-text("운명나침반 로그인")').or(
+      page.locator('text=운명나침반 로그인')
+    );
+
+    const isLoginModalVisible = await loginModal.isVisible().catch(() => false);
+
+    if (isLoginModalVisible) {
+      console.log(`⏳ [인증 헬퍼] 로그인 모달 감지 - 사라질 때까지 대기 중...`);
+      try {
+        await loginModal.waitFor({ state: 'hidden', timeout: 10000 });
+        console.log(`✅ [인증 헬퍼] 로그인 모달 사라짐`);
+      } catch (error) {
+        console.warn(`⚠️ [인증 헬퍼] 로그인 모달이 10초 내에 사라지지 않음`);
+        // 모달이 사라지지 않으면 추가 대기
+        await page.waitForTimeout(2000);
+      }
+    }
 
     // 추가 대기 시간
     await page.waitForTimeout(waitTime);
@@ -173,7 +198,7 @@ export async function isAuthenticated(page: Page): Promise<boolean> {
   try {
     // localStorage에서 인증 토큰 확인
     const authData = await page.evaluate(() => {
-      const authStore = localStorage.getItem('auth-store');
+      const authStore = localStorage.getItem('auth-storage');
       if (!authStore) return null;
 
       const parsed = JSON.parse(authStore);
@@ -212,7 +237,7 @@ export async function clearAuth(page: Page): Promise<void> {
 
   try {
     await page.evaluate(() => {
-      localStorage.removeItem('auth-store');
+      localStorage.removeItem('auth-storage');
       sessionStorage.clear();
     });
 
