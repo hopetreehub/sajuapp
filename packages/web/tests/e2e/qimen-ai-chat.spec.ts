@@ -7,9 +7,13 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { login } from './auth.helper';
 
 test.describe('귀문둔갑 AI 챗 기능', () => {
   test.beforeEach(async ({ page }) => {
+    // 인증 필요 - 테스트 사용자로 로그인
+    await login(page);
+
     // 귀문둔갑 페이지로 이동
     await page.goto('/qimen');
 
