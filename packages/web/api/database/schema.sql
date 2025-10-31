@@ -40,10 +40,13 @@ CREATE TRIGGER update_customers_updated_at
 
 -- ==================== 샘플 데이터 (개발용) ====================
 -- 프로덕션에서는 주석 처리
-INSERT INTO customers (name, birth_date, birth_time, phone, gender, lunar_solar, memo) VALUES
-('박준수', '1990-05-15', '14:30:00', '010-1234-5678', 'male', 'solar', '사주 상담 고객'),
-('이정미', '1988-11-22', '09:15:00', '010-9876-5432', 'female', 'lunar', '궁합 상담 고객'),
-('최민호', '1985-03-10', '16:45:00', '010-5555-1234', 'male', 'solar', '귀문둔갑 상담')
+INSERT INTO customers (name, birth_date, birth_time, phone, gender, lunar_solar, memo, saju_data) VALUES
+('박준수', '1990-05-15', '14:30:00', '010-1234-5678', 'male', 'solar', '사주 상담 고객',
+'{"birthInfo":{"year":1990,"month":5,"day":15,"hour":14,"minute":30,"isLunar":false},"fourPillars":{"year":{"heavenly":"경","earthly":"오"},"month":{"heavenly":"신","earthly":"사"},"day":{"heavenly":"갑","earthly":"자"},"hour":{"heavenly":"신","earthly":"미"}},"sixAreas":{"foundation":75,"thinking":65,"relationship":70,"action":80,"luck":60,"environment":68},"fiveElements":{"wood":20,"fire":25,"earth":15,"metal":30,"water":10},"tenGods":{"bijeon":10,"geopjae":15,"siksin":20,"sanggwan":8,"jeongjae":12,"pyeonjae":18,"jeonggwan":7,"pyeongwan":5,"jeongin":3,"pyeongin":2},"totalScore":418,"averageScore":69.67,"dayMaster":"갑"}'),
+('이정미', '1988-11-22', '09:15:00', '010-9876-5432', 'female', 'lunar', '궁합 상담 고객',
+'{"birthInfo":{"year":1988,"month":11,"day":22,"hour":9,"minute":15,"isLunar":true},"fourPillars":{"year":{"heavenly":"무","earthly":"진"},"month":{"heavenly":"계","earthly":"해"},"day":{"heavenly":"을","earthly":"사"},"hour":{"heavenly":"신","earthly":"사"}},"sixAreas":{"foundation":68,"thinking":72,"relationship":78,"action":65,"luck":70,"environment":62},"fiveElements":{"wood":18,"fire":22,"earth":20,"metal":25,"water":15},"tenGods":{"bijeon":12,"geopjae":18,"siksin":15,"sanggwan":10,"jeongjae":14,"pyeonjae":16,"jeonggwan":9,"pyeongwan":4,"jeongin":1,"pyeongin":1},"totalScore":400,"averageScore":66.67,"dayMaster":"을"}'),
+('최민호', '1985-03-10', '16:45:00', '010-5555-1234', 'male', 'solar', '귀문둔갑 상담',
+'{"birthInfo":{"year":1985,"month":3,"day":10,"hour":16,"minute":45,"isLunar":false},"fourPillars":{"year":{"heavenly":"을","earthly":"축"},"month":{"heavenly":"기","earthly":"묘"},"day":{"heavenly":"병","earthly":"신"},"hour":{"heavenly":"병","earthly":"신"}},"sixAreas":{"foundation":82,"thinking":70,"relationship":65,"action":75,"luck":68,"environment":72},"fiveElements":{"wood":22,"fire":28,"earth":12,"metal":28,"water":10},"tenGods":{"bijeon":14,"geopjae":16,"siksin":18,"sanggwan":12,"jeongjae":10,"pyeonjae":20,"jeonggwan":5,"pyeongwan":3,"jeongin":1,"pyeongin":1},"totalScore":432,"averageScore":72.00,"dayMaster":"병"}')
 ON CONFLICT DO NOTHING;
 
 -- ==================================================

@@ -90,7 +90,7 @@ test.describe('12대 건강 시스템 차트 기능', () => {
     expect(hasCustomerUI || hasCustomerButton).toBeTruthy();
   });
 
-  test.skip('건강 차트가 렌더링되어야 함 (완전한 saju_data 필요 - _isMinimal 조건)', async ({ page }) => {
+  test('건강 차트가 렌더링되어야 함 (완전한 saju_data 필요 - _isMinimal 조건)', async ({ page }) => {
     // 고객 선택이 필요하면 선택
     const customerSelect = page.locator('select').first();
     if (await customerSelect.isVisible({ timeout: 3000 })) {
