@@ -83,20 +83,20 @@
   },
   "suites": [
     {
-      "title": "qimen-ai-chat.spec.ts",
-      "file": "qimen-ai-chat.spec.ts",
+      "title": "health-chart.spec.ts",
+      "file": "health-chart.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "귀문둔갑 AI 챗 기능",
-          "file": "qimen-ai-chat.spec.ts",
-          "line": 11,
+          "title": "12대 건강 시스템 차트 기능",
+          "file": "health-chart.spec.ts",
+          "line": 22,
           "column": 6,
           "specs": [
             {
-              "title": "귀문둔갑 페이지가 정상 로드되어야 함",
+              "title": "사주 분석 페이지가 정상 로드되어야 함",
               "ok": true,
               "tags": [],
               "tests": [
@@ -111,12 +111,22 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4816,
+                      "duration": 21935,
                       "errors": [],
-                      "stdout": [],
+                      "stdout": [
+                        {
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
+                        }
+                      ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T17:07:21.959Z",
+                      "startTime": "2025-10-30T22:03:07.666Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -124,405 +134,429 @@
                   "status": "expected"
                 }
               ],
-              "id": "a2b4b5e334f291f46f74-022a1d0523d92f192acf",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 20,
+              "id": "6bf6ad9a593e168931c9-e27a091ac8f6eb027142",
+              "file": "health-chart.spec.ts",
+              "line": 78,
               "column": 3
             },
             {
-              "title": "AI 챗 버튼이 표시되어야 함",
+              "title": "건강 차트가 렌더링되어야 함 (완전한 saju_data 필요 - _isMinimal 조건)",
               "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 93,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1690,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T17:07:27.214Z",
-                      "annotations": [],
+                      "startTime": "2025-10-30T22:03:30.021Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 93,
+                            "column": 8
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "expected"
+                  "status": "skipped"
                 }
               ],
-              "id": "a2b4b5e334f291f46f74-fed15d0c21ac6b73cc77",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 31,
-              "column": 3
+              "id": "6bf6ad9a593e168931c9-0b3722ccabce6376abea",
+              "file": "health-chart.spec.ts",
+              "line": 93,
+              "column": 8
             },
             {
-              "title": "AI 챗 버튼 클릭 시 모달이 열려야 함",
-              "ok": false,
+              "title": "건강 차트에 12개 시스템이 표시되어야 함 (완전한 saju_data 필요)",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 110,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1889,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:49:31",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                          "column": 31,
-                          "line": 49
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 47 |\u001b[39m     \u001b[90m// 모달 헤더 확인\u001b[39m\n \u001b[90m 48 |\u001b[39m     \u001b[36mconst\u001b[39m modalHeader \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=귀문둔갑 AI 상담사'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 49 |\u001b[39m     \u001b[36mawait\u001b[39m expect(modalHeader)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// 시스템 메시지 확인\u001b[39m\n \u001b[90m 52 |\u001b[39m     \u001b[36mconst\u001b[39m systemMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=/안녕하세요.*귀문둔갑 AI 상담사/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                            "column": 31,
-                            "line": 49
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n\n  47 |     // 모달 헤더 확인\n  48 |     const modalHeader = page.locator('text=귀문둔갑 AI 상담사');\n> 49 |     await expect(modalHeader).toBeVisible({ timeout: 5000 });\n     |                               ^\n  50 |\n  51 |     // 시스템 메시지 확인\n  52 |     const systemMessage = page.locator('text=/안녕하세요.*귀문둔갑 AI 상담사/');\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:49:31"
-                        }
-                      ],
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T17:07:28.929Z",
-                      "annotations": [],
-                      "attachments": [
+                      "startTime": "2025-10-30T22:03:30.022Z",
+                      "annotations": [
                         {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-버튼-클릭-시-모달이-열려야-함-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-버튼-클릭-시-모달이-열려야-함-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-버튼-클릭-시-모달이-열려야-함-chromium\\error-context.md"
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 110,
+                            "column": 8
+                          }
                         }
                       ],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                        "column": 31,
-                        "line": 49
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6bf6ad9a593e168931c9-91c9bf15250b32288532",
+              "file": "health-chart.spec.ts",
+              "line": 110,
+              "column": 8
+            },
+            {
+              "title": "시간대 선택 버튼이 작동해야 함 (완전한 saju_data 필요)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 127,
+                        "column": 8
                       }
                     }
                   ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "a2b4b5e334f291f46f74-eb37cb5a682987e86a2a",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 40,
-              "column": 3
-            },
-            {
-              "title": "AI 챗 모달에서 질문 입력 및 전송이 가능해야 함",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "expectedStatus": "skipped",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2025,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T17:07:32.854Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a2b4b5e334f291f46f74-4a16d9e74c67a844fde7",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 56,
-              "column": 3
-            },
-            {
-              "title": "샘플 질문 선택이 가능해야 함",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1792,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T17:07:35.083Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a2b4b5e334f291f46f74-d667b7c90a51bdd84689",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 95,
-              "column": 3
-            },
-            {
-              "title": "모달 닫기 버튼이 작동해야 함",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 2,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1530,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:131:31",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                          "column": 31,
-                          "line": 131
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 129 |\u001b[39m     \u001b[90m// 모달 로드 대기\u001b[39m\n \u001b[90m 130 |\u001b[39m     \u001b[36mconst\u001b[39m modalHeader \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=귀문둔갑 AI 상담사'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 131 |\u001b[39m     \u001b[36mawait\u001b[39m expect(modalHeader)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 132 |\u001b[39m\n \u001b[90m 133 |\u001b[39m     \u001b[90m// 닫기 버튼 클릭 (X 버튼)\u001b[39m\n \u001b[90m 134 |\u001b[39m     \u001b[36mconst\u001b[39m closeButton \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button'\u001b[39m)\u001b[33m.\u001b[39mfilter({\u001b[0m"
-                      },
-                      "errors": [
+                      "startTime": "2025-10-30T22:03:30.023Z",
+                      "annotations": [
                         {
+                          "type": "skip",
                           "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                            "column": 31,
-                            "line": 131
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n\n  129 |     // 모달 로드 대기\n  130 |     const modalHeader = page.locator('text=귀문둔갑 AI 상담사');\n> 131 |     await expect(modalHeader).toBeVisible({ timeout: 5000 });\n      |                               ^\n  132 |\n  133 |     // 닫기 버튼 클릭 (X 버튼)\n  134 |     const closeButton = page.locator('button').filter({\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:131:31"
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 127,
+                            "column": 8
+                          }
                         }
                       ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T17:07:36.905Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-모달-닫기-버튼이-작동해야-함-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-모달-닫기-버튼이-작동해야-함-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-모달-닫기-버튼이-작동해야-함-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                        "column": 31,
-                        "line": 131
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6bf6ad9a593e168931c9-5174daf9459ce76e4ce7",
+              "file": "health-chart.spec.ts",
+              "line": 127,
+              "column": 8
+            },
+            {
+              "title": "전체 건강 지수가 표시되어야 함 (완전한 saju_data 필요)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 165,
+                        "column": 8
                       }
                     }
                   ],
-                  "status": "unexpected"
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T22:03:30.023Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 165,
+                            "column": 8
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
                 }
               ],
-              "id": "a2b4b5e334f291f46f74-aceb64477bd4e4b245a4",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 122,
-              "column": 3
+              "id": "6bf6ad9a593e168931c9-f303912f466c71d160cc",
+              "file": "health-chart.spec.ts",
+              "line": 165,
+              "column": 8
             },
             {
-              "title": "음성 입력 버튼이 표시되어야 함",
+              "title": "강점/취약 시스템 정보가 표시되어야 함 (완전한 saju_data 필요)",
               "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
+                  "annotations": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1769,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T17:07:40.203Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "a2b4b5e334f291f46f74-b6b2d440745de8366787",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 143,
-              "column": 3
-            },
-            {
-              "title": "목적(context) 선택이 반영되어야 함",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "chromium",
-                  "projectName": "chromium",
-                  "results": [
-                    {
-                      "workerIndex": 4,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1594,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:179:31",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                          "column": 31,
-                          "line": 179
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 177 |\u001b[39m     \u001b[90m// 모달 로드 대기\u001b[39m\n \u001b[90m 178 |\u001b[39m     \u001b[36mconst\u001b[39m modalHeader \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=귀문둔갑 AI 상담사'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 179 |\u001b[39m     \u001b[36mawait\u001b[39m expect(modalHeader)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 180 |\u001b[39m\n \u001b[90m 181 |\u001b[39m     \u001b[90m// 헤더에 선택한 목적이 표시되는지 확인\u001b[39m\n \u001b[90m 182 |\u001b[39m     \u001b[36mconst\u001b[39m contextLabel \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=/사업.*전문 상담/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                            "column": 31,
-                            "line": 179
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n\n  177 |     // 모달 로드 대기\n  178 |     const modalHeader = page.locator('text=귀문둔갑 AI 상담사');\n> 179 |     await expect(modalHeader).toBeVisible({ timeout: 5000 });\n      |                               ^\n  180 |\n  181 |     // 헤더에 선택한 목적이 표시되는지 확인\n  182 |     const contextLabel = page.locator('text=/사업.*전문 상담/');\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:179:31"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T17:07:42.140Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-목적-context-선택이-반영되어야-함-chromium\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-목적-context-선택이-반영되어야-함-chromium\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-목적-context-선택이-반영되어야-함-chromium\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                        "column": 31,
-                        "line": 179
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 184,
+                        "column": 8
                       }
                     }
                   ],
-                  "status": "unexpected"
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T22:03:30.024Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 184,
+                            "column": 8
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
                 }
               ],
-              "id": "a2b4b5e334f291f46f74-8cffd4505ac439479685",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 160,
-              "column": 3
+              "id": "6bf6ad9a593e168931c9-e5dcd5c348b263185df1",
+              "file": "health-chart.spec.ts",
+              "line": 184,
+              "column": 8
             },
             {
-              "title": "AI 응답이 캐싱되어야 함",
+              "title": "건강 권장사항이 표시되어야 함 (완전한 saju_data 필요)",
               "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 211,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6565,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T17:07:45.471Z",
-                      "annotations": [],
+                      "startTime": "2025-10-30T22:03:30.024Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 211,
+                            "column": 8
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "expected"
+                  "status": "skipped"
                 }
               ],
-              "id": "a2b4b5e334f291f46f74-da788767b89b69b2a7dc",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 193,
-              "column": 3
+              "id": "6bf6ad9a593e168931c9-dc6864c04cbdc64e7060",
+              "file": "health-chart.spec.ts",
+              "line": 211,
+              "column": 8
             },
             {
-              "title": "귀문둔갑 페이지가 정상 로드되어야 함",
+              "title": "연령대별 주의사항이 표시되어야 함 (완전한 saju_data 필요)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 235,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T22:03:30.025Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 235,
+                            "column": 8
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6bf6ad9a593e168931c9-3ebc5dd73137d3f9579e",
+              "file": "health-chart.spec.ts",
+              "line": 235,
+              "column": 8
+            },
+            {
+              "title": "건강 차트 데이터가 고객별로 다르게 표시되어야 함 (완전한 saju_data 필요)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 259,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T22:03:30.025Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 259,
+                            "column": 8
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6bf6ad9a593e168931c9-00ba6113eb613ec41e57",
+              "file": "health-chart.spec.ts",
+              "line": 259,
+              "column": 8
+            },
+            {
+              "title": "사주 분석 페이지가 정상 로드되어야 함",
               "ok": true,
               "tags": [],
               "tests": [
@@ -537,12 +571,22 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 5156,
+                      "duration": 22343,
                       "errors": [],
-                      "stdout": [],
+                      "stdout": [
+                        {
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
+                        }
+                      ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T17:07:21.959Z",
+                      "startTime": "2025-10-30T22:03:07.669Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -550,466 +594,426 @@
                   "status": "expected"
                 }
               ],
-              "id": "a2b4b5e334f291f46f74-dd9010e8e25566c554c6",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 20,
+              "id": "6bf6ad9a593e168931c9-43dae6dbd41a7cdb92da",
+              "file": "health-chart.spec.ts",
+              "line": 78,
               "column": 3
             },
             {
-              "title": "AI 챗 버튼이 표시되어야 함",
+              "title": "건강 차트가 렌더링되어야 함 (완전한 saju_data 필요 - _isMinimal 조건)",
               "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 93,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "passed",
-                      "duration": 2177,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T17:07:27.530Z",
-                      "annotations": [],
+                      "startTime": "2025-10-30T22:03:30.366Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 93,
+                            "column": 8
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "expected"
+                  "status": "skipped"
                 }
               ],
-              "id": "a2b4b5e334f291f46f74-508ec1e6d6f61755e613",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 31,
-              "column": 3
+              "id": "6bf6ad9a593e168931c9-dcd5a9067c06ca0c46b7",
+              "file": "health-chart.spec.ts",
+              "line": 93,
+              "column": 8
             },
             {
-              "title": "AI 챗 버튼 클릭 시 모달이 열려야 함",
-              "ok": false,
+              "title": "건강 차트에 12개 시스템이 표시되어야 함 (완전한 saju_data 필요)",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 110,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "failed",
-                      "duration": 2351,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:49:31",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                          "column": 31,
-                          "line": 49
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 47 |\u001b[39m     \u001b[90m// 모달 헤더 확인\u001b[39m\n \u001b[90m 48 |\u001b[39m     \u001b[36mconst\u001b[39m modalHeader \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=귀문둔갑 AI 상담사'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 49 |\u001b[39m     \u001b[36mawait\u001b[39m expect(modalHeader)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 50 |\u001b[39m\n \u001b[90m 51 |\u001b[39m     \u001b[90m// 시스템 메시지 확인\u001b[39m\n \u001b[90m 52 |\u001b[39m     \u001b[36mconst\u001b[39m systemMessage \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=/안녕하세요.*귀문둔갑 AI 상담사/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                            "column": 31,
-                            "line": 49
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n\n  47 |     // 모달 헤더 확인\n  48 |     const modalHeader = page.locator('text=귀문둔갑 AI 상담사');\n> 49 |     await expect(modalHeader).toBeVisible({ timeout: 5000 });\n     |                               ^\n  50 |\n  51 |     // 시스템 메시지 확인\n  52 |     const systemMessage = page.locator('text=/안녕하세요.*귀문둔갑 AI 상담사/');\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:49:31"
-                        }
-                      ],
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T17:07:29.742Z",
-                      "annotations": [],
-                      "attachments": [
+                      "startTime": "2025-10-30T22:03:30.368Z",
+                      "annotations": [
                         {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-버튼-클릭-시-모달이-열려야-함-Mobile-Chrome\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-버튼-클릭-시-모달이-열려야-함-Mobile-Chrome\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-버튼-클릭-시-모달이-열려야-함-Mobile-Chrome\\error-context.md"
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 110,
+                            "column": 8
+                          }
                         }
                       ],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                        "column": 31,
-                        "line": 49
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "skipped"
                 }
               ],
-              "id": "a2b4b5e334f291f46f74-f2ed6b51c990ffbac955",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 40,
-              "column": 3
+              "id": "6bf6ad9a593e168931c9-276f7c6a5b56c4aefe29",
+              "file": "health-chart.spec.ts",
+              "line": 110,
+              "column": 8
             },
             {
-              "title": "AI 챗 모달에서 질문 입력 및 전송이 가능해야 함",
-              "ok": false,
+              "title": "시간대 선택 버튼이 작동해야 함 (완전한 saju_data 필요)",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 127,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "timedOut",
-                      "duration": 30557,
-                      "error": {
-                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                      },
-                      "errors": [
-                        {
-                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                        },
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                            "column": 22,
-                            "line": 76
-                          },
-                          "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"전송\")')\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-medium hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl\">전송</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    54 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n\n  74 |     const sendButton = page.locator('button:has-text(\"전송\")');\n  75 |     await expect(sendButton).toBeEnabled();\n> 76 |     await sendButton.click();\n     |                      ^\n  77 |\n  78 |     // 사용자 메시지가 표시되는지 확인\n  79 |     const userMessage = page.locator('text=오늘 좋은 방향은 어디인가요?');\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:76:22"
-                        }
-                      ],
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T17:07:34.323Z",
-                      "annotations": [],
-                      "attachments": [
+                      "startTime": "2025-10-30T22:03:30.368Z",
+                      "annotations": [
                         {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-모달에서-질문-입력-및-전송이-가능해야-함-Mobile-Chrome\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-모달에서-질문-입력-및-전송이-가능해야-함-Mobile-Chrome\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-챗-모달에서-질문-입력-및-전송이-가능해야-함-Mobile-Chrome\\error-context.md"
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 127,
+                            "column": 8
+                          }
                         }
-                      ]
+                      ],
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "skipped"
                 }
               ],
-              "id": "a2b4b5e334f291f46f74-3fa37ce9fe624b31b23b",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 56,
-              "column": 3
+              "id": "6bf6ad9a593e168931c9-d82c3589b5b92d3aed3a",
+              "file": "health-chart.spec.ts",
+              "line": 127,
+              "column": 8
             },
             {
-              "title": "샘플 질문 선택이 가능해야 함",
+              "title": "전체 건강 지수가 표시되어야 함 (완전한 saju_data 필요)",
               "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 165,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2257,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T17:08:06.653Z",
-                      "annotations": [],
+                      "startTime": "2025-10-30T22:03:30.369Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 165,
+                            "column": 8
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "expected"
+                  "status": "skipped"
                 }
               ],
-              "id": "a2b4b5e334f291f46f74-e44aacacf70362f8fc98",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 95,
-              "column": 3
+              "id": "6bf6ad9a593e168931c9-f06ac54d33b190628776",
+              "file": "health-chart.spec.ts",
+              "line": 165,
+              "column": 8
             },
             {
-              "title": "모달 닫기 버튼이 작동해야 함",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
-                    {
-                      "workerIndex": 6,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 2059,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:131:31",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                          "column": 31,
-                          "line": 131
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 129 |\u001b[39m     \u001b[90m// 모달 로드 대기\u001b[39m\n \u001b[90m 130 |\u001b[39m     \u001b[36mconst\u001b[39m modalHeader \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=귀문둔갑 AI 상담사'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 131 |\u001b[39m     \u001b[36mawait\u001b[39m expect(modalHeader)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 132 |\u001b[39m\n \u001b[90m 133 |\u001b[39m     \u001b[90m// 닫기 버튼 클릭 (X 버튼)\u001b[39m\n \u001b[90m 134 |\u001b[39m     \u001b[36mconst\u001b[39m closeButton \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button'\u001b[39m)\u001b[33m.\u001b[39mfilter({\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                            "column": 31,
-                            "line": 131
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n\n  129 |     // 모달 로드 대기\n  130 |     const modalHeader = page.locator('text=귀문둔갑 AI 상담사');\n> 131 |     await expect(modalHeader).toBeVisible({ timeout: 5000 });\n      |                               ^\n  132 |\n  133 |     // 닫기 버튼 클릭 (X 버튼)\n  134 |     const closeButton = page.locator('button').filter({\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:131:31"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T17:08:09.078Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-모달-닫기-버튼이-작동해야-함-Mobile-Chrome\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-모달-닫기-버튼이-작동해야-함-Mobile-Chrome\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-모달-닫기-버튼이-작동해야-함-Mobile-Chrome\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                        "column": 31,
-                        "line": 131
-                      }
-                    }
-                  ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "a2b4b5e334f291f46f74-871f3c67f41c828fd9fc",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 122,
-              "column": 3
-            },
-            {
-              "title": "음성 입력 버튼이 표시되어야 함",
+              "title": "강점/취약 시스템 정보가 표시되어야 함 (완전한 saju_data 필요)",
               "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 184,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 2025,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T17:08:12.782Z",
-                      "annotations": [],
+                      "startTime": "2025-10-30T22:03:30.369Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 184,
+                            "column": 8
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "expected"
+                  "status": "skipped"
                 }
               ],
-              "id": "a2b4b5e334f291f46f74-1f63132ae6fe32837d52",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 143,
-              "column": 3
+              "id": "6bf6ad9a593e168931c9-ae07bdff9d6ad896c051",
+              "file": "health-chart.spec.ts",
+              "line": 184,
+              "column": 8
             },
             {
-              "title": "목적(context) 선택이 반영되어야 함",
-              "ok": false,
+              "title": "건강 권장사항이 표시되어야 함 (완전한 saju_data 필요)",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [
+                  "annotations": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 2026,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:179:31",
-                        "location": {
-                          "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                          "column": 31,
-                          "line": 179
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 177 |\u001b[39m     \u001b[90m// 모달 로드 대기\u001b[39m\n \u001b[90m 178 |\u001b[39m     \u001b[36mconst\u001b[39m modalHeader \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=귀문둔갑 AI 상담사'\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 179 |\u001b[39m     \u001b[36mawait\u001b[39m expect(modalHeader)\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 180 |\u001b[39m\n \u001b[90m 181 |\u001b[39m     \u001b[90m// 헤더에 선택한 목적이 표시되는지 확인\u001b[39m\n \u001b[90m 182 |\u001b[39m     \u001b[36mconst\u001b[39m contextLabel \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'text=/사업.*전문 상담/'\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                            "column": 31,
-                            "line": 179
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('text=귀문둔갑 AI 상담사')\nExpected: visible\nError: strict mode violation: locator('text=귀문둔갑 AI 상담사') resolved to 2 elements:\n    1) <h3 class=\"text-white font-bold text-lg\">귀문둔갑 AI 상담사</h3> aka getByRole('heading', { name: '귀문둔갑 AI 상담사' })\n    2) <p class=\"text-sm whitespace-pre-wrap\">안녕하세요! 저는 귀문둔갑 AI 상담사입니다. 궁금하신 점을 물어보세요! 😊</p> aka getByText('안녕하세요! 저는 귀문둔갑 AI')\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('text=귀문둔갑 AI 상담사')\u001b[22m\n\n\n  177 |     // 모달 로드 대기\n  178 |     const modalHeader = page.locator('text=귀문둔갑 AI 상담사');\n> 179 |     await expect(modalHeader).toBeVisible({ timeout: 5000 });\n      |                               ^\n  180 |\n  181 |     // 헤더에 선택한 목적이 표시되는지 확인\n  182 |     const contextLabel = page.locator('text=/사업.*전문 상담/');\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:179:31"
-                        }
-                      ],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T17:08:14.987Z",
-                      "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-목적-context-선택이-반영되어야-함-Mobile-Chrome\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-목적-context-선택이-반영되어야-함-Mobile-Chrome\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-목적-context-선택이-반영되어야-함-Mobile-Chrome\\error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                        "column": 31,
-                        "line": 179
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 211,
+                        "column": 8
                       }
                     }
                   ],
-                  "status": "unexpected"
-                }
-              ],
-              "id": "a2b4b5e334f291f46f74-822e27ecb9d7d62ad290",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 160,
-              "column": 3
-            },
-            {
-              "title": "AI 응답이 캐싱되어야 함",
-              "ok": false,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "expectedStatus": "skipped",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
-                      "workerIndex": 8,
-                      "parallelIndex": 0,
-                      "status": "timedOut",
-                      "duration": 30723,
-                      "error": {
-                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                      },
-                      "errors": [
-                        {
-                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                        },
-                        {
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts",
-                            "column": 22,
-                            "line": 209
-                          },
-                          "message": "Error: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"전송\")')\u001b[22m\n\u001b[2m    - locator resolved to <button class=\"px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-medium hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl\">전송</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - element is outside of the viewport\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    55 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - element is outside of the viewport\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is visible, enabled and stable\u001b[22m\n\u001b[2m    - scrolling into view if needed\u001b[22m\n\u001b[2m    - done scrolling\u001b[22m\n\n\n  207 |\n  208 |     const sendButton = page.locator('button:has-text(\"전송\")');\n> 209 |     await sendButton.click();\n      |                      ^\n  210 |\n  211 |     // 첫 번째 응답 대기\n  212 |     await page.waitForTimeout(3000);\n    at E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\qimen-ai-chat.spec.ts:209:22"
-                        }
-                      ],
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T17:08:18.684Z",
-                      "annotations": [],
-                      "attachments": [
+                      "startTime": "2025-10-30T22:03:30.370Z",
+                      "annotations": [
                         {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-응답이-캐싱되어야-함-Mobile-Chrome\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-응답이-캐싱되어야-함-Mobile-Chrome\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "E:\\projects\\sajuapp\\packages\\web\\test-results\\qimen-ai-chat-귀문둔갑-AI-챗-기능-AI-응답이-캐싱되어야-함-Mobile-Chrome\\error-context.md"
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 211,
+                            "column": 8
+                          }
                         }
-                      ]
+                      ],
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "skipped"
                 }
               ],
-              "id": "a2b4b5e334f291f46f74-c78c8cc6384b24df97b2",
-              "file": "qimen-ai-chat.spec.ts",
-              "line": 193,
-              "column": 3
+              "id": "6bf6ad9a593e168931c9-6b135bb3931fb51e9150",
+              "file": "health-chart.spec.ts",
+              "line": 211,
+              "column": 8
+            },
+            {
+              "title": "연령대별 주의사항이 표시되어야 함 (완전한 saju_data 필요)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 235,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T22:03:30.371Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 235,
+                            "column": 8
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6bf6ad9a593e168931c9-ddbc00073b99bfcf30be",
+              "file": "health-chart.spec.ts",
+              "line": 235,
+              "column": 8
+            },
+            {
+              "title": "건강 차트 데이터가 고객별로 다르게 표시되어야 함 (완전한 saju_data 필요)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "location": {
+                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                        "line": 259,
+                        "column": 8
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-10-30T22:03:30.371Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "location": {
+                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
+                            "line": 259,
+                            "column": 8
+                          }
+                        }
+                      ],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6bf6ad9a593e168931c9-d553b96c980861ed39b6",
+              "file": "health-chart.spec.ts",
+              "line": 259,
+              "column": 8
             }
           ]
         }
@@ -1018,11 +1022,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-10-30T17:07:19.992Z",
-    "duration": 89810.077,
-    "expected": 10,
-    "skipped": 0,
-    "unexpected": 8,
+    "startTime": "2025-10-30T22:03:03.417Z",
+    "duration": 27178.028000000002,
+    "expected": 2,
+    "skipped": 16,
+    "unexpected": 0,
     "flaky": 0
   }
 }
