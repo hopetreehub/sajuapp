@@ -50,6 +50,8 @@ const RelationshipRadarChart: React.FC<RelationshipRadarChartProps> = ({
   const [isDarkMode, setIsDarkMode] = useState(false);
   // 시간대 선택
   const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrame>('base');
+  // 년도 선택 (기본값: 현재 년도)
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
 
   useEffect(() => {
     const checkDarkMode = () => {
@@ -69,8 +71,10 @@ const RelationshipRadarChart: React.FC<RelationshipRadarChartProps> = ({
 
   // 인간관계운 점수 계산
   const relationshipReport = useMemo<ComprehensiveRelationshipReport>(() => {
-    return calculateRelationshipScores(sajuData, birthYear);
-  }, [sajuData, birthYear]);
+    // 선택된 년도로 targetDate 생성
+    const targetDate = new Date(selectedYear, 0, 1); // 1월 1일
+    return calculateRelationshipScores(sajuData, birthYear, targetDate);
+  }, [sajuData, birthYear, selectedYear]);
 
   // 차트 데이터 준비
   const chartData = useMemo(() => {
@@ -249,7 +253,7 @@ const RelationshipRadarChart: React.FC<RelationshipRadarChartProps> = ({
       </div>
 
       {/* 시간대 선택 버튼 */}
-      <div className={`${CHART_DESIGN_SYSTEM.LAYOUT.timeFrameSelector.container} mb-6`}>
+      <div className={`${CHART_DESIGN_SYSTEM.LAYOUT.timeFrameSelector.container} mb-4`}>
         {[
           { key: 'base' as TimeFrame, label: '기본' },
           { key: 'today' as TimeFrame, label: '오늘' },
@@ -269,6 +273,32 @@ const RelationshipRadarChart: React.FC<RelationshipRadarChartProps> = ({
           </button>
         ))}
       </div>
+
+      {/* 십이운성 년도 선택 (year 모드일 때만 표시) */}
+      {selectedTimeFrame === 'year' && (
+        <div className="mb-6 flex items-center gap-3">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            🔮 십이운성 년도 선택:
+          </label>
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+                     bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+                     focus:ring-2 focus:ring-purple-500 focus:border-transparent
+                     cursor-pointer transition-all duration-200"
+          >
+            {Array.from({ length: 16 }, (_, i) => new Date().getFullYear() - 5 + i).map(year => (
+              <option key={year} value={year}>
+                {year}년 {year === new Date().getFullYear() ? '(현재)' : ''}
+              </option>
+            ))}
+          </select>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            (과거 5년 ~ 미래 10년)
+          </span>
+        </div>
+      )}
 
       {/* 종합 분석 카드 */}
       <div className="space-y-4">

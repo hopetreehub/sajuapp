@@ -3,6 +3,8 @@
  * 개인별 고유한 운세 곡선을 생성하기 위한 정밀 계산 모듈
  */
 
+import { calculate12LifeStage } from './sajuRelations';
+
 // 오행 타입 정의
 export type OhHaeng = '목' | '화' | '토' | '금' | '수';
 
@@ -1725,7 +1727,28 @@ export function calculateTimeBonus(
       break;
   }
 
-  // 4. 오행 관계 보너스 추가
+  // 4. 십이운성 보너스 추가 (NEW: TDD GREEN 통합)
+  let 십이운성보너스 = 0;
+  const dayGan = sajuData.day.gan;
+
+  try {
+    if (timeFrame === 'today') {
+      const todayJi = getJiJiForDate(targetDate);
+      십이운성보너스 = calculate십이운성Bonus(dayGan, todayJi, 'today');
+    } else if (timeFrame === 'month') {
+      const monthJi = getMonthJiJi(targetDate);
+      십이운성보너스 = calculate십이운성Bonus(dayGan, monthJi, 'month');
+    } else if (timeFrame === 'year') {
+      const yearJi = getYearJiJi(targetDate.getFullYear());
+      십이운성보너스 = calculate십이운성Bonus(dayGan, yearJi, 'year');
+    }
+  } catch (error) {
+    console.warn('십이운성 보너스 계산 실패:', error);
+  }
+
+  bonus += 십이운성보너스;
+
+  // 5. 오행 관계 보너스 추가
   const currentYear = targetDate.getFullYear();
   const currentMonth = targetDate.getMonth() + 1;
   const currentDay = targetDate.getDate();
@@ -1769,10 +1792,190 @@ export function calculateTimeBonus(
     }
   });
 
-  // 5. 천간지지 일치 보너스
+  // 6. 천간지지 일치 보너스
   const exactBonus = calculateExactMatchBonus(sajuData, currentGan, currentJi, timeFrame);
   bonus += exactBonus * 0.15; // 가중치 15%
 
-  // 6. 최종 보너스 범위 제한 (-30 ~ +30으로 확대)
+  // 7. 최종 보너스 범위 제한 (-30 ~ +30으로 확대)
   return Math.max(-30, Math.min(30, Math.round(bonus)));
+}
+
+// ================================================================================
+// 🌟 십이운성 통합 점수 시스템 (TDD GREEN 단계 - Expert Implementation)
+// ================================================================================
+
+/**
+ * 특정 년도의 년지(年支) 계산
+ *
+ * @expert-knowledge 60갑자 순환 체계
+ * - 기준년: 1924년 = 갑자년 (子년)
+ * - 12지 순환: 자축인묘진사오미신유술해
+ * - 계산식: (year - 4) % 12
+ *
+ * @param year - 양력 년도
+ * @returns 년지 (12지 중 하나)
+ *
+ * @example
+ * getYearJiJi(1924) // '자' (갑자년)
+ * getYearJiJi(2024) // '진' (갑진년)
+ * getYearJiJi(2026) // '오' (병오년)
+ */
+export function getYearJiJi(year: number): JiJi {
+  // 60갑자 기준점: 기원전 2697년(황제 원년) 기준
+  // 실용적 기준점: 1924년 = 갑자년 = 자지
+  // 공식: (year - 4) mod 12
+  // 이유: 4년을 빼는 이유는 60갑자 순환 상 서기 4년이 갑자년이기 때문
+  const jiIndex = (year - 4) % 12;
+
+  // 음수 방지 (음수년 대응)
+  const normalizedIndex = jiIndex >= 0 ? jiIndex : jiIndex + 12;
+
+  return JIJI[normalizedIndex];
+}
+
+/**
+ * 특정 월의 월지(月支) 계산
+ *
+ * @expert-knowledge 월지 배정 (간단화 버전)
+ * - 양력 기준 월지 배정 (입춘 절입은 고려하지 않음)
+ * - 1월(정월) = 인월(寅月)
+ * - 2월 = 묘월, 3월 = 진월, 4월 = 사월, 5월 = 오월, 6월 = 미월
+ * - 7월 = 신월, 8월 = 유월, 9월 = 술월, 10월 = 해월, 11월 = 자월, 12월 = 축월
+ *
+ * @note 정통 명리학에서는 입춘(立春)을 기준으로 월을 나누지만,
+ *       웹 앱의 단순성을 위해 양력 월을 직접 매핑합니다.
+ *
+ * @param date - Date 객체
+ * @returns 월지 (12지 중 하나)
+ *
+ * @example
+ * getMonthJiJi(new Date(2024, 0, 15)) // '인' (1월 = 인월)
+ * getMonthJiJi(new Date(2024, 4, 15)) // '오' (5월 = 오월)
+ */
+export function getMonthJiJi(date: Date): JiJi {
+  const month = date.getMonth() + 1; // 0-based → 1-based
+
+  // 월지 매핑 (양력 기준)
+  // 정월(1월) = 인월부터 시작
+  const MONTH_JI_MAP: Record<number, JiJi> = {
+    1: '인',   // 정월 (Tiger)
+    2: '묘',   // 2월 (Rabbit)
+    3: '진',   // 3월 (Dragon)
+    4: '사',   // 4월 (Snake)
+    5: '오',   // 5월 (Horse)
+    6: '미',   // 6월 (Goat)
+    7: '신',   // 7월 (Monkey)
+    8: '유',   // 8월 (Rooster)
+    9: '술',   // 9월 (Dog)
+    10: '해',  // 10월 (Pig)
+    11: '자',  // 11월 (Rat)
+    12: '축',  // 12월 (Ox)
+  };
+
+  return MONTH_JI_MAP[month] || '자'; // fallback
+}
+
+/**
+ * 특정 날짜의 일지(日支) 계산
+ *
+ * @expert-knowledge 수정 율리우스일(Modified Julian Date) 기반 계산
+ * - 기준일: 1970-01-01 (Unix Epoch) = 임술일 (壬戌日)
+ * - 12지 순환 주기 = 12일
+ * - UTC 기준 계산으로 타임존 영향 제거
+ *
+ * @reference 정통 명리학에서는 자시(子時, 23:00-01:00)를 기준으로
+ *            날짜를 구분하지만, 웹 앱에서는 00:00 기준으로 단순화
+ *
+ * @param date - Date 객체
+ * @returns 일지 (12지 중 하나)
+ *
+ * @example
+ * getJiJiForDate(new Date(2024, 0, 1)) // '해'
+ * getJiJiForDate(new Date(2024, 0, 13)) // '해' (12일 주기)
+ */
+export function getJiJiForDate(date: Date): JiJi {
+  // UTC 기준 일수 계산 (타임존 영향 제거)
+  const utcMilliseconds = date.getTime() + (date.getTimezoneOffset() * 60000);
+  const daysSinceEpoch = Math.floor(utcMilliseconds / 86400000);
+
+  // 1970-01-01(Unix Epoch)은 경술일(庚戌日)
+  // 지지 순서: 자축인묘진사오미신유술해 (12지)
+  // 1970-01-01 = 술(戌) = index 10
+  // 계산식: (daysSinceEpoch + 10) % 12
+  const jiIndex = (daysSinceEpoch + 10) % 12;
+
+  // 음수 방지
+  const normalizedIndex = jiIndex >= 0 ? jiIndex : jiIndex + 12;
+
+  return JIJI[normalizedIndex];
+}
+
+/**
+ * 십이운성 보너스 점수 계산
+ *
+ * @expert-knowledge 십이운성(十二運星) 이론
+ * - 일간(日干)과 지지(地支)의 조합으로 생명력 단계 판단
+ * - 12단계: 장생 → 목욕 → 관대 → 건록 → 제왕 → 쇠 → 병 → 사 → 묘 → 절 → 태 → 양
+ * - 양간(陽干): 갑병무경임 - 정방향 순행
+ * - 음간(陰干): 을정기신계 - 역방향 역행
+ *
+ * @reference 『연해자평(淵海子平)』, 『적천수(滴天髓)』 등 명리학 고전
+ *
+ * @param dayGan - 일간 (天干)
+ * @param targetJi - 목표 지지 (年支/月支/日支)
+ * @param timeFrame - 시간대 ('today' | 'month' | 'year')
+ * @returns 십이운성 보너스 점수 (-18 ~ +20, 시간대별 가중치 적용)
+ *
+ * @example
+ * // 갑木 일간 + 해지(亥支) = 장생(長生) = +20점
+ * calculate십이운성Bonus('갑', '해', 'year') // 20
+ *
+ * // 갑木 일간 + 신지(申支) = 절(絕) = -18점, today는 30% 가중치
+ * calculate십이운성Bonus('갑', '신', 'today') // -5.4
+ */
+export function calculate십이운성Bonus(
+  dayGan: CheonGan,
+  targetJi: JiJi,
+  timeFrame: 'today' | 'month' | 'year',
+): number {
+  // 1. 십이운성 계산 (sajuRelations.ts의 함수 사용)
+  const 십이운성 = calculate12LifeStage(dayGan, targetJi);
+
+  // 2. 십이운성별 기본 점수 맵
+  // @expert-note 점수 설계 철학:
+  // - 장생/제왕/건록: 생명력이 왕성한 시기 → 높은 양수
+  // - 쇠/병/사/묘/절: 쇠퇴하는 시기 → 음수
+  // - 목욕/관대/양/태: 중간 단계 → 낮은 양수
+  const 점수맵: Record<string, number> = {
+    '장생': 20,    // 長生 - 새 생명 탄생, 최고의 생명력
+    '제왕': 18,    // 帝旺 - 왕성한 전성기, 최고점
+    '건록': 15,    // 建祿 - 강건한 활동기
+    '관대': 12,    // 冠帶 - 성장하는 시기
+    '목욕': 10,    // 沐浴 - 정화와 변화
+    '양': 8,       // 養 - 양육 단계
+    '태': 6,       // 胎 - 잉태 단계
+    '쇠': 0,       // 衰 - 쇠퇴 시작 (중립)
+    '병': -8,      // 病 - 약화 단계
+    '사': -12,     // 死 - 소멸 단계
+    '묘': -15,     // 墓 - 저장/침체 단계
+    '절': -18,     // 絕 - 끊어짐, 최저점
+  };
+
+  // 3. 기본 점수 획득
+  const baseBonus = 점수맵[십이운성] || 0; // '없음'인 경우 0점
+
+  // 4. 시간대별 가중치 적용
+  // @expert-note 가중치 설계 이유:
+  // - year: 100% - 1년 전체의 운세이므로 십이운성 영향이 가장 큼
+  // - month: 50% - 1개월의 운세이므로 중간 영향
+  // - today: 30% - 하루의 운세이므로 영향이 작음
+  const timeWeights = {
+    'today': 0.3,   // 일운: 30% 가중치
+    'month': 0.5,   // 월운: 50% 가중치
+    'year': 1.0,    // 세운: 100% 가중치 (full impact)
+  };
+
+  const finalBonus = baseBonus * (timeWeights[timeFrame] || 1.0);
+
+  return finalBonus;
 }

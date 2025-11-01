@@ -45,6 +45,8 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
   const [isDarkMode, setIsDarkMode] = useState(false);
   // 시간대 선택 상태 (기존과 동일)
   const [selectedTimeFrame, setSelectedTimeFrame] = useState<TimeFrame>('base');
+  // 년도 선택 (기본값: 현재 년도)
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
 
   useEffect(() => {
     // 초기 다크모드 상태 확인
@@ -172,7 +174,8 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
       // 올해: 다층 점수 (year 모드 - 대운/세운 각 30% 가중)
       result.year = data.items.map(item => {
         try {
-          return calculateMultiLayerScore(item.name, sajuData, 'year', undefined, birthYear);
+          const targetDate = new Date(selectedYear, 0, 1); // 선택된 년도 1월 1일
+          return calculateMultiLayerScore(item.name, sajuData, 'year', targetDate, birthYear);
         } catch (error) {
           console.error(`[올해 점수 계산 오류] ${item.name}:`, error);
           return generateTimeBasedScore(item.baseScore, 1.0, 12);
@@ -196,7 +199,7 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
     }
 
     return result;
-  }, [data.items, sajuData, birthYear]);
+  }, [data.items, sajuData, birthYear, selectedYear]);
 
   // ChartStyleUtils용 TimeFrameData 배열 생성
   const chartTimeFrameDatasets = useMemo((): TimeFrameData[] => {
@@ -417,7 +420,7 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
       </div>
 
       {/* 시간대 선택 버튼 - 차트 아래 배치 (기존과 동일) */}
-      <div className={`${CHART_DESIGN_SYSTEM.LAYOUT.timeFrameSelector.container} mb-6`}>
+      <div className={`${CHART_DESIGN_SYSTEM.LAYOUT.timeFrameSelector.container} mb-4`}>
         {[
           { key: 'base' as TimeFrame, label: '기본', active: 'base' },
           { key: 'today' as TimeFrame, label: '오늘', active: 'today' },
@@ -438,6 +441,31 @@ const UnifiedSajuRadarChart: React.FC<UnifiedSajuRadarChartProps> = ({
         ))}
       </div>
 
+      {/* 십이운성 년도 선택 (year 모드일 때만 표시) */}
+      {selectedTimeFrame === 'year' && (
+        <div className="mb-6 flex items-center gap-3">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            🔮 십이운성 년도 선택:
+          </label>
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
+                     bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+                     focus:ring-2 focus:ring-purple-500 focus:border-transparent
+                     cursor-pointer transition-all duration-200"
+          >
+            {Array.from({ length: 16 }, (_, i) => new Date().getFullYear() - 5 + i).map(year => (
+              <option key={year} value={year}>
+                {year}년 {year === new Date().getFullYear() ? '(현재)' : ''}
+              </option>
+            ))}
+          </select>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            (과거 5년 ~ 미래 10년)
+          </span>
+        </div>
+      )}
 
       {/* 종합 분석 - 점수 없이 간단하게 */}
       <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white rounded-xl p-6 text-center">
