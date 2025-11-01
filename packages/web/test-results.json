@@ -111,7 +111,7 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 21935,
+                      "duration": 18726,
                       "errors": [],
                       "stdout": [
                         {
@@ -126,7 +126,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T22:03:07.666Z",
+                      "startTime": "2025-11-01T06:41:06.120Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -146,50 +146,42 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 93,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 15846,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.021Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 93,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:41:25.139Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-0b3722ccabce6376abea",
               "file": "health-chart.spec.ts",
               "line": 93,
-              "column": 8
+              "column": 3
             },
             {
               "title": "건강 차트에 12개 시스템이 표시되어야 함 (완전한 saju_data 필요)",
@@ -198,50 +190,42 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 110,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 15665,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.022Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 110,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:41:41.006Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-91c9bf15250b32288532",
               "file": "health-chart.spec.ts",
-              "line": 110,
-              "column": 8
+              "line": 108,
+              "column": 3
             },
             {
               "title": "시간대 선택 버튼이 작동해야 함 (완전한 saju_data 필요)",
@@ -250,50 +234,42 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 127,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 17057,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.023Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 127,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:41:56.686Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-5174daf9459ce76e4ce7",
               "file": "health-chart.spec.ts",
-              "line": 127,
-              "column": 8
+              "line": 125,
+              "column": 3
             },
             {
               "title": "전체 건강 지수가 표시되어야 함 (완전한 saju_data 필요)",
@@ -302,53 +278,45 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 165,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 15799,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.023Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 165,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:42:13.764Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-f303912f466c71d160cc",
               "file": "health-chart.spec.ts",
-              "line": 165,
-              "column": 8
+              "line": 164,
+              "column": 3
             },
             {
-              "title": "강점/취약 시스템 정보가 표시되어야 함 (완전한 saju_data 필요)",
+              "title": "강점/취약 시스템 정보가 표시되어야 함 (완전한 saju_data 필요 - 미구현)",
               "ok": true,
               "tags": [],
               "tests": [
@@ -377,7 +345,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.024Z",
+                      "startTime": "2025-11-01T06:42:29.581Z",
                       "annotations": [
                         {
                           "type": "skip",
@@ -394,7 +362,7 @@
                   "status": "skipped"
                 }
               ],
-              "id": "6bf6ad9a593e168931c9-e5dcd5c348b263185df1",
+              "id": "6bf6ad9a593e168931c9-ae1d323d037cf7c6263d",
               "file": "health-chart.spec.ts",
               "line": 184,
               "column": 8
@@ -406,50 +374,42 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 211,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 15512,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.024Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 211,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:42:29.581Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-dc6864c04cbdc64e7060",
               "file": "health-chart.spec.ts",
               "line": 211,
-              "column": 8
+              "column": 3
             },
             {
               "title": "연령대별 주의사항이 표시되어야 함 (완전한 saju_data 필요)",
@@ -458,50 +418,42 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 235,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 15689,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.025Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 235,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:42:45.109Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-3ebc5dd73137d3f9579e",
               "file": "health-chart.spec.ts",
               "line": 235,
-              "column": 8
+              "column": 3
             },
             {
               "title": "건강 차트 데이터가 고객별로 다르게 표시되어야 함 (완전한 saju_data 필요)",
@@ -510,50 +462,45 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 259,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 15492,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.025Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 259,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
+                        },
+                        {
+                          "text": "첫 번째 고객: 58.1점, 두 번째 고객: 58.1점\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:43:00.812Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-00ba6113eb613ec41e57",
               "file": "health-chart.spec.ts",
               "line": 259,
-              "column": 8
+              "column": 3
             },
             {
               "title": "사주 분석 페이지가 정상 로드되어야 함",
@@ -571,7 +518,7 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 22343,
+                      "duration": 19038,
                       "errors": [],
                       "stdout": [
                         {
@@ -586,7 +533,7 @@
                       ],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T22:03:07.669Z",
+                      "startTime": "2025-11-01T06:41:06.185Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -606,50 +553,42 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 93,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 16184,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.366Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 93,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:41:25.491Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-dcd5a9067c06ca0c46b7",
               "file": "health-chart.spec.ts",
               "line": 93,
-              "column": 8
+              "column": 3
             },
             {
               "title": "건강 차트에 12개 시스템이 표시되어야 함 (완전한 saju_data 필요)",
@@ -658,50 +597,42 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 110,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 15688,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.368Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 110,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:41:41.694Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-276f7c6a5b56c4aefe29",
               "file": "health-chart.spec.ts",
-              "line": 110,
-              "column": 8
+              "line": 108,
+              "column": 3
             },
             {
               "title": "시간대 선택 버튼이 작동해야 함 (완전한 saju_data 필요)",
@@ -710,50 +641,42 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 127,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 17261,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.368Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 127,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:41:57.397Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-d82c3589b5b92d3aed3a",
               "file": "health-chart.spec.ts",
-              "line": 127,
-              "column": 8
+              "line": 125,
+              "column": 3
             },
             {
               "title": "전체 건강 지수가 표시되어야 함 (완전한 saju_data 필요)",
@@ -762,53 +685,45 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 165,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 16341,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.369Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 165,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:42:14.681Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-f06ac54d33b190628776",
               "file": "health-chart.spec.ts",
-              "line": 165,
-              "column": 8
+              "line": 164,
+              "column": 3
             },
             {
-              "title": "강점/취약 시스템 정보가 표시되어야 함 (완전한 saju_data 필요)",
+              "title": "강점/취약 시스템 정보가 표시되어야 함 (완전한 saju_data 필요 - 미구현)",
               "ok": true,
               "tags": [],
               "tests": [
@@ -837,7 +752,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.369Z",
+                      "startTime": "2025-11-01T06:42:31.047Z",
                       "annotations": [
                         {
                           "type": "skip",
@@ -854,7 +769,7 @@
                   "status": "skipped"
                 }
               ],
-              "id": "6bf6ad9a593e168931c9-ae07bdff9d6ad896c051",
+              "id": "6bf6ad9a593e168931c9-099ef4a7a06e481dfba0",
               "file": "health-chart.spec.ts",
               "line": 184,
               "column": 8
@@ -866,50 +781,42 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 211,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 15762,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.370Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 211,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:42:31.048Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-6b135bb3931fb51e9150",
               "file": "health-chart.spec.ts",
               "line": 211,
-              "column": 8
+              "column": 3
             },
             {
               "title": "연령대별 주의사항이 표시되어야 함 (완전한 saju_data 필요)",
@@ -918,50 +825,42 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 235,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 15819,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.371Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 235,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:42:46.825Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-ddbc00073b99bfcf30be",
               "file": "health-chart.spec.ts",
               "line": 235,
-              "column": 8
+              "column": 3
             },
             {
               "title": "건강 차트 데이터가 고객별로 다르게 표시되어야 함 (완전한 saju_data 필요)",
@@ -970,50 +869,45 @@
               "tests": [
                 {
                   "timeout": 30000,
-                  "annotations": [
-                    {
-                      "type": "skip",
-                      "location": {
-                        "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                        "line": 259,
-                        "column": 8
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
+                  "annotations": [],
+                  "expectedStatus": "passed",
                   "projectId": "Mobile Chrome",
                   "projectName": "Mobile Chrome",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
-                      "status": "skipped",
-                      "duration": 0,
+                      "status": "passed",
+                      "duration": 15641,
                       "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2025-10-30T22:03:30.371Z",
-                      "annotations": [
+                      "stdout": [
                         {
-                          "type": "skip",
-                          "location": {
-                            "file": "E:\\projects\\sajuapp\\packages\\web\\tests\\e2e\\health-chart.spec.ts",
-                            "line": 259,
-                            "column": 8
-                          }
+                          "text": "🔐 [인증 헬퍼] test@example.com로 Mock 인증 시작...\n"
+                        },
+                        {
+                          "text": "✅ [인증 헬퍼] Mock 인증 완료: test@example.com\n"
+                        },
+                        {
+                          "text": "🔄 [인증 헬퍼] 페이지 새로고침 완료 - 인증 정보 적용됨\n"
+                        },
+                        {
+                          "text": "첫 번째 고객: 58.1점, 두 번째 고객: 58.1점\n"
                         }
                       ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-11-01T06:43:02.660Z",
+                      "annotations": [],
                       "attachments": []
                     }
                   ],
-                  "status": "skipped"
+                  "status": "expected"
                 }
               ],
               "id": "6bf6ad9a593e168931c9-d553b96c980861ed39b6",
               "file": "health-chart.spec.ts",
               "line": 259,
-              "column": 8
+              "column": 3
             }
           ]
         }
@@ -1022,10 +916,10 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-10-30T22:03:03.417Z",
-    "duration": 27178.028000000002,
-    "expected": 2,
-    "skipped": 16,
+    "startTime": "2025-11-01T06:41:00.767Z",
+    "duration": 137992.99,
+    "expected": 16,
+    "skipped": 2,
     "unexpected": 0,
     "flaky": 0
   }

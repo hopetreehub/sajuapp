@@ -1,8 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+
+  // 구독 신청 상태 관리
+  const [subscribeEmail, setSubscribeEmail] = useState('');
+  const [subscribeName, setSubscribeName] = useState('');
+  const [subscribePhone, setSubscribePhone] = useState('');
+  const [subscribeMessage, setSubscribeMessage] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [showDetailForm, setShowDetailForm] = useState(false);
+  const [subscribeSuccess, setSubscribeSuccess] = useState(false);
 
   const footerLinks = {
     서비스: [
@@ -32,6 +41,60 @@ const Footer: React.FC = () => {
     { icon: '📺', label: 'YouTube', url: 'https://youtube.com' },
     { icon: '💬', label: 'KakaoTalk', url: '#' },
   ];
+
+  // 구독 신청 처리
+  const handleSubscribe = async () => {
+    // 이메일 검증
+    if (!subscribeEmail.trim()) {
+      alert('이메일 주소를 입력해주세요.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(subscribeEmail)) {
+      alert('올바른 이메일 형식이 아닙니다.');
+      return;
+    }
+
+    setIsSubscribing(true);
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: subscribeEmail,
+          name: subscribeName || undefined,
+          phone: subscribePhone || undefined,
+          message: subscribeMessage || undefined,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubscribeSuccess(true);
+        setSubscribeEmail('');
+        setSubscribeName('');
+        setSubscribePhone('');
+        setSubscribeMessage('');
+        setShowDetailForm(false);
+        alert('✅ 구독 신청이 완료되었습니다! 곧 연락드리겠습니다.');
+
+        // 3초 후 성공 상태 초기화
+        setTimeout(() => setSubscribeSuccess(false), 3000);
+      } else {
+        alert(`❌ ${result.error || '구독 신청에 실패했습니다.'}`);
+      }
+    } catch (error) {
+      console.error('Subscribe error:', error);
+      alert('❌ 구독 신청 중 오류가 발생했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
 
   return (
     <footer className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
@@ -90,24 +153,89 @@ const Footer: React.FC = () => {
 
         {/* Newsletter Section */}
         <div className="py-8 border-t border-gray-200 dark:border-gray-800">
-          <div className="max-w-md mx-auto text-center md:text-left md:max-w-none md:flex md:justify-between md:items-center">
+          <div className="max-w-md mx-auto text-center md:text-left md:max-w-none">
             <div className="mb-4 md:mb-0">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
-                운세 소식을 받아보세요
+                📧 운세 소식을 받아보세요
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                 매주 당신의 운세와 행운의 팁을 이메일로 전달해드립니다
               </p>
             </div>
-            <div className="flex max-w-md mx-auto md:mx-0">
-              <input
-                type="email"
-                placeholder="이메일 주소 입력"
-                className="flex-1 px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-l-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-              <button className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-medium rounded-r-lg hover:from-purple-700 hover:to-pink-700 transition-colors">
-                구독하기
-              </button>
+
+            {/* 기본 이메일 입력 폼 */}
+            <div className="space-y-3">
+              <div className="flex max-w-md mx-auto md:mx-0">
+                <input
+                  type="email"
+                  value={subscribeEmail}
+                  onChange={(e) => setSubscribeEmail(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSubscribe()}
+                  placeholder="이메일 주소 입력"
+                  disabled={subscribeSuccess}
+                  className="flex-1 px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-l-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                <button
+                  onClick={handleSubscribe}
+                  disabled={isSubscribing || subscribeSuccess}
+                  className={`px-6 py-2 text-white text-sm font-medium rounded-r-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                    subscribeSuccess
+                      ? 'bg-green-500'
+                      : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700'
+                  }`}
+                >
+                  {isSubscribing ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      처리 중...
+                    </div>
+                  ) : subscribeSuccess ? (
+                    '✓ 완료'
+                  ) : (
+                    '구독하기'
+                  )}
+                </button>
+              </div>
+
+              {/* 상세 정보 입력 토글 버튼 */}
+              {!subscribeSuccess && (
+                <button
+                  onClick={() => setShowDetailForm(!showDetailForm)}
+                  className="text-xs text-purple-600 dark:text-purple-400 hover:underline mx-auto md:mx-0 block"
+                >
+                  {showDetailForm ? '▲ 간단히 구독하기' : '▼ 추가 정보 입력하기 (선택)'}
+                </button>
+              )}
+
+              {/* 추가 정보 입력 폼 */}
+              {showDetailForm && !subscribeSuccess && (
+                <div className="max-w-md mx-auto md:mx-0 space-y-2 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-700">
+                  <input
+                    type="text"
+                    value={subscribeName}
+                    onChange={(e) => setSubscribeName(e.target.value)}
+                    placeholder="이름 (선택사항)"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                  <input
+                    type="tel"
+                    value={subscribePhone}
+                    onChange={(e) => setSubscribePhone(e.target.value)}
+                    placeholder="연락처 (선택사항)"
+                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                  <textarea
+                    value={subscribeMessage}
+                    onChange={(e) => setSubscribeMessage(e.target.value)}
+                    placeholder="메시지 (선택사항)"
+                    rows={2}
+                    className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    💡 추가 정보를 입력하시면 더 맞춤화된 운세 정보를 제공해드립니다.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

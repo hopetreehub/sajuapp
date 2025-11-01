@@ -99,15 +99,13 @@ test.describe('12대 건강 시스템 차트 기능', () => {
       await page.waitForTimeout(2000);
     }
 
-    // 건강 차트 확인
-    const healthChartSection = page.locator('#health-system-chart').or(
-      page.locator('text=/12대.*건강|건강.*시스템/i')
-    );
+    // 건강 차트 확인 (ID로 명확히 지정)
+    const healthChartSection = page.locator('#health-system-chart');
 
     await expect(healthChartSection).toBeVisible({ timeout: 10000 });
   });
 
-  test.skip('건강 차트에 12개 시스템이 표시되어야 함 (완전한 saju_data 필요)', async ({ page }) => {
+  test('건강 차트에 12개 시스템이 표시되어야 함 (완전한 saju_data 필요)', async ({ page }) => {
     // 고객 선택
     const customerSelect = page.locator('select').first();
     if (await customerSelect.isVisible({ timeout: 3000 })) {
@@ -124,7 +122,7 @@ test.describe('12대 건강 시스템 차트 기능', () => {
     await expect(canvas).toBeVisible({ timeout: 5000 });
   });
 
-  test.skip('시간대 선택 버튼이 작동해야 함 (완전한 saju_data 필요)', async ({ page }) => {
+  test('시간대 선택 버튼이 작동해야 함 (완전한 saju_data 필요)', async ({ page }) => {
     // 고객 선택
     const customerSelect = page.locator('select').first();
     if (await customerSelect.isVisible({ timeout: 3000 })) {
@@ -135,10 +133,11 @@ test.describe('12대 건강 시스템 차트 기능', () => {
     // 건강 차트 확인
     await page.waitForSelector('#health-system-chart', { timeout: 10000 });
 
-    // 시간대 버튼 찾기
-    const todayButton = page.locator('button').filter({ hasText: /오늘/i });
-    const monthButton = page.locator('button').filter({ hasText: /이달/i });
-    const yearButton = page.locator('button').filter({ hasText: /올해/i });
+    // 시간대 버튼 찾기 (건강 차트로 스코핑)
+    const healthChart = page.locator('#health-system-chart');
+    const todayButton = healthChart.locator('button').filter({ hasText: /오늘/i });
+    const monthButton = healthChart.locator('button').filter({ hasText: /이달/i });
+    const yearButton = healthChart.locator('button').filter({ hasText: /올해/i });
 
     // 오늘 버튼 클릭
     if (await todayButton.isVisible({ timeout: 3000 })) {
@@ -162,7 +161,7 @@ test.describe('12대 건강 시스템 차트 기능', () => {
     }
   });
 
-  test.skip('전체 건강 지수가 표시되어야 함 (완전한 saju_data 필요)', async ({ page }) => {
+  test('전체 건강 지수가 표시되어야 함 (완전한 saju_data 필요)', async ({ page }) => {
     // 고객 선택
     const customerSelect = page.locator('select').first();
     if (await customerSelect.isVisible({ timeout: 3000 })) {
@@ -173,15 +172,16 @@ test.describe('12대 건강 시스템 차트 기능', () => {
     // 건강 차트 확인
     await page.waitForSelector('#health-system-chart', { timeout: 10000 });
 
-    // 전체 건강 지수 확인
-    const healthScore = page.locator('text=/전체.*건강.*지수|건강.*지수/i').or(
-      page.locator('text=/\\d+점/i')
+    // 전체 건강 지수 확인 (건강 차트로 스코핑)
+    const healthChart = page.locator('#health-system-chart');
+    const healthScore = healthChart.locator('text=/전체.*건강.*지수|건강.*지수/i').or(
+      healthChart.locator('text=/\\d+점/i')
     );
 
-    await expect(healthScore).toBeVisible({ timeout: 5000 });
+    await expect(healthScore.first()).toBeVisible({ timeout: 5000 });
   });
 
-  test.skip('강점/취약 시스템 정보가 표시되어야 함 (완전한 saju_data 필요)', async ({ page }) => {
+  test.skip('강점/취약 시스템 정보가 표시되어야 함 (완전한 saju_data 필요 - 미구현)', async ({ page }) => {
     // 고객 선택
     const customerSelect = page.locator('select').first();
     if (await customerSelect.isVisible({ timeout: 3000 })) {
@@ -208,7 +208,7 @@ test.describe('12대 건강 시스템 차트 기능', () => {
     expect(hasStrong || hasWeak).toBeTruthy();
   });
 
-  test.skip('건강 권장사항이 표시되어야 함 (완전한 saju_data 필요)', async ({ page }) => {
+  test('건강 권장사항이 표시되어야 함 (완전한 saju_data 필요)', async ({ page }) => {
     // 고객 선택
     const customerSelect = page.locator('select').first();
     if (await customerSelect.isVisible({ timeout: 3000 })) {
@@ -232,7 +232,7 @@ test.describe('12대 건강 시스템 차트 기능', () => {
     expect(hasRecommendations || hasHealthChart).toBeTruthy();
   });
 
-  test.skip('연령대별 주의사항이 표시되어야 함 (완전한 saju_data 필요)', async ({ page }) => {
+  test('연령대별 주의사항이 표시되어야 함 (완전한 saju_data 필요)', async ({ page }) => {
     // 고객 선택
     const customerSelect = page.locator('select').first();
     if (await customerSelect.isVisible({ timeout: 3000 })) {
@@ -256,7 +256,7 @@ test.describe('12대 건강 시스템 차트 기능', () => {
     expect(hasAgeInfo || hasHealthChart).toBeTruthy();
   });
 
-  test.skip('건강 차트 데이터가 고객별로 다르게 표시되어야 함 (완전한 saju_data 필요)', async ({ page }) => {
+  test('건강 차트 데이터가 고객별로 다르게 표시되어야 함 (완전한 saju_data 필요)', async ({ page }) => {
     // 첫 번째 고객 선택
     const customerSelect = page.locator('select').first();
     if (await customerSelect.isVisible({ timeout: 3000 })) {
