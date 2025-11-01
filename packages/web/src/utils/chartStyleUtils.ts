@@ -85,14 +85,14 @@ export class ChartStyleUtils {
         beginAtZero: true,
         max: 100,
         ticks: {
-          stepSize: 20,
+          stepSize: 10, // 🎯 10점 단위 눈금선 (가독성 향상)
           display: false, // 점수 표시 제거
           font: {
             size: 10,
           },
         },
         grid: {
-          color: 'rgba(128, 128, 128, 0.2)',
+          color: 'rgba(128, 128, 128, 0.3)', // 눈금선 조금 더 진하게
           lineWidth: 1,
         },
         angleLines: {
@@ -269,10 +269,10 @@ export class ChartStyleUtils {
     const options: EnhancedRadarOptions = {
       highlightMaximum: highlightMax,
       maxPointStyle: {
-        radius: 6,
-        backgroundColor: this.COLOR_PALETTE.accent,
-        borderColor: this.COLOR_PALETTE.accent,
-        borderWidth: 3,
+        radius: 10, // 🎯 최고점 포인트 크기 증가 (6 → 10)
+        backgroundColor: this.COLOR_PALETTE.accent, // 골드 색상
+        borderColor: '#FF8C00', // 진한 오렌지 테두리 (더 강조)
+        borderWidth: 4, // 테두리 두께 증가 (3 → 4)
       },
       normalPointStyle: {
         radius: 3,
