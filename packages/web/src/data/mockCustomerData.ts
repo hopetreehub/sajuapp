@@ -5,6 +5,7 @@
  */
 
 import { Customer } from '@/services/customerApi';
+import { calculateSajuData } from '@/utils/sajuDataCalculator';
 
 export const mockCustomers: Customer[] = [
   {
@@ -184,9 +185,59 @@ export function addCustomerToLocalStorage(customer: Omit<Customer, 'id' | 'creat
   const customers = loadCustomersFromLocalStorage();
   const maxId = customers.length > 0 ? Math.max(...customers.map(c => c.id!)) : 0;
 
+  // 🎯 완전한 사주 데이터 자동 생성
+  let sajuData = customer.saju_data;
+
+  if (!sajuData && customer.birth_date && customer.birth_time) {
+    try {
+      console.log('🔮 [고객등록] 완전한 사주 데이터 자동 생성 시작');
+      const birthDate = new Date(customer.birth_date);
+      const [hour, minute] = customer.birth_time.split(':').map(Number);
+
+      const fullSajuData = calculateSajuData({
+        year: birthDate.getFullYear(),
+        month: birthDate.getMonth() + 1,
+        day: birthDate.getDate(),
+        hour: hour || 0,
+        minute: minute || 0,
+        isLunar: customer.lunar_solar === 'lunar',
+        gender: customer.gender,
+        useTrueSolarTime: true,
+      });
+
+      // 차트용 형식으로 변환
+      sajuData = {
+        year: { gan: fullSajuData.fourPillars.year.heavenly, ji: fullSajuData.fourPillars.year.earthly },
+        month: { gan: fullSajuData.fourPillars.month.heavenly, ji: fullSajuData.fourPillars.month.earthly },
+        day: { gan: fullSajuData.fourPillars.day.heavenly, ji: fullSajuData.fourPillars.day.earthly },
+        time: { gan: fullSajuData.fourPillars.hour.heavenly, ji: fullSajuData.fourPillars.hour.earthly },
+        ohHaengBalance: {
+          목: fullSajuData.fiveElements.wood,
+          화: fullSajuData.fiveElements.fire,
+          토: fullSajuData.fiveElements.earth,
+          금: fullSajuData.fiveElements.metal,
+          수: fullSajuData.fiveElements.water,
+        },
+        sipSungBalance: {
+          비겁: fullSajuData.tenGods.bijeon,
+          식상: fullSajuData.tenGods.siksin,
+          재성: fullSajuData.tenGods.jeongjae + fullSajuData.tenGods.pyeonjae,
+          관성: fullSajuData.tenGods.jeonggwan + fullSajuData.tenGods.pyeongwan,
+          인성: fullSajuData.tenGods.jeongin + fullSajuData.tenGods.pyeongin,
+        },
+        fullSaju: `${fullSajuData.fourPillars.year.heavenly}${fullSajuData.fourPillars.year.earthly} ${fullSajuData.fourPillars.month.heavenly}${fullSajuData.fourPillars.month.earthly} ${fullSajuData.fourPillars.day.heavenly}${fullSajuData.fourPillars.day.earthly} ${fullSajuData.fourPillars.hour.heavenly}${fullSajuData.fourPillars.hour.earthly}`,
+        _isMinimal: false,
+      };
+      console.log('✅ [고객등록] 완전한 사주 데이터 생성 완료:', sajuData.fullSaju);
+    } catch (error) {
+      console.error('❌ [고객등록] 사주 데이터 생성 실패:', error);
+    }
+  }
+
   const newCustomer: Customer = {
     ...customer,
     id: maxId + 1,
+    saju_data: sajuData, // 🎯 완전한 사주 데이터 저장
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };

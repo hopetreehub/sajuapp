@@ -17,6 +17,7 @@ import '@/utils/testUniqueValues'; // 개인별 고유값 테스트 함수 로�
 import SajuAIChat from '@/components/saju/SajuAIChat';
 import { calculateFourPillars } from '@/utils/sajuCalculator';
 import SajuBeginnerGuide from '@/components/saju/SajuBeginnerGuide';
+import { calculateSajuData } from '@/utils/sajuDataCalculator';
 
 export default function UnifiedSajuAnalysisPageWithLifeChart() {
   const [selectedCategory, setSelectedCategory] = useState('jubon');
@@ -190,29 +191,59 @@ export default function UnifiedSajuAnalysisPageWithLifeChart() {
         }
       }
 
-      // saju_data가 없는 경우 기본 데이터 생성 (AI 버튼용)
+      // saju_data가 없는 경우 완전한 사주 데이터 자동 생성
       if (!sajuData) {
-        console.log('⚠️ [사주분석] saju_data 없음 - AI용 기본 데이터 생성');
-        sajuData = {
-          fullSaju: '사주 데이터 계산 필요',
-          ohHaengBalance: {
-            목: 20,
-            화: 20,
-            토: 20,
-            금: 20,
-            수: 20,
-          },
-          sipSungBalance: {
-            비겁: 10,
-            식상: 10,
-            재성: 10,
-            관성: 10,
-            인성: 10,
-          },
-          // 차트 에러 방지용 플래그
-          _isMinimal: true,
-        };
-        console.log('✅ [사주분석] AI용 기본 데이터 생성 완료');
+        console.log('⚠️ [사주분석] saju_data 없음 - 완전한 사주 데이터 자동 생성 시작');
+        try {
+          const birthDate = new Date(customer.birth_date);
+          const [hour, minute] = customer.birth_time.split(':').map(Number);
+
+          // calculateSajuData로 완전한 사주 계산
+          const fullSajuData = calculateSajuData({
+            year: birthDate.getFullYear(),
+            month: birthDate.getMonth() + 1, // JS month는 0부터 시작
+            day: birthDate.getDate(),
+            hour: hour || 0,
+            minute: minute || 0,
+            isLunar: customer.lunar_solar === 'lunar',
+            gender: customer.gender,
+            useTrueSolarTime: true,
+          });
+
+          // 차트용 형식으로 변환
+          sajuData = {
+            year: { gan: fullSajuData.fourPillars.year.heavenly, ji: fullSajuData.fourPillars.year.earthly },
+            month: { gan: fullSajuData.fourPillars.month.heavenly, ji: fullSajuData.fourPillars.month.earthly },
+            day: { gan: fullSajuData.fourPillars.day.heavenly, ji: fullSajuData.fourPillars.day.earthly },
+            time: { gan: fullSajuData.fourPillars.hour.heavenly, ji: fullSajuData.fourPillars.hour.earthly },
+            ohHaengBalance: {
+              목: fullSajuData.fiveElements.wood,
+              화: fullSajuData.fiveElements.fire,
+              토: fullSajuData.fiveElements.earth,
+              금: fullSajuData.fiveElements.metal,
+              수: fullSajuData.fiveElements.water,
+            },
+            sipSungBalance: {
+              비겁: fullSajuData.tenGods.bijeon,
+              식상: fullSajuData.tenGods.siksin,
+              재성: fullSajuData.tenGods.jeongjae + fullSajuData.tenGods.pyeonjae,
+              관성: fullSajuData.tenGods.jeonggwan + fullSajuData.tenGods.pyeongwan,
+              인성: fullSajuData.tenGods.jeongin + fullSajuData.tenGods.pyeongin,
+            },
+            fullSaju: `${fullSajuData.fourPillars.year.heavenly}${fullSajuData.fourPillars.year.earthly} ${fullSajuData.fourPillars.month.heavenly}${fullSajuData.fourPillars.month.earthly} ${fullSajuData.fourPillars.day.heavenly}${fullSajuData.fourPillars.day.earthly} ${fullSajuData.fourPillars.hour.heavenly}${fullSajuData.fourPillars.hour.earthly}`,
+            _isMinimal: false, // ✅ 완전한 데이터!
+          };
+          console.log('✅ [사주분석] 완전한 사주 데이터 자동 생성 완료:', sajuData.fullSaju);
+        } catch (error) {
+          console.error('❌ [사주분석] 사주 데이터 생성 실패:', error);
+          // 실패 시에만 최소 데이터 사용
+          sajuData = {
+            fullSaju: '사주 데이터 계산 필요',
+            ohHaengBalance: { 목: 20, 화: 20, 토: 20, 금: 20, 수: 20 },
+            sipSungBalance: { 비겁: 10, 식상: 10, 재성: 10, 관성: 10, 인성: 10 },
+            _isMinimal: true,
+          };
+        }
       }
 
       console.log('✅ [사주분석] 사주 데이터 설정:', sajuData?.fullSaju);
