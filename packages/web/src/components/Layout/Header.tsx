@@ -10,22 +10,22 @@ const Header: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated, user, logout } = useAuthStore();
 
-  // 기본 메뉴 항목
+  // 기본 메뉴 항목 (이모티콘 제거)
   const baseNavItems = [
-    { path: '/', label: '캘린더', icon: '📅' },
-    { path: '/saju', label: '사주분석', icon: '🔮' },
-    { path: '/qimen', label: '귀문둔갑', icon: '⚡' },
-    { path: '/ziwei', label: '자미두수', icon: '⭐' },
-    { path: '/tarot', label: '타로', icon: '🃏' },
-    { path: '/compatibility', label: '궁합', icon: '💑' },
-    { path: '/settings', label: '설정', icon: '⚙️' },
+    { path: '/', label: '캘린더' },
+    { path: '/saju', label: '사주분석' },
+    { path: '/qimen', label: '귀문둔갑' },
+    { path: '/ziwei', label: '자미두수' },
+    { path: '/tarot', label: '타로' },
+    { path: '/compatibility', label: '궁합' },
+    { path: '/settings', label: '설정' },
   ];
 
   // 관리자 메뉴 추가
   const navItems = user?.role === 'admin' || user?.role === 'super_admin'
     ? [
         ...baseNavItems.slice(0, -1), // 설정 전까지
-        { path: '/admin/users', label: '회원관리', icon: '👥' },
+        { path: '/admin/users', label: '회원관리' },
         baseNavItems[baseNavItems.length - 1], // 설정
       ]
     : baseNavItems;
@@ -70,19 +70,18 @@ const Header: React.FC = () => {
           {/* Center - Navigation */}
           <div className="flex-1 flex items-center justify-center">
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-2">
+            <nav className="hidden md:flex items-center space-x-1">
               {navItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-1.5
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
                     ${isActive(item.path)
                       ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`}
                 >
-                  <span>{item.icon}</span>
-                  <span>{item.label}</span>
+                  {item.label}
                 </Link>
               ))}
             </nav>
@@ -121,29 +120,26 @@ const Header: React.FC = () => {
                         <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email || ''}</p>
                       </div>
                       
-                      <Link 
-                        to="/settings" 
+                      <Link
+                        to="/settings"
                         onClick={() => setShowUserMenu(false)}
                         className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
-                        <span className="mr-2">⚙️</span>
                         설정
                       </Link>
-                      
-                      <Link 
-                        to="/dashboard" 
+
+                      <Link
+                        to="/dashboard"
                         onClick={() => setShowUserMenu(false)}
                         className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
-                        <span className="mr-2">📊</span>
                         대시보드
                       </Link>
-                      
-                      <button 
+
+                      <button
                         onClick={handleLogout}
                         className="flex items-center w-full px-4 py-2 text-sm text-red-700 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
                       >
-                        <span className="mr-2">🚪</span>
                         로그아웃
                       </button>
                     </div>
@@ -202,14 +198,13 @@ const Header: React.FC = () => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2
+                  className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200
                     ${isActive(item.path)
                       ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300'
                       : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`}
                 >
-                  <span>{item.icon}</span>
-                  <span>{item.label}</span>
+                  {item.label}
                 </Link>
               ))}
               
@@ -227,11 +222,11 @@ const Header: React.FC = () => {
                         <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email || ''}</p>
                       </div>
                     </div>
-                    <button 
+                    <button
                       onClick={handleLogout}
                       className="w-full px-3 py-2 text-left text-sm text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
                     >
-                      🚪 로그아웃
+                      로그아웃
                     </button>
                   </div>
                 ) : (
